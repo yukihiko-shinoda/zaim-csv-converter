@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from typing import NoReturn
 
-from zaimcsvconverter.database_wrapper import DatabaseWrapper
-from zaimcsvconverter.waon import WaonRow
-from zaimcsvconverter.zaim import ZaimRow
+from zaimcsvconverter.session_manager import SessionManager
+from zaimcsvconverter.waon.waon_row import WaonRow
+from zaimcsvconverter.zaim.zaim_row import ZaimRow
 
 
 class ZaimIncomeRow(ZaimRow):
@@ -12,7 +12,7 @@ class ZaimIncomeRow(ZaimRow):
     def get_method(self):
         return self.METHOD
 
-    def _initialize_by_waon_row(self, waon_row: WaonRow, database_wrapper: DatabaseWrapper) -> NoReturn:
+    def _initialize_by_waon_row(self, waon_row: WaonRow, session_manager: SessionManager) -> NoReturn:
         self._category_large = ''
         self._category_small = ''
         self._cash_flow_source = '-'

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import csv
 
-from zaimcsvconverter.database_wrapper import DatabaseWrapper
-from zaimcsvconverter.waon.convert_waon_zaim_row import ConvertWaonZaimRow
+from zaimcsvconverter.session_manager import SessionManager
+from zaimcsvconverter.models import WaonStore, initialize_database
 from zaimcsvconverter.waon.waon_row_factory import WaonRowFactory
 
 
@@ -11,19 +11,20 @@ class WaonCsvConverter(object):
     CSV_FILE_CONVERT_WAON_ZAIM = './csvconverttable/waon-zaim.csv'
 
     def __init__(self, csv_file_waon):
+        initialize_database()
         self._csv_file_waon = csv_file_waon
 
     def execute(self):
-        with DatabaseWrapper() as database_wrapper:
-            self._import_convert_waon_zaim_to_database(database_wrapper)
-            self._convert(database_wrapper)
+        with SessionManager() as session_manager:
+            self._import_waon_store_to_database(session_manager)
+            self._convert(session_manager)
 
-    def _import_convert_waon_zaim_to_database(self, database_wrapper):
+    def _import_waon_store_to_database(self, session_wrapper):
         with open(self.CSV_FILE_CONVERT_WAON_ZAIM, 'r', encoding='UTF-8') as file_convert_waon_zaim:
             reader_convert_waon_zaim = csv.reader(file_convert_waon_zaim)
             for list_row_convert_waon_zaim in reader_convert_waon_zaim:
-                convert_waon_zaim_row = ConvertWaonZaimRow(list_row_convert_waon_zaim)
-                database_wrapper.save_convert_waon_zaim(convert_waon_zaim_row)
+                waon_store = WaonStore(*list_row_convert_waon_zaim)
+                session_wrapper.save_waon_store(waon_store)
 
     def _convert(self, database_wrapper):
         with open(self.CSV_FILE_ZAIM, 'w', encoding='UTF-8', newline='\n') as file_zaim:

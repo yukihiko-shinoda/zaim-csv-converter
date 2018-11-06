@@ -2,7 +2,7 @@
 from abc import ABCMeta, abstractmethod
 from typing import NoReturn
 
-from zaimcsvconverter.database_wrapper import DatabaseWrapper
+from zaimcsvconverter.session_manager import SessionManager
 from zaimcsvconverter.waon.waon_row import WaonRow
 
 
@@ -101,7 +101,7 @@ class ZaimRow(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def _initialize_by_waon_row(self, waon_row: WaonRow, database_wrapper: DatabaseWrapper) -> NoReturn:
+    def _initialize_by_waon_row(self, waon_row: WaonRow, session_manager: SessionManager) -> NoReturn:
         pass
 
     def _initialize_by_waon_row_common(self, waon_row: WaonRow) -> NoReturn:
