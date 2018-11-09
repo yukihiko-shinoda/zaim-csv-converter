@@ -8,3 +8,4 @@ csvinput/*
 !csvinput/.gitkeep
 csvoutput/*
 !csvoutput/.gitkeep
+config.yml

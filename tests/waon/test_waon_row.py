@@ -16,7 +16,7 @@ class TestWaonRow(unittest.TestCase):
     def test_init(self, argument, expected_date, expected_use_amount):
         waon_row = WaonPaymentRow(argument)
         self.assertEqual(datetime(*expected_date), waon_row.date)
-        self.assertEqual(argument[1], waon_row.use_store)
-        self.assertEqual(expected_use_amount, waon_row.use_amount)
-        self.assertEqual(argument[3], waon_row._use_kind)
+        self.assertEqual(argument[1], waon_row.used_store)
+        self.assertEqual(expected_use_amount, waon_row.used_amount)
+        self.assertEqual(argument[3], waon_row._used_kind)
         self.assertEqual(argument[4], waon_row._charge_kind)

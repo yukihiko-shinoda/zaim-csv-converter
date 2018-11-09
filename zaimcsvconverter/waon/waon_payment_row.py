@@ -6,5 +6,5 @@ from zaimcsvconverter.zaim.zaim_payment_row import ZaimPaymentRow
 class WaonPaymentRow(WaonRow):
     USE_KIND = '支払'
 
-    def convert_to_zaim_row(self, database_wrapper):
-        return ZaimPaymentRow(self, database_wrapper)
+    def convert_to_zaim_row(self):
+        return ZaimPaymentRow(self)

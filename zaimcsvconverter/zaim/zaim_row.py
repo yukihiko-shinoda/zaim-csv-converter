@@ -2,29 +2,18 @@
 from abc import ABCMeta, abstractmethod
 from typing import NoReturn
 
+from sqlalchemy.orm.exc import NoResultFound
+
+from zaimcsvconverter import CONFIG
+from zaimcsvconverter.goldpointcardplus.gold_point_card_plus_row import GoldPointCardPlusRow
+from zaimcsvconverter.models import Store
 from zaimcsvconverter.session_manager import SessionManager
 from zaimcsvconverter.waon.waon_row import WaonRow
+from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 
 
 class ZaimRow(metaclass=ABCMeta):
-    # INDEX_DATE = 0
-    # INDEX_METHOD = 1
-    # INDEX_CATEGORY_LARGE = 2
-    # INDEX_CATEGORY_SMALL = 3
-    # INDEX_CASH_FLOW_SOURCE = 4
-    # INDEX_CASH_FLOW_TARGET = 5
-    # INDEX_ITEM_NAME = 6
-    # INDEX_NOTE = 7
-    # INDEX_STORE = 8
-    # INDEX_CURRENCY = 9
-    # INDEX_AMOUNT_INCOME = 10
-    # INDEX_AMOUNT_PAYMENT = 11
-    # INDEX_AMOUNT_TRANSFER = 12
-    # INDEX_BALANCE_ADJUSTMENT = 13
-    # INDEX_AMOUNT_BEFORE_CURRENCY_CONVERSION = 14
-    # INDEX_SETTING_AGGREGATE = 15
-    ACCOUNT_WAON = 'WAON'
-    ACCOUNT_AEON_BANK = 'イオン銀行'
+    ACCOUNT_CREDIT_CARD = 'クレジットカード'
 
     @property
     def _category_large(self):
@@ -90,19 +79,14 @@ class ZaimRow(metaclass=ABCMeta):
     def _amount_transfer(self, amount_transfer):
         self.__amount_transfer = amount_transfer
 
-    def __init__(self, row, database_wrapper):
-        if isinstance(row, WaonRow):
-            self._initialize_by_waon_row(row, database_wrapper)
+    def __init__(self, account_row, method):
+        self._method = method
+        if isinstance(account_row, WaonRow):
+            self._initialize_by_waon_row(account_row)
+        elif isinstance(account_row, GoldPointCardPlusRow):
+            self._initialize_by_gold_point_card_plus_row(account_row)
         else:
-            raise TypeError('Argument "row" is unsupported instance type. Type = ' + type(row).__name__)
-
-    @abstractmethod
-    def get_method(self):
-        pass
-
-    @abstractmethod
-    def _initialize_by_waon_row(self, waon_row: WaonRow, session_manager: SessionManager) -> NoReturn:
-        pass
+            raise TypeError('Argument "row" is unsupported instance type. Type = ' + type(account_row).__name__)
 
     def _initialize_by_waon_row_common(self, waon_row: WaonRow) -> NoReturn:
         self._date = waon_row.date
@@ -114,22 +98,69 @@ class ZaimRow(metaclass=ABCMeta):
         self._setting_aggregate = ''
 
     def convert_to_list(self):
-        list_row_zaim = []
-        list_row_zaim.append(self._date.strftime("%Y-%m-%d"))
-        list_row_zaim.append(self.get_method())
-        list_row_zaim.append(self._category_large)
-        list_row_zaim.append(self._category_small)
-        list_row_zaim.append(self._cash_flow_source)
-        list_row_zaim.append(self._cash_flow_target)
-        list_row_zaim.append(self._item_name)
-        list_row_zaim.append(self._note)
-        list_row_zaim.append(self._store)
-        list_row_zaim.append(self._currency)
-        list_row_zaim.append(self._amount_income)
-        list_row_zaim.append(self._amount_payment)
-        list_row_zaim.append(self._amount_transfer)
-        list_row_zaim.append(self._balance_adjustment)
-        list_row_zaim.append(self._amount_before_currency_conversion)
-        list_row_zaim.append(self._setting_aggregate)
+        list_row_zaim = [
+            self._date.strftime("%Y-%m-%d"),
+            self._method,
+            self._category_large,
+            self._category_small,
+            self._cash_flow_source,
+            self._cash_flow_target,
+            self._item_name,
+            self._note,
+            self._store,
+            self._currency,
+            self._amount_income,
+            self._amount_payment,
+            self._amount_transfer,
+            self._balance_adjustment,
+            self._amount_before_currency_conversion,
+            self._setting_aggregate
+        ]
 
         return list_row_zaim
+
+    @abstractmethod
+    def _initialize_by_waon_row(self, waon_row: WaonRow) -> NoReturn:
+        pass
+
+    def _initialize_by_gold_point_card_plus_row(self, gold_point_card_plus_row: GoldPointCardPlusRow) -> NoReturn:
+        store = self._try_to_find_gold_point_card_plus_store(gold_point_card_plus_row)
+        self._date = gold_point_card_plus_row.used_date
+        self._category_large = store.category_large
+        self._category_small = store.category_small
+        self._cash_flow_source = CONFIG.gold_point_card_plus.account_name
+        self._cash_flow_target = '-'
+        self._item_name = ''
+        self._note = ''
+        self._store = store.name_zaim
+        self._currency = ''
+        self._amount_income = 0
+        self._amount_payment = gold_point_card_plus_row.used_amount
+        self._amount_transfer = 0
+        self._balance_adjustment = ''
+        self._amount_before_currency_conversion = ''
+        self._setting_aggregate = ''
+
+    @staticmethod
+    def _try_to_find_waon_store(waon_row):
+        return ZaimRow.method_name(
+            Store.STORE_KIND_WAON,
+            waon_row.used_store,
+            ZaimCsvConverter.FILE_CSV_CONVERT_WAON)
+
+    @staticmethod
+    def _try_to_find_gold_point_card_plus_store(gold_point_card_plus_row):
+        return ZaimRow.method_name(
+            Store.STORE_KIND_GOLD_POINT_CARD_PLUS,
+            gold_point_card_plus_row.used_store,
+            ZaimCsvConverter.FILE_CSV_CONVERT_GOLD_POINT_CARD_PLUS)
+
+    @staticmethod
+    def method_name(store_kind, use_store, file_csv_convert):
+        try:
+            with SessionManager() as session_manager:
+                return session_manager.find_store(store_kind, use_store)
+        except NoResultFound as e:
+            raise KeyError(
+                f'"{use_store}" is not defined on {file_csv_convert}. ' + 'Please define it.'
+            ) from e
