@@ -1,48 +1,39 @@
 #!/usr/bin/env python
-import factory
-import unittest2 as unittest
-from sqlalchemy.orm.exc import NoResultFound
+import parameterized
 
-from tests.common import CommonSession, create_database
+from tests.database_test import StoreFactory, DatabaseTestCase
+from zaimcsvconverter.enum import Account
 from zaimcsvconverter.models import Store
-from zaimcsvconverter.session_manager import SessionManager
 
 
-class WaonStoreFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta(object):
-        model = Store
-        sqlalchemy_session = CommonSession
-
-    store_kind_id = 1
-    name = '幕張新都心'
-    name_zaim = 'イオンモール　幕張新都心'
-
-
-class TestSessionManager(unittest.TestCase):
-
-    def setUp(self):
-        self._session = create_database()
-        WaonStoreFactory()
+class TestSessionManager(DatabaseTestCase):
+    def _prepare_fixture(self):
+        StoreFactory(
+            account=Account.WAON,
+            list_row_store=['幕張新都心', 'イオンモール　幕張新都心'],
+        )
+        StoreFactory(
+            account=Account.MUFG,
+            list_row_store=['カ）トウブカ－ドビ', '', '', '', '', '東武カード'],
+        )
 
     def test_import_stores(self):
-        stores = [Store(1, '上尾', 'イオンモール　上尾')]
-        with SessionManager(self._session) as session_manager:
-            session_manager.save_stores(stores)
-            stores = self._session.query(Store).filter(Store.name == '上尾').one()
-            assert stores.name == '上尾'
-            assert stores.name_zaim == 'イオンモール　上尾'
+        stores = [Store(Account.WAON, ['上尾', 'イオンモール　上尾'])]
+        Store.save_all(stores)
+        stores = self._session.query(Store).filter(Store.name == '上尾').one()
+        assert stores.name == '上尾'
+        assert stores.name_zaim == 'イオンモール　上尾'
 
-    def test_find_waon_store_success(self):
-        with SessionManager(self._session) as session_manager:
-            waon_store = session_manager.find_store(Store.STORE_KIND_WAON, '幕張新都心')
-            assert waon_store.name == '幕張新都心'
-            assert waon_store.name_zaim == 'イオンモール　幕張新都心'
+    @parameterized.parameterized.expand([
+        (Account.WAON, '幕張新都心', 'イオンモール　幕張新都心', None),
+        (Account.MUFG, 'カ）トウブカ－ドビ', None, '東武カード'),
+    ])
+    def test_find_waon_store_success(self, account, store_name, expected_store_name_zaim, expected_transfer_target):
+        store = Store.try_to_find(account, store_name)
+        assert store.name == store_name
+        assert store.name_zaim == expected_store_name_zaim
+        assert store.transfer_target == expected_transfer_target
 
     def test_find_waon_store_failure(self):
-        with self.assertRaises(NoResultFound):
-            with SessionManager(self._session) as session_manager:
-                session_manager.find_store(Store.STORE_KIND_WAON, '上尾')
-
-    def doCleanups(self):
-        # Remove it, so that the next test gets a new Session()
-        CommonSession.remove()
+        with self.assertRaises(KeyError):
+                Store.try_to_find(Account.WAON, '上尾')

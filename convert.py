@@ -1,13 +1,11 @@
 #!/usr/bin/env python
-import sys
-
 from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 
 
-def main(args):
+def main():
     zaim_csv_converter = ZaimCsvConverter()
     zaim_csv_converter.execute()
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main()

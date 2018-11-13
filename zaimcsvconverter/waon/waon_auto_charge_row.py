@@ -4,8 +4,5 @@ from zaimcsvconverter.zaim.zaim_transfer_row import ZaimTransferRow
 
 
 class WaonAutoChargeRow(WaonRow):
-    USE_KIND = 'オートチャージ'
-
-    def convert_to_zaim_row(self):
+    def convert_to_zaim_row(self) -> ZaimTransferRow:
         return ZaimTransferRow(self)
-

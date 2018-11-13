@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 
-class WaonConfig(object):
+class MufgConfig(object):
     KEY_ACCOUNT_NAME: str = 'account_name'
-    KEY_AUTO_CHARGE_SOURCE: str = 'auto_charge_source'
+    KEY_TRANSFER_ACCOUNT_NAME: str = 'transfer_account_name'
 
     def __init__(self, dictionary_config):
         self.account_name: str = dictionary_config.get(self.KEY_ACCOUNT_NAME)
-        self.auto_charge_source: str = dictionary_config.get(self.KEY_AUTO_CHARGE_SOURCE)
+        self.transfer_account_name: str = dictionary_config.get(self.KEY_TRANSFER_ACCOUNT_NAME)
