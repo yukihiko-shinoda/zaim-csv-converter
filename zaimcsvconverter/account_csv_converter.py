@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+"""
+This module implements abstract converting steps for CSV.
+"""
+
 import csv
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
@@ -9,6 +14,9 @@ from zaimcsvconverter.enum import DirectoryCsv
 
 
 class AccountCsvConverter(metaclass=ABCMeta):
+    """
+    This class implements abstract converting steps for CSV.
+    """
     def __init__(self, csv_file: Path, encode: str, is_including_header: bool):
         self._csv_file: Path = csv_file
         self.encode: str = encode

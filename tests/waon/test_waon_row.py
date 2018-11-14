@@ -4,21 +4,14 @@ from datetime import datetime
 
 import parameterized
 
-from tests.database_test import DatabaseTestCase, StoreFactory
-from zaimcsvconverter.enum import Account
+from tests.database_test import DatabaseTestCase
+from tests.waon import prepare_fixture
 from zaimcsvconverter.waon.waon_payment_row import WaonPaymentRow
 
 
 class TestWaonRow(DatabaseTestCase):
     def _prepare_fixture(self):
-        StoreFactory(
-            account=Account.WAON,
-            list_row_store=['ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店'],
-        )
-        StoreFactory(
-            account=Account.WAON,
-            list_row_store=['板橋前野町', 'イオンスタイル　板橋前野町'],
-        )
+        prepare_fixture()
 
     @parameterized.parameterized.expand([
         (['2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'], (2018, 8, 7, 0, 0, 0), 'ファミリーマート　かぶと町永代通り店', 129),
@@ -30,4 +23,5 @@ class TestWaonRow(DatabaseTestCase):
         self.assertEqual(waon_row.used_store.name, argument[1])
         self.assertEqual(waon_row.used_store.name_zaim, expexted_store_name_zaim)
         self.assertEqual(waon_row.used_amount, expected_use_amount)
+        # pylint: disable=protected-access
         self.assertEqual(waon_row._charge_kind, argument[4])

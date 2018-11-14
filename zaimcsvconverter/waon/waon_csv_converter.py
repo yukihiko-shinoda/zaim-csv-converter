@@ -17,11 +17,10 @@ class WaonCsvConverter(AccountCsvConverter):
         use_kind = list_row_account[WaonRow.INDEX_USED_KIND]
         try:
             use_kind = WaonRow.UseKind(use_kind)
-        except ValueError as e:
-            # TODO 例外の型を確認する
+        except ValueError as error:
             raise NotImplementedError(
                 'The value of "Use kind" has not been defined in this code. Use kind =' + use_kind
-            ) from e
+            ) from error
 
         return {
             WaonRow.UseKind.PAYMENT: WaonPaymentRow(list_row_account),

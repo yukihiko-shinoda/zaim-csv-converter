@@ -8,7 +8,7 @@ from zaimcsvconverter.mufg.mufg_config import MufgConfig
 from zaimcsvconverter.waon.waon_config import WaonConfig
 
 
-class Config(object):
+class Config:
     KEY_WAON: str = 'waon'
     KEY_GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus'
     KEY_MUFG: str = 'mufg'

@@ -11,6 +11,7 @@ from zaimcsvconverter.account_row import AccountRow
 from zaimcsvconverter.goldpointcardplus.gold_point_card_plus_row import GoldPointCardPlusRow
 
 
+# pylint: disable=too-many-instance-attributes
 class ZaimRow(metaclass=ABCMeta):
     CATEGORY_LARGE_EMPTY = '-'
     CATEGORY_SMALL_EMPTY = '-'

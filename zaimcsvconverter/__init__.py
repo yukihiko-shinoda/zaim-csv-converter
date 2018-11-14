@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+"""
+This module implements default database settings.
+"""
+
 import sys
 
 from sqlalchemy import create_engine
@@ -8,6 +13,10 @@ from zaimcsvconverter.config import Config
 
 
 def call_session_maker(target_engine):
+    """
+    :param target_engine: Target engine to create session.
+    :return: Created session factory.
+    """
     return sessionmaker(
         bind=target_engine,
         # ↓ @ see https://stackoverflow.com/questions/32922210/why-does-a-query-invoke-a-auto-flush-in-sqlalchemy
@@ -17,15 +26,15 @@ def call_session_maker(target_engine):
     )
 
 
-engine = create_engine('sqlite://')
+ENGINE = create_engine('sqlite://')
 # ↓ To share same session with unittest and inject new engine on every unittest to run parallel
-# noinspection Pylint
+# pylint: disable=invalid-name
 Session = None
 if len(sys.argv) >= 1 and 'unittest' in sys.argv[0]:
-    # noinspection Pylint
-    Session = scoped_session(call_session_maker(engine))
+    # pylint: disable=invalid-name
+    Session = scoped_session(call_session_maker(ENGINE))
 else:
-    # noinspection Pylint
-    Session = call_session_maker(engine)
+    # pylint: disable=invalid-name
+    Session = call_session_maker(ENGINE)
 FILE_CONFIG: str = './config.yml'
 CONFIG: Config = Config(FILE_CONFIG)

@@ -7,7 +7,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from sqlalchemy.orm.exc import NoResultFound
 
-from zaimcsvconverter import engine
+from zaimcsvconverter import ENGINE
 from zaimcsvconverter.enum import FileCsvConvert, Account
 from zaimcsvconverter.session_manager import SessionManager
 
@@ -50,7 +50,7 @@ class Store(Base):
 
     @staticmethod
     def get_str_or_none(li: list, index: int) -> str:
-        return li[index] if index < len(li) and li[index] is not '' else None
+        return li[index] if index < len(li) and li[index] != '' else None
 
     @staticmethod
     def try_to_find(account: Account, store_name: str) -> Store:
@@ -61,11 +61,11 @@ class Store(Base):
         # ↓ To support Shift JIS
         try:
             return Store.find(account, store_name.replace("−", "ー"))
-        except NoResultFound as e:
+        except NoResultFound as error:
             file_csv_convert = FileCsvConvert.create(account)
             raise KeyError(
                 f'"{store_name}" is not defined on {file_csv_convert.value}. ' + 'Please define it.'
-            ) from e
+            ) from error
 
     @staticmethod
     def find(account: Account, store_name: str) -> Store:
@@ -82,5 +82,5 @@ class Store(Base):
                 session.add_all(stores)
 
 
-def initialize_database(target_engine=engine) -> NoReturn:
+def initialize_database(target_engine=ENGINE) -> NoReturn:
     Base.metadata.create_all(target_engine, checkfirst=False)

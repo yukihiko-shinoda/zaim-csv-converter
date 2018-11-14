@@ -12,7 +12,7 @@ from zaimcsvconverter.models import initialize_database, Store
 from zaimcsvconverter.mufg.mufg_csv_converter import MufgCsvConverter
 
 
-class ZaimCsvConverter(object):
+class ZaimCsvConverter:
     def __init__(self):
         CONFIG.load()
         initialize_database()
@@ -26,9 +26,8 @@ class ZaimCsvConverter(object):
     def _import_store_to_database(path: Path):
         try:
             file_csv_convert = FileCsvConvert(path.name)
-        except ValueError as e:
-            # TODO Errorの型を詳細にチェックする
-            raise ValueError(f'File name "{path.name}" is not supported store name.') from e
+        except ValueError as error:
+            raise ValueError(f'File name "{path.name}" is not supported store name.') from error
 
         account: Account = Account.create(file_csv_convert)
         with path.open('r', encoding='UTF-8') as file_store:
@@ -41,14 +40,13 @@ class ZaimCsvConverter(object):
     @staticmethod
     def _create_account_csv_converter(path: Path) -> AccountCsvConverter:
         from zaimcsvconverter.waon.waon_csv_converter import WaonCsvConverter
-        if re.search(u'.*waon.*\.csv', path.name):
+        if re.search(r'.*waon.*\.csv', path.name):
             return WaonCsvConverter(path)
-        elif re.search(u'.*gold_point_card_plus.*\.csv', path.name):
+        if re.search(r'.*gold_point_card_plus.*\.csv', path.name):
             return GoldPointCardPlusCsvConverter(path)
-        elif re.search(u'.*mufg.*\.csv', path.name):
+        if re.search(r'.*mufg.*\.csv', path.name):
             return MufgCsvConverter(path)
-        else:
-            raise TypeError('can\'t detect account type by csv file name. Please confirm csv file name.')
+        raise TypeError('can\'t detect account type by csv file name. Please confirm csv file name.')
 
     def execute(self) -> NoReturn:
         for csv_converter in self.list_csv_converter:

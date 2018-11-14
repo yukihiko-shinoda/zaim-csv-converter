@@ -18,37 +18,35 @@ class CashFlowKind(Enum):
     TRANSFER_PAYMENT: str = '振替支払い'
 
 
-class MufgRow(AccountRow):
-    INDEX_DATE: int = 0
-    INDEX_SUMMARY: int = 1
-    INDEX_SUMMARY_CONTENT: int = 2
-    INDEX_PAYED_AMOUNT: int = 3
-    INDEX_DEPOSIT_AMOUNT: int = 4
-    INDEX_BALANCE: int = 5
-    INDEX_NOTE: int = 6
-    INDEX_IS_UNCAPITALIZED: int = 7
-    INDEX_CASH_FLOW_KIND: int = 8
+class Index(Enum):
+    DATE: int = 0
+    SUMMARY: int = 1
+    SUMMARY_CONTENT: int = 2
+    PAYED_AMOUNT: int = 3
+    DEPOSIT_AMOUNT: int = 4
+    BALANCE: int = 5
+    NOTE: int = 6
+    IS_UNCAPITALIZED: int = 7
+    CASH_FLOW_KIND: int = 8
 
+
+# pylint: disable=too-many-instance-attributes
+class MufgRow(AccountRow):
     def __init__(self, list_row_waon):
-        self._date: datetime = datetime.datetime.strptime(list_row_waon[self.INDEX_DATE], "%Y/%m/%d")
-        self._summary: str = list_row_waon[self.INDEX_SUMMARY]
-        self._summary_content: Store = Store.try_to_find(Account.MUFG, list_row_waon[self.INDEX_SUMMARY_CONTENT])
-        self._payed_amount: int = self.convert_string_to_int_or_none(list_row_waon[self.INDEX_PAYED_AMOUNT].replace(',', ''))
-        self._deposit_amount: int = self.convert_string_to_int_or_none(list_row_waon[self.INDEX_DEPOSIT_AMOUNT].replace(',', ''))
-        self._balance = int(list_row_waon[self.INDEX_BALANCE].replace(',', ''))
-        self._note: str = list_row_waon[self.INDEX_NOTE]
-        self._is_uncapitalized: str = list_row_waon[self.INDEX_IS_UNCAPITALIZED]
+        self._date: datetime = datetime.datetime.strptime(list_row_waon[Index.DATE.value], "%Y/%m/%d")
+        self._summary: str = list_row_waon[Index.SUMMARY.value]
+        self._summary_content: Store = Store.try_to_find(Account.MUFG, list_row_waon[Index.SUMMARY_CONTENT.value])
+        self._payed_amount: int = self.convert_string_to_int_or_none(list_row_waon[Index.PAYED_AMOUNT.value].replace(',', ''))
+        self._deposit_amount: int = self.convert_string_to_int_or_none(list_row_waon[Index.DEPOSIT_AMOUNT.value].replace(',', ''))
+        self._balance = int(list_row_waon[Index.BALANCE.value].replace(',', ''))
+        self._note: str = list_row_waon[Index.NOTE.value]
+        self._is_uncapitalized: str = list_row_waon[Index.IS_UNCAPITALIZED.value]
 
     @staticmethod
     def convert_string_to_int_or_none(string) -> Union[int, None]:
-        if string is '':
+        if string == '':
             return None
-        else:
-            return int(string)
-
-    @abstractmethod
-    def convert_to_zaim_row(self) -> 'ZaimRow':
-        pass
+        return int(string)
 
     @property
     def date(self) -> datetime:

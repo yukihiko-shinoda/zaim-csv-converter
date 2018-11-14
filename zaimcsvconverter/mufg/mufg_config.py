@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-class MufgConfig(object):
+class MufgConfig:
     KEY_ACCOUNT_NAME: str = 'account_name'
     KEY_TRANSFER_ACCOUNT_NAME: str = 'transfer_account_name'
 

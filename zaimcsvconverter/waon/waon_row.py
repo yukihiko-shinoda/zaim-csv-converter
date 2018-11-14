@@ -26,7 +26,7 @@ class WaonRow(AccountRow):
     def __init__(self, list_row_waon: List[str]):
         self._date: datetime = datetime.datetime.strptime(list_row_waon[self.INDEX_DATE], "%Y/%m/%d")
         self._used_store: Store = Store.try_to_find(Account.WAON, list_row_waon[self.INDEX_USED_STORE])
-        used_amount = re.search(u'([\d,]+)円', list_row_waon[self.INDEX_USED_AMOUNT])
+        used_amount = re.search(r'([\d,]+)円', list_row_waon[self.INDEX_USED_AMOUNT])
         self._used_amount: int = int(used_amount.group(1).replace(',', ''))
         self._charge_kind: str = list_row_waon[self.INDEX_CHARGE_KIND]
 

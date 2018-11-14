@@ -24,6 +24,7 @@ class TestSessionManager(DatabaseTestCase):
         assert stores.name == '上尾'
         assert stores.name_zaim == 'イオンモール　上尾'
 
+    # pylint: disable=no-self-use
     @parameterized.parameterized.expand([
         (Account.WAON, '幕張新都心', 'イオンモール　幕張新都心', None),
         (Account.MUFG, 'カ）トウブカ－ドビ', None, '東武カード'),
@@ -36,4 +37,4 @@ class TestSessionManager(DatabaseTestCase):
 
     def test_find_waon_store_failure(self):
         with self.assertRaises(KeyError):
-                Store.try_to_find(Account.WAON, '上尾')
+            Store.try_to_find(Account.WAON, '上尾')

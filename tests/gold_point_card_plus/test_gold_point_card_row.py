@@ -20,13 +20,20 @@ class TestGoldPointCardPlusRow(DatabaseTestCase):
             list_row_store=['ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'Amazon Japan G.K.'],
         )
 
+    # pylint: disable=protected-access,too-many-arguments
     @parameterized.parameterized.expand([
         (['2018/7/3', '東京電力  電気料金等', 'ご本人', '1回払い', '', '18/8', '11402', '11402'], (2018, 7, 3, 0, 0, 0),
          '東京電力エナジーパートナー株式会社', 1, 11402),
         (['2018/7/4', 'ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'ご本人', '1回払い', '', '18/8', '3456', '3456'], (2018, 7, 4, 0, 0, 0),
          'Amazon Japan G.K.', 1, 3456),
     ])
-    def test_init(self, argument, expected_date, expected_store_name_zaim, expected_number_of_division, expected_use_amount):
+    def test_init(self,
+                  argument,
+                  expected_date,
+                  expected_store_name_zaim,
+                  expected_number_of_division,
+                  expected_use_amount
+                  ):
         row = GoldPointCardPlusRow(argument)
         self.assertEqual(datetime(*expected_date), row.used_date)
         self.assertIsInstance(row.used_store, Store)

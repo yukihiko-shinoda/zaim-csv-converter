@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-class GoldPointCardPlusConfig(object):
+class GoldPointCardPlusConfig:
     KEY_ACCOUNT_NAME: str = 'account_name'
     KEY_PAYMENT_SOURCE: str = 'payment_source'
 

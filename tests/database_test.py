@@ -21,7 +21,7 @@ def create_database():
 
 
 class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta(object):
+    class Meta:
         model = Store
         sqlalchemy_session = Session
 

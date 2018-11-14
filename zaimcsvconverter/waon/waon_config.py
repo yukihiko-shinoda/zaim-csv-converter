@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-class WaonConfig(object):
+class WaonConfig:
     KEY_ACCOUNT_NAME: str = 'account_name'
     KEY_AUTO_CHARGE_SOURCE: str = 'auto_charge_source'
 

@@ -4,7 +4,7 @@ from sqlalchemy.orm.session import Session as SQLAlchemySession
 from zaimcsvconverter import Session
 
 
-class SessionManager(object):
+class SessionManager:
     def __init__(self):
         self._session: SQLAlchemySession = Session()
 

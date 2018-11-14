@@ -24,7 +24,7 @@ class GoldPointCardPlusRow(AccountRow):
         self._used_card: str = list_row[self.INDEX_USED_CARD]
         self._payment_kind: str = list_row[self.INDEX_PAYMENT_KIND]
         number_of_division = list_row[self.INDEX_NUMBER_OF_DIVISION]
-        if number_of_division is '':
+        if number_of_division == '':
             number_of_division = 1
         self._number_of_division: int = int(number_of_division)
         self._scheduled_payment_month: str = list_row[self.INDEX_SCHEDULED_PAYMENT_MONTH]
