@@ -36,5 +36,4 @@ if len(sys.argv) >= 1 and 'unittest' in sys.argv[0]:
 else:
     # pylint: disable=invalid-name
     Session = call_session_maker(ENGINE)
-FILE_CONFIG: str = './config.yml'
-CONFIG: Config = Config(FILE_CONFIG)
+CONFIG: Config = Config()

@@ -3,69 +3,92 @@
 """
 This module implements configuration.
 """
+from __future__ import annotations
 
-from typing import NoReturn
+import re
+from abc import ABCMeta
+from enum import Enum
+from typing import Dict
 
 import yaml
-
-from zaimcsvconverter.goldpointcardplus.gold_point_card_plus_config import GoldPointCardPlusConfig
-from zaimcsvconverter.mufg.mufg_config import MufgConfig
-from zaimcsvconverter.waon.waon_config import WaonConfig
+from dataclasses import dataclass, field
 
 
+class AccountKey(Enum):
+    """
+    This class implements constant of account key for config.yml.
+    """
+    WAON: str = 'waon'
+    GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus'
+    MUFG: str = 'mufg'
+
+
+class AccountConfig(metaclass=ABCMeta):
+    """
+    This class implements configuration for account.
+    """
+    @staticmethod
+    def create(account_key: AccountKey, dict_account_config: dict) -> AccountConfig:
+        """This method creates """
+        account_config_class = {
+            AccountKey.WAON: WaonConfig,
+            AccountKey.GOLD_POINT_CARD_PLUS: GoldPointCardPlusConfig,
+            AccountKey.MUFG: MufgConfig,
+        }.get(account_key)
+        try:
+            return account_config_class(**dict_account_config)
+        except TypeError as error:
+            matches = re.search(r"__init__\(\) got an unexpected keyword argument '(.*)'", str(error))
+            raise TypeError(
+                f'Key "{account_key.value}.{matches.group(1)}" is undefined key. Please confirm {Config.FILE_CONFIG}.'
+            ) from error
+
+
+@dataclass
+class WaonConfig(AccountConfig):
+    """
+    This class implements configuration for WAON.
+    """
+    account_name: str
+    auto_charge_source: str
+
+
+@dataclass
+class GoldPointCardPlusConfig(AccountConfig):
+    """
+    This class implements configuration for GOLD POINT CARD+.
+    """
+    account_name: str
+    payment_source: str
+
+
+@dataclass
+class MufgConfig(AccountConfig):
+    """
+    This class implements configuration for MUFG bank.
+    """
+    account_name: str
+    transfer_account_name: str
+
+
+@dataclass
 class Config:
     """
-    This class implements configuration.
+    This class implements configuration wrapping.
     """
-    KEY_WAON: str = 'waon'
-    KEY_GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus'
-    KEY_MUFG: str = 'mufg'
+    waon: WaonConfig = None
+    gold_point_card_plus: GoldPointCardPlusConfig = None
+    mufg: MufgConfig = None
+    FILE_CONFIG: str = field(default='./config.yml', init=False)
 
-    @property
-    def waon(self) -> WaonConfig:
-        """
-        This property returns configuration of WAON.
-        """
-        self._validate_load()
-        return self._waon
-
-    @property
-    def gold_point_card_plus(self) -> GoldPointCardPlusConfig:
-        """
-        This property returns configuration of GOLD POINT CARD+.
-        """
-        self._validate_load()
-        return self._gold_point_card_plus
-
-    @property
-    def mufg(self) -> MufgConfig:
-        """
-        This property returns configuration of MUFG bank.
-        """
-        self._validate_load()
-        return self._mufg
-
-    def __init__(self, file: str):
-        self.file: str = file
-        self.is_loaded: bool = False
-        self._waon: WaonConfig = None
-        self._gold_point_card_plus: GoldPointCardPlusConfig = None
-        self._mufg: MufgConfig = None
-
-    def load(self) -> NoReturn:
-        """
-        This method load configuration from yaml file.
-        """
-        with open(self.file, 'r', encoding='UTF-8') as yml:
+    def load(self):
+        """This method creates instance by dict."""
+        with open(Config.FILE_CONFIG, 'r', encoding='UTF-8') as yml:
             dictionary_config = yaml.load(yml)
-            if self.KEY_WAON in dictionary_config:
-                self._waon = WaonConfig(dictionary_config[self.KEY_WAON])
-            if self.KEY_GOLD_POINT_CARD_PLUS in dictionary_config:
-                self._gold_point_card_plus = GoldPointCardPlusConfig(dictionary_config[self.KEY_GOLD_POINT_CARD_PLUS])
-            if self.KEY_MUFG in dictionary_config:
-                self._mufg = MufgConfig(dictionary_config[self.KEY_MUFG])
-        self.is_loaded = True
-
-    def _validate_load(self) -> NoReturn:
-        if not self.is_loaded:
-            raise RuntimeError('Config has not load. Please call load() function at first.')
+        account_config: Dict[str, AccountConfig] = {}
+        for key_string, dict_account_config in dictionary_config.items():
+            key_enum = AccountKey(key_string)
+            if key_enum is None:
+                raise ValueError(f'Key "{key_string}" is undefined key. Please confirm {Config.FILE_CONFIG}.')
+            account_config[key_string] = AccountConfig.create(key_enum, dict_account_config)
+        self.__dict__.update(Config(**account_config).__dict__)
