@@ -1,12 +1,98 @@
 #!/usr/bin/env python
+
+"""
+This module implements row model of CSV.
+"""
+
+import datetime
 from abc import ABCMeta, abstractmethod
 from typing import TYPE_CHECKING
+
+from zaimcsvconverter.models import Store
 
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim.zaim_row import ZaimRow
 
 
 class AccountRow(metaclass=ABCMeta):
+    """
+    This class implements row model of CSV.
+    """
     @abstractmethod
     def convert_to_zaim_row(self) -> 'ZaimRow':
+        """
+        This method converts this row to row of Zaim.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_date(self) -> datetime:
+        """
+        This property return date in Zaim row.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_store(self) -> Store:
+        """
+        This property return store in Zaim row.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_income_cash_flow_target(self) -> str:
+        """
+        This property return cash flow target in Zaim income row.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_income_ammount_income(self) -> int:
+        """
+        This property return amount of income in Zaim income row.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_payment_cash_flow_source(self) -> str:
+        """
+        This property return cash flow source in Zaim payment row.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_payment_amount_payment(self) -> int:
+        """
+        This property return amount of payment in Zaim payment row.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_transfer_cash_flow_source(self) -> str:
+        """
+        This property return cash flow source in Zaim transfer row.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_transfer_cash_flow_target(self) -> str:
+        """
+        This property return cash flow target in Zaim transfer row.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def zaim_transfer_amount_transfer(self) -> int:
+        """
+        This property return amount of transfer in Zaim transfer row.
+        """
         pass

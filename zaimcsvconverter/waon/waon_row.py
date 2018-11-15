@@ -1,10 +1,16 @@
 #!/usr/bin/env python
+
+"""
+This module implements row model of WAON CSV.
+"""
+
 from abc import abstractmethod
 import datetime
 import re
 from enum import Enum
 from typing import List, TYPE_CHECKING
 
+from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow
 from zaimcsvconverter.enum import Account
 from zaimcsvconverter.models import Store
@@ -13,7 +19,13 @@ if TYPE_CHECKING:
 
 
 class WaonRow(AccountRow):
+    """
+    This class implements row model of WAON CSV.
+    """
     class UseKind(Enum):
+        """
+        This class implements constant of user kind in WAON CSV.
+        """
         PAYMENT: str = '支払'
         AUTO_CHARGE: str = 'オートチャージ'
 
@@ -35,13 +47,37 @@ class WaonRow(AccountRow):
         pass
 
     @property
-    def date(self) -> datetime:
+    def zaim_date(self) -> datetime:
         return self._date
 
     @property
-    def used_store(self) -> Store:
+    def zaim_store(self) -> Store:
         return self._used_store
 
     @property
-    def used_amount(self) -> int:
+    def zaim_income_cash_flow_target(self) -> str:
+        return CONFIG.waon.account_name
+
+    @property
+    def zaim_income_ammount_income(self) -> int:
+        return self._used_amount
+
+    @property
+    def zaim_payment_cash_flow_source(self) -> str:
+        return CONFIG.waon.account_name
+
+    @property
+    def zaim_payment_amount_payment(self) -> int:
+        return self._used_amount
+
+    @property
+    def zaim_transfer_cash_flow_source(self) -> str:
+        return CONFIG.waon.auto_charge_source
+
+    @property
+    def zaim_transfer_cash_flow_target(self) -> str:
+        return CONFIG.waon.account_name
+
+    @property
+    def zaim_transfer_amount_transfer(self) -> int:
         return self._used_amount

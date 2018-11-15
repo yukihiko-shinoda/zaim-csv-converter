@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+"""
+This module implements converting steps from account CSV to Zaim CSV.
+"""
+
 import csv
 import re
 from pathlib import Path
@@ -13,6 +18,9 @@ from zaimcsvconverter.mufg.mufg_csv_converter import MufgCsvConverter
 
 
 class ZaimCsvConverter:
+    """
+    This class implements converting steps from account CSV to Zaim CSV.
+    """
     def __init__(self):
         CONFIG.load()
         initialize_database()
@@ -49,5 +57,8 @@ class ZaimCsvConverter:
         raise TypeError('can\'t detect account type by csv file name. Please confirm csv file name.')
 
     def execute(self) -> NoReturn:
+        """
+        This method executes all CSV converters.
+        """
         for csv_converter in self.list_csv_converter:
             csv_converter.execute()

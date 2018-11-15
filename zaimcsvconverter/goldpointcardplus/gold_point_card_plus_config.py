@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
+"""
+This module implements configuration for GOLD POINT CARD+.
+"""
+
 
 class GoldPointCardPlusConfig:
+    """
+    This class implements configuration for GOLD POINT CARD+.
+    """
     KEY_ACCOUNT_NAME: str = 'account_name'
     KEY_PAYMENT_SOURCE: str = 'payment_source'
 

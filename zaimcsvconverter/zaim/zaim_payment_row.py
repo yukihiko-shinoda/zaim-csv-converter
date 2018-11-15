@@ -1,39 +1,29 @@
 #!/usr/bin/env python
-from typing import NoReturn, List, TYPE_CHECKING
 
-from zaimcsvconverter import CONFIG
+"""
+This module implements payment row model of Zaim CSV.
+"""
+
+from typing import List, TYPE_CHECKING
+
 from zaimcsvconverter.account_row import AccountRow
-from zaimcsvconverter.mufg.mufg_row import MufgRow
-from zaimcsvconverter.waon.waon_row import WaonRow
 from zaimcsvconverter.zaim.zaim_row import ZaimRow
-if TYPE_CHECKING:
-    from zaimcsvconverter.goldpointcardplus.gold_point_card_plus_row import GoldPointCardPlusRow
 
 
 class ZaimPaymentRow(ZaimRow):
+    """
+    This class implements payment row model of Zaim CSV.
+    """
     METHOD: str = 'payment'
 
     def __init__(self, account_row: AccountRow):
-        super().__init__(account_row, self.METHOD)
-
-    def _initialize_by_waon_row(self, waon_row: WaonRow) -> NoReturn:
-        self._cash_flow_source: str = CONFIG.waon.account_name
-        self._amount_payment: int = waon_row.used_amount
-        super()._initialize_by_waon_row(waon_row)
-
-    def _initialize_by_gold_point_card_plus_row(self, gold_point_card_plus_row: 'GoldPointCardPlusRow') -> NoReturn:
-        self._cash_flow_source: str = CONFIG.gold_point_card_plus.account_name
-        self._amount_payment: int = gold_point_card_plus_row.used_amount
-        super()._initialize_by_gold_point_card_plus_row(gold_point_card_plus_row)
-
-    def _initialize_by_mufg_row(self, mufg_row: MufgRow) -> NoReturn:
-        self._cash_flow_source: str = mufg_row.cash_flow_source_on_zaim
-        self._amount_payment: int = mufg_row.amount
-        super()._initialize_by_mufg_row(mufg_row)
+        self._cash_flow_source: str = account_row.zaim_payment_cash_flow_source
+        self._amount_payment: int = account_row.zaim_payment_amount_payment
+        super().__init__(account_row)
 
     def convert_to_list(self) -> List[str]:
         return [
-            self._date.strftime("%Y-%m-%d"),
+            self._date_string,
             self.METHOD,
             self._store.category_payment_large,
             self._store.category_payment_small,

@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+"""
+This module implements configuration.
+"""
+
 from typing import NoReturn
 
 import yaml
@@ -9,23 +14,35 @@ from zaimcsvconverter.waon.waon_config import WaonConfig
 
 
 class Config:
+    """
+    This class implements configuration.
+    """
     KEY_WAON: str = 'waon'
     KEY_GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus'
     KEY_MUFG: str = 'mufg'
 
     @property
     def waon(self) -> WaonConfig:
-        self.validate_load()
+        """
+        This property returns configuration of WAON.
+        """
+        self._validate_load()
         return self._waon
 
     @property
     def gold_point_card_plus(self) -> GoldPointCardPlusConfig:
-        self.validate_load()
+        """
+        This property returns configuration of GOLD POINT CARD+.
+        """
+        self._validate_load()
         return self._gold_point_card_plus
 
     @property
     def mufg(self) -> MufgConfig:
-        self.validate_load()
+        """
+        This property returns configuration of MUFG bank.
+        """
+        self._validate_load()
         return self._mufg
 
     def __init__(self, file: str):
@@ -36,6 +53,9 @@ class Config:
         self._mufg: MufgConfig = None
 
     def load(self) -> NoReturn:
+        """
+        This method load configuration from yaml file.
+        """
         with open(self.file, 'r', encoding='UTF-8') as yml:
             dictionary_config = yaml.load(yml)
             if self.KEY_WAON in dictionary_config:
@@ -46,6 +66,6 @@ class Config:
                 self._mufg = MufgConfig(dictionary_config[self.KEY_MUFG])
         self.is_loaded = True
 
-    def validate_load(self) -> NoReturn:
+    def _validate_load(self) -> NoReturn:
         if not self.is_loaded:
             raise RuntimeError('Config has not load. Please call load() function at first.')

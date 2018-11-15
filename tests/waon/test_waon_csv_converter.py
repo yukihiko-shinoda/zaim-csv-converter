@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+"""Tests for WaonCsvConverter."""
 import parameterized
 
 from tests.database_test import DatabaseTestCase
@@ -10,6 +10,7 @@ from zaimcsvconverter.waon.waon_payment_row import WaonPaymentRow
 
 
 class TestWaonCsvConverter(DatabaseTestCase):
+    """Tests for WaonCsvConverter."""
     def _prepare_fixture(self):
         prepare_fixture()
 
@@ -18,11 +19,13 @@ class TestWaonCsvConverter(DatabaseTestCase):
         (['2018/8/22', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座'], WaonAutoChargeRow),
     ])
     def test_create_success(self, argument, expected):
+        """Method should return Store model when use kind is defined."""
         # pylint: disable=protected-access
         waon_row = WaonCsvConverter._create_account_row(argument)
         self.assertIsInstance(waon_row, expected)
 
     def test_create_fail(self):
-        with self.assertRaises(NotImplementedError):
+        """Method should raise ValueError when use kind is not defined."""
+        with self.assertRaises(ValueError):
             # pylint: disable=protected-access
             WaonCsvConverter._create_account_row(['2018/8/7', 'ファミリーマートかぶと町永代', '10000円', '入金', '-'])

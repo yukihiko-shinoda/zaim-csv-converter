@@ -1,7 +1,13 @@
 #!/usr/bin/env python
+
+"""
+This module implements row model of GOLD POINT CARD+ CSV.
+"""
+
 import datetime
 from typing import List, TYPE_CHECKING
 
+from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow
 from zaimcsvconverter.enum import Account
 from zaimcsvconverter.models import Store
@@ -10,6 +16,9 @@ if TYPE_CHECKING:
 
 
 class GoldPointCardPlusRow(AccountRow):
+    """
+    This class implements row model of GOLD POINT CARD+ CSV.
+    """
     INDEX_USED_DATE: int = 0
     INDEX_USED_STORE: int = 1
     INDEX_USED_CARD: int = 2
@@ -35,13 +44,37 @@ class GoldPointCardPlusRow(AccountRow):
         return ZaimPaymentRow(self)
 
     @property
-    def used_date(self) -> datetime:
+    def zaim_date(self) -> datetime:
         return self._used_date
 
     @property
-    def used_store(self) -> Store:
+    def zaim_store(self) -> Store:
         return self._used_store
 
     @property
-    def used_amount(self) -> int:
+    def zaim_income_cash_flow_target(self) -> str:
+        raise ValueError('Income row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
+
+    @property
+    def zaim_income_ammount_income(self) -> int:
+        raise ValueError('Income row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
+
+    @property
+    def zaim_payment_cash_flow_source(self) -> str:
+        return CONFIG.gold_point_card_plus.account_name
+
+    @property
+    def zaim_payment_amount_payment(self) -> int:
         return self._used_amount
+
+    @property
+    def zaim_transfer_cash_flow_source(self) -> str:
+        raise ValueError('Transfer row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
+
+    @property
+    def zaim_transfer_cash_flow_target(self) -> str:
+        raise ValueError('Transfer row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
+
+    @property
+    def zaim_transfer_amount_transfer(self) -> int:
+        raise ValueError('Transfer row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')

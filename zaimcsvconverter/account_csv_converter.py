@@ -23,8 +23,11 @@ class AccountCsvConverter(metaclass=ABCMeta):
         self.is_including_header: bool = is_including_header
 
     def execute(self) -> NoReturn:
+        """
+        This method executes CSV convert steps.
+        """
         with open(
-            Path(DirectoryCsv.OUTPUT.value) / self._csv_file.name, 'w', encoding='UTF-8', newline='\n'
+                Path(DirectoryCsv.OUTPUT.value) / self._csv_file.name, 'w', encoding='UTF-8', newline='\n'
         ) as file_zaim:
             writer_zaim = csv.writer(file_zaim)
             writer_zaim.writerow([

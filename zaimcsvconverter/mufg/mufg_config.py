@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
+"""
+This module implements configuration for MUFG bank.
+"""
+
 
 class MufgConfig:
+    """
+    This class implements configuration for MUFG bank.
+    """
     KEY_ACCOUNT_NAME: str = 'account_name'
     KEY_TRANSFER_ACCOUNT_NAME: str = 'transfer_account_name'
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+"""Tests for WaonRow."""
 from datetime import datetime
 
 import parameterized
@@ -10,6 +10,7 @@ from zaimcsvconverter.waon.waon_payment_row import WaonPaymentRow
 
 
 class TestWaonRow(DatabaseTestCase):
+    """Tests for WaonRow."""
     def _prepare_fixture(self):
         prepare_fixture()
 
@@ -18,10 +19,12 @@ class TestWaonRow(DatabaseTestCase):
         (['2018/8/30', '板橋前野町', '1,489円', '支払', '-'], (2018, 8, 30, 0, 0, 0), 'イオンスタイル　板橋前野町', 1489),
     ])
     def test_init(self, argument, expected_date, expexted_store_name_zaim, expected_use_amount):
+        """Arguments should set into properties."""
         waon_row = WaonPaymentRow(argument)
-        self.assertEqual(waon_row.date, datetime(*expected_date))
-        self.assertEqual(waon_row.used_store.name, argument[1])
-        self.assertEqual(waon_row.used_store.name_zaim, expexted_store_name_zaim)
-        self.assertEqual(waon_row.used_amount, expected_use_amount)
+        self.assertEqual(waon_row.zaim_date, datetime(*expected_date))
+        self.assertEqual(waon_row.zaim_store.name, argument[1])
+        self.assertEqual(waon_row.zaim_store.name_zaim, expexted_store_name_zaim)
+        # pylint: disable=protected-access
+        self.assertEqual(waon_row._used_amount, expected_use_amount)
         # pylint: disable=protected-access
         self.assertEqual(waon_row._charge_kind, argument[4])

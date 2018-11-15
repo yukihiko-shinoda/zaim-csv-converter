@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Tests for GoldPointCartPlusRow."""
 from datetime import datetime
 
 import parameterized
@@ -10,6 +11,7 @@ from zaimcsvconverter.models import Store
 
 
 class TestGoldPointCardPlusRow(DatabaseTestCase):
+    """Tests for GoldPointCartPlusRow."""
     def _prepare_fixture(self):
         StoreFactory(
             account=Account.GOLD_POINT_CARD_PLUS,
@@ -34,13 +36,14 @@ class TestGoldPointCardPlusRow(DatabaseTestCase):
                   expected_number_of_division,
                   expected_use_amount
                   ):
+        """Arguments should set into properties."""
         row = GoldPointCardPlusRow(argument)
-        self.assertEqual(datetime(*expected_date), row.used_date)
-        self.assertIsInstance(row.used_store, Store)
-        self.assertEqual(row.used_store.name, argument[1])
-        self.assertEqual(row.used_store.name_zaim, expected_store_name_zaim)
+        self.assertEqual(row.zaim_date, datetime(*expected_date))
+        self.assertIsInstance(row.zaim_store, Store)
+        self.assertEqual(row.zaim_store.name, argument[1])
+        self.assertEqual(row.zaim_store.name_zaim, expected_store_name_zaim)
         self.assertEqual(row._used_card, argument[2])
         self.assertEqual(row._payment_kind, argument[3])
         self.assertEqual(row._number_of_division, expected_number_of_division)
         self.assertEqual(row._scheduled_payment_month, argument[5])
-        self.assertEqual(row.used_amount, expected_use_amount)
+        self.assertEqual(row._used_amount, expected_use_amount)

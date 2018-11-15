@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+"""
+This module implements converting steps for WAON CSV.
+"""
+
 from pathlib import Path
 from typing import List
 
@@ -9,6 +14,9 @@ from zaimcsvconverter.waon.waon_row import WaonRow
 
 
 class WaonCsvConverter(AccountCsvConverter):
+    """
+    This class implements converting steps for WAON CSV.
+    """
     def __init__(self, csv_file: Path):
         super().__init__(csv_file, 'UTF-8', True)
 
@@ -18,7 +26,7 @@ class WaonCsvConverter(AccountCsvConverter):
         try:
             use_kind = WaonRow.UseKind(use_kind)
         except ValueError as error:
-            raise NotImplementedError(
+            raise ValueError(
                 'The value of "Use kind" has not been defined in this code. Use kind =' + use_kind
             ) from error
 

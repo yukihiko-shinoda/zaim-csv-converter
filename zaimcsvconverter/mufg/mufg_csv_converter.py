@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+
+"""
+This module implements converting steps for MUFG bank CSV.
+"""
+
+from pathlib import Path
+
 from zaimcsvconverter.account_csv_converter import AccountCsvConverter
 from zaimcsvconverter.mufg.mufg_income_row import MufgIncomeRow
 from zaimcsvconverter.mufg.mufg_payment_row import MufgPaymentRow
@@ -8,7 +15,10 @@ from zaimcsvconverter.mufg.mufg_transfer_payment_row import MufgTransferPaymentR
 
 
 class MufgCsvConverter(AccountCsvConverter):
-    def __init__(self, csv_file):
+    """
+    This class implements converting steps for MUFG bank CSV.
+    """
+    def __init__(self, csv_file: Path):
         super().__init__(csv_file, 'shift_jis_2004', True)
 
     @staticmethod
