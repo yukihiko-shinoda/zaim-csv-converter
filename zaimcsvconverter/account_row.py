@@ -4,6 +4,7 @@
 This module implements row model of CSV.
 """
 
+from __future__ import annotations
 import datetime
 from abc import ABCMeta, abstractmethod
 from typing import TYPE_CHECKING
@@ -12,6 +13,12 @@ from zaimcsvconverter.models import Store
 
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim.zaim_row import ZaimRow
+
+
+class AccountRowData(metaclass=ABCMeta):
+    """This class is abstract class of account CSV row data."""
+    def __init__(self, *args):
+        pass
 
 
 class AccountRow(metaclass=ABCMeta):
@@ -95,4 +102,11 @@ class AccountRow(metaclass=ABCMeta):
         """
         This property return amount of transfer in Zaim transfer row.
         """
+        pass
+
+
+    @staticmethod
+    @abstractmethod
+    def create(row_data: AccountRowData) -> AccountRow:
+        """This method creates account row by account row data."""
         pass

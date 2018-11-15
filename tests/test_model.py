@@ -4,7 +4,7 @@ from parameterized import parameterized
 
 from tests.database_test import DatabaseTestCase, StoreFactory
 from zaimcsvconverter.enum import Account
-from zaimcsvconverter.models import Store
+from zaimcsvconverter.models import Store, StoreRowData
 
 
 class TestModel(DatabaseTestCase):
@@ -12,16 +12,16 @@ class TestModel(DatabaseTestCase):
     def _prepare_fixture(self):
         StoreFactory(
             account=Account.WAON,
-            list_row_store=['幕張新都心', 'イオンモール　幕張新都心'],
+            row_data=StoreRowData('幕張新都心', 'イオンモール　幕張新都心'),
         )
         StoreFactory(
             account=Account.MUFG,
-            list_row_store=['カ）トウブカ－ドビ', '', '', '', '', '東武カード'],
+            row_data=StoreRowData('カ）トウブカ－ドビ', '', '', '', '', '東武カード'),
         )
 
     def test_save_all(self):
         """Arguments should insert into database."""
-        stores = [Store(Account.WAON, ['上尾', 'イオンモール　上尾'])]
+        stores = [Store(Account.WAON, StoreRowData('上尾', 'イオンモール　上尾'))]
         Store.save_all(stores)
         stores = self._session.query(Store).filter(Store.name == '上尾').one()
         assert stores.name == '上尾'

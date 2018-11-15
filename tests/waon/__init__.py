@@ -7,6 +7,7 @@ from typing import NoReturn
 
 from tests.database_test import StoreFactory
 from zaimcsvconverter.enum import Account
+from zaimcsvconverter.models import StoreRowData
 
 
 def prepare_fixture() -> NoReturn:
@@ -15,9 +16,9 @@ def prepare_fixture() -> NoReturn:
     """
     StoreFactory(
         account=Account.WAON,
-        list_row_store=['ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店'],
+        row_data=StoreRowData('ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店'),
     )
     StoreFactory(
         account=Account.WAON,
-        list_row_store=['板橋前野町', 'イオンスタイル　板橋前野町'],
+        row_data=StoreRowData('板橋前野町', 'イオンスタイル　板橋前野町'),
     )

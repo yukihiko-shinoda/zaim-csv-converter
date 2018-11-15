@@ -5,29 +5,26 @@ This module implements abstract converting steps for CSV.
 """
 
 import csv
-from abc import ABCMeta, abstractmethod
 from pathlib import Path
-from typing import List, NoReturn
+from typing import NoReturn
 
-from zaimcsvconverter.account_row import AccountRow
 from zaimcsvconverter.enum import DirectoryCsv
+from zaimcsvconverter.recipe import Recipe
 
 
-class AccountCsvConverter(metaclass=ABCMeta):
+class AccountCsvConverter:
     """
     This class implements abstract converting steps for CSV.
     """
-    def __init__(self, csv_file: Path, encode: str, is_including_header: bool):
-        self._csv_file: Path = csv_file
-        self.encode: str = encode
-        self.is_including_header: bool = is_including_header
+    def __init__(self, recipe: Recipe):
+        self.recipe = recipe
 
     def execute(self) -> NoReturn:
         """
         This method executes CSV convert steps.
         """
         with open(
-                Path(DirectoryCsv.OUTPUT.value) / self._csv_file.name, 'w', encoding='UTF-8', newline='\n'
+                Path(DirectoryCsv.OUTPUT.value) / self.recipe.csv_file.name, 'w', encoding='UTF-8', newline='\n'
         ) as file_zaim:
             writer_zaim = csv.writer(file_zaim)
             writer_zaim.writerow([
@@ -51,20 +48,16 @@ class AccountCsvConverter(metaclass=ABCMeta):
             self._convert_from_account(writer_zaim)
 
     def _convert_from_account(self, writer_zaim) -> NoReturn:
-        with self._csv_file.open('r', encoding=self.encode) as file_account:
+        with self.recipe.csv_file.open('r', encoding=self.recipe.encode) as file_account:
             reader_account = csv.reader(file_account)
-            if self.is_including_header:
+            if self.recipe.is_including_header:
                 reader_account.__next__()
             self._iterate_convert(reader_account, writer_zaim)
 
     def _iterate_convert(self, reader_account, writer_zaim) -> NoReturn:
         for list_row_account in reader_account:
-            account_row = self._create_account_row(list_row_account)
+            account_row_data = self.recipe.account_row_data_class(*list_row_account)
+            account_row = self.recipe.account_row_class.create(account_row_data)
             zaim_row = account_row.convert_to_zaim_row()
             list_row_zaim = zaim_row.convert_to_list()
             writer_zaim.writerow(list_row_zaim)
-
-    @staticmethod
-    @abstractmethod
-    def _create_account_row(list_row_account: List[str]) -> AccountRow:
-        pass

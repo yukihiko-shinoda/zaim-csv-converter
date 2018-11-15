@@ -4,43 +4,55 @@
 This module implements row model of GOLD POINT CARD+ CSV.
 """
 
+from __future__ import annotations
 import datetime
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow
+from zaimcsvconverter.account_row import AccountRow, AccountRowData
 from zaimcsvconverter.enum import Account
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
-    from zaimcsvconverter.zaim.zaim_payment_row import ZaimPaymentRow
+    from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow
+
+
+@dataclass
+class GoldPointCardPlusRowData(AccountRowData):
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+    used_date: str
+    used_store: str
+    used_card: str
+    payment_kind: str
+    number_of_division: str
+    scheduled_payment_month: str
+    used_amount: str
+    unknown_1: str
+    unknown_2: str
+    unknown_3: str
+    unknown_4: str
+    unknown_5: str
+    unknown_6: str
 
 
 class GoldPointCardPlusRow(AccountRow):
     """
     This class implements row model of GOLD POINT CARD+ CSV.
     """
-    INDEX_USED_DATE: int = 0
-    INDEX_USED_STORE: int = 1
-    INDEX_USED_CARD: int = 2
-    INDEX_PAYMENT_KIND: int = 3
-    INDEX_NUMBER_OF_DIVISION: int = 4
-    INDEX_SCHEDULED_PAYMENT_MONTH: int = 5
-    INDEX_USED_AMOUNT: int = 6
-
-    def __init__(self, list_row: List[str]):
-        self._used_date: datetime = datetime.datetime.strptime(list_row[self.INDEX_USED_DATE], "%Y/%m/%d")
-        self._used_store: Store = Store.try_to_find(Account.GOLD_POINT_CARD_PLUS, list_row[self.INDEX_USED_STORE])
-        self._used_card: str = list_row[self.INDEX_USED_CARD]
-        self._payment_kind: str = list_row[self.INDEX_PAYMENT_KIND]
-        number_of_division = list_row[self.INDEX_NUMBER_OF_DIVISION]
+    def __init__(self, row_data: GoldPointCardPlusRowData):
+        self._used_date: datetime = datetime.datetime.strptime(row_data.used_date, "%Y/%m/%d")
+        self._used_store: Store = Store.try_to_find(Account.GOLD_POINT_CARD_PLUS, row_data.used_store)
+        self._used_card: str = row_data.used_card
+        self._payment_kind: str = row_data.payment_kind
+        number_of_division = row_data.number_of_division
         if number_of_division == '':
             number_of_division = 1
         self._number_of_division: int = int(number_of_division)
-        self._scheduled_payment_month: str = list_row[self.INDEX_SCHEDULED_PAYMENT_MONTH]
-        self._used_amount: int = int(list_row[self.INDEX_USED_AMOUNT])
+        self._scheduled_payment_month: str = row_data.scheduled_payment_month
+        self._used_amount: int = int(row_data.used_amount)
 
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
-        from zaimcsvconverter.zaim.zaim_payment_row import ZaimPaymentRow
+        from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow
         return ZaimPaymentRow(self)
 
     @property
@@ -78,3 +90,7 @@ class GoldPointCardPlusRow(AccountRow):
     @property
     def zaim_transfer_amount_transfer(self) -> int:
         raise ValueError('Transfer row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
+
+    @staticmethod
+    def create(row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
+        return GoldPointCardPlusRow(row_data)

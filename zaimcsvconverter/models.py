@@ -6,11 +6,12 @@ This module implements SQLAlchemy database models.
 
 from __future__ import annotations
 
-from enum import Enum
 from typing import NoReturn, List
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from sqlalchemy.orm.exc import NoResultFound
+
+from dataclasses import dataclass
 
 from zaimcsvconverter import ENGINE
 from zaimcsvconverter.enum import FileCsvConvert, Account
@@ -19,21 +20,21 @@ from zaimcsvconverter.session_manager import SessionManager
 Base: DeclarativeMeta = declarative_base()
 
 
+@dataclass
+class StoreRowData:
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+    name: str
+    name_zaim: str = None
+    category_payment_large: str = None
+    category_payment_small: str = None
+    category_income: str = None
+    transfer_account: str = None
+
+
 class Store(Base):
     """
     This class implements Store model to convert from account CSV to Zaim CSV.
     """
-    class Index(Enum):
-        """
-        This class implements constants of index for row of convert table CSV.
-        """
-        NAME: int = 0
-        NAME_ZAIM: int = 1
-        CATEGORY_PAYMENT_LARGE: int = 2
-        CATEGORY_PAYMENT_SMALL: int = 3
-        CATEGORY_INCOME: int = 4
-        TRANSFER_ACCOUNT: int = 5
-
     __tablename__: str = 'stores'
 
     id: Column = Column(Integer, primary_key=True)
@@ -47,20 +48,18 @@ class Store(Base):
     STORE_KIND_WAON: int = 1
     STORE_KIND_GOLD_POINT_CARD_PLUS: int = 2
 
-    def __init__(self, account: Account, list_row_store: list):
+    def __init__(self, account: Account, row_data: StoreRowData):
         self.account_id: int = account.value
-        self.name: str = list_row_store[Store.Index.NAME.value]
-        self.name_zaim: str = self._get_str_or_none(list_row_store, Store.Index.NAME_ZAIM.value)
-        self.category_payment_large: str = self._get_str_or_none(list_row_store,
-                                                                 Store.Index.CATEGORY_PAYMENT_LARGE.value)
-        self.category_payment_small: str = self._get_str_or_none(list_row_store,
-                                                                 Store.Index.CATEGORY_PAYMENT_SMALL.value)
-        self.category_income: str = self._get_str_or_none(list_row_store, Store.Index.CATEGORY_INCOME.value)
-        self.transfer_target: str = self._get_str_or_none(list_row_store, Store.Index.TRANSFER_ACCOUNT.value)
+        self.name: str = row_data.name
+        self.name_zaim: str = self._get_str_or_none(row_data.name_zaim)
+        self.category_payment_large: str = self._get_str_or_none(row_data.category_payment_large)
+        self.category_payment_small: str = self._get_str_or_none(row_data.category_payment_small)
+        self.category_income: str = self._get_str_or_none(row_data.category_income)
+        self.transfer_target: str = self._get_str_or_none(row_data.transfer_account)
 
     @staticmethod
-    def _get_str_or_none(argument_list: list, index: int) -> str:
-        return argument_list[index] if index < len(argument_list) and argument_list[index] != '' else None
+    def _get_str_or_none(value: str) -> str:
+        return value if value != '' else None
 
     @staticmethod
     def try_to_find(account: Account, store_name: str) -> Store:
