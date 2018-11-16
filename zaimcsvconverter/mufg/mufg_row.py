@@ -13,7 +13,6 @@ from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow, AccountRowData
-from zaimcsvconverter.enum import Account
 from zaimcsvconverter.models import Store
 from zaimcsvconverter.zaim.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow
 
@@ -50,7 +49,7 @@ class MufgRow(AccountRow):
     def __init__(self, list_row_waon: MufgRowData):
         self._date: datetime = datetime.datetime.strptime(list_row_waon.date, "%Y/%m/%d")
         self._summary: str = list_row_waon.summary
-        self._summary_content: Store = Store.try_to_find(Account.MUFG, list_row_waon.summary_content)
+        self._summary_content: Store = self.try_to_find_store(list_row_waon.summary_content)
         self._payed_amount: int = self._convert_string_to_int_or_none(list_row_waon.payed_amount)
         self._deposit_amount: int = self._convert_string_to_int_or_none(list_row_waon.deposit_amount)
         self._balance = int(list_row_waon.balance.replace(',', ''))

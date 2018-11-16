@@ -34,7 +34,7 @@ class TestModel(DatabaseTestCase):
     ])
     def test_try_to_find_success(self, account, store_name, expected_store_name_zaim, expected_transfer_target):
         """Method should return Store model when store name is exist in database."""
-        store = Store.try_to_find(account, store_name)
+        store = Store.try_to_find(account.value, store_name)
         assert store.name == store_name
         assert store.name_zaim == expected_store_name_zaim
         assert store.transfer_target == expected_transfer_target
@@ -42,4 +42,4 @@ class TestModel(DatabaseTestCase):
     def test_try_to_find_failure(self):
         """Method should raise KeyError when store name is not exist in database."""
         with self.assertRaises(KeyError):
-            Store.try_to_find(Account.WAON, '上尾')
+            Store.try_to_find(Account.WAON.value, '上尾')

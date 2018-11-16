@@ -42,7 +42,7 @@ class AccountRow(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def zaim_store(self) -> Store:
+    def zaim_store(self) -> 'Store':
         """
         This property return store in Zaim row.
         """
@@ -110,3 +110,8 @@ class AccountRow(metaclass=ABCMeta):
     def create(row_data: AccountRowData) -> AccountRow:
         """This method creates account row by account row data."""
         pass
+
+    def try_to_find_store(self, store_name) -> Store:
+        from zaimcsvconverter.enum import Account
+        account_dependency = Account.create_by_account_row(self).value
+        return Store.try_to_find(account_dependency, store_name)

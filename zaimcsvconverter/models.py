@@ -6,7 +6,7 @@ This module implements SQLAlchemy database models.
 
 from __future__ import annotations
 
-from typing import NoReturn, List
+from typing import NoReturn, List, TYPE_CHECKING
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from sqlalchemy.orm.exc import NoResultFound
@@ -14,8 +14,9 @@ from sqlalchemy.orm.exc import NoResultFound
 from dataclasses import dataclass
 
 from zaimcsvconverter import ENGINE
-from zaimcsvconverter.enum import FileCsvConvert, Account
 from zaimcsvconverter.session_manager import SessionManager
+if TYPE_CHECKING:
+    from zaimcsvconverter.enum import Account, AccountDependency
 
 Base: DeclarativeMeta = declarative_base()
 
@@ -48,8 +49,8 @@ class Store(Base):
     STORE_KIND_WAON: int = 1
     STORE_KIND_GOLD_POINT_CARD_PLUS: int = 2
 
-    def __init__(self, account: Account, row_data: StoreRowData):
-        self.account_id: int = account.value
+    def __init__(self, account: 'Account', row_data: StoreRowData):
+        self.account_id: int = account.value.id
         self.name: str = row_data.name
         self.name_zaim: str = self._get_str_or_none(row_data.name_zaim)
         self.category_payment_large: str = self._get_str_or_none(row_data.category_payment_large)
@@ -62,31 +63,30 @@ class Store(Base):
         return value if value != '' else None
 
     @staticmethod
-    def try_to_find(account: Account, store_name: str) -> Store:
+    def try_to_find(account_dependency: AccountDependency, store_name: str) -> Store:
         """
         This method select Store model from database. If record is not exist, raise NoResultFound.
         """
         try:
-            return Store.find(account, store_name)
+            return Store.find(account_dependency, store_name)
         except NoResultFound:
             pass
         # ↓ To support Shift JIS
         try:
-            return Store.find(account, store_name.replace("−", "ー"))
+            return Store.find(account_dependency, store_name.replace("−", "ー"))
         except NoResultFound as error:
-            file_csv_convert = FileCsvConvert.create(account)
             raise KeyError(
-                f'"{store_name}" is not defined on {file_csv_convert.value}. ' + 'Please define it.'
+                f'"{store_name}" is not defined on {account_dependency.file_name_csv_convert}. ' + 'Please define it.'
             ) from error
 
     @staticmethod
-    def find(account: Account, store_name: str) -> Store:
+    def find(account_dependency: 'AccountDependency', store_name: str) -> Store:
         """
         This method select Store model from database.
         """
         with SessionManager() as session:
             return session.query(Store).filter(
-                Store.account_id == account.value,
+                Store.account_id == account_dependency.id,
                 Store.name == store_name
             ).one()
 

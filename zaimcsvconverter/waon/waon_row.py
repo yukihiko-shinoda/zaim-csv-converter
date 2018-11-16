@@ -12,7 +12,6 @@ import re
 from dataclasses import dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow, AccountRowData
-from zaimcsvconverter.enum import Account
 from zaimcsvconverter.models import Store
 from zaimcsvconverter.zaim.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow
 
@@ -40,7 +39,7 @@ class WaonRow(AccountRow):
 
     def __init__(self, row_data: WaonRowData):
         self._date: datetime = datetime.datetime.strptime(row_data.date, "%Y/%m/%d")
-        self._used_store: Store = Store.try_to_find(Account.WAON, row_data.used_store)
+        self._used_store: Store = self.try_to_find_store(row_data.used_store)
         matches = re.search(r'([\d,]+)円', row_data.used_amount)
         self._used_amount: int = int(matches.group(1).replace(',', ''))
         self._charge_kind: str = row_data.charge_kind

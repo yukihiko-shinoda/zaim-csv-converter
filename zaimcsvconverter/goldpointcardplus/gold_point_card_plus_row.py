@@ -11,7 +11,6 @@ from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow, AccountRowData
-from zaimcsvconverter.enum import Account
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow
@@ -41,7 +40,7 @@ class GoldPointCardPlusRow(AccountRow):
     """
     def __init__(self, row_data: GoldPointCardPlusRowData):
         self._used_date: datetime = datetime.datetime.strptime(row_data.used_date, "%Y/%m/%d")
-        self._used_store: Store = Store.try_to_find(Account.GOLD_POINT_CARD_PLUS, row_data.used_store)
+        self._used_store: Store = self.try_to_find_store(row_data.used_store)
         self._used_card: str = row_data.used_card
         self._payment_kind: str = row_data.payment_kind
         number_of_division = row_data.number_of_division

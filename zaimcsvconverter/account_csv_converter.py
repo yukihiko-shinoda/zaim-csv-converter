@@ -8,23 +8,23 @@ import csv
 from pathlib import Path
 from typing import NoReturn
 
-from zaimcsvconverter.enum import DirectoryCsv
-from zaimcsvconverter.recipe import Recipe
+from zaimcsvconverter.enum import DirectoryCsv, AccountDependency
 
 
 class AccountCsvConverter:
     """
     This class implements abstract converting steps for CSV.
     """
-    def __init__(self, recipe: Recipe):
-        self.recipe = recipe
+    def __init__(self, path_csv_file: Path, account_dependency: AccountDependency):
+        self._path_csv_file = path_csv_file
+        self._account_dependency = account_dependency
 
     def execute(self) -> NoReturn:
         """
         This method executes CSV convert steps.
         """
         with open(
-                Path(DirectoryCsv.OUTPUT.value) / self.recipe.csv_file.name, 'w', encoding='UTF-8', newline='\n'
+                Path(DirectoryCsv.OUTPUT.value) / self._path_csv_file.name, 'w', encoding='UTF-8', newline='\n'
         ) as file_zaim:
             writer_zaim = csv.writer(file_zaim)
             writer_zaim.writerow([
@@ -48,16 +48,16 @@ class AccountCsvConverter:
             self._convert_from_account(writer_zaim)
 
     def _convert_from_account(self, writer_zaim) -> NoReturn:
-        with self.recipe.csv_file.open('r', encoding=self.recipe.encode) as file_account:
+        with self._path_csv_file.open('r', encoding=self._account_dependency.encode) as file_account:
             reader_account = csv.reader(file_account)
-            if self.recipe.is_including_header:
+            if self._account_dependency.is_including_header:
                 reader_account.__next__()
             self._iterate_convert(reader_account, writer_zaim)
 
     def _iterate_convert(self, reader_account, writer_zaim) -> NoReturn:
         for list_row_account in reader_account:
-            account_row_data = self.recipe.account_row_data_class(*list_row_account)
-            account_row = self.recipe.account_row_class.create(account_row_data)
+            account_row_data = self._account_dependency.account_row_data_class(*list_row_account)
+            account_row = self._account_dependency.account_row_class.create(account_row_data)
             zaim_row = account_row.convert_to_zaim_row()
             list_row_zaim = zaim_row.convert_to_list()
             writer_zaim.writerow(list_row_zaim)

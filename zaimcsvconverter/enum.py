@@ -5,8 +5,18 @@ This module implements constants which suitable module to belong is not defined.
 """
 
 from __future__ import annotations
+
+import re
 from enum import Enum
-from typing import Dict, Any
+from pathlib import Path
+from typing import Type, TYPE_CHECKING
+from dataclasses import dataclass
+
+from zaimcsvconverter.goldpointcardplus.gold_point_card_plus_row import GoldPointCardPlusRowData, GoldPointCardPlusRow
+from zaimcsvconverter.mufg.mufg_row import MufgRowData, MufgRow
+from zaimcsvconverter.waon.waon_row import WaonRowData, WaonRow
+if TYPE_CHECKING:
+    from zaimcsvconverter.account_row import AccountRowData, AccountRow
 
 
 class DirectoryCsv(Enum):
@@ -18,51 +28,81 @@ class DirectoryCsv(Enum):
     OUTPUT: str = './csvoutput/'
 
 
-class FileCsvConvert(Enum):
-    """
-    This class implements constant of file of convert table CSV.
-    """
-    WAON: str = 'waon.csv'
-    GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus.csv'
-    MUFG: str = 'mufg.csv'
-
-    @staticmethod
-    def create(account: Account) -> FileCsvConvert:
-        """
-        This method creates Enum instance by Enum of Account.
-        """
-        return switch({
-            Account.WAON: FileCsvConvert.WAON,
-            Account.GOLD_POINT_CARD_PLUS: FileCsvConvert.GOLD_POINT_CARD_PLUS,
-            Account.MUFG: FileCsvConvert.MUFG
-        }, account)
+@dataclass
+class AccountDependency:
+    """This class implements recipe for converting steps for WAON CSV."""
+    id: int
+    file_name_csv_convert: str
+    regex_csv_file_name: str
+    account_row_data_class: Type[AccountRowData]
+    account_row_class: Type[AccountRow]
+    is_including_header: bool = True
+    encode: str = 'UTF-8'
 
 
 class Account(Enum):
     """
     This class implements constant of account in Zaim.
     """
-    WAON: int = 1
-    GOLD_POINT_CARD_PLUS: int = 2
-    MUFG: int = 3
+    WAON: AccountDependency = AccountDependency(
+        1,
+        'waon.csv',
+        r'.*waon.*\.csv',
+        WaonRowData,
+        WaonRow
+    )
+    GOLD_POINT_CARD_PLUS: AccountDependency = AccountDependency(
+        2,
+        'gold_point_card_plus.csv',
+        r'.*gold_point_card_plus.*\.csv',
+        GoldPointCardPlusRowData,
+        GoldPointCardPlusRow,
+        False,
+        'shift_jis_2004'
+    )
+    MUFG: AccountDependency = AccountDependency(
+        3,
+        'mufg.csv',
+        r'.*mufg.*\.csv',
+        MufgRowData,
+        MufgRow,
+        True,
+        'shift_jis_2004'
+    )
+
+    @property
+    def value(self) -> AccountDependency:
+        """This method overwrite super method for type hint."""
+        return super().value
 
     @staticmethod
-    def create(account: FileCsvConvert) -> Account:
+    def create_by_path_csv_convert(path: Path) -> Account:
         """
-        This method creates Enum instance by Enum of CSV convert file.
+        This method creates Enum instance by path to CSV convert file.
         """
-        return switch({
-            FileCsvConvert.WAON: Account.WAON,
-            FileCsvConvert.GOLD_POINT_CARD_PLUS: Account.GOLD_POINT_CARD_PLUS,
-            FileCsvConvert.MUFG: Account.MUFG,
-        }, account)
+        # noinspection PyUnusedLocal
+        account: Account
+        for account in Account:
+            if path.name == account.value.file_name_csv_convert:
+                return account
+        raise ValueError('can\'t detect account type by csv file name. Please confirm csv file name.')
 
+    @staticmethod
+    def create_by_path_csv_input(path: Path) -> Account:
+        """This function create correct setting instance by argument."""
+        # noinspection PyUnusedLocal
+        account: Account
+        for account in Account:
+            if re.search(account.value.regex_csv_file_name, path.name):
+                return account
+        raise ValueError('can\'t detect account type by csv file name. Please confirm csv file name.')
 
-def switch(dictionary: Dict, key: Enum) -> Any:
-    """
-    This method return value of dictionary. If key is not in dictionary, raise ValueError.
-    """
-    value = dictionary.get(key)
-    if value is None:
-        raise ValueError(f'"{key.name}" is not supported.')
-    return value
+    @staticmethod
+    def create_by_account_row(account_row: AccountRow) -> Account:
+        """This function create correct setting instance by argument."""
+        # noinspection PyUnusedLocal
+        account: Account
+        for account in Account:
+            if isinstance(account_row, account.value.account_row_class):
+                return account
+        raise ValueError('can\'t detect account type by csv file name. Please confirm csv file name.')
