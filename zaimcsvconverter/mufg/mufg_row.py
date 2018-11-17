@@ -30,9 +30,9 @@ class CashFlowKind(Enum):
 @dataclass
 class MufgRowData(AccountRowData):
     """This class implements data class for wrapping list of MUFG bunk CSV row model."""
-    date: str
+    _date: str
     summary: str
-    summary_content: str
+    _summary_content: str
     payed_amount: str
     deposit_amount: str
     balance: str
@@ -40,21 +40,31 @@ class MufgRowData(AccountRowData):
     is_uncapitalized: str
     cash_flow_kind: str
 
+    @property
+    def date(self) -> datetime:
+        """This property returns date as datetime."""
+        return datetime.datetime.strptime(self._date, "%Y/%m/%d")
+
+    @property
+    def store_name(self) -> str:
+        """This property returns store name."""
+        return self._summary_content
+
 
 # pylint: disable=too-many-instance-attributes
 class MufgRow(AccountRow):
     """
     This class implements row model of MUFG bank CSV.
     """
-    def __init__(self, list_row_waon: MufgRowData):
-        self._date: datetime = datetime.datetime.strptime(list_row_waon.date, "%Y/%m/%d")
-        self._summary: str = list_row_waon.summary
-        self._summary_content: Store = self.try_to_find_store(list_row_waon.summary_content)
-        self._payed_amount: int = self._convert_string_to_int_or_none(list_row_waon.payed_amount)
-        self._deposit_amount: int = self._convert_string_to_int_or_none(list_row_waon.deposit_amount)
-        self._balance = int(list_row_waon.balance.replace(',', ''))
-        self._note: str = list_row_waon.note
-        self._is_uncapitalized: str = list_row_waon.is_uncapitalized
+    def __init__(self, row_data: MufgRowData):
+        self._date: datetime = row_data.date
+        self._summary: str = row_data.summary
+        self._summary_content: Store = self.try_to_find_store(row_data.store_name)
+        self._payed_amount: int = self._convert_string_to_int_or_none(row_data.payed_amount)
+        self._deposit_amount: int = self._convert_string_to_int_or_none(row_data.deposit_amount)
+        self._balance = int(row_data.balance.replace(',', ''))
+        self._note: str = row_data.note
+        self._is_uncapitalized: str = row_data.is_uncapitalized
 
     @staticmethod
     def _convert_string_to_int_or_none(string) -> Union[int, None]:

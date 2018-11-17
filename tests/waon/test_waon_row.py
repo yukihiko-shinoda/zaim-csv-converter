@@ -26,7 +26,8 @@ class TestWaonRow(DatabaseTestCase):
         """
         waon_row = WaonPaymentRow(waon_row_data)
         self.assertEqual(waon_row.zaim_date, expected_date)
-        self.assertEqual(waon_row.zaim_store.name, waon_row_data.used_store)
+        # pylint: disable=protected-access
+        self.assertEqual(waon_row.zaim_store.name, waon_row_data._used_store)
         self.assertEqual(waon_row.zaim_store.name_zaim, expexted_store_name_zaim)
         # pylint: disable=protected-access
         self.assertEqual(waon_row._used_amount, expected_use_amount)

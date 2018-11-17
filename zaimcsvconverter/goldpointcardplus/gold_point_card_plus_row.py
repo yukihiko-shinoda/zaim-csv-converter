@@ -19,8 +19,8 @@ if TYPE_CHECKING:
 @dataclass
 class GoldPointCardPlusRowData(AccountRowData):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
-    used_date: str
-    used_store: str
+    _used_date: str
+    _used_store: str
     used_card: str
     payment_kind: str
     number_of_division: str
@@ -33,14 +33,24 @@ class GoldPointCardPlusRowData(AccountRowData):
     unknown_5: str
     unknown_6: str
 
+    @property
+    def date(self) -> datetime:
+        """This property returns date as datetime."""
+        return datetime.datetime.strptime(self._used_date, "%Y/%m/%d")
+
+    @property
+    def store_name(self) -> str:
+        """This property returns store name."""
+        return self._used_store
+
 
 class GoldPointCardPlusRow(AccountRow):
     """
     This class implements row model of GOLD POINT CARD+ CSV.
     """
     def __init__(self, row_data: GoldPointCardPlusRowData):
-        self._used_date: datetime = datetime.datetime.strptime(row_data.used_date, "%Y/%m/%d")
-        self._used_store: Store = self.try_to_find_store(row_data.used_store)
+        self._used_date: datetime = row_data.date
+        self._used_store: Store = self.try_to_find_store(row_data.store_name)
         self._used_card: str = row_data.used_card
         self._payment_kind: str = row_data.payment_kind
         number_of_division = row_data.number_of_division

@@ -59,7 +59,7 @@ class TestGoldPointCardPlusRow(DatabaseTestCase):
         row = GoldPointCardPlusRow(gold_point_card_plus_row_data)
         self.assertEqual(row.zaim_date, expected_date)
         self.assertIsInstance(row.zaim_store, Store)
-        self.assertEqual(row.zaim_store.name, gold_point_card_plus_row_data.used_store)
+        self.assertEqual(row.zaim_store.name, gold_point_card_plus_row_data._used_store)
         self.assertEqual(row.zaim_store.name_zaim, expected_store_name_zaim)
         self.assertEqual(row._used_card, gold_point_card_plus_row_data.used_card)
         self.assertEqual(row._payment_kind, gold_point_card_plus_row_data.payment_kind)

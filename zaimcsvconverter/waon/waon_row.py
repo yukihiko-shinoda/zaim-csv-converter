@@ -19,11 +19,21 @@ from zaimcsvconverter.zaim.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransfer
 @dataclass
 class WaonRowData(AccountRowData):
     """This class implements data class for wrapping list of WAON CSV row model."""
-    date: str
-    used_store: str
+    _date: str
+    _used_store: str
     used_amount: str
     use_kind: str
     charge_kind: str
+
+    @property
+    def date(self) -> datetime:
+        """This property returns date as datetime."""
+        return datetime.datetime.strptime(self._date, "%Y/%m/%d")
+
+    @property
+    def store_name(self) -> str:
+        """This property returns store name."""
+        return self._used_store
 
 
 class WaonRow(AccountRow):
@@ -38,8 +48,8 @@ class WaonRow(AccountRow):
         AUTO_CHARGE: str = 'オートチャージ'
 
     def __init__(self, row_data: WaonRowData):
-        self._date: datetime = datetime.datetime.strptime(row_data.date, "%Y/%m/%d")
-        self._used_store: Store = self.try_to_find_store(row_data.used_store)
+        self._date: datetime = row_data.date
+        self._used_store: Store = self.try_to_find_store(row_data.store_name)
         matches = re.search(r'([\d,]+)円', row_data.used_amount)
         self._used_amount: int = int(matches.group(1).replace(',', ''))
         self._charge_kind: str = row_data.charge_kind

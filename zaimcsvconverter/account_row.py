@@ -20,6 +20,18 @@ class AccountRowData(metaclass=ABCMeta):
     def __init__(self, *args):
         pass
 
+    @property
+    @abstractmethod
+    def date(self) -> datetime:
+        """This property returns date as datetime."""
+        pass
+
+    @property
+    @abstractmethod
+    def store_name(self) -> str:
+        """This property returns store name."""
+        pass
+
 
 class AccountRow(metaclass=ABCMeta):
     """
@@ -112,6 +124,7 @@ class AccountRow(metaclass=ABCMeta):
         pass
 
     def try_to_find_store(self, store_name) -> Store:
+        """This method select store from database and return it as Store model."""
         from zaimcsvconverter.enum import Account
         account_dependency = Account.create_by_account_row(self).value
         return Store.try_to_find(account_dependency, store_name)

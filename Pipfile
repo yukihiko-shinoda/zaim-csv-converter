@@ -7,7 +7,7 @@ name = "pypi"
 pyyaml = "==3.13"
 sqlalchemy = "==1.2.13"
 factory_boy = "==2.11.1"
-pylint = "*"
+numpy = "==1.15.4"
 
 [dev-packages]
 unittest2 = "*"

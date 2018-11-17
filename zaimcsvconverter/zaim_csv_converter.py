@@ -7,6 +7,7 @@ This module implements converting steps from account CSV to Zaim CSV.
 import csv
 from pathlib import Path
 from typing import List, NoReturn
+import numpy
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_csv_converter import AccountCsvConverter
@@ -18,6 +19,8 @@ class ZaimCsvConverter:
     """
     This class implements converting steps from account CSV to Zaim CSV.
     """
+    FILE_NAME_ERROR = 'error.csv'
+
     def __init__(self):
         CONFIG.load()
         initialize_database()
@@ -41,5 +44,19 @@ class ZaimCsvConverter:
         """
         This method executes all CSV converters.
         """
+        list_undefined_store = []
         for csv_converter in self.list_csv_converter:
-            csv_converter.execute()
+            try:
+                csv_converter.execute()
+            except KeyError:
+                list_undefined_store.extend(csv_converter.list_undefined_store)
+                continue
+        if list_undefined_store:
+            list_undefined_store = numpy.unique(list_undefined_store, axis=0).tolist()
+            with open(
+                    Path(DirectoryCsv.OUTPUT.value) / self.FILE_NAME_ERROR, 'w', encoding='UTF-8', newline='\n'
+            ) as file_error:
+                writer_error = csv.writer(file_error)
+                for undefined_store in list_undefined_store:
+                    writer_error.writerow(undefined_store)
+            raise KeyError(f'Undefined store name in convert table CSV exists. Please check ')
