@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 from zaimcsvconverter.models import Store
 
 if TYPE_CHECKING:
-    from zaimcsvconverter.zaim.zaim_row import ZaimRow
+    from zaimcsvconverter.zaim_row import ZaimRow
 
 
 class AccountRowData(metaclass=ABCMeta):

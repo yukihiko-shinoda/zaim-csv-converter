@@ -13,7 +13,7 @@ from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow, AccountRowData
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
-    from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow
+    from zaimcsvconverter.zaim_row import ZaimPaymentRow
 
 
 @dataclass
@@ -61,7 +61,7 @@ class GoldPointCardPlusRow(AccountRow):
         self._used_amount: int = int(row_data.used_amount)
 
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
-        from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow
+        from zaimcsvconverter.zaim_row import ZaimPaymentRow
         return ZaimPaymentRow(self)
 
     @property

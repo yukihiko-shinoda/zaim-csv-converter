@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow, AccountRowData
 from zaimcsvconverter.models import Store
-from zaimcsvconverter.zaim.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow
+from zaimcsvconverter.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow
 
 
 @dataclass

@@ -6,7 +6,7 @@ import parameterized
 
 from tests.database_test import StoreFactory, DatabaseTestCase
 from zaimcsvconverter.enum import Account
-from zaimcsvconverter.goldpointcardplus.gold_point_card_plus_row import GoldPointCardPlusRow, GoldPointCardPlusRowData
+from zaimcsvconverter.account.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData
 from zaimcsvconverter.models import Store, StoreRowData
 
 

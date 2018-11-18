@@ -6,7 +6,7 @@ import parameterized
 
 from tests.database_test import DatabaseTestCase
 from tests.waon import prepare_fixture
-from zaimcsvconverter.waon.waon_row import WaonRow, WaonPaymentRow, WaonAutoChargeRow, WaonRowData
+from zaimcsvconverter.account.waon import WaonRow, WaonPaymentRow, WaonAutoChargeRow, WaonRowData
 
 
 class TestWaonRow(DatabaseTestCase):
