@@ -6,7 +6,7 @@ This module implements test for waon module.
 from typing import NoReturn
 
 from tests.database_test import StoreFactory
-from zaimcsvconverter.enum import Account
+from zaimcsvconverter.account_dependency import Account
 from zaimcsvconverter.models import StoreRowData
 
 

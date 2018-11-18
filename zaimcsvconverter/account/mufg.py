@@ -145,10 +145,6 @@ class MufgAbstractIncomeRow(MufgRow):
     """
     This class implements abstract income row model of MUFG bank CSV.
     """
-    @abstractmethod
-    def convert_to_zaim_row(self):
-        pass
-
     @property
     @abstractmethod
     def _cash_flow_source_on_zaim(self) -> str:
@@ -167,10 +163,6 @@ class MufgAbstractPaymentRow(MufgRow):
     """
     This class implements abstract payment row model of MUFG bank CSV.
     """
-    @abstractmethod
-    def convert_to_zaim_row(self):
-        pass
-
     @property
     def _cash_flow_source_on_zaim(self) -> str:
         return CONFIG.mufg.account_name

@@ -11,7 +11,7 @@ import numpy
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_csv_converter import AccountCsvConverter
-from zaimcsvconverter.enum import DirectoryCsv, Account
+from zaimcsvconverter.account_dependency import DirectoryCsv, Account
 from zaimcsvconverter.models import initialize_database, Store, StoreRowData
 
 
@@ -59,4 +59,4 @@ class ZaimCsvConverter:
                 writer_error = csv.writer(file_error)
                 for undefined_store in list_undefined_store:
                     writer_error.writerow(undefined_store)
-            raise KeyError(f'Undefined store name in convert table CSV exists. Please check ')
+            raise KeyError(f'Undefined store name in convert table CSV exists. Please check {self.FILE_NAME_ERROR}.')

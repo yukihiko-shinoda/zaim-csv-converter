@@ -37,6 +37,10 @@ class AccountRow(metaclass=ABCMeta):
     """
     This class implements row model of CSV.
     """
+    @property
+    def is_row_to_skip(self) -> bool:
+        return False
+
     @abstractmethod
     def convert_to_zaim_row(self) -> 'ZaimRow':
         """
@@ -116,7 +120,6 @@ class AccountRow(metaclass=ABCMeta):
         """
         pass
 
-
     @staticmethod
     @abstractmethod
     def create(row_data: AccountRowData) -> AccountRow:
@@ -125,6 +128,6 @@ class AccountRow(metaclass=ABCMeta):
 
     def try_to_find_store(self, store_name) -> Store:
         """This method select store from database and return it as Store model."""
-        from zaimcsvconverter.enum import Account
+        from zaimcsvconverter.account_dependency import Account
         account_dependency = Account.create_by_account_row(self).value
         return Store.try_to_find(account_dependency, store_name)

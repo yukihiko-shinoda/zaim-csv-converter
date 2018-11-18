@@ -10,7 +10,7 @@ from typing import NoReturn, List
 
 import numpy
 
-from zaimcsvconverter.enum import DirectoryCsv, AccountDependency
+from zaimcsvconverter.account_dependency import DirectoryCsv, AccountDependency
 
 
 class AccountCsvConverter:
@@ -53,8 +53,15 @@ class AccountCsvConverter:
     def _convert_from_account(self, writer_zaim) -> NoReturn:
         with self._path_csv_file.open('r', encoding=self._account_dependency.encode) as file_account:
             reader_account = csv.reader(file_account)
-            if self._account_dependency.is_including_header:
-                reader_account.__next__()
+            if self._account_dependency.csv_header:
+                try:
+                    while reader_account.__next__() != self._account_dependency.csv_header:
+                        pass
+                except StopIteration as error:
+                    raise StopIteration(
+                        'CSV doesn\'t include header row. Please confirm AccountDependency.csv_header. '
+                        + f'AccountDependency.csv_header = {self._account_dependency.csv_header}'
+                    ) from error
             self._iterate_convert(reader_account, writer_zaim)
 
     def _iterate_convert(self, reader_account, writer_zaim) -> NoReturn:
@@ -68,6 +75,8 @@ class AccountCsvConverter:
                     self._account_dependency.file_name_csv_convert,
                     account_row_data.store_name
                 ])
+                continue
+            if account_row.is_row_to_skip:
                 continue
             zaim_row = account_row.convert_to_zaim_row()
             list_row_zaim = zaim_row.convert_to_list()

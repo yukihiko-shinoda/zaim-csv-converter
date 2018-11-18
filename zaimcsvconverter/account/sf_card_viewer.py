@@ -1,0 +1,157 @@
+#!/usr/bin/env python
+
+"""
+This module implements row model of SF Card Viewer CSV.
+"""
+
+from __future__ import annotations
+import datetime
+from abc import abstractmethod
+from enum import Enum
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
+
+from zaimcsvconverter import CONFIG
+from zaimcsvconverter.account_row import AccountRow, AccountRowData
+from zaimcsvconverter.models import Store
+if TYPE_CHECKING:
+    from zaimcsvconverter.zaim_row import ZaimPaymentRow
+    from zaimcsvconverter.zaim_row import ZaimTransferRow
+
+
+class Note(Enum):
+    """
+    This class implements constant of note in SF Card Viewer CSV.
+    """
+    EMPTY: str = ''
+    SALES_GOODS: str = '物販'
+    AUTO_CHARGE: str = 'ｵｰﾄﾁｬｰｼﾞ'
+
+
+@dataclass
+class SFCardViewerRowData(AccountRowData):
+    """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
+    _used_date: str
+    is_commuter_pass_enter: str
+    railway_company_name_enter: str
+    station_name_enter: str
+    is_commuter_pass_exit: str
+    railway_company_name_exit: str
+    _station_name_exit: str
+    used_amount: str
+    balance: str
+    note: str
+
+    @property
+    def date(self) -> datetime:
+        """This property returns date as datetime."""
+        return datetime.datetime.strptime(self._used_date, "%Y/%m/%d")
+
+    @property
+    def store_name(self) -> str:
+        """This property returns store name."""
+        return self._station_name_exit
+
+
+# pylint: disable=too-many-instance-attributes
+class SFCardViewerRow(AccountRow):
+    """
+    This class implements row model of SF Card Viewer CSV.
+    """
+    def __init__(self, row_data: SFCardViewerRowData):
+        self._used_date: datetime = row_data.date
+        self._is_commuter_pass_enter: str = row_data.is_commuter_pass_enter
+        self._railway_company_name_enter: str = row_data.railway_company_name_enter
+        self._station_name_enter: str = row_data.station_name_enter
+        self._is_commuter_pass_exit: str = row_data.is_commuter_pass_exit
+        self._railway_company_name_exit: str = row_data.railway_company_name_exit
+        self._station_name_exit: Store = self.try_to_find_store(row_data.store_name)
+        self._used_amount: int = int(row_data.used_amount)
+        self._balance: int = int(row_data.balance)
+        self._note: str = str(row_data.note)
+
+    @abstractmethod
+    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+        pass
+
+    @property
+    def zaim_date(self) -> datetime:
+        return self._used_date
+
+    @property
+    def zaim_store(self) -> Store:
+        return self._station_name_exit
+
+    @property
+    def zaim_income_cash_flow_target(self) -> str:
+        raise ValueError('Income row for SF Card Viewer is not defined. Please confirm CSV file.')
+
+    @property
+    def zaim_income_ammount_income(self) -> int:
+        raise ValueError('Income row for SF Card Viewer is not defined. Please confirm CSV file.')
+
+    @property
+    def zaim_payment_cash_flow_source(self) -> str:
+        return CONFIG.pasmo.account_name
+
+    @property
+    def zaim_payment_amount_payment(self) -> int:
+        return self._used_amount
+
+    @property
+    def zaim_transfer_cash_flow_source(self) -> str:
+        return CONFIG.pasmo.auto_charge_source
+
+    @property
+    def zaim_transfer_cash_flow_target(self) -> str:
+        return CONFIG.pasmo.account_name
+
+    @property
+    def zaim_transfer_amount_transfer(self) -> int:
+        return -1 * self._used_amount
+
+    @staticmethod
+    def create(row_data: SFCardViewerRowData) -> SFCardViewerRow:
+        try:
+            note = Note(row_data.note)
+        except ValueError as error:
+            raise NotImplementedError(
+                f'The value of "Note" has not been defined in this code. Note = {row_data.note}'
+            ) from error
+
+        return {
+            Note.EMPTY: SFCardViewerTransportationRow(row_data),
+            Note.SALES_GOODS: SFCardViewerSalesGoodsRow(row_data),
+            Note.AUTO_CHARGE: SFCardViewerAutoChargeRow(row_data)
+        }.get(note)
+
+
+class SFCardViewerTransportationRow(SFCardViewerRow):
+    """
+    This class implements transportation row model of SF Card Viewer CSV.
+    """
+    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+        from zaimcsvconverter.zaim_row import ZaimPaymentRow
+        return ZaimPaymentRow(self)
+
+
+class SFCardViewerSalesGoodsRow(SFCardViewerRow):
+    """
+    This class implements sales goods row model of SF Card Viewer CSV.
+    """
+    @property
+    def is_row_to_skip(self) -> bool:
+        return CONFIG.pasmo.skip_sales_goods_row
+
+    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+        from zaimcsvconverter.zaim_row import ZaimPaymentRow
+        return ZaimPaymentRow(self)
+
+
+class SFCardViewerAutoChargeRow(SFCardViewerRow):
+    """
+    This class implements auto charge row model of SF Card Viewer CSV.
+    """
+    def convert_to_zaim_row(self) -> 'ZaimTransferRow':
+        from zaimcsvconverter.zaim_row import ZaimTransferRow
+        return ZaimTransferRow(self)

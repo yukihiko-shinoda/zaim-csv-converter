@@ -3,7 +3,7 @@
 from parameterized import parameterized
 
 from tests.database_test import DatabaseTestCase, StoreFactory
-from zaimcsvconverter.enum import Account
+from zaimcsvconverter.account_dependency import Account
 from zaimcsvconverter.models import Store, StoreRowData
 
 

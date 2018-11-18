@@ -21,6 +21,7 @@ class AccountKey(Enum):
     WAON: str = 'waon'
     GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus'
     MUFG: str = 'mufg'
+    PASMO: str = 'pasmo'
 
 
 class AccountConfig(metaclass=ABCMeta):
@@ -34,6 +35,7 @@ class AccountConfig(metaclass=ABCMeta):
             AccountKey.WAON: WaonConfig,
             AccountKey.GOLD_POINT_CARD_PLUS: GoldPointCardPlusConfig,
             AccountKey.MUFG: MufgConfig,
+            AccountKey.PASMO: PasmoConfig,
         }.get(account_key)
         try:
             return account_config_class(**dict_account_config)
@@ -72,6 +74,16 @@ class MufgConfig(AccountConfig):
 
 
 @dataclass
+class PasmoConfig(AccountConfig):
+    """
+    This class implements configuration for PASMO.
+    """
+    account_name: str
+    auto_charge_source: str
+    skip_sales_goods_row: bool
+
+
+@dataclass
 class Config:
     """
     This class implements configuration wrapping.
@@ -79,6 +91,7 @@ class Config:
     waon: WaonConfig = None
     gold_point_card_plus: GoldPointCardPlusConfig = None
     mufg: MufgConfig = None
+    pasmo: PasmoConfig = None
     FILE_CONFIG: str = field(default='./config.yml', init=False)
 
     def load(self):

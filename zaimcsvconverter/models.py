@@ -7,7 +7,7 @@ This module implements SQLAlchemy database models.
 from __future__ import annotations
 
 from typing import NoReturn, List, TYPE_CHECKING
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from zaimcsvconverter import ENGINE
 from zaimcsvconverter.session_manager import SessionManager
 if TYPE_CHECKING:
-    from zaimcsvconverter.enum import Account, AccountDependency
+    from zaimcsvconverter.account_dependency import Account, AccountDependency
 
 Base: DeclarativeMeta = declarative_base()
 
@@ -40,7 +40,7 @@ class Store(Base):
 
     id: Column = Column(Integer, primary_key=True)
     account_id: Column = Column(Integer)
-    name: Column = Column(String(255), unique=True)
+    name: Column = Column(String(255))
     name_zaim: Column = Column(String(255))
     category_payment_large: Column = Column(String(255))
     category_payment_small: Column = Column(String(255))
@@ -48,6 +48,7 @@ class Store(Base):
     transfer_target: Column = Column(String(255))
     STORE_KIND_WAON: int = 1
     STORE_KIND_GOLD_POINT_CARD_PLUS: int = 2
+    __table_args__ = (UniqueConstraint('account_id', 'name', name='_name_on_each_account_uc'),)
 
     def __init__(self, account: 'Account', row_data: StoreRowData):
         self.account_id: int = account.value.id

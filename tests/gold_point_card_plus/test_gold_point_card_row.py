@@ -5,7 +5,7 @@ from datetime import datetime
 import parameterized
 
 from tests.database_test import StoreFactory, DatabaseTestCase
-from zaimcsvconverter.enum import Account
+from zaimcsvconverter.account_dependency import Account
 from zaimcsvconverter.account.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData
 from zaimcsvconverter.models import Store, StoreRowData
 
