@@ -12,8 +12,9 @@ from typing import Union
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountRowData
+from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData
 from zaimcsvconverter.models import Store
+from zaimcsvconverter.unility import Utility
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow
 
 
@@ -28,7 +29,7 @@ class CashFlowKind(Enum):
 
 
 @dataclass
-class MufgRowData(AccountRowData):
+class MufgRowData(AccountStoreRowData):
     """This class implements data class for wrapping list of MUFG bunk CSV row model."""
     _date: str
     summary: str
@@ -60,8 +61,8 @@ class MufgRow(AccountRow):
         self._date: datetime = row_data.date
         self._summary: str = row_data.summary
         self._summary_content: Store = self.try_to_find_store(row_data.store_name)
-        self._payed_amount: int = self._convert_string_to_int_or_none(row_data.payed_amount)
-        self._deposit_amount: int = self._convert_string_to_int_or_none(row_data.deposit_amount)
+        self._payed_amount: int = Utility.convert_string_to_int_or_none(row_data.payed_amount)
+        self._deposit_amount: int = Utility.convert_string_to_int_or_none(row_data.deposit_amount)
         self._balance = int(row_data.balance.replace(',', ''))
         self._note: str = row_data.note
         self._is_uncapitalized: str = row_data.is_uncapitalized
@@ -133,12 +134,14 @@ class MufgRow(AccountRow):
                 + row_data.cash_flow_kind
             ) from error
 
-        return {
-            CashFlowKind.INCOME: MufgIncomeRow(row_data),
-            CashFlowKind.PAYMENT: MufgPaymentRow(row_data),
-            CashFlowKind.TRANSFER_INCOME: MufgTransferIncomeRow(row_data),
-            CashFlowKind.TRANSFER_PAYMENT: MufgTransferPaymentRow(row_data)
+        mufg_row_class = {
+            CashFlowKind.INCOME: MufgIncomeRow,
+            CashFlowKind.PAYMENT: MufgPaymentRow,
+            CashFlowKind.TRANSFER_INCOME: MufgTransferIncomeRow,
+            CashFlowKind.TRANSFER_PAYMENT: MufgTransferPaymentRow,
         }.get(cash_flow_kind)
+
+        return mufg_row_class(row_data)
 
 
 class MufgAbstractIncomeRow(MufgRow):

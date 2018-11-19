@@ -12,7 +12,7 @@ import numpy
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_csv_converter import AccountCsvConverter
 from zaimcsvconverter.account_dependency import DirectoryCsv, Account
-from zaimcsvconverter.models import initialize_database, Store, StoreRowData
+from zaimcsvconverter.models import initialize_database, Store, StoreRowData, Item, ItemRowData
 
 
 class ZaimCsvConverter:
@@ -25,20 +25,25 @@ class ZaimCsvConverter:
         CONFIG.load()
         initialize_database()
         for path in Path(DirectoryCsv.CONVERT.value).glob('*.csv'):
-            self._import_store_to_database(path)
+            self._import_convert_table_to_database(path)
         self.list_csv_converter: List[AccountCsvConverter] = []
         for path in Path(DirectoryCsv.INPUT.value).glob('*.csv'):
             self.list_csv_converter.append(AccountCsvConverter(path, Account.create_by_path_csv_input(path).value))
 
     @staticmethod
-    def _import_store_to_database(path: Path):
+    def _import_convert_table_to_database(path: Path):
         account = Account.create_by_path_csv_convert(path)
-        with path.open('r', encoding='UTF-8') as file_store:
-            reader_store = csv.reader(file_store)
-            stores: List[Store] = []
-            for list_row_store in reader_store:
-                stores.append(Store(account, StoreRowData(*list_row_store)))
-            Store.save_all(stores)
+        with path.open('r', encoding='UTF-8') as file_convert_table:
+            reader_convert_table = csv.reader(file_convert_table)
+            model_class = account.value.convert_table_model_class
+            row_data_class = {
+                Store: StoreRowData,
+                Item: ItemRowData,
+            }.get(model_class)
+            list_convert_table: List[model_class] = []
+            for list_row_convert_table in reader_convert_table:
+                list_convert_table.append(model_class(account, row_data_class(*list_row_convert_table)))
+            model_class.save_all(list_convert_table)
 
     def execute(self) -> NoReturn:
         """
@@ -49,7 +54,7 @@ class ZaimCsvConverter:
             try:
                 csv_converter.execute()
             except KeyError:
-                list_undefined_store.extend(csv_converter.list_undefined_store)
+                list_undefined_store.extend(csv_converter.list_undefined_content)
                 continue
         if list_undefined_store:
             list_undefined_store = numpy.unique(list_undefined_store, axis=0).tolist()

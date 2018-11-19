@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountRowData
+from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
@@ -29,7 +29,7 @@ class Note(Enum):
 
 
 @dataclass
-class SFCardViewerRowData(AccountRowData):
+class SFCardViewerRowData(AccountStoreRowData):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
     _used_date: str
     is_commuter_pass_enter: str
@@ -119,11 +119,13 @@ class SFCardViewerRow(AccountRow):
                 f'The value of "Note" has not been defined in this code. Note = {row_data.note}'
             ) from error
 
-        return {
-            Note.EMPTY: SFCardViewerTransportationRow(row_data),
-            Note.SALES_GOODS: SFCardViewerSalesGoodsRow(row_data),
-            Note.AUTO_CHARGE: SFCardViewerAutoChargeRow(row_data)
+        sf_card_viewer_row_class = {
+            Note.EMPTY: SFCardViewerTransportationRow,
+            Note.SALES_GOODS: SFCardViewerSalesGoodsRow,
+            Note.AUTO_CHARGE: SFCardViewerAutoChargeRow,
         }.get(note)
+
+        return sf_card_viewer_row_class(row_data)
 
 
 class SFCardViewerTransportationRow(SFCardViewerRow):

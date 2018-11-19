@@ -9,15 +9,19 @@ from __future__ import annotations
 from enum import Enum
 from pathlib import Path
 import re
-from typing import Type, TYPE_CHECKING, List, Union
+from typing import Type, List, Union, TypeVar, Generic
 from dataclasses import dataclass
 
+from zaimcsvconverter.account.amazon import AmazonRowData, AmazonRow
 from zaimcsvconverter.account.gold_point_card_plus import GoldPointCardPlusRowData, GoldPointCardPlusRow
 from zaimcsvconverter.account.mufg import MufgRowData, MufgRow
 from zaimcsvconverter.account.sf_card_viewer import SFCardViewerRowData, SFCardViewerRow
 from zaimcsvconverter.account.waon import WaonRowData, WaonRow
-if TYPE_CHECKING:
-    from zaimcsvconverter.account_row import AccountRowData, AccountRow
+from zaimcsvconverter.account_row import AccountRow, AccountRowData
+from zaimcsvconverter.models import Base, Item, Store
+
+BaseTV = TypeVar('BaseTV', bound=Base)
+AccountRowDataTV = TypeVar('AccountRowDataTV', bound=AccountRowData)
 
 
 class DirectoryCsv(Enum):
@@ -35,7 +39,11 @@ class AccountDependency:
     id: int
     file_name_csv_convert: str
     regex_csv_file_name: str
-    account_row_data_class: Type[AccountRowData]
+    # @see https://github.com/PyCQA/pylint/issues/2416
+    # pylint: disable=unsubscriptable-object
+    convert_table_model_class: Generic[BaseTV]
+    # pylint: disable=unsubscriptable-object
+    account_row_data_class: Generic[AccountRowDataTV]
     account_row_class: Type[AccountRow]
     encode: str = 'UTF-8'
     csv_header: Union[List[str], None] = None
@@ -49,6 +57,7 @@ class Account(Enum):
         1,
         'waon.csv',
         r'.*waon.*\.csv',
+        Store,
         WaonRowData,
         WaonRow,
         'UTF-8',
@@ -58,6 +67,7 @@ class Account(Enum):
         2,
         'gold_point_card_plus.csv',
         r'.*gold_point_card_plus.*\.csv',
+        Store,
         GoldPointCardPlusRowData,
         GoldPointCardPlusRow,
         'shift_jis_2004'
@@ -66,6 +76,7 @@ class Account(Enum):
         3,
         'mufg.csv',
         r'.*mufg.*\.csv',
+        Store,
         MufgRowData,
         MufgRow,
         'shift_jis_2004',
@@ -75,10 +86,25 @@ class Account(Enum):
         4,
         'sp_card_viewer.csv',
         r'.*pasmo.*\.csv',
+        Store,
         SFCardViewerRowData,
         SFCardViewerRow,
         'shift_jis_2004',
         ['利用年月日', '定期', '鉄道会社名', '入場駅/事業者名', '定期', '鉄道会社名', '出場駅/降車場所', '利用額(円)', '残額(円)', 'メモ']
+    )
+    AMAZON: AccountDependency = AccountDependency(
+        5,
+        'amazon.csv',
+        r'.*amazon.*\.csv',
+        Item,
+        AmazonRowData,
+        AmazonRow,
+        'utf-8-sig',
+        [
+            '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
+            'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
+            '注文概要URL', '領収書URL', '商品URL'
+        ]
     )
 
     @property

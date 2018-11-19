@@ -10,14 +10,14 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountRowData
+from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
 
 
 @dataclass
-class GoldPointCardPlusRowData(AccountRowData):
+class GoldPointCardPlusRowData(AccountStoreRowData):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
     _used_date: str
     _used_store: str

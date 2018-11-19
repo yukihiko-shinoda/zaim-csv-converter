@@ -11,13 +11,13 @@ from enum import Enum
 import re
 from dataclasses import dataclass
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountRowData
+from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData
 from zaimcsvconverter.models import Store
 from zaimcsvconverter.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow
 
 
 @dataclass
-class WaonRowData(AccountRowData):
+class WaonRowData(AccountStoreRowData):
     """This class implements data class for wrapping list of WAON CSV row model."""
     _date: str
     _used_store: str
@@ -103,10 +103,12 @@ class WaonRow(AccountRow):
                 'The value of "Use kind" has not been defined in this code. Use kind =' + row_data.use_kind
             ) from error
 
-        return {
-            WaonRow.UseKind.PAYMENT: WaonPaymentRow(row_data),
-            WaonRow.UseKind.AUTO_CHARGE: WaonAutoChargeRow(row_data)
+        waon_row_class = {
+            WaonRow.UseKind.PAYMENT: WaonPaymentRow,
+            WaonRow.UseKind.AUTO_CHARGE: WaonAutoChargeRow,
         }.get(use_kind)
+
+        return waon_row_class(row_data)
 
 
 class WaonPaymentRow(WaonRow):

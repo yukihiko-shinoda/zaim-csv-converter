@@ -7,9 +7,9 @@ This module implements row model of CSV.
 from __future__ import annotations
 import datetime
 from abc import ABCMeta, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
-from zaimcsvconverter.models import Store
+from zaimcsvconverter.models import Store, Item
 
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimRow
@@ -26,9 +26,21 @@ class AccountRowData(metaclass=ABCMeta):
         """This property returns date as datetime."""
         pass
 
+
+class AccountStoreRowData(AccountRowData):
+    """This class is abstract class of account CSV row data."""
     @property
     @abstractmethod
     def store_name(self) -> str:
+        """This property returns store name."""
+        pass
+
+
+class AccountItemRowData(AccountRowData):
+    """This class is abstract class of account CSV row data."""
+    @property
+    @abstractmethod
+    def item_name(self) -> str:
         """This property returns store name."""
         pass
 
@@ -38,7 +50,18 @@ class AccountRow(metaclass=ABCMeta):
     This class implements row model of CSV.
     """
     @property
+    def is_valid(self) -> bool:
+        """This property returns whether this row is valid or not."""
+        return self.zaim_store is not None
+
+    # pylint: disable=no-self-use
+    def extract_undefined_content(self, account_row_data: AccountStoreRowData) -> List[str]:
+        """This property extract undefined content from account_row_data and return it."""
+        return [account_row_data.store_name, '']
+
+    @property
     def is_row_to_skip(self) -> bool:
+        """This property returns whether this row should be skipped or not."""
         return False
 
     @abstractmethod
@@ -63,6 +86,11 @@ class AccountRow(metaclass=ABCMeta):
         This property return store in Zaim row.
         """
         pass
+
+    @property
+    def zaim_item(self) -> None:
+        """This property return item in Zaim row."""
+        return None
 
     @property
     @abstractmethod
@@ -131,3 +159,32 @@ class AccountRow(metaclass=ABCMeta):
         from zaimcsvconverter.account_dependency import Account
         account_dependency = Account.create_by_account_row(self).value
         return Store.try_to_find(account_dependency, store_name)
+
+    def try_to_find_item(self, item_name) -> Item:
+        """This method select store from database and return it as Store model."""
+        from zaimcsvconverter.account_dependency import Account
+        account_dependency = Account.create_by_account_row(self).value
+        return Item.try_to_find(account_dependency, item_name)
+
+
+class AccountItemRow(AccountRow):
+    """
+    This class implements store row model of CSV.
+    """
+    @property
+    def is_valid(self) -> bool:
+        """This property returns whether this row is valid or not."""
+        return self.zaim_store is not None and self.zaim_item is not None
+
+    def extract_undefined_content(self, account_row_data: AccountItemRowData) -> List[str]:
+        """This property extract undefined content from account_row_data and return it."""
+        return [
+            '',
+            account_row_data.item_name
+        ]
+
+    @property
+    @abstractmethod
+    def zaim_item(self) -> 'Item':
+        """This property return item in Zaim row."""
+        pass

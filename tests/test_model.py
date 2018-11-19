@@ -41,5 +41,5 @@ class TestModel(DatabaseTestCase):
 
     def test_try_to_find_failure(self):
         """Method should raise KeyError when store name is not exist in database."""
-        with self.assertRaises(KeyError):
-            Store.try_to_find(Account.WAON.value, '上尾')
+        store = Store.try_to_find(Account.WAON.value, '上尾')
+        assert store is None

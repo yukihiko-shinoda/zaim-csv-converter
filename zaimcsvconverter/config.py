@@ -22,6 +22,7 @@ class AccountKey(Enum):
     GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus'
     MUFG: str = 'mufg'
     PASMO: str = 'pasmo'
+    AMAZON: str = 'amazon'
 
 
 class AccountConfig(metaclass=ABCMeta):
@@ -36,14 +37,24 @@ class AccountConfig(metaclass=ABCMeta):
             AccountKey.GOLD_POINT_CARD_PLUS: GoldPointCardPlusConfig,
             AccountKey.MUFG: MufgConfig,
             AccountKey.PASMO: PasmoConfig,
+            AccountKey.AMAZON: AmazonConfig,
         }.get(account_key)
         try:
             return account_config_class(**dict_account_config)
         except TypeError as error:
             matches = re.search(r"__init__\(\) got an unexpected keyword argument '(.*)'", str(error))
-            raise TypeError(
-                f'Key "{account_key.value}.{matches.group(1)}" is undefined key. Please confirm {Config.FILE_CONFIG}.'
-            ) from error
+            if matches:
+                raise TypeError(
+                    f'Key "{account_key.value}.{matches.group(1)}" is undefined key.'
+                    + f' Please confirm {Config.FILE_CONFIG}.'
+                ) from error
+            matches = re.search(r"__init__\(\) missing \d+ required positional argument: '(.*)'", str(error))
+            if matches:
+                raise TypeError(
+                    f'Key "{account_key.value}.{matches.group(1)}" is required.'
+                    + f' Please confirm {Config.FILE_CONFIG}.'
+                ) from error
+            raise error
 
 
 @dataclass
@@ -84,6 +95,15 @@ class PasmoConfig(AccountConfig):
 
 
 @dataclass
+class AmazonConfig(AccountConfig):
+    """
+    This class implements configuration for Amazon.co.jp.
+    """
+    store_name_zaim: str
+    payment_account_name: str
+
+
+@dataclass
 class Config:
     """
     This class implements configuration wrapping.
@@ -92,6 +112,7 @@ class Config:
     gold_point_card_plus: GoldPointCardPlusConfig = None
     mufg: MufgConfig = None
     pasmo: PasmoConfig = None
+    amazon: AmazonConfig = None
     FILE_CONFIG: str = field(default='./config.yml', init=False)
 
     def load(self):
