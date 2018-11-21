@@ -10,16 +10,16 @@ from typing import NoReturn, List
 
 import numpy
 
-from zaimcsvconverter.account_dependency import DirectoryCsv, AccountDependency
+from zaimcsvconverter.account import DirectoryCsv, Account
 
 
 class AccountCsvConverter:
     """
     This class implements abstract converting steps for CSV.
     """
-    def __init__(self, path_csv_file: Path, account_dependency: AccountDependency):
+    def __init__(self, path_csv_file: Path, account: Account):
         self._path_csv_file = path_csv_file
-        self._account_dependency = account_dependency
+        self._account = account
         self.list_undefined_content: List[List[str]] = []
 
     def execute(self) -> NoReturn:
@@ -51,27 +51,29 @@ class AccountCsvConverter:
             self._convert_from_account(writer_zaim)
 
     def _convert_from_account(self, writer_zaim) -> NoReturn:
-        with self._path_csv_file.open('r', encoding=self._account_dependency.encode) as file_account:
+        account_dependency = self._account.value
+        with self._path_csv_file.open('r', encoding=account_dependency.encode) as file_account:
             reader_account = csv.reader(file_account)
-            if self._account_dependency.csv_header:
+            if account_dependency.csv_header:
                 try:
-                    while reader_account.__next__() != self._account_dependency.csv_header:
+                    while reader_account.__next__() != account_dependency.csv_header:
                         pass
                 except StopIteration as error:
                     raise StopIteration(
                         f'{self._path_csv_file.name} doesn\'t include header row.'
-                        + 'Please confirm AccountDependency.csv_header. '
-                        + f'AccountDependency.csv_header = {self._account_dependency.csv_header}'
+                        + 'Please confirm AccountConfig.csv_header. '
+                        + f'AccountConfig.csv_header = {account_dependency.csv_header}'
                     ) from error
             self._iterate_convert(reader_account, writer_zaim)
 
     def _iterate_convert(self, reader_account, writer_zaim) -> NoReturn:
         for list_row_account in reader_account:
-            account_row_data = self._account_dependency.account_row_data_class(*list_row_account)
-            account_row = self._account_dependency.account_row_class.create(account_row_data)
+            account_dependency = self._account.value
+            account_row_data = account_dependency.account_row_data_class(*list_row_account)
+            account_row = account_dependency.account_row_factory.create(self._account, account_row_data)
             if not account_row.is_valid:
                 self.list_undefined_content: List[List[str]]
-                undefined_content = [self._account_dependency.file_name_csv_convert]
+                undefined_content = [account_dependency.file_name_csv_convert]
                 undefined_content.extend(account_row.extract_undefined_content(account_row_data))
                 self.list_undefined_content.append(undefined_content)
                 continue

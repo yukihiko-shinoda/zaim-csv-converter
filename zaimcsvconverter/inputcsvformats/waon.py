@@ -9,11 +9,33 @@ from abc import abstractmethod
 import datetime
 from enum import Enum
 import re
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
+
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData
+from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
 from zaimcsvconverter.models import Store
 from zaimcsvconverter.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow
+if TYPE_CHECKING:
+    from zaimcsvconverter.account import Account
+
+
+class WaonRowFactory(AccountRowFactory):
+    """This class implements factory to create WAON CSV row instance."""
+    def create(self, account: 'Account', row_data: WaonRowData) -> WaonRow:
+        try:
+            use_kind = WaonRow.UseKind(row_data.use_kind)
+        except ValueError as error:
+            raise ValueError(
+                'The value of "Use kind" has not been defined in this code. Use kind =' + row_data.use_kind
+            ) from error
+
+        waon_row_class = {
+            WaonRow.UseKind.PAYMENT: WaonPaymentRow,
+            WaonRow.UseKind.AUTO_CHARGE: WaonAutoChargeRow,
+        }.get(use_kind)
+
+        return waon_row_class(account, row_data)
 
 
 @dataclass
@@ -47,7 +69,8 @@ class WaonRow(AccountRow):
         PAYMENT: str = '支払'
         AUTO_CHARGE: str = 'オートチャージ'
 
-    def __init__(self, row_data: WaonRowData):
+    def __init__(self, account: 'Account', row_data: WaonRowData):
+        super().__init__(account)
         self._date: datetime = row_data.date
         self._used_store: Store = self.try_to_find_store(row_data.store_name)
         matches = re.search(r'([\d,]+)円', row_data.used_amount)
@@ -93,22 +116,6 @@ class WaonRow(AccountRow):
     @property
     def zaim_transfer_amount_transfer(self) -> int:
         return self._used_amount
-
-    @staticmethod
-    def create(row_data: WaonRowData) -> WaonRow:
-        try:
-            use_kind = WaonRow.UseKind(row_data.use_kind)
-        except ValueError as error:
-            raise ValueError(
-                'The value of "Use kind" has not been defined in this code. Use kind =' + row_data.use_kind
-            ) from error
-
-        waon_row_class = {
-            WaonRow.UseKind.PAYMENT: WaonPaymentRow,
-            WaonRow.UseKind.AUTO_CHARGE: WaonAutoChargeRow,
-        }.get(use_kind)
-
-        return waon_row_class(row_data)
 
 
 class WaonPaymentRow(WaonRow):

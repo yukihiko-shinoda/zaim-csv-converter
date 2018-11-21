@@ -10,12 +10,19 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountItemRowData, AccountItemRow
+from zaimcsvconverter.account_row import AccountItemRowData, AccountItemRow, AccountRowFactory
 from zaimcsvconverter.models import Store, Item, StoreRowData
 from zaimcsvconverter.unility import Utility
 
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
+    from zaimcsvconverter.account import Account
+
+
+class AmazonRowFactory(AccountRowFactory):
+    """This class implements factory to create Amazon.co.jp CSV row instance."""
+    def create(self, account: 'Account', row_data: AmazonRowData) -> AmazonRow:
+        return AmazonRow(account, row_data)
 
 
 @dataclass
@@ -56,10 +63,10 @@ class AmazonRow(AccountItemRow):
     """
     This class implements row model of Amazon.co.jp CSV.
     """
-    def __init__(self, row_data: AmazonRowData):
-        from zaimcsvconverter.account_dependency import Account
+    def __init__(self, account: Account, row_data: AmazonRowData):
+        super().__init__(account)
         self._ordered_date: datetime = row_data.date
-        self._store: Store = Store(Account.AMAZON, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
+        self._store: Store = Store(account, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
         self.order_id: str = row_data.order_id
         self._item: Item = self.try_to_find_item(row_data.item_name)
         self.note: str = row_data.note
@@ -122,7 +129,3 @@ class AmazonRow(AccountItemRow):
     @property
     def zaim_transfer_amount_transfer(self) -> int:
         raise ValueError('Transfer row for Amazon.co.jp is not defined. Please confirm CSV file.')
-
-    @staticmethod
-    def create(row_data: AmazonRowData) -> AmazonRow:
-        return AmazonRow(row_data)

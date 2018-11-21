@@ -10,10 +10,17 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData
+from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
+    from zaimcsvconverter.account import Account
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
+
+
+class GoldPointCardPlusRowFactory(AccountRowFactory):
+    """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
+    def create(self, account: 'Account', row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
+        return GoldPointCardPlusRow(account, row_data)
 
 
 @dataclass
@@ -48,7 +55,8 @@ class GoldPointCardPlusRow(AccountRow):
     """
     This class implements row model of GOLD POINT CARD+ CSV.
     """
-    def __init__(self, row_data: GoldPointCardPlusRowData):
+    def __init__(self, account: 'Account', row_data: GoldPointCardPlusRowData):
+        super().__init__(account)
         self._used_date: datetime = row_data.date
         self._used_store: Store = self.try_to_find_store(row_data.store_name)
         self._used_card: str = row_data.used_card
@@ -99,7 +107,3 @@ class GoldPointCardPlusRow(AccountRow):
     @property
     def zaim_transfer_amount_transfer(self) -> int:
         raise ValueError('Transfer row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
-
-    @staticmethod
-    def create(row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
-        return GoldPointCardPlusRow(row_data)

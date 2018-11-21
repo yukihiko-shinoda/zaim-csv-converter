@@ -6,7 +6,8 @@ import parameterized
 
 from tests.database_test import DatabaseTestCase
 from tests.waon import prepare_fixture
-from zaimcsvconverter.account.waon import WaonRow, WaonPaymentRow, WaonAutoChargeRow, WaonRowData
+from zaimcsvconverter.inputcsvformats.waon import WaonPaymentRow, WaonAutoChargeRow, WaonRowData, WaonRowFactory
+from zaimcsvconverter.account import Account
 
 
 class TestWaonRow(DatabaseTestCase):
@@ -24,7 +25,7 @@ class TestWaonRow(DatabaseTestCase):
         Arguments should set into properties.
         :param WaonRowData waon_row_data:
         """
-        waon_row = WaonPaymentRow(waon_row_data)
+        waon_row = WaonPaymentRow(Account.WAON, waon_row_data)
         self.assertEqual(waon_row.zaim_date, expected_date)
         # pylint: disable=protected-access
         self.assertEqual(waon_row.zaim_store.name, waon_row_data._used_store)
@@ -41,11 +42,11 @@ class TestWaonRow(DatabaseTestCase):
     def test_create_success(self, argument, expected):
         """Method should return Store model when use kind is defined."""
         # pylint: disable=protected-access
-        waon_row = WaonRow.create(argument)
+        waon_row = WaonRowFactory().create(Account.WAON, argument)
         self.assertIsInstance(waon_row, expected)
 
     def test_create_fail(self):
         """Method should raise ValueError when use kind is not defined."""
         with self.assertRaises(ValueError):
             # pylint: disable=protected-access
-            WaonRow.create(WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '10000円', '入金', '-'))
+            WaonRowFactory().create(Account.WAON, WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '10000円', '入金', '-'))

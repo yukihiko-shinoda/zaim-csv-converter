@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from zaimcsvconverter import ENGINE
 from zaimcsvconverter.session_manager import SessionManager
 if TYPE_CHECKING:
-    from zaimcsvconverter.account_dependency import Account, AccountDependency
+    from zaimcsvconverter.account import Account
 
 Base: DeclarativeMeta = declarative_base()
 
@@ -45,28 +45,28 @@ class ConvertTableMixin:
         return value if value != '' else None
 
     @classmethod
-    def try_to_find(cls: Type[T], account_dependency: AccountDependency, name: str) -> T:
+    def try_to_find(cls: Type[T], account: 'Account', name: str) -> T:
         """
         This method select Store model from database. If record is not exist, raise NoResultFound.
         """
         try:
-            return cls.find(account_dependency, name)
+            return cls.find(account, name)
         except NoResultFound:
             pass
         # ↓ To support Shift JIS
         try:
-            return cls.find(account_dependency, name.replace("−", "ー"))
+            return cls.find(account, name.replace("−", "ー"))
         except NoResultFound:
             return None
 
     @classmethod
-    def find(cls: Type[T], account_dependency: 'AccountDependency', name: str) -> T:
+    def find(cls: Type[T], account: 'Account', name: str) -> T:
         """
         This method select Store model from database.
         """
         with SessionManager() as session:
             return session.query(cls).filter(
-                cls.account_id == account_dependency.id,
+                cls.account_id == account.value.id,
                 cls.name == name
             ).one()
 

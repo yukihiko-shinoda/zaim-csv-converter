@@ -5,8 +5,8 @@ from datetime import datetime
 import parameterized
 
 from tests.database_test import StoreFactory, DatabaseTestCase
-from zaimcsvconverter.account_dependency import Account
-from zaimcsvconverter.account.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData
 from zaimcsvconverter.models import Store, StoreRowData
 
 
@@ -56,7 +56,7 @@ class TestGoldPointCardPlusRow(DatabaseTestCase):
         Arguments should set into properties.
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
-        row = GoldPointCardPlusRow(gold_point_card_plus_row_data)
+        row = GoldPointCardPlusRow(Account.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
         self.assertEqual(row.zaim_date, expected_date)
         self.assertIsInstance(row.zaim_store, Store)
         self.assertEqual(row.zaim_store.name, gold_point_card_plus_row_data._used_store)

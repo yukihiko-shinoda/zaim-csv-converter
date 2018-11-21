@@ -85,13 +85,20 @@ class MufgConfig(AccountConfig):
 
 
 @dataclass
-class PasmoConfig(AccountConfig):
+class SFCardViewerConfig(AccountConfig):
     """
-    This class implements configuration for PASMO.
+    This class implements configuration for SF Card Viewer.
     """
     account_name: str
     auto_charge_source: str
     skip_sales_goods_row: bool
+
+
+@dataclass
+class PasmoConfig(SFCardViewerConfig):
+    """
+    This class implements configuration for PASMO.
+    """
 
 
 @dataclass

@@ -11,7 +11,7 @@ import numpy
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_csv_converter import AccountCsvConverter
-from zaimcsvconverter.account_dependency import DirectoryCsv, Account
+from zaimcsvconverter.account import DirectoryCsv, Account
 from zaimcsvconverter.models import initialize_database, Store, StoreRowData, Item, ItemRowData
 
 
@@ -28,7 +28,7 @@ class ZaimCsvConverter:
             self._import_convert_table_to_database(path)
         self.list_csv_converter: List[AccountCsvConverter] = []
         for path in Path(DirectoryCsv.INPUT.value).glob('*.csv'):
-            self.list_csv_converter.append(AccountCsvConverter(path, Account.create_by_path_csv_input(path).value))
+            self.list_csv_converter.append(AccountCsvConverter(path, Account.create_by_path_csv_input(path)))
 
     @staticmethod
     def _import_convert_table_to_database(path: Path):

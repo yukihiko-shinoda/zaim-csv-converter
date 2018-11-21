@@ -12,7 +12,16 @@ from typing import TYPE_CHECKING, List
 from zaimcsvconverter.models import Store, Item
 
 if TYPE_CHECKING:
+    from zaimcsvconverter.account import Account
     from zaimcsvconverter.zaim_row import ZaimRow
+
+
+class AccountRowFactory(metaclass=ABCMeta):
+    """This class implements factory to create account CSV row instance."""
+    @abstractmethod
+    def create(self, account: 'Account', row_data: AccountRowData) -> AccountRow:
+        """This method creates account row by account CSV row data."""
+        pass
 
 
 class AccountRowData(metaclass=ABCMeta):
@@ -46,9 +55,10 @@ class AccountItemRowData(AccountRowData):
 
 
 class AccountRow(metaclass=ABCMeta):
-    """
-    This class implements row model of CSV.
-    """
+    """This class implements row model of CSV."""
+    def __init__(self, account: 'Account'):
+        self._account = account
+
     @property
     def is_valid(self) -> bool:
         """This property returns whether this row is valid or not."""
@@ -148,23 +158,13 @@ class AccountRow(metaclass=ABCMeta):
         """
         pass
 
-    @staticmethod
-    @abstractmethod
-    def create(row_data: AccountRowData) -> AccountRow:
-        """This method creates account row by account row data."""
-        pass
-
     def try_to_find_store(self, store_name) -> Store:
         """This method select store from database and return it as Store model."""
-        from zaimcsvconverter.account_dependency import Account
-        account_dependency = Account.create_by_account_row(self).value
-        return Store.try_to_find(account_dependency, store_name)
+        return Store.try_to_find(self._account, store_name)
 
     def try_to_find_item(self, item_name) -> Item:
         """This method select store from database and return it as Store model."""
-        from zaimcsvconverter.account_dependency import Account
-        account_dependency = Account.create_by_account_row(self).value
-        return Item.try_to_find(account_dependency, item_name)
+        return Item.try_to_find(self._account, item_name)
 
 
 class AccountItemRow(AccountRow):

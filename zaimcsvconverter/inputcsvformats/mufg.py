@@ -8,14 +8,16 @@ from __future__ import annotations
 from abc import abstractmethod
 import datetime
 from enum import Enum
-from typing import Union
+from typing import Union, TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData
+from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
 from zaimcsvconverter.models import Store
 from zaimcsvconverter.unility import Utility
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow
+if TYPE_CHECKING:
+    from zaimcsvconverter.account import Account
 
 
 class CashFlowKind(Enum):
@@ -26,6 +28,27 @@ class CashFlowKind(Enum):
     PAYMENT: str = '支払い'
     TRANSFER_INCOME: str = '振替入金'
     TRANSFER_PAYMENT: str = '振替支払い'
+
+
+class MufgRowFactory(AccountRowFactory):
+    """This class implements factory to create MUFG CSV row instance."""
+    def create(self, account: 'Account', row_data: MufgRowData) -> MufgRow:
+        try:
+            cash_flow_kind = CashFlowKind(row_data.cash_flow_kind)
+        except ValueError as error:
+            raise NotImplementedError(
+                'The value of "Cash flow kind" has not been defined in this code. Cash flow kind ='
+                + row_data.cash_flow_kind
+            ) from error
+
+        mufg_row_class = {
+            CashFlowKind.INCOME: MufgIncomeRow,
+            CashFlowKind.PAYMENT: MufgPaymentRow,
+            CashFlowKind.TRANSFER_INCOME: MufgTransferIncomeRow,
+            CashFlowKind.TRANSFER_PAYMENT: MufgTransferPaymentRow,
+        }.get(cash_flow_kind)
+
+        return mufg_row_class(account, row_data)
 
 
 @dataclass
@@ -57,7 +80,8 @@ class MufgRow(AccountRow):
     """
     This class implements row model of MUFG bank CSV.
     """
-    def __init__(self, row_data: MufgRowData):
+    def __init__(self, account: 'Account', row_data: MufgRowData):
+        super().__init__(account)
         self._date: datetime = row_data.date
         self._summary: str = row_data.summary
         self._summary_content: Store = self.try_to_find_store(row_data.store_name)
@@ -123,25 +147,6 @@ class MufgRow(AccountRow):
     @property
     def zaim_transfer_amount_transfer(self) -> int:
         return self._amount
-
-    @staticmethod
-    def create(row_data: MufgRowData) -> MufgRow:
-        try:
-            cash_flow_kind = CashFlowKind(row_data.cash_flow_kind)
-        except ValueError as error:
-            raise NotImplementedError(
-                'The value of "Cash flow kind" has not been defined in this code. Cash flow kind ='
-                + row_data.cash_flow_kind
-            ) from error
-
-        mufg_row_class = {
-            CashFlowKind.INCOME: MufgIncomeRow,
-            CashFlowKind.PAYMENT: MufgPaymentRow,
-            CashFlowKind.TRANSFER_INCOME: MufgTransferIncomeRow,
-            CashFlowKind.TRANSFER_PAYMENT: MufgTransferPaymentRow,
-        }.get(cash_flow_kind)
-
-        return mufg_row_class(row_data)
 
 
 class MufgAbstractIncomeRow(MufgRow):

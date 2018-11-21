@@ -8,15 +8,38 @@ from __future__ import annotations
 import datetime
 from abc import abstractmethod
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 from dataclasses import dataclass
 
-from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData
+from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
+from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
+    from zaimcsvconverter.account import Account
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
     from zaimcsvconverter.zaim_row import ZaimTransferRow
+
+
+class SFCardViewerRowFactory(AccountRowFactory):
+    """This class implements factory to create WAON CSV row instance."""
+    def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
+        self._account_config = account_config
+
+    def create(self, account: 'Account', row_data: SFCardViewerRowData) -> SFCardViewerRow:
+        try:
+            note = Note(row_data.note)
+        except ValueError as error:
+            raise NotImplementedError(
+                f'The value of "Note" has not been defined in this code. Note = {row_data.note}'
+            ) from error
+
+        sf_card_viewer_row_class = {
+            Note.EMPTY: SFCardViewerTransportationRow,
+            Note.SALES_GOODS: SFCardViewerSalesGoodsRow,
+            Note.AUTO_CHARGE: SFCardViewerAutoChargeRow,
+        }.get(note)
+
+        return sf_card_viewer_row_class(account, row_data, self._account_config())
 
 
 class Note(Enum):
@@ -58,7 +81,8 @@ class SFCardViewerRow(AccountRow):
     """
     This class implements row model of SF Card Viewer CSV.
     """
-    def __init__(self, row_data: SFCardViewerRowData):
+    def __init__(self, account: 'Account', row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+        super().__init__(account)
         self._used_date: datetime = row_data.date
         self._is_commuter_pass_enter: str = row_data.is_commuter_pass_enter
         self._railway_company_name_enter: str = row_data.railway_company_name_enter
@@ -69,6 +93,7 @@ class SFCardViewerRow(AccountRow):
         self._used_amount: int = int(row_data.used_amount)
         self._balance: int = int(row_data.balance)
         self._note: str = str(row_data.note)
+        self._account_config: SFCardViewerConfig = account_config
 
     @abstractmethod
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
@@ -92,7 +117,7 @@ class SFCardViewerRow(AccountRow):
 
     @property
     def zaim_payment_cash_flow_source(self) -> str:
-        return CONFIG.pasmo.account_name
+        return self._account_config.account_name
 
     @property
     def zaim_payment_amount_payment(self) -> int:
@@ -100,32 +125,15 @@ class SFCardViewerRow(AccountRow):
 
     @property
     def zaim_transfer_cash_flow_source(self) -> str:
-        return CONFIG.pasmo.auto_charge_source
+        return self._account_config.auto_charge_source
 
     @property
     def zaim_transfer_cash_flow_target(self) -> str:
-        return CONFIG.pasmo.account_name
+        return self._account_config.account_name
 
     @property
     def zaim_transfer_amount_transfer(self) -> int:
         return -1 * self._used_amount
-
-    @staticmethod
-    def create(row_data: SFCardViewerRowData) -> SFCardViewerRow:
-        try:
-            note = Note(row_data.note)
-        except ValueError as error:
-            raise NotImplementedError(
-                f'The value of "Note" has not been defined in this code. Note = {row_data.note}'
-            ) from error
-
-        sf_card_viewer_row_class = {
-            Note.EMPTY: SFCardViewerTransportationRow,
-            Note.SALES_GOODS: SFCardViewerSalesGoodsRow,
-            Note.AUTO_CHARGE: SFCardViewerAutoChargeRow,
-        }.get(note)
-
-        return sf_card_viewer_row_class(row_data)
 
 
 class SFCardViewerTransportationRow(SFCardViewerRow):
@@ -143,7 +151,7 @@ class SFCardViewerSalesGoodsRow(SFCardViewerRow):
     """
     @property
     def is_row_to_skip(self) -> bool:
-        return CONFIG.pasmo.skip_sales_goods_row
+        return self._account_config.skip_sales_goods_row
 
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
