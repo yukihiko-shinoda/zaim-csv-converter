@@ -120,6 +120,10 @@ class SFCardViewerRow(AccountRow):
         return self._account_config.account_name
 
     @property
+    def zaim_payment_note(self) -> str:
+        return f'{self._railway_company_name_enter} {self._station_name_enter} → {self._railway_company_name_exit} {self._station_name_exit.name}'
+
+    @property
     def zaim_payment_amount_payment(self) -> int:
         return self._used_amount
 

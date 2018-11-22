@@ -89,6 +89,7 @@ class ZaimPaymentRow(ZaimRow):
 
     def __init__(self, account_row: AccountRow):
         self._cash_flow_source: str = account_row.zaim_payment_cash_flow_source
+        self._note: int = account_row.zaim_payment_note
         self._amount_payment: int = account_row.zaim_payment_amount_payment
         super().__init__(account_row)
 
@@ -101,7 +102,7 @@ class ZaimPaymentRow(ZaimRow):
             self._cash_flow_source,
             self.CASH_FLOW_TARGET_EMPTY,
             self._item.name if self._item is not None else None,
-            self.NOTE_EMPTY,
+            self._note,
             self._store.name_zaim,
             self.CURRENCY_EMPTY,
             self.AMOUNT_INCOME_EMPTY,

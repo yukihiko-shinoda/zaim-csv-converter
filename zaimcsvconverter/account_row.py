@@ -127,6 +127,14 @@ class AccountRow(metaclass=ABCMeta):
         pass
 
     @property
+    def zaim_payment_note(self) -> str:
+        """
+        This property return cash flow source in Zaim payment row.
+        """
+        from zaimcsvconverter.zaim_row import ZaimRow
+        return ZaimRow.NOTE_EMPTY
+
+    @property
     @abstractmethod
     def zaim_payment_amount_payment(self) -> int:
         """
