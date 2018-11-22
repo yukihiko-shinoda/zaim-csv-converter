@@ -108,6 +108,11 @@ class Store(Base, ConvertTableMixin):
         self.category_income: str = self._get_str_or_none(row_data.category_income)
         self.transfer_target: str = self._get_str_or_none(row_data.transfer_account)
 
+    @property
+    def is_amazon(self) -> bool:
+        """This property returns wheter this store is Amazon.co.jp or not."""
+        return self.name in {'Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ', 'ＡＭＡＺＯＮ．ＣＯ．ＪＰ'}
+
 
 @dataclass
 class ItemRowData:

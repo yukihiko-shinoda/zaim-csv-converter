@@ -73,6 +73,7 @@ class GoldPointCardPlusConfig(AccountConfig):
     """
     account_name: str
     payment_source: str
+    skip_amazon_row: bool
 
 
 @dataclass
@@ -108,7 +109,6 @@ class AmazonConfig(AccountConfig):
     """
     store_name_zaim: str
     payment_account_name: str
-
 
 @dataclass
 class Config:

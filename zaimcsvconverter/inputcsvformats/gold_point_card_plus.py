@@ -68,6 +68,10 @@ class GoldPointCardPlusRow(AccountRow):
         self._scheduled_payment_month: str = row_data.scheduled_payment_month
         self._used_amount: int = int(row_data.used_amount)
 
+    @property
+    def is_row_to_skip(self) -> bool:
+        return CONFIG.gold_point_card_plus.skip_amazon_row and self._used_store.is_amazon
+
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
         return ZaimPaymentRow(self)
