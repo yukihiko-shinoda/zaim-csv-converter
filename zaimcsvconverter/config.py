@@ -72,7 +72,6 @@ class GoldPointCardPlusConfig(AccountConfig):
     This class implements configuration for GOLD POINT CARD+.
     """
     account_name: str
-    payment_source: str
     skip_amazon_row: bool
 
 

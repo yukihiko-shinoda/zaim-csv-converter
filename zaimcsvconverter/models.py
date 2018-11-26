@@ -6,13 +6,13 @@ This module implements SQLAlchemy database models.
 
 from __future__ import annotations
 
+import warnings
 from typing import NoReturn, List, TYPE_CHECKING, Type, TypeVar
 
 from inflector import Inflector
-from sqlalchemy import Column, Integer, String, UniqueConstraint
+from sqlalchemy import Column, Integer, String, UniqueConstraint, exc
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta, declared_attr
 from sqlalchemy.orm.exc import NoResultFound
-
 from dataclasses import dataclass
 
 from zaimcsvconverter import ENGINE
@@ -80,58 +80,62 @@ class ConvertTableMixin:
                 session.add_all(models)
 
 
-@dataclass
-class StoreRowData:
-    """This class implements data class for wrapping list of store convert table row model."""
-    name: str
-    name_zaim: str = None
-    category_payment_large: str = None
-    category_payment_small: str = None
-    category_income: str = None
-    transfer_account: str = None
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", category=exc.SAWarning)
 
 
-class Store(Base, ConvertTableMixin):
-    """
-    This class implements Store model to convert from account CSV to Zaim CSV.
-    """
-    name_zaim: Column = Column(String(255))
-    category_income: Column = Column(String(255))
-    transfer_target: Column = Column(String(255))
-
-    def __init__(self, account: 'Account', row_data: StoreRowData):
-        self.account_id: int = account.value.id
-        self.name: str = row_data.name
-        self.name_zaim: str = self._get_str_or_none(row_data.name_zaim)
-        self.category_payment_large: str = self._get_str_or_none(row_data.category_payment_large)
-        self.category_payment_small: str = self._get_str_or_none(row_data.category_payment_small)
-        self.category_income: str = self._get_str_or_none(row_data.category_income)
-        self.transfer_target: str = self._get_str_or_none(row_data.transfer_account)
-
-    @property
-    def is_amazon(self) -> bool:
-        """This property returns wheter this store is Amazon.co.jp or not."""
-        return self.name in {'Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ', 'ＡＭＡＺＯＮ．ＣＯ．ＪＰ'}
+    @dataclass
+    class StoreRowData:
+        """This class implements data class for wrapping list of store convert table row model."""
+        name: str
+        name_zaim: str = None
+        category_payment_large: str = None
+        category_payment_small: str = None
+        category_income: str = None
+        transfer_account: str = None
 
 
-@dataclass
-class ItemRowData:
-    """This class implements data class for wrapping list of item and category row model."""
-    name: str
-    category_payment_large: str = None
-    category_payment_small: str = None
+    class Store(Base, ConvertTableMixin):
+        """
+        This class implements Store model to convert from account CSV to Zaim CSV.
+        """
+        name_zaim: Column = Column(String(255))
+        category_income: Column = Column(String(255))
+        transfer_target: Column = Column(String(255))
+
+        def __init__(self, account: 'Account', row_data: StoreRowData):
+            self.account_id: int = account.value.id
+            self.name: str = row_data.name
+            self.name_zaim: str = self._get_str_or_none(row_data.name_zaim)
+            self.category_payment_large: str = self._get_str_or_none(row_data.category_payment_large)
+            self.category_payment_small: str = self._get_str_or_none(row_data.category_payment_small)
+            self.category_income: str = self._get_str_or_none(row_data.category_income)
+            self.transfer_target: str = self._get_str_or_none(row_data.transfer_account)
+
+        @property
+        def is_amazon(self) -> bool:
+            """This property returns wheter this store is Amazon.co.jp or not."""
+            return self.name in {'Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ', 'ＡＭＡＺＯＮ．ＣＯ．ＪＰ'}
 
 
-class Item(Base, ConvertTableMixin):
-    """
-    This class implements Store model to convert from account CSV to Zaim CSV.
-    """
+    @dataclass
+    class ItemRowData:
+        """This class implements data class for wrapping list of item and category row model."""
+        name: str
+        category_payment_large: str = None
+        category_payment_small: str = None
 
-    def __init__(self, account: 'Account', row_data: ItemRowData):
-        self.account_id: int = account.value.id
-        self.name: str = row_data.name
-        self.category_payment_large: str = self._get_str_or_none(row_data.category_payment_large)
-        self.category_payment_small: str = self._get_str_or_none(row_data.category_payment_small)
+
+    class Item(Base, ConvertTableMixin):
+        """
+        This class implements Store model to convert from account CSV to Zaim CSV.
+        """
+
+        def __init__(self, account: 'Account', row_data: ItemRowData):
+            self.account_id: int = account.value.id
+            self.name: str = row_data.name
+            self.category_payment_large: str = self._get_str_or_none(row_data.category_payment_large)
+            self.category_payment_small: str = self._get_str_or_none(row_data.category_payment_small)
 
 
 def initialize_database(target_engine=ENGINE) -> NoReturn:

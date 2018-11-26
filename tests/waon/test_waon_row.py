@@ -15,13 +15,15 @@ class TestWaonRow(DatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
+    # pylint: disable=too-many-arguments
     @parameterized.parameterized.expand([
         (WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'), datetime(2018, 8, 7, 0, 0, 0),
          'ファミリーマート　かぶと町永代通り店', 129, None),
         (WaonRowData('2018/8/30', '板橋前野町', '1,489円', '支払', '-'), datetime(2018, 8, 30, 0, 0, 0),
          'イオンスタイル　板橋前野町', 1489, None),
     ])
-    def test_init(self, waon_row_data, expected_date, expexted_store_name_zaim, expected_use_amount, expected_charge_kind):
+    def test_init(self, waon_row_data, expected_date, expexted_store_name_zaim, expected_use_amount,
+                  expected_charge_kind):
         """
         Arguments should set into properties.
         :param WaonRowData waon_row_data:
