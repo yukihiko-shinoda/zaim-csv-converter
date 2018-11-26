@@ -17,10 +17,11 @@ class TestWaonRow(DatabaseTestCase):
 
     @parameterized.parameterized.expand([
         (WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'), datetime(2018, 8, 7, 0, 0, 0),
-         'ファミリーマート　かぶと町永代通り店', 129),
-        (WaonRowData('2018/8/30', '板橋前野町', '1,489円', '支払', '-'), datetime(2018, 8, 30, 0, 0, 0), 'イオンスタイル　板橋前野町', 1489),
+         'ファミリーマート　かぶと町永代通り店', 129, None),
+        (WaonRowData('2018/8/30', '板橋前野町', '1,489円', '支払', '-'), datetime(2018, 8, 30, 0, 0, 0),
+         'イオンスタイル　板橋前野町', 1489, None),
     ])
-    def test_init(self, waon_row_data, expected_date, expexted_store_name_zaim, expected_use_amount):
+    def test_init(self, waon_row_data, expected_date, expexted_store_name_zaim, expected_use_amount, expected_charge_kind):
         """
         Arguments should set into properties.
         :param WaonRowData waon_row_data:
@@ -33,7 +34,7 @@ class TestWaonRow(DatabaseTestCase):
         # pylint: disable=protected-access
         self.assertEqual(waon_row._used_amount, expected_use_amount)
         # pylint: disable=protected-access
-        self.assertEqual(waon_row._charge_kind, waon_row_data.charge_kind)
+        self.assertEqual(waon_row._charge_kind, expected_charge_kind)
 
     @parameterized.parameterized.expand([
         (WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'), WaonPaymentRow),

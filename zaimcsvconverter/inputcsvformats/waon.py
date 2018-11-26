@@ -15,7 +15,8 @@ from dataclasses import dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
 from zaimcsvconverter.models import Store
-from zaimcsvconverter.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow
+from zaimcsvconverter.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow, ZaimIncomeRow
+
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
 
@@ -32,7 +33,9 @@ class WaonRowFactory(AccountRowFactory):
 
         waon_row_class = {
             WaonRow.UseKind.PAYMENT: WaonPaymentRow,
+            WaonRow.UseKind.CHARGE: WaonChargeRow,
             WaonRow.UseKind.AUTO_CHARGE: WaonAutoChargeRow,
+            WaonRow.UseKind.DOWNLOAD_POINT: WaonDownloadPointRow,
         }.get(use_kind)
 
         return waon_row_class(account, row_data)
@@ -59,15 +62,18 @@ class WaonRowData(AccountStoreRowData):
 
 
 class WaonRow(AccountRow):
-    """
-    This class implements row model of WAON CSV.
-    """
+    """This class implements row model of WAON CSV."""
     class UseKind(Enum):
-        """
-        This class implements constant of user kind in WAON CSV.
-        """
+        """This class implements constant of user kind in WAON CSV."""
         PAYMENT: str = '支払'
+        CHARGE: str = 'チャージ'
         AUTO_CHARGE: str = 'オートチャージ'
+        DOWNLOAD_POINT: str = 'ポイントダウンロード'
+
+    class ChargeKind(Enum):
+        """This class implements constant of charge kind in WAON CSV."""
+        BANK_ACCOUNT: str = '銀行口座'
+        POINT: str = 'ポイント'
 
     def __init__(self, account: 'Account', row_data: WaonRowData):
         super().__init__(account)
@@ -75,7 +81,19 @@ class WaonRow(AccountRow):
         self._used_store: Store = self.try_to_find_store(row_data.store_name)
         matches = re.search(r'([\d,]+)円', row_data.used_amount)
         self._used_amount: int = int(matches.group(1).replace(',', ''))
-        self._charge_kind: str = row_data.charge_kind
+        self._charge_kind: WaonRow.ChargeKind = self._convert_charge_kind_to_enum(row_data.charge_kind)
+
+    @staticmethod
+    def _convert_charge_kind_to_enum(charge_kind_string):
+        if charge_kind_string == '-':
+            return None
+        try:
+            return WaonRow.ChargeKind(charge_kind_string)
+        except ValueError as error:
+            raise ValueError(
+                'The value of "Charge kind" has not been defined in this code. Charge kind =' + charge_kind_string
+            ) from error
+
 
     @abstractmethod
     def convert_to_zaim_row(self) -> ZaimRow:
@@ -126,9 +144,35 @@ class WaonPaymentRow(WaonRow):
         return ZaimPaymentRow(self)
 
 
+class WaonChargeRow(WaonRow):
+    """
+    This class implements auto charge row model of WAON.
+    """
+    def convert_to_zaim_row(self) -> ZaimTransferRow:
+        zaim_row_class = {
+            WaonRow.ChargeKind.POINT: ZaimIncomeRow,
+            WaonRow.ChargeKind.BANK_ACCOUNT: ZaimTransferRow,
+        }.get(self._charge_kind)
+
+        return zaim_row_class(self)
+
+
 class WaonAutoChargeRow(WaonRow):
     """
     This class implements auto charge row model of WAON.
     """
     def convert_to_zaim_row(self) -> ZaimTransferRow:
         return ZaimTransferRow(self)
+
+
+class WaonDownloadPointRow(WaonRow):
+    """
+    This class implements auto charge row model of WAON.
+    """
+    def convert_to_zaim_row(self) -> ZaimTransferRow:
+        raise ValueError('WAON download point row is only history data. It\'s no need to import into Zaim.')
+
+    @property
+    def is_row_to_skip(self) -> bool:
+        """This property returns whether this row should be skipped or not."""
+        return True
