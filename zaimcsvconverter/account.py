@@ -63,7 +63,7 @@ class Account(Enum):
     )
     PASMO: AccountDependency = AccountDependency(
         4,
-        'sp_card_viewer.csv',
+        'sf_card_viewer.csv',
         r'.*pasmo.*\.csv',
         Store,
         SFCardViewerRowData,

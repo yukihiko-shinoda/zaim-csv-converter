@@ -54,7 +54,7 @@ CSVの作成方法は[変換用テーブルのCSVのつくり方](#変換用テ�
 WAON|waon.csv|お店単位
 ヨドバシゴールドポイントカード・プラス|gold_point_card_plus.csv|お店単位
 三菱UFJ銀行|mufg.csv|お店単位
-PASMO|sp_card_viewer.csv|お店単位
+PASMO|sf_card_viewer.csv|お店単位
 Amazon.co.jp|amazon.csv|品目単位
 
 ※ 文字コードはUTF-8で準備してください。
@@ -83,7 +83,7 @@ pipenv install
 WAON|waon
 ヨドバシゴールドポイントカード・プラス|gold_point_card_plus
 三菱UFJ銀行|mufg
-PASMO|sp_card_viewer
+PASMO|sf_card_viewer
 Amazon.co.jp|amazon
 
 変換対象CSVの準備方法の詳細は[変換対象CSVの準備方法](#変換対象CSVの準備方法)を参照してください。
@@ -122,7 +122,7 @@ KeyError: 'Undefined store name in convert table CSV exists. Please check error.
 
 ### 5. Zaimにインポートします
 
-ブラウザーでWEB版のZaim: https://zaim.net/にログインし、
+ブラウザーでWEB版のZaim: https://zaim.net/ にログインし、
 画面右上の
 
 [設定] -> [ファイル入出力] -> [Zaim の出力ファイルをアップロード]
@@ -189,7 +189,8 @@ WD HDD 内蔵ハードディスク 3.5インチ 8TB WD Red NAS用 WD80EFZX 5400r
 ### WAON
 
 1.
-www.waon.comにログインします。
+www.waon.com にログインします。
+
 https://www.waon.com/wmUseHistoryInq/init.do
 
 2.
@@ -199,6 +200,7 @@ https://www.waon.com/wmUseHistoryInq/init.do
 　[次の10件→]でページをめくり、全件コピーします。
 
 Chromeの場合はTable Captureという拡張機能を使います。
+
 https://chrome.google.com/webstore/detail/table-capture/iebpjdmgckacbodjpijphcplhebcmeop
 
 3.
@@ -215,6 +217,7 @@ Open Officeでダウンロードしたcsvファイルを以下の設定で開き
 
 1.
 GOLD POINT CARD+にログインします。
+
 https://secure.goldpoint.co.jp/gpm/authentication/index.html
 
 2.
@@ -231,6 +234,7 @@ https://secure.goldpoint.co.jp/gpm/authentication/index.html
 
 1.
 三菱UFJダイレクトにログインします。
+
 https://entry11.bk.mufg.jp/ibg/dfw/APLIN/loginib/login?_TRANID=AA000_001
 
 2.
@@ -248,11 +252,15 @@ https://entry11.bk.mufg.jp/ibg/dfw/APLIN/loginib/login?_TRANID=AA000_001
 1.
 Windowsコンピューターと「NFCポート/パソリ」を準備し、
 SFCard Viewer 2をインストールします。
+
 ↓Windowsコンピューターと「NFCポート/パソリ」の要件はこちらを確認します。
+
 https://www.sony.co.jp/Products/felica/consumer/download/sfcardviewer2.html
 
-※作者は、Windowsコンピューターは Windows10 Home 64ビット(x64)、
-　「NFCポート/パソリ」は RC-S380/S を使っています。
+※作者は、Windowsコンピューターは Windows10 Home 64ビット(x64) を使っています。
+
+※作者は、「NFCポート/パソリ」は RC-S380/S を使っています。
+
 https://www.amazon.co.jp/%E3%82%BD%E3%83%8B%E3%83%BC-NFC%E9%80%9A%E4%BF%A1%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC-PaSoRi-RC-S380-S/dp/B00VR1WARC
 
 2.
@@ -269,10 +277,12 @@ SFCard Viewer 2を起動し、「NFCポート/パソリ」にPASMOをタッチ�
 
 1.
 Chrome拡張の「マゾン注文履歴フィルタ」をインストールします。
+
 https://chrome.google.com/webstore/detail/%E3%82%A2%E3%83%9E%E3%82%BE%E3%83%B3%E6%B3%A8%E6%96%87%E5%B1%A5%E6%AD%B4%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF/jaikhcpoplnhinlglnkmihfdlbamhgig
 
 2.
 Amazon.co.jpにログインします。
+
 https://www.amazon.co.jp/
 
 3.
