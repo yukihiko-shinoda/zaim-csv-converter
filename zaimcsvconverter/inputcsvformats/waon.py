@@ -94,7 +94,6 @@ class WaonRow(AccountRow):
                 'The value of "Charge kind" has not been defined in this code. Charge kind =' + charge_kind_string
             ) from error
 
-
     @abstractmethod
     def convert_to_zaim_row(self) -> ZaimRow:
         pass

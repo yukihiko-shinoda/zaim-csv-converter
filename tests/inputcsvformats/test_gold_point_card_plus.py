@@ -10,6 +10,7 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardP
 from zaimcsvconverter.models import Store, StoreRowData
 
 
+# TODO データクラスのテスト
 class TestGoldPointCardPlusRow(DatabaseTestCase):
     """Tests for GoldPointCartPlusRow."""
     def _prepare_fixture(self):
@@ -66,3 +67,6 @@ class TestGoldPointCardPlusRow(DatabaseTestCase):
         self.assertEqual(row._number_of_division, expected_number_of_division)
         self.assertEqual(row._scheduled_payment_month, gold_point_card_plus_row_data.scheduled_payment_month)
         self.assertEqual(row._used_amount, expected_use_amount)
+        # TODO 全propertyのテスト
+
+# TODO Factoryクラスのテスト

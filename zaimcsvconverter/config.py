@@ -109,6 +109,7 @@ class AmazonConfig(AccountConfig):
     store_name_zaim: str
     payment_account_name: str
 
+
 @dataclass
 class Config:
     """
