@@ -37,6 +37,7 @@ class SFCardViewerRowFactory(AccountRowFactory):
             Note.EMPTY: SFCardViewerTransportationRow,
             Note.SALES_GOODS: SFCardViewerSalesGoodsRow,
             Note.AUTO_CHARGE: SFCardViewerAutoChargeRow,
+            Note.EXIT_BY_WINDOW: SFCardViewerExitByWindowRow,
         }.get(note)
 
         return sf_card_viewer_row_class(account, row_data, self._account_config())
@@ -49,6 +50,7 @@ class Note(Enum):
     EMPTY: str = ''
     SALES_GOODS: str = '物販'
     AUTO_CHARGE: str = 'ｵｰﾄﾁｬｰｼﾞ'
+    EXIT_BY_WINDOW: str = '窓出'
 
 
 @dataclass
@@ -142,18 +144,14 @@ class SFCardViewerRow(AccountRow):
 
 
 class SFCardViewerTransportationRow(SFCardViewerRow):
-    """
-    This class implements transportation row model of SF Card Viewer CSV.
-    """
+    """This class implements transportation row model of SF Card Viewer CSV."""
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
         return ZaimPaymentRow(self)
 
 
 class SFCardViewerSalesGoodsRow(SFCardViewerRow):
-    """
-    This class implements sales goods row model of SF Card Viewer CSV.
-    """
+    """This class implements sales goods row model of SF Card Viewer CSV."""
     @property
     def is_row_to_skip(self) -> bool:
         return self._account_config.skip_sales_goods_row
@@ -164,9 +162,20 @@ class SFCardViewerSalesGoodsRow(SFCardViewerRow):
 
 
 class SFCardViewerAutoChargeRow(SFCardViewerRow):
-    """
-    This class implements auto charge row model of SF Card Viewer CSV.
-    """
+    """This class implements auto charge row model of SF Card Viewer CSV."""
     def convert_to_zaim_row(self) -> 'ZaimTransferRow':
         from zaimcsvconverter.zaim_row import ZaimTransferRow
         return ZaimTransferRow(self)
+
+
+class SFCardViewerExitByWindowRow(SFCardViewerRow):
+    """This class implements exit by window row model of SF Card Viewer CSV."""
+    @property
+    def is_row_to_skip(self) -> bool:
+        return self._used_amount == 0 and \
+               self._railway_company_name_enter == self._railway_company_name_exit and \
+               self._station_name_enter == self._station_name_exit.name
+
+    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+        from zaimcsvconverter.zaim_row import ZaimPaymentRow
+        return ZaimPaymentRow(self)
