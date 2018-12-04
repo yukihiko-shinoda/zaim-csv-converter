@@ -11,3 +11,4 @@ csvinput/*
 csvoutput/*
 !csvoutput/.gitkeep
 config.yml
+config.yml.bak

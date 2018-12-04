@@ -4,7 +4,7 @@ from datetime import datetime
 
 import parameterized
 
-from tests.database_test import StoreFactory, DatabaseTestCase
+from tests.resource import StoreFactory, DatabaseTestCase
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData
 from zaimcsvconverter.models import Store, StoreRowData

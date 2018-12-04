@@ -8,6 +8,7 @@ from __future__ import annotations
 import re
 from abc import ABCMeta
 from enum import Enum
+from pathlib import Path
 from typing import Dict
 
 import yaml
@@ -120,11 +121,12 @@ class Config:
     mufg: MufgConfig = None
     pasmo: PasmoConfig = None
     amazon: AmazonConfig = None
-    FILE_CONFIG: str = field(default='./config.yml', init=False)
+    FILE_CONFIG: Path = field(default=Path(__file__).parent.parent / 'config.yml', init=False)
 
     def load(self):
         """This method creates instance by dict."""
-        with open(Config.FILE_CONFIG, 'r', encoding='UTF-8') as yml:
+        # pylint: disable=no-member
+        with self.FILE_CONFIG.open('r', encoding='UTF-8') as yml:
             dictionary_config = yaml.load(yml)
         account_config: Dict[str, AccountConfig] = {}
         for key_string, dict_account_config in dictionary_config.items():
