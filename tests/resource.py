@@ -5,10 +5,12 @@ This module implements testing utility using SQLAlchemy and factory_boy.
 @see https://factoryboy.readthedocs.io/en/latest/orms.html#sqlalchemy
 """
 import os
+import re
 import shutil
+import sys
 from abc import abstractmethod
 from pathlib import Path
-from time import sleep
+from typing import Union
 
 import factory
 import sqlalchemy
@@ -66,11 +68,11 @@ class ConfigHandler:
     FILE_BACK_UP: Path = PATH_TARGET / 'config.yml.bak'
 
     @staticmethod
-    def set_up():
+    def set_up(file_source=FILE_SOURCE):
         """This function set up config.yml."""
         if ConfigHandler.FILE_TARGET.is_file():
             shutil.move(str(ConfigHandler.FILE_TARGET), str(ConfigHandler.FILE_BACK_UP))
-        shutil.copy(str(ConfigHandler.FILE_SOURCE), str(ConfigHandler.FILE_TARGET))
+        shutil.copy(str(file_source), str(ConfigHandler.FILE_TARGET))
         CONFIG.load()
 
     @staticmethod
@@ -81,14 +83,27 @@ class ConfigHandler:
             shutil.move(str(ConfigHandler.FILE_BACK_UP), str(ConfigHandler.FILE_TARGET))
 
 
+def create_path_as_same_as_file_name(file):
+    """This function creates and returns path as same as file name."""
+    return Path(re.search(r'(.*)\.py', file).group(1))
+
+
 class ConfigurableDatabaseTestCase(DatabaseTestCase):
     """
     This class creates new in memory database to run unittest as parallel,
     and also creates config.yml.
     """
+    @property
+    def directory_resource(self) -> Path:
+        """This property returns resource directory for test."""
+        return create_path_as_same_as_file_name(sys.modules[self.__class__.__module__].__file__)
+
     def setUp(self):
         super().setUp()
-        ConfigHandler.set_up()
+        if self.source_yaml_file is None:
+            ConfigHandler.set_up()
+        else:
+            ConfigHandler.set_up(self.directory_resource / self.source_yaml_file)
 
     @abstractmethod
     def _prepare_fixture(self):
@@ -98,13 +113,31 @@ class ConfigurableDatabaseTestCase(DatabaseTestCase):
         ConfigHandler.do_cleanups()
         super().doCleanups()
 
+    @property
+    def source_yaml_file(self) -> Union[str, None]:
+        """This property returns source yaml file"""
+        return None
+
 
 class ConfigurableTestCase(unittest.TestCase):
     """
     This class creates config.yml.
     """
+    @property
+    def directory_resource(self) -> Path:
+        """This property returns resource directory for test."""
+        return create_path_as_same_as_file_name(sys.modules[self.__class__.__module__].__file__)
+
     def setUp(self):
-        ConfigHandler.set_up()
+        if self.source_yaml_file is None:
+            ConfigHandler.set_up()
+        else:
+            ConfigHandler.set_up(self.directory_resource / self.source_yaml_file)
 
     def doCleanups(self):
         ConfigHandler.do_cleanups()
+
+    @property
+    def source_yaml_file(self) -> Union[str, None]:
+        """This property returns source yaml file"""
+        return None

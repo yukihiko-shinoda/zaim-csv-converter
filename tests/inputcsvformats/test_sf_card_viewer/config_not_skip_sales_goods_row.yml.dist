@@ -1,0 +1,4 @@
+pasmo:
+  account_name: 'PASMO'
+  auto_charge_source: 'TOKYU CARD'
+  skip_sales_goods_row: false

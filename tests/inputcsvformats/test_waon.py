@@ -3,7 +3,7 @@
 from datetime import datetime
 import unittest2 as unittest
 
-import parameterized
+from parameterized import parameterized
 
 from tests.resource import DatabaseTestCase, StoreFactory, ConfigurableDatabaseTestCase
 from zaimcsvconverter.inputcsvformats.waon import WaonPaymentRow, WaonAutoChargeRow, WaonRowData, WaonRowFactory, \
@@ -51,14 +51,14 @@ class TestWaonRow(ConfigurableDatabaseTestCase):
         prepare_fixture()
 
     # pylint: disable=too-many-arguments
-    @parameterized.parameterized.expand([
+    @parameterized.expand([
         (WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'), datetime(2018, 8, 7, 0, 0, 0),
          'ファミリーマート　かぶと町永代通り店', 129, None),
         (WaonRowData('2018/8/30', '板橋前野町', '1,489円', '支払', '-'), datetime(2018, 8, 30, 0, 0, 0),
          'イオンスタイル　板橋前野町', 1489, None),
     ])
     def test_init_success(self, waon_row_data, expected_date, expected_store_name_zaim,
-                          expected_ammount, expected_charge_kind):
+                          expected_amount, expected_charge_kind):
         """
         Arguments should set into properties.
         :param WaonRowData waon_row_data:
@@ -70,12 +70,12 @@ class TestWaonRow(ConfigurableDatabaseTestCase):
         self.assertIsInstance(waon_row.zaim_store, Store)
         self.assertEqual(waon_row.zaim_store.name_zaim, expected_store_name_zaim)
         self.assertEqual(waon_row.zaim_income_cash_flow_target, config_account_name)
-        self.assertEqual(waon_row.zaim_income_ammount_income, expected_ammount)
+        self.assertEqual(waon_row.zaim_income_ammount_income, expected_amount)
         self.assertEqual(waon_row.zaim_payment_cash_flow_source, config_account_name)
-        self.assertEqual(waon_row.zaim_payment_amount_payment, expected_ammount)
+        self.assertEqual(waon_row.zaim_payment_amount_payment, expected_amount)
         self.assertEqual(waon_row.zaim_transfer_cash_flow_source, config_auto_charge_source)
         self.assertEqual(waon_row.zaim_transfer_cash_flow_target, config_account_name)
-        self.assertEqual(waon_row.zaim_transfer_amount_transfer, expected_ammount)
+        self.assertEqual(waon_row.zaim_transfer_amount_transfer, expected_amount)
         # pylint: disable=protected-access
         self.assertEqual(waon_row._charge_kind, expected_charge_kind)
 
@@ -102,7 +102,7 @@ class TestWaonChargeRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    @parameterized.parameterized.expand([
+    @parameterized.expand([
         (WaonRowData('2018/10/22', '板橋前野町', '1,504円', 'チャージ', 'ポイント'), ZaimIncomeRow),
         (WaonRowData('2018/11/11', '板橋前野町', '5,000円', 'チャージ', '銀行口座'), ZaimTransferRow),
     ])
@@ -151,7 +151,7 @@ class TestWaonRowFactory(DatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    @parameterized.parameterized.expand([
+    @parameterized.expand([
         (WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'), WaonPaymentRow),
         (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'チャージ', 'ポイント'), WaonChargeRow),
         (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座'), WaonAutoChargeRow),

@@ -29,7 +29,7 @@ class SFCardViewerRowFactory(AccountRowFactory):
         try:
             note = Note(row_data.note)
         except ValueError as error:
-            raise NotImplementedError(
+            raise ValueError(
                 f'The value of "Note" has not been defined in this code. Note = {row_data.note}'
             ) from error
 
@@ -123,8 +123,11 @@ class SFCardViewerRow(AccountRow):
 
     @property
     def zaim_payment_note(self) -> str:
-        return f'{self._railway_company_name_enter} {self._station_name_enter}' \
-               + f' → {self._railway_company_name_exit} {self._station_name_exit.name}'
+        if self._station_name_exit is None:
+            return ''
+        else:
+            return f'{self._railway_company_name_enter} {self._station_name_enter}' \
+                   + f' → {self._railway_company_name_exit} {self._station_name_exit.name}'
 
     @property
     def zaim_payment_amount_payment(self) -> int:
