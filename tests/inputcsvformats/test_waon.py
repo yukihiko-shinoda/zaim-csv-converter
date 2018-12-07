@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Tests for WaonRow."""
+"""Tests for waon.py."""
 from datetime import datetime
 import unittest2 as unittest
 

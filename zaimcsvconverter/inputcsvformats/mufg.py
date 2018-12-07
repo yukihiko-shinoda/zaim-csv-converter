@@ -36,7 +36,7 @@ class MufgRowFactory(AccountRowFactory):
         try:
             cash_flow_kind = CashFlowKind(row_data.cash_flow_kind)
         except ValueError as error:
-            raise NotImplementedError(
+            raise ValueError(
                 'The value of "Cash flow kind" has not been defined in this code. Cash flow kind ='
                 + row_data.cash_flow_kind
             ) from error

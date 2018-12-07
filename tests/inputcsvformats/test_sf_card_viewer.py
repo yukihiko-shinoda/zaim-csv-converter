@@ -1,9 +1,6 @@
 #!/usr/bin/env python
-"""Tests for SfCardViewerRow."""
-import re
+"""Tests for sf_card_viewer.py."""
 from datetime import datetime
-from pathlib import Path
-
 import unittest2 as unittest
 from parameterized import parameterized
 
@@ -17,7 +14,7 @@ from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimTransferRow
 
 
 class TestSFCardViewerRowData(unittest.TestCase):
-    """Tests for WaonRowData."""
+    """Tests for SFCardViewerRowData."""
 
     def test_init_and_property(self):
         """
@@ -189,6 +186,7 @@ class TestSFCardViewerExitByWindowRow(ConfigurableDatabaseTestCase):
          True),
     ])
     def test_is_row_to_skip(self, sf_card_viewer_row_data, expected):
+        """Method should return true when entered station is as same as exit station and used amount is 0."""
         sf_card_viewer_row = SFCardViewerExitByWindowRow(
             Account.PASMO,
             sf_card_viewer_row_data,
@@ -198,7 +196,7 @@ class TestSFCardViewerExitByWindowRow(ConfigurableDatabaseTestCase):
 
 
 class TestSFCardViewerRowFactory(ConfigurableDatabaseTestCase):
-    """Tests for WaonRowFactory."""
+    """Tests for SFCardViewerRowFactory."""
 
     def _prepare_fixture(self):
         prepare_fixture()
@@ -216,8 +214,8 @@ class TestSFCardViewerRowFactory(ConfigurableDatabaseTestCase):
     def test_create_success(self, argument, expected):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        waon_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(Account.PASMO, argument)
-        self.assertIsInstance(waon_row, expected)
+        sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(Account.PASMO, argument)
+        self.assertIsInstance(sf_card_viewer_row, expected)
 
     def test_create_fail(self):
         """Method should raise ValueError when note is not defined."""

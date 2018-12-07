@@ -125,9 +125,8 @@ class SFCardViewerRow(AccountRow):
     def zaim_payment_note(self) -> str:
         if self._station_name_exit is None:
             return ''
-        else:
-            return f'{self._railway_company_name_enter} {self._station_name_enter}' \
-                   + f' → {self._railway_company_name_exit} {self._station_name_exit.name}'
+        return f'{self._railway_company_name_enter} {self._station_name_enter}' \
+               + f' → {self._railway_company_name_exit} {self._station_name_exit.name}'
 
     @property
     def zaim_payment_amount_payment(self) -> int:
