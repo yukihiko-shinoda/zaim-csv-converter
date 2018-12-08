@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountItemRowData, AccountItemRow, AccountRowFactory
 from zaimcsvconverter.models import Store, Item, StoreRowData
-from zaimcsvconverter.unility import Utility
+from zaimcsvconverter.utility import Utility
 
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimPaymentRow

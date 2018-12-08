@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
 from zaimcsvconverter.models import Store
-from zaimcsvconverter.unility import Utility
+from zaimcsvconverter.utility import Utility
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
@@ -90,12 +90,6 @@ class MufgRow(AccountRow):
         self._balance = int(row_data.balance.replace(',', ''))
         self._note: str = row_data.note
         self._is_uncapitalized: str = row_data.is_uncapitalized
-
-    @staticmethod
-    def _convert_string_to_int_or_none(string) -> Union[int, None]:
-        if string == '':
-            return None
-        return int(string.replace(',', ''))
 
     @property
     @abstractmethod

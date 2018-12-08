@@ -31,9 +31,8 @@ class FilePathInput(Enum):
 class TestAccount(unittest.TestCase):
     """Tests for Account."""
     def test_create_by_path_csv_convert(self):
-        """All accounts should have regex."""
+        """All accounts should have definition of convert table file name."""
         for account in Account:
-            print(account)
             self.assertIsInstance(Account.create_by_path_csv_convert(FilePathConvertTable[account.name].value), Account)
 
     def test_create_by_path_csv_input(self):
