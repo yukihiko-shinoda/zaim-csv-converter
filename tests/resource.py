@@ -17,7 +17,7 @@ import sqlalchemy
 import unittest2 as unittest
 
 from zaimcsvconverter import Session, CONFIG
-from zaimcsvconverter.models import initialize_database, Store
+from zaimcsvconverter.models import initialize_database, Store, Item
 
 
 def create_database():
@@ -38,6 +38,14 @@ class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         """Settings for factory_boy"""
         model = Store
+        sqlalchemy_session = Session
+
+
+class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):
+    """Factory for Store model."""
+    class Meta:
+        """Settings for factory_boy"""
+        model = Item
         sqlalchemy_session = Session
 
 

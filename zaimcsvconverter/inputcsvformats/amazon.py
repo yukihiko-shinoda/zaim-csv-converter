@@ -67,24 +67,9 @@ class AmazonRow(AccountItemRow):
         super().__init__(account)
         self._ordered_date: datetime = row_data.date
         self._store: Store = Store(account, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
-        self.order_id: str = row_data.order_id
         self._item: Item = self.try_to_find_item(row_data.item_name)
-        self.note: str = row_data.note
         self.price: int = int(row_data.price)
         self.number: int = int(row_data.number)
-        self.subtotal_price_item: int = Utility.convert_string_to_int_or_none(row_data.subtotal_price_item)
-        self.total_order: int = Utility.convert_string_to_int_or_none(row_data.total_order)
-        self.destination: str = row_data.destination
-        self.status: str = row_data.status
-        self.billing_address: str = row_data.billing_address
-        self.billing_amount: int = Utility.convert_string_to_int_or_none(row_data.billing_amount)
-        self.credit_card_billing_date: str = row_data.credit_card_billing_date
-        self.credit_card_billing_amount: int = Utility.convert_string_to_int_or_none(
-            row_data.credit_card_billing_amount)
-        self.credit_card_identity: str = row_data.credit_card_identity
-        self.url_order_summary: str = row_data.url_order_summary
-        self.url_receipt: str = row_data.url_receipt
-        self.url_item: str = row_data.url_item
 
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         from zaimcsvconverter.zaim_row import ZaimPaymentRow

@@ -14,7 +14,6 @@ from zaimcsvconverter.zaim_row import ZaimPaymentRow
 
 class TestGoldPointCardPlusRowData(unittest.TestCase):
     """Tests for GoldPointCardPlusRowData."""
-
     # pylint: disable=too-many-locals
     def test_init_and_property(self):
         """
