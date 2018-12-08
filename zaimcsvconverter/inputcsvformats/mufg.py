@@ -8,7 +8,7 @@ from __future__ import annotations
 from abc import abstractmethod
 import datetime
 from enum import Enum
-from typing import Union, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG

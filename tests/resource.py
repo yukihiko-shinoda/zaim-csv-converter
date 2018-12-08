@@ -86,8 +86,8 @@ class ConfigHandler:
     @staticmethod
     def do_cleanups():
         """This function clean up config.yml."""
-        os.unlink(str(ConfigHandler.FILE_TARGET))
         if ConfigHandler.FILE_BACK_UP.is_file():
+            os.unlink(str(ConfigHandler.FILE_TARGET))
             shutil.move(str(ConfigHandler.FILE_BACK_UP), str(ConfigHandler.FILE_TARGET))
 
 
