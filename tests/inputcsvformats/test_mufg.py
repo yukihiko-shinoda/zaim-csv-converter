@@ -10,6 +10,7 @@ from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgIncomeRow, MufgPaymentRow, MufgTransferIncomeRow, \
     MufgTransferPaymentRow, MufgRowFactory
 from zaimcsvconverter.models import StoreRowData, Store
+from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow
 
 
 class TestMufgRowData(unittest.TestCase):
@@ -50,11 +51,15 @@ def prepare_fixture():
     )
     StoreFactory(
         account=Account.MUFG,
-        row_data=StoreRowData('スーパーフツウ', '三菱UFJ銀行', 'その他', 'その他', '臨時収入', '三菱UFJ銀行'),
+        row_data=StoreRowData('スーパーフツウ', '三菱UFJ銀行', 'その他', 'その他', '臨時収入', ''),
     )
     StoreFactory(
         account=Account.MUFG,
-        row_data=StoreRowData('トウキヨウトスイドウ', '東京都水道局　経理部管理課', '水道・光熱', '水道料金', '立替金返済', 'ゴールドポイントカード・プラス'),
+        row_data=StoreRowData('トウキヨウトスイドウ', '東京都水道局　経理部管理課', '水道・光熱', '水道料金', '立替金返済', ''),
+    )
+    StoreFactory(
+        account=Account.MUFG,
+        row_data=StoreRowData('ＧＰマーケテイング', '', '', '', '', 'ゴールドポイントカード・プラス'),
     )
 
 
@@ -66,11 +71,11 @@ class TestMufgIncomeRow(ConfigurableDatabaseTestCase):
 
     def test_init(self):
         """Arguments should set into properties."""
-        mufg_row_data = MufgRowData('2018/10/1', 'カ－ド', '', '', '10000', '3000000', '', '',	'入金')
         expected_amount = 10000
         config_account_name = '三菱UFJ銀行'
         config_transfer_account_name = 'お財布'
-        mufg_row = MufgIncomeRow(Account.MUFG, mufg_row_data)
+        mufg_row = MufgIncomeRow(Account.MUFG,
+                                 MufgRowData('2018/10/1', 'カ－ド', '', '', '10000', '3000000', '', '', '入金'))
         self.assertEqual(mufg_row.zaim_date, datetime(2018, 10, 1, 0, 0, 0))
         self.assertIsInstance(mufg_row.zaim_store, Store)
         self.assertIsNone(mufg_row.zaim_store.name_zaim)
@@ -83,20 +88,25 @@ class TestMufgIncomeRow(ConfigurableDatabaseTestCase):
         self.assertEqual(mufg_row.zaim_transfer_cash_flow_target, config_account_name)
         self.assertEqual(mufg_row.zaim_transfer_amount_transfer, expected_amount)
 
+    def test_convert_to_zaim_row(self):
+        """MufgTransferPaymentRow should convert to ZaimTransferRow."""
+        mufg_row = MufgIncomeRow(Account.MUFG,
+                                 MufgRowData('2018/10/1', 'カ－ド', '', '', '10000', '3000000', '', '', '入金'))
+        self.assertIsInstance(mufg_row.convert_to_zaim_row(), ZaimTransferRow)
+
 
 class TestMufgPaymentRow(ConfigurableDatabaseTestCase):
     """Tests for MufgPaymentRow."""
-
     def _prepare_fixture(self):
         prepare_fixture()
 
     def test_init(self):
         """Arguments should set into properties."""
-        mufg_row_data = MufgRowData('2018/11/5', 'カ－ド', '', '9000', '', '4000000', '', '', '支払い')
+        mufg_row = MufgPaymentRow(Account.MUFG,
+                                  MufgRowData('2018/11/5', 'カ－ド', '', '9000', '', '4000000', '', '', '支払い'))
         expected_amount = 9000
         config_account_name = '三菱UFJ銀行'
         config_transfer_account_name = 'お財布'
-        mufg_row = MufgPaymentRow(Account.MUFG, mufg_row_data)
         self.assertEqual(mufg_row.zaim_date, datetime(2018, 11, 5, 0, 0, 0))
         self.assertIsInstance(mufg_row.zaim_store, Store)
         self.assertIsNone(mufg_row.zaim_store.name_zaim)
@@ -109,6 +119,12 @@ class TestMufgPaymentRow(ConfigurableDatabaseTestCase):
         self.assertEqual(mufg_row.zaim_transfer_cash_flow_target, config_transfer_account_name)
         self.assertEqual(mufg_row.zaim_transfer_amount_transfer, expected_amount)
 
+    def test_convert_to_zaim_row(self):
+        """MufgPaymentRow should convert to ZaimTransferRow."""
+        mufg_row = MufgPaymentRow(Account.MUFG,
+                                  MufgRowData('2018/11/5', 'カ－ド', '', '9000', '', '4000000', '', '', '支払い'))
+        self.assertIsInstance(mufg_row.convert_to_zaim_row(), ZaimTransferRow)
+
 
 class TestMufgTransferIncomeRow(ConfigurableDatabaseTestCase):
     """Tests for MufgTransferIncomeRow."""
@@ -118,22 +134,31 @@ class TestMufgTransferIncomeRow(ConfigurableDatabaseTestCase):
 
     def test_init(self):
         """Arguments should set into properties."""
-        mufg_row_data = MufgRowData('2018/8/20', '利息', 'スーパーフツウ', '', '20', '2000000', '', '', '振替入金')
         expected_amount = 20
         transfer_target = '三菱UFJ銀行'
         store_name = '三菱UFJ銀行'
-        mufg_row = MufgTransferIncomeRow(Account.MUFG, mufg_row_data)
+        mufg_row = MufgTransferIncomeRow(Account.MUFG,
+                                         MufgRowData('2018/8/20', '利息', 'スーパーフツウ', '', '20', '2000000', '', '', '振替入金'))
         self.assertEqual(mufg_row.zaim_date, datetime(2018, 8, 20, 0, 0, 0))
         self.assertIsInstance(mufg_row.zaim_store, Store)
         self.assertEqual(mufg_row.zaim_store.name_zaim, store_name)
         self.assertEqual(mufg_row.zaim_income_cash_flow_target, transfer_target)
         self.assertEqual(mufg_row.zaim_income_ammount_income, expected_amount)
-        self.assertEqual(mufg_row.zaim_payment_cash_flow_source, store_name)
+        self.assertEqual(mufg_row.zaim_payment_cash_flow_source, None)
         self.assertEqual(mufg_row.zaim_payment_note, '')
         self.assertEqual(mufg_row.zaim_payment_amount_payment, expected_amount)
-        self.assertEqual(mufg_row.zaim_transfer_cash_flow_source, store_name)
+        self.assertEqual(mufg_row.zaim_transfer_cash_flow_source, None)
         self.assertEqual(mufg_row.zaim_transfer_cash_flow_target, transfer_target)
         self.assertEqual(mufg_row.zaim_transfer_amount_transfer, expected_amount)
+
+    @parameterized.expand([
+        (MufgRowData('2018/8/20', '利息', 'スーパーフツウ', '', '20', '2000000', '', '', '振替入金'), ZaimIncomeRow),
+        (MufgRowData('2018/10/29', '口座振替３', 'ＧＰマ−ケテイング', '', '59260', '3000000', '', '', '振替支払い'), ZaimTransferRow),
+    ])
+    def test_convert_to_zaim_row(self, argument, expected):
+        """MufgTransferIncomeRow should convert to suitable ZaimRow by transfer target."""
+        mufg_row = MufgTransferIncomeRow(Account.MUFG, argument)
+        self.assertIsInstance(mufg_row.convert_to_zaim_row(), expected)
 
 
 class TestMufgTransferPaymentRow(ConfigurableDatabaseTestCase):
@@ -144,12 +169,13 @@ class TestMufgTransferPaymentRow(ConfigurableDatabaseTestCase):
 
     def test_init(self):
         """Arguments should set into properties."""
-        mufg_row_data = MufgRowData('2018/11/28', '水道', 'トウキヨウトスイドウ', '3628', '', '5000000', '', '', '振替支払い')
         expected_amount = 3628
         config_account_name = '三菱UFJ銀行'
-        transfer_target = 'ゴールドポイントカード・プラス'
+        transfer_target = None
         store_name = '東京都水道局　経理部管理課'
-        mufg_row = MufgTransferPaymentRow(Account.MUFG, mufg_row_data)
+        mufg_row = MufgTransferPaymentRow(Account.MUFG,
+                                          MufgRowData('2018/11/28', '水道', 'トウキヨウトスイドウ', '3628', '', '5000000', '', '',
+                                                      '振替支払い'))
         self.assertEqual(mufg_row.zaim_date, datetime(2018, 11, 28, 0, 0, 0))
         self.assertIsInstance(mufg_row.zaim_store, Store)
         self.assertEqual(mufg_row.zaim_store.name_zaim, store_name)
@@ -161,6 +187,15 @@ class TestMufgTransferPaymentRow(ConfigurableDatabaseTestCase):
         self.assertEqual(mufg_row.zaim_transfer_cash_flow_source, config_account_name)
         self.assertEqual(mufg_row.zaim_transfer_cash_flow_target, transfer_target)
         self.assertEqual(mufg_row.zaim_transfer_amount_transfer, expected_amount)
+
+    @parameterized.expand([
+        (MufgRowData('2018/11/28', '水道', 'トウキヨウトスイドウ', '3628', '', '5000000', '', '', '振替支払い'), ZaimPaymentRow),
+        (MufgRowData('2018/10/29', '口座振替３', 'ＧＰマ−ケテイング', '', '59260', '3000000', '', '', '振替支払い'), ZaimTransferRow),
+    ])
+    def test_convert_to_zaim_row(self, argument, expected):
+        """MufgTransferPaymentRow should convert to suitable ZaimRow by transfer target."""
+        mufg_row = MufgTransferPaymentRow(Account.MUFG, argument)
+        self.assertIsInstance(mufg_row.convert_to_zaim_row(), expected)
 
 
 class TestMufgRowFactory(DatabaseTestCase):

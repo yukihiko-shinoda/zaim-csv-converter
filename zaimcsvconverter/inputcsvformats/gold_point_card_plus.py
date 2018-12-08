@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-This module implements row model of GOLD POINT CARD+ CSV.
-"""
+"""This module implements row model of GOLD POINT CARD+ CSV."""
 
 from __future__ import annotations
 import datetime
@@ -52,9 +50,7 @@ class GoldPointCardPlusRowData(AccountStoreRowData):
 
 
 class GoldPointCardPlusRow(AccountRow):
-    """
-    This class implements row model of GOLD POINT CARD+ CSV.
-    """
+    """This class implements row model of GOLD POINT CARD+ CSV."""
     def __init__(self, account: 'Account', row_data: GoldPointCardPlusRowData):
         super().__init__(account)
         self._used_date: datetime = row_data.date
