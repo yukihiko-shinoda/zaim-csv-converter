@@ -17,9 +17,9 @@ class AccountCsvConverter:
     """
     This class implements abstract converting steps for CSV.
     """
-    def __init__(self, path_csv_file: Path, account: Account):
+    def __init__(self, path_csv_file: Path):
         self._path_csv_file = path_csv_file
-        self._account = account
+        self._account = Account.create_by_path_csv_input(path_csv_file)
         self.list_undefined_content: List[List[str]] = []
 
     def execute(self) -> NoReturn:

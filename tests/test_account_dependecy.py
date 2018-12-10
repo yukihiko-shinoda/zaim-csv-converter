@@ -21,8 +21,8 @@ class TestAccount(unittest.TestCase):
         convert_table_model_class = Store
         account_row_data_class = WaonRowData
         account_row_factory = WaonRowFactory()
-        accunt_dependency = AccountDependency(identity, file_name_csv_convert, regex_csv_file_name, convert_table_model_class,
-                                              account_row_data_class, account_row_factory)
+        accunt_dependency = AccountDependency(identity, file_name_csv_convert, regex_csv_file_name,
+                                              convert_table_model_class, account_row_data_class, account_row_factory)
         self.assertEqual(accunt_dependency.id, identity)
         self.assertEqual(accunt_dependency.file_name_csv_convert, file_name_csv_convert)
         self.assertEqual(accunt_dependency.regex_csv_file_name, regex_csv_file_name)

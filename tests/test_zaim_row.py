@@ -3,14 +3,13 @@
 from parameterized import parameterized
 from dataclasses import dataclass
 
-
+from tests.instance_fixture import InstanceFixture
 from tests.resource import StoreFactory, ConfigurableDatabaseTestCase, ItemFactory
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory, AmazonRowData
+from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
 from zaimcsvconverter.inputcsvformats.mufg import MufgTransferIncomeRow, MufgRowData
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerTransportationRow, \
-    SFCardViewerRowFactory
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonAutoChargeRow, WaonRowData
 from zaimcsvconverter.models import StoreRowData, ItemRowData
 from zaimcsvconverter.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
@@ -88,26 +87,20 @@ class TestZaimPaymentRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
+    # pylint: disable=too-many-arguments,too-many-locals
     @parameterized.expand([
         (SFCardViewerRowFactory(lambda: CONFIG.pasmo), Account.PASMO, SFCardViewerRowData(
             '2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''
         ), '2018-11-13', '交通', '電車', 'PASMO', None, 'メトロ 六本木一丁目 → メトロ 後楽園',
          '東京地下鉄株式会社　南北線後楽園駅', 195),
-        (AmazonRowFactory(), Account.AMAZON, AmazonRowData(
-            '2018/10/23', '123-4567890-1234567', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト',
-            '販売： Amazon Japan G.K.  コンディション： 新品', '4980', '1', '6276', '6390', 'ローソン桜塚',
-            '2018年10月23日に発送済み', 'テストアカウント', '5952', '2018/10/23', '5952', 'Visa（下4けたが1234）',
-            'https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=123-4567890-1234567',
-            'https://www.amazon.co.jp/gp/css/summary/print.html/'
-            + 'ref=oh_aui_ajax_dpi?ie=UTF8&orderID=123-4567890-1234567',
-            'https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1'),
+        (AmazonRowFactory(), Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON,
          '2018-10-23', '大型出費', '家電', 'ヨドバシゴールドポイントカード・プラス',
          'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '',
          'Amazon Japan G.K.', 4980),
     ])
-    def test_all(self, account_row_factory, account, account_row_data, expected_date, expected_category_large, expected_category_small,
-                 expected_cash_flow_source, expected_item_name, expected_note, expected_store_name,
-                 expected_amount_payment):
+    def test_all(self, account_row_factory, account, account_row_data, expected_date, expected_category_large,
+                 expected_category_small, expected_cash_flow_source, expected_item_name, expected_note,
+                 expected_store_name, expected_amount_payment):
         """Argument should set into properties."""
         zaim_low = ZaimPaymentRow(account_row_factory.create(account, account_row_data))
         list_zaim_row = zaim_low.convert_to_list()

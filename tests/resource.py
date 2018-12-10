@@ -10,7 +10,7 @@ import shutil
 import sys
 from abc import abstractmethod
 from pathlib import Path
-from typing import Union
+from typing import Union, Type
 
 import factory
 import sqlalchemy
@@ -91,9 +91,11 @@ class ConfigHandler:
             shutil.move(str(ConfigHandler.FILE_BACK_UP), str(ConfigHandler.FILE_TARGET))
 
 
-def create_path_as_same_as_file_name(file):
+def create_path_as_same_as_file_name(argument: Union[object, Type[object]]) -> Path:
     """This function creates and returns path as same as file name."""
-    return Path(re.search(r'(.*)\.py', file).group(1))
+    if isinstance(argument, object):
+        argument = argument.__class__
+    return Path(re.search(r'(.*)\.py', sys.modules[argument.__module__].__file__).group(1))
 
 
 class ConfigurableDatabaseTestCase(DatabaseTestCase):
@@ -101,17 +103,12 @@ class ConfigurableDatabaseTestCase(DatabaseTestCase):
     This class creates new in memory database to run unittest as parallel,
     and also creates config.yml.
     """
-    @property
-    def directory_resource(self) -> Path:
-        """This property returns resource directory for test."""
-        return create_path_as_same_as_file_name(sys.modules[self.__class__.__module__].__file__)
-
     def setUp(self):
         super().setUp()
         if self.source_yaml_file is None:
             ConfigHandler.set_up()
         else:
-            ConfigHandler.set_up(self.directory_resource / self.source_yaml_file)
+            ConfigHandler.set_up(create_path_as_same_as_file_name(self) / self.source_yaml_file)
 
     @abstractmethod
     def _prepare_fixture(self):
@@ -131,16 +128,11 @@ class ConfigurableTestCase(unittest.TestCase):
     """
     This class creates config.yml.
     """
-    @property
-    def directory_resource(self) -> Path:
-        """This property returns resource directory for test."""
-        return create_path_as_same_as_file_name(sys.modules[self.__class__.__module__].__file__)
-
     def setUp(self):
         if self.source_yaml_file is None:
             ConfigHandler.set_up()
         else:
-            ConfigHandler.set_up(self.directory_resource / self.source_yaml_file)
+            ConfigHandler.set_up(create_path_as_same_as_file_name(self) / self.source_yaml_file)
 
     def doCleanups(self):
         ConfigHandler.do_cleanups()
@@ -149,3 +141,34 @@ class ConfigurableTestCase(unittest.TestCase):
     def source_yaml_file(self) -> Union[str, None]:
         """This property returns source yaml file"""
         return None
+
+
+class CsvHandler:
+    """This class handles CSV."""
+    PATH_TARGET_OUTPUT: Path = Path(__file__).parent.parent / 'csvoutput'
+
+    @staticmethod
+    def set_up(file_source: Path):
+        """This function set up CSV."""
+        file_target_output = CsvHandler.__file_target_output(file_source)
+        file_back_up_output = CsvHandler.__file_back_up_output(file_source)
+        if file_target_output.is_file():
+            shutil.move(str(file_target_output), str(file_back_up_output))
+        CONFIG.load()
+
+    @staticmethod
+    def do_cleanups(file_source: Path):
+        """This function clean up CSV."""
+        file_target_output = CsvHandler.__file_target_output(file_source)
+        file_back_up_output = CsvHandler.__file_back_up_output(file_source)
+        if file_back_up_output.is_file():
+            os.unlink(str(file_target_output))
+            shutil.move(str(file_back_up_output), str(file_target_output))
+
+    @staticmethod
+    def __file_target_output(file_source: Path):
+        return CsvHandler.PATH_TARGET_OUTPUT / file_source.name
+
+    @staticmethod
+    def __file_back_up_output(file_source: Path):
+        return CsvHandler.PATH_TARGET_OUTPUT / (file_source.name + '.bak')
