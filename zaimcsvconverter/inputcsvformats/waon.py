@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
+from zaimcsvconverter.input_row import InputRow, InputStoreRowData, InputRowFactory
 from zaimcsvconverter.models import Store
 from zaimcsvconverter.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow, ZaimIncomeRow
 
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
 
 
-class WaonRowFactory(AccountRowFactory):
+class WaonRowFactory(InputRowFactory):
     """This class implements factory to create WAON CSV row instance."""
     def create(self, account: 'Account', row_data: WaonRowData) -> WaonRow:
         try:
@@ -42,7 +42,7 @@ class WaonRowFactory(AccountRowFactory):
 
 
 @dataclass
-class WaonRowData(AccountStoreRowData):
+class WaonRowData(InputStoreRowData):
     """This class implements data class for wrapping list of WAON CSV row model."""
     _date: str
     _used_store: str
@@ -61,7 +61,7 @@ class WaonRowData(AccountStoreRowData):
         return self._used_store
 
 
-class WaonRow(AccountRow):
+class WaonRow(InputRow):
     """This class implements row model of WAON CSV."""
     class UseKind(Enum):
         """This class implements constant of user kind in WAON CSV."""

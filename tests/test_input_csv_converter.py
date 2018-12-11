@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Tests for account_csv_converter.py."""
+"""Tests for input_csv_converter.py."""
 from __future__ import annotations
 
 import csv
@@ -9,7 +9,7 @@ from pathlib import Path
 from tests.resource import ConfigurableDatabaseTestCase, CsvHandler, create_path_as_same_as_file_name, \
     prepare_basic_store_waon
 from tests.test_zaim_row import ZaimRowDataForTest
-from zaimcsvconverter.account_csv_converter import AccountCsvConverter
+from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
 
 def prepare_fixture():
@@ -17,7 +17,7 @@ def prepare_fixture():
     prepare_basic_store_waon()
 
 
-class TestAccountCsvConverter(ConfigurableDatabaseTestCase):
+class TestInputCsvConverter(ConfigurableDatabaseTestCase):
     """Tests for AccountCsvConverter."""
     @property
     @abstractmethod
@@ -42,7 +42,7 @@ class TestAccountCsvConverter(ConfigurableDatabaseTestCase):
         super().doCleanups()
 
 
-class TestAccountCsvConverterForStore(TestAccountCsvConverter):
+class TestInputCsvConverterForStore(TestInputCsvConverter):
     """Tests for AccountCsvConverter for store based CSV."""
     @property
     def suffix_file_name(self):
@@ -53,9 +53,9 @@ class TestAccountCsvConverterForStore(TestAccountCsvConverter):
         The row to skip should be skipped.
         First line should be header.
         """
-        account_csv_converter = AccountCsvConverter(self.file_source)
-        self.assertEqual(account_csv_converter.list_undefined_content, [])
-        account_csv_converter.execute()
+        input_csv_converter = InputCsvConverter(self.file_source)
+        self.assertEqual(input_csv_converter.list_undefined_content, [])
+        input_csv_converter.execute()
         with open(
                 str(CsvHandler.PATH_TARGET_OUTPUT / self.file_source.name), 'r', encoding='UTF-8', newline='\n'
         ) as file_zaim:
@@ -84,24 +84,24 @@ class TestAccountCsvConverterForStore(TestAccountCsvConverter):
 
     def test_stop_iteration(self):
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
-        account_csv_converter = AccountCsvConverter(self.file_source)
-        self.assertEqual(account_csv_converter.list_undefined_content, [])
+        input_csv_converter = InputCsvConverter(self.file_source)
+        self.assertEqual(input_csv_converter.list_undefined_content, [])
         with self.assertRaises(StopIteration):
-            account_csv_converter.execute()
+            input_csv_converter.execute()
 
     def test_key_error(self):
         """
         Method should raise error when store isn't be find on database.
         Undefined store is listed up on property.
         """
-        account_csv_converter = AccountCsvConverter(self.file_source)
-        self.assertEqual(account_csv_converter.list_undefined_content, [])
+        input_csv_converter = InputCsvConverter(self.file_source)
+        self.assertEqual(input_csv_converter.list_undefined_content, [])
         with self.assertRaises(KeyError):
-            account_csv_converter.execute()
-        self.assertEqual(account_csv_converter.list_undefined_content, [['waon.csv', 'マクドナルド津田沼駅前店', '']])
+            input_csv_converter.execute()
+        self.assertEqual(input_csv_converter.list_undefined_content, [['waon.csv', 'マクドナルド津田沼駅前店', '']])
 
 
-class TestAccountCsvConverterForItem(TestAccountCsvConverter):
+class TestInputCsvConverterForItem(TestInputCsvConverter):
     """Tests for AcountCsvConverter for item based CSV."""
     @property
     def suffix_file_name(self):
@@ -112,11 +112,11 @@ class TestAccountCsvConverterForItem(TestAccountCsvConverter):
         Method should raise error when store isn't be find on database.
         Undefined item is listed up on property.
         """
-        account_csv_converter = AccountCsvConverter(self.file_source)
-        self.assertEqual(account_csv_converter.list_undefined_content, [])
+        input_csv_converter = InputCsvConverter(self.file_source)
+        self.assertEqual(input_csv_converter.list_undefined_content, [])
         with self.assertRaises(KeyError):
-            account_csv_converter.execute()
+            input_csv_converter.execute()
         self.assertEqual(
-            account_csv_converter.list_undefined_content,
+            input_csv_converter.list_undefined_content,
             [['amazon.csv', '', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト']]
         )

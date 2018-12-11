@@ -9,7 +9,7 @@ from abc import ABCMeta, abstractmethod
 from typing import List
 
 from zaimcsvconverter.models import Store, Item
-from zaimcsvconverter.account_row import AccountRow
+from zaimcsvconverter.input_row import InputRow
 
 
 # pylint: disable=too-many-instance-attributes
@@ -36,10 +36,10 @@ class ZaimRow(metaclass=ABCMeta):
     def _date_string(self) -> str:
         return self._date.strftime("%Y-%m-%d")
 
-    def __init__(self, account_row: AccountRow):
-        self._date: datetime = account_row.zaim_date
-        self._store: Store = account_row.zaim_store
-        self._item: Item = account_row.zaim_item
+    def __init__(self, input_row: InputRow):
+        self._date: datetime = input_row.zaim_date
+        self._store: Store = input_row.zaim_store
+        self._item: Item = input_row.zaim_item
 
     @abstractmethod
     def convert_to_list(self) -> List[str]:
@@ -55,10 +55,10 @@ class ZaimIncomeRow(ZaimRow):
     """
     METHOD: str = 'income'
 
-    def __init__(self, account_row: AccountRow):
-        self._cash_flow_target: str = account_row.zaim_income_cash_flow_target
-        self._amount_income: int = account_row.zaim_income_ammount_income
-        super().__init__(account_row)
+    def __init__(self, input_row: InputRow):
+        self._cash_flow_target: str = input_row.zaim_income_cash_flow_target
+        self._amount_income: int = input_row.zaim_income_ammount_income
+        super().__init__(input_row)
 
     def convert_to_list(self) -> List[str]:
         return [
@@ -87,11 +87,11 @@ class ZaimPaymentRow(ZaimRow):
     """
     METHOD: str = 'payment'
 
-    def __init__(self, account_row: AccountRow):
-        self._cash_flow_source: str = account_row.zaim_payment_cash_flow_source
-        self._note: int = account_row.zaim_payment_note
-        self._amount_payment: int = account_row.zaim_payment_amount_payment
-        super().__init__(account_row)
+    def __init__(self, input_row: InputRow):
+        self._cash_flow_source: str = input_row.zaim_payment_cash_flow_source
+        self._note: int = input_row.zaim_payment_note
+        self._amount_payment: int = input_row.zaim_payment_amount_payment
+        super().__init__(input_row)
 
     def convert_to_list(self) -> List[str]:
         return [
@@ -120,11 +120,11 @@ class ZaimTransferRow(ZaimRow):
     """
     METHOD: str = 'transfer'
 
-    def __init__(self, account_row: AccountRow):
-        self._cash_flow_source: str = account_row.zaim_transfer_cash_flow_source
-        self._cash_flow_target: str = account_row.zaim_transfer_cash_flow_target
-        self._amount_transfer: int = account_row.zaim_transfer_amount_transfer
-        super().__init__(account_row)
+    def __init__(self, input_row: InputRow):
+        self._cash_flow_source: str = input_row.zaim_transfer_cash_flow_source
+        self._cash_flow_target: str = input_row.zaim_transfer_cash_flow_target
+        self._amount_transfer: int = input_row.zaim_transfer_amount_transfer
+        super().__init__(input_row)
 
     def convert_to_list(self) -> List[str]:
         return [

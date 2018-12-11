@@ -11,7 +11,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Callable
 from dataclasses import dataclass
 
-from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
+from zaimcsvconverter.input_row import InputRow, InputStoreRowData, InputRowFactory
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimTransferRow
 
 
-class SFCardViewerRowFactory(AccountRowFactory):
+class SFCardViewerRowFactory(InputRowFactory):
     """This class implements factory to create WAON CSV row instance."""
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config
@@ -54,7 +54,7 @@ class Note(Enum):
 
 
 @dataclass
-class SFCardViewerRowData(AccountStoreRowData):
+class SFCardViewerRowData(InputStoreRowData):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
     _used_date: str
     is_commuter_pass_enter: str
@@ -79,7 +79,7 @@ class SFCardViewerRowData(AccountStoreRowData):
 
 
 # pylint: disable=too-many-instance-attributes
-class SFCardViewerRow(AccountRow):
+class SFCardViewerRow(InputRow):
     """
     This class implements row model of SF Card Viewer CSV.
     """

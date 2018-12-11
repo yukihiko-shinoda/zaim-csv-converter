@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountItemRowData, AccountItemRow, AccountRowFactory
+from zaimcsvconverter.input_row import InputItemRowData, InputItemRow, InputRowFactory
 from zaimcsvconverter.models import Store, Item, StoreRowData
 from zaimcsvconverter.utility import Utility
 
@@ -19,14 +19,14 @@ if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
 
 
-class AmazonRowFactory(AccountRowFactory):
+class AmazonRowFactory(InputRowFactory):
     """This class implements factory to create Amazon.co.jp CSV row instance."""
     def create(self, account: 'Account', row_data: AmazonRowData) -> AmazonRow:
         return AmazonRow(account, row_data)
 
 
 @dataclass
-class AmazonRowData(AccountItemRowData):
+class AmazonRowData(InputItemRowData):
     """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
     _ordered_date: str
     order_id: str
@@ -59,7 +59,7 @@ class AmazonRowData(AccountItemRowData):
 
 
 # pylint: disable=too-many-instance-attributes
-class AmazonRow(AccountItemRow):
+class AmazonRow(InputItemRow):
     """
     This class implements row model of Amazon.co.jp CSV.
     """

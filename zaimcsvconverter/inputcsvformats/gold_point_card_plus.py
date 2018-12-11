@@ -8,21 +8,21 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
+from zaimcsvconverter.input_row import InputRow, InputStoreRowData, InputRowFactory
 from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
 
 
-class GoldPointCardPlusRowFactory(AccountRowFactory):
+class GoldPointCardPlusRowFactory(InputRowFactory):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
     def create(self, account: 'Account', row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
         return GoldPointCardPlusRow(account, row_data)
 
 
 @dataclass
-class GoldPointCardPlusRowData(AccountStoreRowData):
+class GoldPointCardPlusRowData(InputStoreRowData):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
     _used_date: str
     _used_store: str
@@ -49,7 +49,7 @@ class GoldPointCardPlusRowData(AccountStoreRowData):
         return self._used_store
 
 
-class GoldPointCardPlusRow(AccountRow):
+class GoldPointCardPlusRow(InputRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
     def __init__(self, account: 'Account', row_data: GoldPointCardPlusRowData):
         super().__init__(account)

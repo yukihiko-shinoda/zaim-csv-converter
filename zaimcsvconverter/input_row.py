@@ -16,16 +16,16 @@ if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimRow
 
 
-class AccountRowFactory(metaclass=ABCMeta):
-    """This class implements factory to create account CSV row instance."""
+class InputRowFactory(metaclass=ABCMeta):
+    """This class implements factory to create input CSV row instance."""
     @abstractmethod
-    def create(self, account: 'Account', row_data: AccountRowData) -> AccountRow:
-        """This method creates account row by account CSV row data."""
+    def create(self, account: 'Account', row_data: InputRowData) -> InputRow:
+        """This method creates input row by input CSV row data."""
         pass
 
 
-class AccountRowData(metaclass=ABCMeta):
-    """This class is abstract class of account CSV row data."""
+class InputRowData(metaclass=ABCMeta):
+    """This class is abstract class of input CSV row data."""
     def __init__(self, *args):
         pass
 
@@ -36,8 +36,8 @@ class AccountRowData(metaclass=ABCMeta):
         pass
 
 
-class AccountStoreRowData(AccountRowData):
-    """This class is abstract class of account CSV row data."""
+class InputStoreRowData(InputRowData):
+    """This class is abstract class of input CSV row data."""
     @property
     @abstractmethod
     def store_name(self) -> str:
@@ -45,8 +45,8 @@ class AccountStoreRowData(AccountRowData):
         pass
 
 
-class AccountItemRowData(AccountRowData):
-    """This class is abstract class of account CSV row data."""
+class InputItemRowData(InputRowData):
+    """This class is abstract class of input CSV row data."""
     @property
     @abstractmethod
     def item_name(self) -> str:
@@ -54,7 +54,7 @@ class AccountItemRowData(AccountRowData):
         pass
 
 
-class AccountRow(metaclass=ABCMeta):
+class InputRow(metaclass=ABCMeta):
     """This class implements row model of CSV."""
     def __init__(self, account: 'Account'):
         self._account = account
@@ -65,9 +65,9 @@ class AccountRow(metaclass=ABCMeta):
         return self.zaim_store is not None
 
     # pylint: disable=no-self-use
-    def extract_undefined_content(self, account_row_data: AccountStoreRowData) -> List[str]:
-        """This property extract undefined content from account_row_data and return it."""
-        return [account_row_data.store_name, '']
+    def extract_undefined_content(self, input_row_data: InputStoreRowData) -> List[str]:
+        """This property extract undefined content from input_row_data and return it."""
+        return [input_row_data.store_name, '']
 
     @property
     def is_row_to_skip(self) -> bool:
@@ -175,7 +175,7 @@ class AccountRow(metaclass=ABCMeta):
         return Item.try_to_find(self._account, item_name)
 
 
-class AccountItemRow(AccountRow):
+class InputItemRow(InputRow):
     """
     This class implements store row model of CSV.
     """
@@ -184,11 +184,11 @@ class AccountItemRow(AccountRow):
         """This property returns whether this row is valid or not."""
         return self.zaim_store is not None and self.zaim_item is not None
 
-    def extract_undefined_content(self, account_row_data: AccountItemRowData) -> List[str]:
-        """This property extract undefined content from account_row_data and return it."""
+    def extract_undefined_content(self, input_row_data: InputItemRowData) -> List[str]:
+        """This property extract undefined content from input_row_data and return it."""
         return [
             '',
-            account_row_data.item_name
+            input_row_data.item_name
         ]
 
     @property

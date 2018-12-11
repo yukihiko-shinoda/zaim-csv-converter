@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-"""Tests for account_csv_converter_iterator.py."""
+"""Tests for input_csv_converter_iterator.py."""
 import csv
 from dataclasses import dataclass
 
 from tests.resource import DatabaseTestCase, create_path_as_same_as_file_name, StoreFactory, clean_up_directory, \
     ItemFactory
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.account_csv_converter_iterator import AccountCsvConverterIterator
+from zaimcsvconverter.input_csv_converter_iterator import InputCsvConverterIterator
 from zaimcsvconverter.models import StoreRowData, ItemRowData
 
 
@@ -18,9 +18,9 @@ class ErrorRowDataForTest:
     item_name: str
 
 
-class TestAccountCsvConverterIterator(DatabaseTestCase):
+class TestInputCsvConverterIterator(DatabaseTestCase):
     """Tests for AccountCsvConverterIterator."""
-    account_csv_converter = None
+    input_csv_converter = None
     directory_csv_input = None
     directory_csv_output = None
 
@@ -40,7 +40,7 @@ class TestAccountCsvConverterIterator(DatabaseTestCase):
         super().setUp()
         self.directory_csv_input = create_path_as_same_as_file_name(self) / self._testMethodName / 'csvinput'
         self.directory_csv_output = create_path_as_same_as_file_name(self) / self._testMethodName / 'csvoutput'
-        self.account_csv_converter = AccountCsvConverterIterator(self.directory_csv_input, self.directory_csv_output)
+        self.input_csv_converter = InputCsvConverterIterator(self.directory_csv_input, self.directory_csv_output)
 
     def doCleanups(self):
         clean_up_directory(self.directory_csv_output)
@@ -48,7 +48,7 @@ class TestAccountCsvConverterIterator(DatabaseTestCase):
 
     def test_success(self):
         """Method processes all csv files in specified diretory."""
-        self.account_csv_converter.execute()
+        self.input_csv_converter.execute()
         files = sorted(self.directory_csv_output.rglob('*[!.gitkeep]'))
         self.assertEqual(len(files), 2)
         self.assertEqual(files[0].name, 'test_amazon.csv')
@@ -60,7 +60,7 @@ class TestAccountCsvConverterIterator(DatabaseTestCase):
         Same content should be unified.
         """
         with self.assertRaises(KeyError):
-            self.account_csv_converter.execute()
+            self.input_csv_converter.execute()
         files = sorted(self.directory_csv_output.rglob('*[!.gitkeep]'))
         self.assertEqual(len(files), 3)
         self.assertEqual(files[0].name, 'error.csv')

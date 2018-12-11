@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account_row import AccountRow, AccountStoreRowData, AccountRowFactory
+from zaimcsvconverter.input_row import InputRow, InputStoreRowData, InputRowFactory
 from zaimcsvconverter.models import Store
 from zaimcsvconverter.utility import Utility
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow
@@ -30,7 +30,7 @@ class CashFlowKind(Enum):
     TRANSFER_PAYMENT: str = '振替支払い'
 
 
-class MufgRowFactory(AccountRowFactory):
+class MufgRowFactory(InputRowFactory):
     """This class implements factory to create MUFG CSV row instance."""
     def create(self, account: 'Account', row_data: MufgRowData) -> MufgRow:
         try:
@@ -52,7 +52,7 @@ class MufgRowFactory(AccountRowFactory):
 
 
 @dataclass
-class MufgRowData(AccountStoreRowData):
+class MufgRowData(InputStoreRowData):
     """This class implements data class for wrapping list of MUFG bunk CSV row model."""
     _date: str
     summary: str
@@ -76,7 +76,7 @@ class MufgRowData(AccountStoreRowData):
 
 
 # pylint: disable=too-many-instance-attributes
-class MufgRow(AccountRow):
+class MufgRow(InputRow):
     """
     This class implements row model of MUFG bank CSV.
     """

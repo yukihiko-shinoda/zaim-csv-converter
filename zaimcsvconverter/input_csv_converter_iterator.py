@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""This module implements iterating steps from account_csv_converter."""
+"""This module implements iterating steps from input_csv_converter."""
 import csv
 from pathlib import Path
 from typing import NoReturn, List
@@ -7,11 +7,11 @@ from typing import NoReturn, List
 import numpy
 
 from zaimcsvconverter.account import DirectoryCsv
-from zaimcsvconverter.account_csv_converter import AccountCsvConverter
+from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
 
-class AccountCsvConverterIterator:
-    """This class implements iterating steps from account_csv_converter."""
+class InputCsvConverterIterator:
+    """This class implements iterating steps from input_csv_converter."""
     FILE_NAME_ERROR = 'error.csv'
 
     def __init__(
@@ -24,9 +24,9 @@ class AccountCsvConverterIterator:
 
     def execute(self) -> NoReturn:
         """This method executes all CSV converters."""
-        list_csv_converter: List[AccountCsvConverter] = []
+        list_csv_converter: List[InputCsvConverter] = []
         for path in self.directory_csv_input.glob('*.csv'):
-            list_csv_converter.append(AccountCsvConverter(path, self.directory_csv_output))
+            list_csv_converter.append(InputCsvConverter(path, self.directory_csv_output))
         list_undefined_store = []
         for csv_converter in list_csv_converter:
             try:

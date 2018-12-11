@@ -98,11 +98,11 @@ class TestZaimPaymentRow(ConfigurableDatabaseTestCase):
          'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '',
          'Amazon Japan G.K.', 4980),
     ])
-    def test_all(self, account_row_factory, account, account_row_data, expected_date, expected_category_large,
+    def test_all(self, input_row_factory, account, input_row_data, expected_date, expected_category_large,
                  expected_category_small, expected_cash_flow_source, expected_item_name, expected_note,
                  expected_store_name, expected_amount_payment):
         """Argument should set into properties."""
-        zaim_low = ZaimPaymentRow(account_row_factory.create(account, account_row_data))
+        zaim_low = ZaimPaymentRow(input_row_factory.create(account, input_row_data))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowDataForTest(*list_zaim_row)
         self.assertEqual(zaim_row_data.date, expected_date)
