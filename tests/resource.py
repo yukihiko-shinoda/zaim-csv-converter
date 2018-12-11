@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """
 This module implements testing utility using SQLAlchemy and factory_boy.
 @see https://factoryboy.readthedocs.io/en/latest/orms.html#sqlalchemy
@@ -10,14 +9,15 @@ import shutil
 import sys
 from abc import abstractmethod
 from pathlib import Path
-from typing import Union, Type
+from typing import Union, Type, NoReturn
 
 import factory
 import sqlalchemy
 import unittest2 as unittest
 
 from zaimcsvconverter import Session, CONFIG
-from zaimcsvconverter.models import initialize_database, Store, Item
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.models import initialize_database, Store, Item, StoreRowData
 
 
 def create_database():
@@ -98,6 +98,12 @@ def create_path_as_same_as_file_name(argument: Union[object, Type[object]]) -> P
     return Path(re.search(r'(.*)\.py', sys.modules[argument.__module__].__file__).group(1))
 
 
+def clean_up_directory(path_to_directory: Path) -> NoReturn:
+    """This function cleans up content in specified directory."""
+    for file in path_to_directory.rglob('*[!.gitkeep]'):
+        os.unlink(str(file))
+
+
 class ConfigurableDatabaseTestCase(DatabaseTestCase):
     """
     This class creates new in memory database to run unittest as parallel,
@@ -172,3 +178,15 @@ class CsvHandler:
     @staticmethod
     def __file_back_up_output(file_source: Path):
         return CsvHandler.PATH_TARGET_OUTPUT / (file_source.name + '.bak')
+
+
+def prepare_basic_store_waon():
+    """This function prepare common fixture with some tests."""
+    StoreFactory(
+        account=Account.WAON,
+        row_data=StoreRowData('ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店'),
+    )
+    StoreFactory(
+        account=Account.WAON,
+        row_data=StoreRowData('板橋前野町', 'イオンスタイル　板橋前野町'),
+    )

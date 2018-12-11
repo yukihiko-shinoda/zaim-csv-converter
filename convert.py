@@ -12,8 +12,7 @@ def main() -> NoReturn:
     """
     This function calls Zaim CSV converter package.
     """
-    zaim_csv_converter = ZaimCsvConverter()
-    zaim_csv_converter.execute()
+    ZaimCsvConverter.execute()
 
 
 if __name__ == '__main__':

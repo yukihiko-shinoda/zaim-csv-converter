@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-
-"""
-This module implements abstract converting steps for CSV.
-"""
-
+"""This module implements abstract converting steps for CSV."""
 import csv
 from pathlib import Path
 from typing import NoReturn, List
@@ -14,20 +10,17 @@ from zaimcsvconverter.account import DirectoryCsv, Account
 
 
 class AccountCsvConverter:
-    """
-    This class implements abstract converting steps for CSV.
-    """
-    def __init__(self, path_csv_file: Path):
+    """This class implements abstract converting steps for CSV."""
+    def __init__(self, path_csv_file: Path, directory_csv_output: Path = DirectoryCsv.OUTPUT.value):
         self._path_csv_file = path_csv_file
+        self.directory_csv_output = directory_csv_output
         self._account = Account.create_by_path_csv_input(path_csv_file)
         self.list_undefined_content: List[List[str]] = []
 
     def execute(self) -> NoReturn:
-        """
-        This method executes CSV convert steps.
-        """
-        with open(
-                Path(DirectoryCsv.OUTPUT.value) / self._path_csv_file.name, 'w', encoding='UTF-8', newline='\n'
+        """This method executes CSV convert steps."""
+        with (self.directory_csv_output / self._path_csv_file.name).open(
+                'w', encoding='UTF-8', newline='\n'
         ) as file_zaim:
             writer_zaim = csv.writer(file_zaim)
             writer_zaim.writerow([

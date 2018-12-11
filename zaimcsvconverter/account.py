@@ -23,9 +23,9 @@ class DirectoryCsv(Enum):
     """
     This class implements constant of directory of CSV.
     """
-    CONVERT: str = './csvconverttable/'
-    INPUT: str = './csvinput/'
-    OUTPUT: str = './csvoutput/'
+    CONVERT: Path = Path('./csvconverttable/')
+    INPUT: Path = Path('./csvinput/')
+    OUTPUT: Path = Path('./csvoutput/')
 
 
 class Account(Enum):

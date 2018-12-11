@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-
-"""
-This module implements configuration.
-"""
+"""This module implements configuration."""
 from __future__ import annotations
 
 import re
@@ -16,9 +13,7 @@ from dataclasses import dataclass, field
 
 
 class AccountKey(Enum):
-    """
-    This class implements constant of account key for config.yml.
-    """
+    """This class implements constant of account key for config.yml."""
     WAON: str = 'waon'
     GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus'
     MUFG: str = 'mufg'
@@ -27,9 +22,7 @@ class AccountKey(Enum):
 
 
 class AccountConfig(metaclass=ABCMeta):
-    """
-    This class implements configuration for account.
-    """
+    """This class implements configuration for account."""
     @staticmethod
     def create(account_key: AccountKey, dict_account_config: dict) -> AccountConfig:
         """This method creates """
@@ -60,36 +53,28 @@ class AccountConfig(metaclass=ABCMeta):
 
 @dataclass
 class WaonConfig(AccountConfig):
-    """
-    This class implements configuration for WAON.
-    """
+    """This class implements configuration for WAON."""
     account_name: str
     auto_charge_source: str
 
 
 @dataclass
 class GoldPointCardPlusConfig(AccountConfig):
-    """
-    This class implements configuration for GOLD POINT CARD+.
-    """
+    """This class implements configuration for GOLD POINT CARD+."""
     account_name: str
     skip_amazon_row: bool
 
 
 @dataclass
 class MufgConfig(AccountConfig):
-    """
-    This class implements configuration for MUFG bank.
-    """
+    """This class implements configuration for MUFG bank."""
     account_name: str
     transfer_account_name: str
 
 
 @dataclass
 class SFCardViewerConfig(AccountConfig):
-    """
-    This class implements configuration for SF Card Viewer.
-    """
+    """This class implements configuration for SF Card Viewer."""
     account_name: str
     auto_charge_source: str
     skip_sales_goods_row: bool
@@ -97,25 +82,19 @@ class SFCardViewerConfig(AccountConfig):
 
 @dataclass
 class PasmoConfig(SFCardViewerConfig):
-    """
-    This class implements configuration for PASMO.
-    """
+    """This class implements configuration for PASMO."""
 
 
 @dataclass
 class AmazonConfig(AccountConfig):
-    """
-    This class implements configuration for Amazon.co.jp.
-    """
+    """This class implements configuration for Amazon.co.jp."""
     store_name_zaim: str
     payment_account_name: str
 
 
 @dataclass
 class Config:
-    """
-    This class implements configuration wrapping.
-    """
+    """This class implements configuration wrapping."""
     waon: WaonConfig = None
     gold_point_card_plus: GoldPointCardPlusConfig = None
     mufg: MufgConfig = None

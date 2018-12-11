@@ -21,13 +21,13 @@ class TestAccount(unittest.TestCase):
         convert_table_model_class = Store
         account_row_data_class = WaonRowData
         account_row_factory = WaonRowFactory()
-        accunt_dependency = AccountDependency(identity, file_name_csv_convert, regex_csv_file_name,
-                                              convert_table_model_class, account_row_data_class, account_row_factory)
-        self.assertEqual(accunt_dependency.id, identity)
-        self.assertEqual(accunt_dependency.file_name_csv_convert, file_name_csv_convert)
-        self.assertEqual(accunt_dependency.regex_csv_file_name, regex_csv_file_name)
-        self.assertEqual(accunt_dependency.convert_table_model_class, convert_table_model_class)
-        self.assertEqual(accunt_dependency.account_row_data_class, account_row_data_class)
-        self.assertEqual(accunt_dependency.account_row_factory, account_row_factory)
-        self.assertEqual(accunt_dependency.encode, 'UTF-8')
-        self.assertEqual(accunt_dependency.csv_header, None)
+        account_dependency = AccountDependency(identity, file_name_csv_convert, regex_csv_file_name,
+                                               convert_table_model_class, account_row_data_class, account_row_factory)
+        self.assertEqual(account_dependency.id, identity)
+        self.assertEqual(account_dependency.file_name_csv_convert, file_name_csv_convert)
+        self.assertEqual(account_dependency.regex_csv_file_name, regex_csv_file_name)
+        self.assertEqual(account_dependency.convert_table_model_class, convert_table_model_class)
+        self.assertEqual(account_dependency.account_row_data_class, account_row_data_class)
+        self.assertEqual(account_dependency.account_row_factory, account_row_factory)
+        self.assertEqual(account_dependency.encode, 'UTF-8')
+        self.assertEqual(account_dependency.csv_header, None)

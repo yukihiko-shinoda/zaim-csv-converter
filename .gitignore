@@ -12,3 +12,5 @@ csvoutput/*
 !csvoutput/.gitkeep
 config.yml
 config.yml.bak
+**/csvoutput/*
+!**/csvoutput/.gitkeep

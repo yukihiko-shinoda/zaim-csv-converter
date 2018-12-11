@@ -6,7 +6,8 @@ import csv
 from abc import abstractmethod
 from pathlib import Path
 
-from tests.resource import ConfigurableDatabaseTestCase, StoreFactory, CsvHandler, create_path_as_same_as_file_name
+from tests.resource import ConfigurableDatabaseTestCase, StoreFactory, CsvHandler, create_path_as_same_as_file_name, \
+    prepare_basic_store_waon
 from tests.test_zaim_row import ZaimRowDataForTest
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.account_csv_converter import AccountCsvConverter
@@ -15,14 +16,7 @@ from zaimcsvconverter.models import StoreRowData
 
 def prepare_fixture():
     """This function prepare common fixture with some tests."""
-    StoreFactory(
-        account=Account.WAON,
-        row_data=StoreRowData('ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店'),
-    )
-    StoreFactory(
-        account=Account.WAON,
-        row_data=StoreRowData('板橋前野町', 'イオンスタイル　板橋前野町'),
-    )
+    prepare_basic_store_waon()
 
 
 class TestAccountCsvConverter(ConfigurableDatabaseTestCase):
@@ -70,8 +64,8 @@ class TestAccountCsvConverterForStore(TestAccountCsvConverter):
             # noinspection PyUnusedLocal
             self.assertEqual(sum(1 for row in file_zaim), 2)
             file_zaim.seek(0)
-            reader_account = csv.reader(file_zaim)
-            list_zaim_row = reader_account.__next__()
+            reader_zaim = csv.reader(file_zaim)
+            list_zaim_row = reader_zaim.__next__()
             zaim_row_data = ZaimRowDataForTest(*list_zaim_row)
             self.assertEqual(zaim_row_data.date, '日付')
             self.assertEqual(zaim_row_data.method, '方法')
