@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Tests for acccount_csv_converter_iterator.py."""
+"""Tests for account_csv_converter_iterator.py."""
 import csv
 from dataclasses import dataclass
 
@@ -18,7 +18,7 @@ class ErrorRowDataForTest:
     item_name: str
 
 
-class TestAccountCsvConveterIterator(DatabaseTestCase):
+class TestAccountCsvConverterIterator(DatabaseTestCase):
     """Tests for AccountCsvConverterIterator."""
     account_csv_converter = None
     directory_csv_input = None
@@ -55,7 +55,10 @@ class TestAccountCsvConveterIterator(DatabaseTestCase):
         self.assertEqual(files[1].name, 'test_waon.csv')
 
     def test_fail(self):
-        """Method exports error csv files in specified diretory."""
+        """
+        Method exports error csv files in specified diretory.
+        Same content should be unified.
+        """
         with self.assertRaises(KeyError):
             self.account_csv_converter.execute()
         files = sorted(self.directory_csv_output.rglob('*[!.gitkeep]'))

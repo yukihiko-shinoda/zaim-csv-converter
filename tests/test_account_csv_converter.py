@@ -6,12 +6,10 @@ import csv
 from abc import abstractmethod
 from pathlib import Path
 
-from tests.resource import ConfigurableDatabaseTestCase, StoreFactory, CsvHandler, create_path_as_same_as_file_name, \
+from tests.resource import ConfigurableDatabaseTestCase, CsvHandler, create_path_as_same_as_file_name, \
     prepare_basic_store_waon
 from tests.test_zaim_row import ZaimRowDataForTest
-from zaimcsvconverter.account import Account
 from zaimcsvconverter.account_csv_converter import AccountCsvConverter
-from zaimcsvconverter.models import StoreRowData
 
 
 def prepare_fixture():

@@ -5,11 +5,11 @@ import unittest2 as unittest
 
 from parameterized import parameterized
 
-from tests.resource import DatabaseTestCase, StoreFactory, ConfigurableDatabaseTestCase, prepare_basic_store_waon
+from tests.resource import DatabaseTestCase, ConfigurableDatabaseTestCase, prepare_basic_store_waon
 from zaimcsvconverter.inputcsvformats.waon import WaonPaymentRow, WaonAutoChargeRow, WaonRowData, WaonRowFactory, \
     WaonChargeRow, WaonDownloadPointRow
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.models import StoreRowData, Store
+from zaimcsvconverter.models import Store
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimIncomeRow, ZaimTransferRow
 
 
@@ -33,7 +33,6 @@ class TestWaonRowData(unittest.TestCase):
         self.assertEqual(waon_row_data.charge_kind, charge_kind)
 
 
-# pylint: disable=duplicate-code
 def prepare_fixture():
     """This function prepare common fixture with some tests."""
     prepare_basic_store_waon()
