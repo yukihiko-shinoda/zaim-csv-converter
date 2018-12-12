@@ -8,8 +8,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.input_row import InputRow, InputStoreRowData, InputRowFactory
-from zaimcsvconverter.models import Store
+from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
@@ -49,12 +48,10 @@ class GoldPointCardPlusRowData(InputStoreRowData):
         return self._used_store
 
 
-class GoldPointCardPlusRow(InputRow):
+class GoldPointCardPlusRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
     def __init__(self, account: 'Account', row_data: GoldPointCardPlusRowData):
-        super().__init__(account)
-        self._used_date: datetime = row_data.date
-        self._used_store: Store = self.try_to_find_store(row_data.store_name)
+        super().__init__(account, row_data)
         self._used_card: str = row_data.used_card
         self._payment_kind: str = row_data.payment_kind
         number_of_division = row_data.number_of_division
@@ -66,19 +63,11 @@ class GoldPointCardPlusRow(InputRow):
 
     @property
     def is_row_to_skip(self) -> bool:
-        return CONFIG.gold_point_card_plus.skip_amazon_row and self._used_store.is_amazon
+        return CONFIG.gold_point_card_plus.skip_amazon_row and self.zaim_store.is_amazon
 
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
         return ZaimPaymentRow(self)
-
-    @property
-    def zaim_date(self) -> datetime:
-        return self._used_date
-
-    @property
-    def zaim_store(self) -> Store:
-        return self._used_store
 
     @property
     def zaim_income_cash_flow_target(self) -> str:

@@ -2,11 +2,10 @@
 """This module implements abstract converting steps for CSV."""
 import csv
 from pathlib import Path
-from typing import NoReturn, List
-
-import numpy
+from typing import NoReturn
 
 from zaimcsvconverter.account import DirectoryCsv, Account
+from zaimcsvconverter.error_handler import ErrorHandler
 
 
 class InputCsvConverter:
@@ -15,7 +14,7 @@ class InputCsvConverter:
         self._path_csv_file = path_csv_file
         self.directory_csv_output = directory_csv_output
         self._account = Account.create_by_path_csv_input(path_csv_file)
-        self.list_undefined_content: List[List[str]] = []
+        self.error_handler: ErrorHandler = ErrorHandler()
 
     def execute(self) -> NoReturn:
         """This method executes CSV convert steps."""
@@ -65,18 +64,15 @@ class InputCsvConverter:
             input_row_data = account_dependency.input_row_data_class(*list_row_account)
             input_row = account_dependency.input_row_factory.create(self._account, input_row_data)
             if not input_row.is_valid:
-                self.list_undefined_content: List[List[str]]
-                undefined_content = [account_dependency.file_name_csv_convert]
-                undefined_content.extend(input_row.extract_undefined_content(input_row_data))
-                self.list_undefined_content.append(undefined_content)
+                self.error_handler.append_undefined_content(self._account, input_row_data)
                 continue
             if input_row.is_row_to_skip:
                 continue
             zaim_row = input_row.convert_to_zaim_row()
             list_row_zaim = zaim_row.convert_to_list()
             writer_zaim.writerow(list_row_zaim)
-        if self.list_undefined_content:
-            self.list_undefined_content = numpy.unique(self.list_undefined_content, axis=0).tolist()
+        if self.error_handler.is_presented:
+            self.error_handler.uniquify()
             raise KeyError(
                 f'Undefined store name in convert table CSV exists in {self._path_csv_file.name}.'
                 + 'Please check property AccountCsvConveter.list_undefined_store.'

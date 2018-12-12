@@ -11,9 +11,8 @@ from enum import Enum
 from typing import TYPE_CHECKING, Callable
 from dataclasses import dataclass
 
-from zaimcsvconverter.input_row import InputRow, InputStoreRowData, InputRowFactory
+from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
 from zaimcsvconverter.config import SFCardViewerConfig
-from zaimcsvconverter.models import Store
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
@@ -79,19 +78,17 @@ class SFCardViewerRowData(InputStoreRowData):
 
 
 # pylint: disable=too-many-instance-attributes
-class SFCardViewerRow(InputRow):
+class SFCardViewerRow(InputStoreRow):
     """
     This class implements row model of SF Card Viewer CSV.
     """
     def __init__(self, account: 'Account', row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
-        super().__init__(account)
-        self._used_date: datetime = row_data.date
+        super().__init__(account, row_data)
         self._is_commuter_pass_enter: str = row_data.is_commuter_pass_enter
         self._railway_company_name_enter: str = row_data.railway_company_name_enter
         self._station_name_enter: str = row_data.station_name_enter
         self._is_commuter_pass_exit: str = row_data.is_commuter_pass_exit
         self._railway_company_name_exit: str = row_data.railway_company_name_exit
-        self._station_name_exit: Store = self.try_to_find_store(row_data.store_name)
         self._used_amount: int = int(row_data.used_amount)
         self._balance: int = int(row_data.balance)
         self._note: str = str(row_data.note)
@@ -100,14 +97,6 @@ class SFCardViewerRow(InputRow):
     @abstractmethod
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         pass
-
-    @property
-    def zaim_date(self) -> datetime:
-        return self._used_date
-
-    @property
-    def zaim_store(self) -> Store:
-        return self._station_name_exit
 
     @property
     def zaim_income_cash_flow_target(self) -> str:
@@ -123,10 +112,10 @@ class SFCardViewerRow(InputRow):
 
     @property
     def zaim_payment_note(self) -> str:
-        if self._station_name_exit is None:
+        if self.zaim_store is None:
             return ''
         return f'{self._railway_company_name_enter} {self._station_name_enter}' \
-               + f' → {self._railway_company_name_exit} {self._station_name_exit.name}'
+               + f' → {self._railway_company_name_exit} {self.zaim_store.name}'
 
     @property
     def zaim_payment_amount_payment(self) -> int:
@@ -176,7 +165,7 @@ class SFCardViewerExitByWindowRow(SFCardViewerRow):
     def is_row_to_skip(self) -> bool:
         return self._used_amount == 0 and \
                self._railway_company_name_enter == self._railway_company_name_exit and \
-               self._station_name_enter == self._station_name_exit.name
+               self._station_name_enter == self.zaim_store.name
 
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         from zaimcsvconverter.zaim_row import ZaimPaymentRow

@@ -54,7 +54,7 @@ class TestInputCsvConverterForStore(TestInputCsvConverter):
         First line should be header.
         """
         input_csv_converter = InputCsvConverter(self.file_source)
-        self.assertEqual(input_csv_converter.list_undefined_content, [])
+        self.assertEqual(input_csv_converter.error_handler.list_error, [])
         input_csv_converter.execute()
         with open(
                 str(CsvHandler.PATH_TARGET_OUTPUT / self.file_source.name), 'r', encoding='UTF-8', newline='\n'
@@ -85,7 +85,7 @@ class TestInputCsvConverterForStore(TestInputCsvConverter):
     def test_stop_iteration(self):
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
         input_csv_converter = InputCsvConverter(self.file_source)
-        self.assertEqual(input_csv_converter.list_undefined_content, [])
+        self.assertEqual(input_csv_converter.error_handler.list_error, [])
         with self.assertRaises(StopIteration):
             input_csv_converter.execute()
 
@@ -95,10 +95,10 @@ class TestInputCsvConverterForStore(TestInputCsvConverter):
         Undefined store is listed up on property.
         """
         input_csv_converter = InputCsvConverter(self.file_source)
-        self.assertEqual(input_csv_converter.list_undefined_content, [])
+        self.assertEqual(input_csv_converter.error_handler.list_error, [])
         with self.assertRaises(KeyError):
             input_csv_converter.execute()
-        self.assertEqual(input_csv_converter.list_undefined_content, [['waon.csv', 'マクドナルド津田沼駅前店', '']])
+        self.assertEqual(input_csv_converter.error_handler.list_error, [['waon.csv', 'マクドナルド津田沼駅前店', '']])
 
 
 class TestInputCsvConverterForItem(TestInputCsvConverter):
@@ -113,10 +113,10 @@ class TestInputCsvConverterForItem(TestInputCsvConverter):
         Undefined item is listed up on property.
         """
         input_csv_converter = InputCsvConverter(self.file_source)
-        self.assertEqual(input_csv_converter.list_undefined_content, [])
+        self.assertEqual(input_csv_converter.error_handler.list_error, [])
         with self.assertRaises(KeyError):
             input_csv_converter.execute()
         self.assertEqual(
-            input_csv_converter.list_undefined_content,
+            input_csv_converter.error_handler.list_error,
             [['amazon.csv', '', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト']]
         )

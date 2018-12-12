@@ -13,8 +13,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.input_row import InputRow, InputStoreRowData, InputRowFactory
-from zaimcsvconverter.models import Store
+from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
 from zaimcsvconverter.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow, ZaimIncomeRow
 
 if TYPE_CHECKING:
@@ -61,7 +60,7 @@ class WaonRowData(InputStoreRowData):
         return self._used_store
 
 
-class WaonRow(InputRow):
+class WaonRow(InputStoreRow):
     """This class implements row model of WAON CSV."""
     class UseKind(Enum):
         """This class implements constant of user kind in WAON CSV."""
@@ -76,9 +75,7 @@ class WaonRow(InputRow):
         POINT: str = 'ポイント'
 
     def __init__(self, account: 'Account', row_data: WaonRowData):
-        super().__init__(account)
-        self._date: datetime = row_data.date
-        self._used_store: Store = self.try_to_find_store(row_data.store_name)
+        super().__init__(account, row_data)
         matches = re.search(r'([\d,]+)円', row_data.used_amount)
         self._used_amount: int = int(matches.group(1).replace(',', ''))
         self._charge_kind: WaonRow.ChargeKind = self._convert_charge_kind_to_enum(row_data.charge_kind)
@@ -97,14 +94,6 @@ class WaonRow(InputRow):
     @abstractmethod
     def convert_to_zaim_row(self) -> ZaimRow:
         pass
-
-    @property
-    def zaim_date(self) -> datetime:
-        return self._date
-
-    @property
-    def zaim_store(self) -> Store:
-        return self._used_store
 
     @property
     def zaim_income_cash_flow_target(self) -> str:

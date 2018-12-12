@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """This module implements fixture of instance."""
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData
+from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 
 
 class InstanceFixture:
@@ -13,3 +14,4 @@ class InstanceFixture:
         'https://www.amazon.co.jp/gp/css/summary/print.html/'
         + 'ref=oh_aui_ajax_dpi?ie=UTF8&orderID=123-4567890-1234567',
         'https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1')
+    ROW_DATA_WAON = WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-')

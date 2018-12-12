@@ -7,7 +7,7 @@ This module implements row model of CSV.
 from __future__ import annotations
 import datetime
 from abc import ABCMeta, abstractmethod
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from zaimcsvconverter.models import Store, Item
 
@@ -35,18 +35,12 @@ class InputRowData(metaclass=ABCMeta):
         """This property returns date as datetime."""
         pass
 
-
-class InputStoreRowData(InputRowData):
-    """This class is abstract class of input CSV row data."""
     @property
     @abstractmethod
     def store_name(self) -> str:
         """This property returns store name."""
         pass
 
-
-class InputItemRowData(InputRowData):
-    """This class is abstract class of input CSV row data."""
     @property
     @abstractmethod
     def item_name(self) -> str:
@@ -54,20 +48,40 @@ class InputItemRowData(InputRowData):
         pass
 
 
-class InputRow(metaclass=ABCMeta):
+class InputStoreRowData(InputRowData):
+    """This class is abstract class of input CSV row data."""
+    @property
+    @abstractmethod
+    def store_name(self) -> str:
+        pass
+
+    @property
+    def item_name(self) -> str:
+        return ''
+
+
+class InputItemRowData(InputRowData):
+    """This class is abstract class of input CSV row data."""
+    @property
+    def store_name(self) -> str:
+        return ''
+
+    @property
+    @abstractmethod
+    def item_name(self) -> str:
+        pass
+
+
+class InputRow:
     """This class implements row model of CSV."""
-    def __init__(self, account: 'Account'):
+    def __init__(self, account: 'Account', input_row_data: InputRowData):
         self._account = account
+        self.zaim_date = input_row_data.date
 
     @property
     def is_valid(self) -> bool:
         """This property returns whether this row is valid or not."""
         return self.zaim_store is not None
-
-    # pylint: disable=no-self-use
-    def extract_undefined_content(self, input_row_data: InputStoreRowData) -> List[str]:
-        """This property extract undefined content from input_row_data and return it."""
-        return [input_row_data.store_name, '']
 
     @property
     def is_row_to_skip(self) -> bool:
@@ -76,94 +90,67 @@ class InputRow(metaclass=ABCMeta):
 
     @abstractmethod
     def convert_to_zaim_row(self) -> 'ZaimRow':
-        """
-        This method converts this row to row of Zaim.
-        """
-        pass
-
-    @property
-    @abstractmethod
-    def zaim_date(self) -> datetime:
-        """
-        This property return date in Zaim row.
-        """
+        """This method converts this row to row of Zaim."""
         pass
 
     @property
     @abstractmethod
     def zaim_store(self) -> 'Store':
-        """
-        This property return store in Zaim row.
-        """
+        """This property return store in Zaim row."""
         pass
 
     @property
-    def zaim_item(self) -> None:
+    @abstractmethod
+    def zaim_item(self) -> 'Item':
         """This property return item in Zaim row."""
-        return None
+        pass
 
     @property
     @abstractmethod
     def zaim_income_cash_flow_target(self) -> str:
-        """
-        This property return cash flow target in Zaim income row.
-        """
+        """This property return cash flow target in Zaim income row."""
         pass
 
     @property
     @abstractmethod
     def zaim_income_ammount_income(self) -> int:
-        """
-        This property return amount of income in Zaim income row.
-        """
+        """This property return amount of income in Zaim income row."""
         pass
 
     @property
     @abstractmethod
     def zaim_payment_cash_flow_source(self) -> str:
-        """
-        This property return cash flow source in Zaim payment row.
-        """
+        """This property return cash flow source in Zaim payment row."""
         pass
 
     @property
     def zaim_payment_note(self) -> str:
-        """
-        This property return cash flow source in Zaim payment row.
-        """
+        """This property return cash flow source in Zaim payment row."""
         from zaimcsvconverter.zaim_row import ZaimRow
         return ZaimRow.NOTE_EMPTY
 
     @property
     @abstractmethod
     def zaim_payment_amount_payment(self) -> int:
-        """
-        This property return amount of payment in Zaim payment row.
-        """
+        """This property return amount of payment in Zaim payment row."""
         pass
 
     @property
     @abstractmethod
     def zaim_transfer_cash_flow_source(self) -> str:
-        """
-        This property return cash flow source in Zaim transfer row.
-        """
+        """This property return cash flow source in Zaim transfer row."""
         pass
 
     @property
     @abstractmethod
     def zaim_transfer_cash_flow_target(self) -> str:
-        """
-        This property return cash flow target in Zaim transfer row.
-        """
+        """This property return cash flow target in Zaim transfer row."""
         pass
 
     @property
     @abstractmethod
     def zaim_transfer_amount_transfer(self) -> int:
-        """
-        This property return amount of transfer in Zaim transfer row.
-        """
+        """This property return amount of transfer in Zaim transfer row."""
         pass
 
     def try_to_find_store(self, store_name) -> Store:
@@ -175,24 +162,48 @@ class InputRow(metaclass=ABCMeta):
         return Item.try_to_find(self._account, item_name)
 
 
-class InputItemRow(InputRow):
-    """
-    This class implements store row model of CSV.
-    """
+class InputStoreRow(InputRow, metaclass=ABCMeta):
+    """This class implements store row model of CSV."""
+    def __init__(self, account: 'Account', input_store_row_data: InputStoreRowData):
+        super().__init__(account, input_store_row_data)
+        self._account = account
+        self._zaim_store = self.try_to_find_store(input_store_row_data.store_name)
+
+    @property
+    def is_valid(self) -> bool:
+        """This property returns whether this row is valid or not."""
+        return self.zaim_store is not None
+
+    @property
+    def zaim_store(self) -> Store:
+        return self._zaim_store
+
+    @property
+    def zaim_item(self) -> None:
+        return None
+
+    @abstractmethod
+    def convert_to_zaim_row(self) -> 'ZaimRow':
+        pass
+
+
+class InputItemRow(InputRow, metaclass=ABCMeta):
+    """This class implements store row model of CSV."""
+    def __init__(self, account: 'Account', input_item_row_data: InputItemRowData):
+        super().__init__(account, input_item_row_data)
+        self._account = account
+        self._zaim_item = self.try_to_find_item(input_item_row_data.item_name)
+
     @property
     def is_valid(self) -> bool:
         """This property returns whether this row is valid or not."""
         return self.zaim_store is not None and self.zaim_item is not None
 
-    def extract_undefined_content(self, input_row_data: InputItemRowData) -> List[str]:
-        """This property extract undefined content from input_row_data and return it."""
-        return [
-            '',
-            input_row_data.item_name
-        ]
-
     @property
     @abstractmethod
-    def zaim_item(self) -> 'Item':
-        """This property return item in Zaim row."""
+    def zaim_store(self) -> Store:
         pass
+
+    @property
+    def zaim_item(self) -> None:
+        return None

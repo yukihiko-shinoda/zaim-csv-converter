@@ -12,7 +12,6 @@ from dataclasses import dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.input_row import InputItemRowData, InputItemRow, InputRowFactory
 from zaimcsvconverter.models import Store, Item, StoreRowData
-from zaimcsvconverter.utility import Utility
 
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
@@ -64,8 +63,7 @@ class AmazonRow(InputItemRow):
     This class implements row model of Amazon.co.jp CSV.
     """
     def __init__(self, account: Account, row_data: AmazonRowData):
-        super().__init__(account)
-        self._ordered_date: datetime = row_data.date
+        super().__init__(account, row_data)
         self._store: Store = Store(account, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
         self._item: Item = self.try_to_find_item(row_data.item_name)
         self.price: int = int(row_data.price)
@@ -74,10 +72,6 @@ class AmazonRow(InputItemRow):
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
         return ZaimPaymentRow(self)
-
-    @property
-    def zaim_date(self) -> datetime:
-        return self._ordered_date
 
     @property
     def zaim_store(self) -> Store:

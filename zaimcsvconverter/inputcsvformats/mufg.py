@@ -12,8 +12,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.input_row import InputRow, InputStoreRowData, InputRowFactory
-from zaimcsvconverter.models import Store
+from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
 from zaimcsvconverter.utility import Utility
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow
 if TYPE_CHECKING:
@@ -76,15 +75,13 @@ class MufgRowData(InputStoreRowData):
 
 
 # pylint: disable=too-many-instance-attributes
-class MufgRow(InputRow):
+class MufgRow(InputStoreRow):
     """
     This class implements row model of MUFG bank CSV.
     """
     def __init__(self, account: 'Account', row_data: MufgRowData):
-        super().__init__(account)
-        self._date: datetime = row_data.date
+        super().__init__(account, row_data)
         self._summary: str = row_data.summary
-        self._summary_content: Store = self.try_to_find_store(row_data.store_name)
         self._payed_amount: int = Utility.convert_string_to_int_or_none(row_data.payed_amount)
         self._deposit_amount: int = Utility.convert_string_to_int_or_none(row_data.deposit_amount)
         self._balance = int(row_data.balance.replace(',', ''))
@@ -105,14 +102,6 @@ class MufgRow(InputRow):
     @abstractmethod
     def _amount(self) -> int:
         pass
-
-    @property
-    def zaim_date(self) -> datetime:
-        return self._date
-
-    @property
-    def zaim_store(self) -> Store:
-        return self._summary_content
 
     @property
     def zaim_income_cash_flow_target(self) -> str:
@@ -208,13 +197,13 @@ class MufgTransferIncomeRow(MufgAbstractIncomeRow):
     This class implements transfer income row model of MUFG bank CSV.
     """
     def convert_to_zaim_row(self):
-        if self._summary_content.transfer_target is None:
+        if self.zaim_store.transfer_target is None:
             return ZaimIncomeRow(self)
         return ZaimTransferRow(self)
 
     @property
     def _cash_flow_source_on_zaim(self) -> str:
-        return self._summary_content.transfer_target
+        return self.zaim_store.transfer_target
 
 
 class MufgTransferPaymentRow(MufgAbstractPaymentRow):
@@ -222,10 +211,10 @@ class MufgTransferPaymentRow(MufgAbstractPaymentRow):
     This class implements transfer payment row model of MUFG bank CSV.
     """
     def convert_to_zaim_row(self):
-        if self._summary_content.transfer_target is None:
+        if self.zaim_store.transfer_target is None:
             return ZaimPaymentRow(self)
         return ZaimTransferRow(self)
 
     @property
     def _cash_flow_target_on_zaim(self) -> str:
-        return self._summary_content.transfer_target
+        return self.zaim_store.transfer_target

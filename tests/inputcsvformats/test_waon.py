@@ -5,6 +5,7 @@ import unittest2 as unittest
 
 from parameterized import parameterized
 
+from tests.instance_fixture import InstanceFixture
 from tests.resource import DatabaseTestCase, ConfigurableDatabaseTestCase, prepare_basic_store_waon
 from zaimcsvconverter.inputcsvformats.waon import WaonPaymentRow, WaonAutoChargeRow, WaonRowData, WaonRowFactory, \
     WaonChargeRow, WaonDownloadPointRow
@@ -45,7 +46,7 @@ class TestWaonRow(ConfigurableDatabaseTestCase):
 
     # pylint: disable=too-many-arguments
     @parameterized.expand([
-        (WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'), datetime(2018, 8, 7, 0, 0, 0),
+        (InstanceFixture.ROW_DATA_WAON, datetime(2018, 8, 7, 0, 0, 0),
          'ファミリーマート　かぶと町永代通り店', 129, None),
         (WaonRowData('2018/8/30', '板橋前野町', '1,489円', '支払', '-'), datetime(2018, 8, 30, 0, 0, 0),
          'イオンスタイル　板橋前野町', 1489, None),
@@ -86,7 +87,7 @@ class TestWaonPaymentRow(ConfigurableDatabaseTestCase):
     def test_convert_to_zaim_row(self):
         """WaonPaymentRow should convert to ZaimPaymentRow."""
         waon_row = WaonPaymentRow(Account.WAON,
-                                  WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'))
+                                  InstanceFixture.ROW_DATA_WAON)
         self.assertIsInstance(waon_row.convert_to_zaim_row(), ZaimPaymentRow)
 
 
@@ -145,7 +146,7 @@ class TestWaonRowFactory(DatabaseTestCase):
         prepare_fixture()
 
     @parameterized.expand([
-        (WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-'), WaonPaymentRow),
+        (InstanceFixture.ROW_DATA_WAON, WaonPaymentRow),
         (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'チャージ', 'ポイント'), WaonChargeRow),
         (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座'), WaonAutoChargeRow),
         (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'ポイントダウンロード', '-'), WaonDownloadPointRow),
