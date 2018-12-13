@@ -15,6 +15,10 @@ Zaimで口座連携をするために
 - PASMO
 - Amazon.co.jp
 
+※↓対応口座追加のための開発手順をまとめました、プルリクエストをお待ちしています。
+
+[zaim-csv-converter の対応口座追加開発手順](extension.md)
+
 ## 動作確認環境
 
 - Windows 10 home 64bit

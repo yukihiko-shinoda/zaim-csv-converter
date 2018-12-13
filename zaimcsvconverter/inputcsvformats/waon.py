@@ -51,12 +51,10 @@ class WaonRowData(InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        """This property returns date as datetime."""
         return datetime.datetime.strptime(self._date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
-        """This property returns store name."""
         return self._used_store
 
 

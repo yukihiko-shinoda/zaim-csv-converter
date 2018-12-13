@@ -39,12 +39,10 @@ class GoldPointCardPlusRowData(InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        """This property returns date as datetime."""
         return datetime.datetime.strptime(self._used_date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
-        """This property returns store name."""
         return self._used_store
 
 
@@ -52,13 +50,6 @@ class GoldPointCardPlusRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
     def __init__(self, account: 'Account', row_data: GoldPointCardPlusRowData):
         super().__init__(account, row_data)
-        self._used_card: str = row_data.used_card
-        self._payment_kind: str = row_data.payment_kind
-        number_of_division = row_data.number_of_division
-        if number_of_division == '':
-            number_of_division = 1
-        self._number_of_division: int = int(number_of_division)
-        self._scheduled_payment_month: str = row_data.scheduled_payment_month
         self._used_amount: int = int(row_data.used_amount)
 
     @property

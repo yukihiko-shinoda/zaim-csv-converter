@@ -65,12 +65,10 @@ class MufgRowData(InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        """This property returns date as datetime."""
         return datetime.datetime.strptime(self._date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
-        """This property returns store name."""
         return self._summary_content
 
 
@@ -84,9 +82,6 @@ class MufgRow(InputStoreRow):
         self._summary: str = row_data.summary
         self._payed_amount: int = Utility.convert_string_to_int_or_none(row_data.payed_amount)
         self._deposit_amount: int = Utility.convert_string_to_int_or_none(row_data.deposit_amount)
-        self._balance = int(row_data.balance.replace(',', ''))
-        self._note: str = row_data.note
-        self._is_uncapitalized: str = row_data.is_uncapitalized
 
     @property
     @abstractmethod

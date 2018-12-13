@@ -68,12 +68,10 @@ class SFCardViewerRowData(InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        """This property returns date as datetime."""
         return datetime.datetime.strptime(self._used_date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
-        """This property returns store name."""
         return self._station_name_exit
 
 
@@ -84,14 +82,10 @@ class SFCardViewerRow(InputStoreRow):
     """
     def __init__(self, account: 'Account', row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
         super().__init__(account, row_data)
-        self._is_commuter_pass_enter: str = row_data.is_commuter_pass_enter
         self._railway_company_name_enter: str = row_data.railway_company_name_enter
         self._station_name_enter: str = row_data.station_name_enter
-        self._is_commuter_pass_exit: str = row_data.is_commuter_pass_exit
         self._railway_company_name_exit: str = row_data.railway_company_name_exit
         self._used_amount: int = int(row_data.used_amount)
-        self._balance: int = int(row_data.balance)
-        self._note: str = str(row_data.note)
         self._account_config: SFCardViewerConfig = account_config
 
     @abstractmethod

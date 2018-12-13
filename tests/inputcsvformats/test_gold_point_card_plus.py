@@ -78,7 +78,7 @@ class TestGoldPointCardPlusRow(ConfigurableDatabaseTestCase):
                 'ご本人',
                 '1回払い', '', '18/8', '11402', '11402',
                 '', '', '', '', ''),
-            datetime(2018, 7, 3, 0, 0, 0), '東京電力エナジーパートナー株式会社', 1, 11402, False),
+            datetime(2018, 7, 3, 0, 0, 0), '東京電力エナジーパートナー株式会社', 11402, False),
         (
             GoldPointCardPlusRowData(
                 '2018/7/4',
@@ -90,13 +90,12 @@ class TestGoldPointCardPlusRow(ConfigurableDatabaseTestCase):
                 '3456',
                 '3456',
                 '', '', '', '', ''),
-            datetime(2018, 7, 4, 0, 0, 0), 'Amazon Japan G.K.', 1, 3456, True),
+            datetime(2018, 7, 4, 0, 0, 0), 'Amazon Japan G.K.', 3456, True),
     ])
     def test_init(self,
                   gold_point_card_plus_row_data,
                   expected_date,
                   expected_store_name_zaim,
-                  expected_number_of_division,
                   expected_use_amount,
                   expected_is_row_to_skip
                   ):
@@ -109,10 +108,6 @@ class TestGoldPointCardPlusRow(ConfigurableDatabaseTestCase):
         self.assertIsInstance(row.zaim_store, Store)
         self.assertEqual(row.zaim_store.name, gold_point_card_plus_row_data._used_store)
         self.assertEqual(row.zaim_store.name_zaim, expected_store_name_zaim)
-        self.assertEqual(row._used_card, gold_point_card_plus_row_data.used_card)
-        self.assertEqual(row._payment_kind, gold_point_card_plus_row_data.payment_kind)
-        self.assertEqual(row._number_of_division, expected_number_of_division)
-        self.assertEqual(row._scheduled_payment_month, gold_point_card_plus_row_data.scheduled_payment_month)
         self.assertEqual(row.is_row_to_skip, expected_is_row_to_skip)
         self.assertEqual(row.zaim_payment_cash_flow_source, 'ヨドバシゴールドポイントカード・プラス')
         self.assertEqual(row.zaim_payment_amount_payment, expected_use_amount)

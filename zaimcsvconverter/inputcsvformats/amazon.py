@@ -48,12 +48,10 @@ class AmazonRowData(InputItemRowData):
 
     @property
     def date(self) -> datetime:
-        """This property returns date as datetime."""
         return datetime.datetime.strptime(self._ordered_date, "%Y/%m/%d")
 
     @property
     def item_name(self) -> str:
-        """This property returns store name."""
         return self._item_name
 
 
