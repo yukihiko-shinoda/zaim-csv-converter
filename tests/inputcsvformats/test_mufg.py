@@ -88,11 +88,16 @@ class TestMufgIncomeRow(ConfigurableDatabaseTestCase):
         self.assertEqual(mufg_row.zaim_transfer_cash_flow_target, config_account_name)
         self.assertEqual(mufg_row.zaim_transfer_amount_transfer, expected_amount)
 
-    def test_convert_to_zaim_row(self):
+    @parameterized.expand([
+        (MufgRowData('2018/10/1', 'カ－ド', '', '', '10000', '3000000', '', '',	'入金'),
+         ZaimTransferRow),
+        (MufgRowData('2018/10/1', '振込９', 'フリコミモト－アカウント', '', '10000', '3000000', '', '',	'入金'),
+         ZaimIncomeRow),
+    ])
+    def test_convert_to_zaim_row(self, argument, expected):
         """MufgTransferPaymentRow should convert to ZaimTransferRow."""
-        mufg_row = MufgIncomeRow(Account.MUFG,
-                                 MufgRowData('2018/10/1', 'カ－ド', '', '', '10000', '3000000', '', '', '入金'))
-        self.assertIsInstance(mufg_row.convert_to_zaim_row(), ZaimTransferRow)
+        mufg_row = MufgIncomeRow(Account.MUFG, argument)
+        self.assertIsInstance(mufg_row.convert_to_zaim_row(), expected)
 
 
 class TestMufgPaymentRow(ConfigurableDatabaseTestCase):

@@ -168,7 +168,9 @@ class MufgIncomeRow(MufgAbstractIncomeRow):
     This class implements income row model of MUFG bank CSV.
     """
     def convert_to_zaim_row(self):
-        return ZaimTransferRow(self)
+        if self._summary == 'カ－ド':
+            return ZaimTransferRow(self)
+        return ZaimIncomeRow(self)
 
     @property
     def _cash_flow_source_on_zaim(self) -> str:
