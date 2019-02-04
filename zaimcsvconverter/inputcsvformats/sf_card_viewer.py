@@ -13,6 +13,8 @@ from dataclasses import dataclass
 
 from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
 from zaimcsvconverter.config import SFCardViewerConfig
+from zaimcsvconverter.models import Store, StoreRowData
+
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
@@ -37,6 +39,7 @@ class SFCardViewerRowFactory(InputRowFactory):
             Note.SALES_GOODS: SFCardViewerSalesGoodsRow,
             Note.AUTO_CHARGE: SFCardViewerAutoChargeRow,
             Note.EXIT_BY_WINDOW: SFCardViewerExitByWindowRow,
+            Note.BUS_TRAM: SFCardViewerBusTramRow,
         }.get(note)
 
         return sf_card_viewer_row_class(account, row_data, self._account_config())
@@ -50,6 +53,7 @@ class Note(Enum):
     SALES_GOODS: str = '物販'
     AUTO_CHARGE: str = 'ｵｰﾄﾁｬｰｼﾞ'
     EXIT_BY_WINDOW: str = '窓出'
+    BUS_TRAM: str = 'ﾊﾞｽ/路面等'
 
 
 @dataclass
@@ -160,6 +164,17 @@ class SFCardViewerExitByWindowRow(SFCardViewerRow):
         return self._used_amount == 0 and \
                self._railway_company_name_enter == self._railway_company_name_exit and \
                self._station_name_enter == self.zaim_store.name
+
+    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+        from zaimcsvconverter.zaim_row import ZaimPaymentRow
+        return ZaimPaymentRow(self)
+
+
+class SFCardViewerBusTramRow(SFCardViewerRow):
+    """This class implements bus tram row model of SF Card Viewer CSV."""
+    def __init__(self, account: Account, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+        super().__init__(account, row_data, account_config)
+        self._zaim_store: Store = Store(account, StoreRowData('', '', '交通', '電車'))
 
     def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
