@@ -46,7 +46,6 @@ class ZaimRow(metaclass=ABCMeta):
         """
         This method converts object data to list.
         """
-        pass
 
 
 class ZaimIncomeRow(ZaimRow):

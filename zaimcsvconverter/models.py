@@ -9,11 +9,11 @@ from __future__ import annotations
 import warnings
 from typing import NoReturn, List, TYPE_CHECKING, Type, TypeVar
 
+from dataclasses import dataclass
 from inflector import Inflector
 from sqlalchemy import Column, Integer, String, UniqueConstraint, exc
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta, declared_attr
 from sqlalchemy.orm.exc import NoResultFound
-from dataclasses import dataclass
 
 from zaimcsvconverter import ENGINE
 from zaimcsvconverter.session_manager import SessionManager

@@ -21,7 +21,6 @@ class InputRowFactory(metaclass=ABCMeta):
     @abstractmethod
     def create(self, account: 'Account', row_data: InputRowData) -> InputRow:
         """This method creates input row by input CSV row data."""
-        pass
 
 
 class InputRowData(metaclass=ABCMeta):
@@ -33,19 +32,16 @@ class InputRowData(metaclass=ABCMeta):
     @abstractmethod
     def date(self) -> datetime:
         """This property returns date as datetime."""
-        pass
 
     @property
     @abstractmethod
     def store_name(self) -> str:
         """This property returns store name."""
-        pass
 
     @property
     @abstractmethod
     def item_name(self) -> str:
         """This property returns store name."""
-        pass
 
 
 class InputStoreRowData(InputRowData):
@@ -91,37 +87,31 @@ class InputRow:
     @abstractmethod
     def convert_to_zaim_row(self) -> 'ZaimRow':
         """This method converts this row to row of Zaim."""
-        pass
 
     @property
     @abstractmethod
     def zaim_store(self) -> 'Store':
         """This property return store in Zaim row."""
-        pass
 
     @property
     @abstractmethod
     def zaim_item(self) -> 'Item':
         """This property return item in Zaim row."""
-        pass
 
     @property
     @abstractmethod
     def zaim_income_cash_flow_target(self) -> str:
         """This property return cash flow target in Zaim income row."""
-        pass
 
     @property
     @abstractmethod
     def zaim_income_ammount_income(self) -> int:
         """This property return amount of income in Zaim income row."""
-        pass
 
     @property
     @abstractmethod
     def zaim_payment_cash_flow_source(self) -> str:
         """This property return cash flow source in Zaim payment row."""
-        pass
 
     @property
     def zaim_payment_note(self) -> str:
@@ -133,25 +123,21 @@ class InputRow:
     @abstractmethod
     def zaim_payment_amount_payment(self) -> int:
         """This property return amount of payment in Zaim payment row."""
-        pass
 
     @property
     @abstractmethod
     def zaim_transfer_cash_flow_source(self) -> str:
         """This property return cash flow source in Zaim transfer row."""
-        pass
 
     @property
     @abstractmethod
     def zaim_transfer_cash_flow_target(self) -> str:
         """This property return cash flow target in Zaim transfer row."""
-        pass
 
     @property
     @abstractmethod
     def zaim_transfer_amount_transfer(self) -> int:
         """This property return amount of transfer in Zaim transfer row."""
-        pass
 
     def try_to_find_store(self, store_name) -> Store:
         """This method select store from database and return it as Store model."""

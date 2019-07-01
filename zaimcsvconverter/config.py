@@ -2,14 +2,13 @@
 """This module implements configuration."""
 from __future__ import annotations
 
-import re
-from abc import ABCMeta
 from enum import Enum
 from pathlib import Path
-from typing import Dict
 
-import yaml
 from dataclasses import dataclass, field
+from dataclasses_json import DataClassJsonMixin
+from yamldataclassconfig import build_file_path
+from yamldataclassconfig.config import YamlDataClassConfig
 
 
 class AccountKey(Enum):
@@ -21,59 +20,29 @@ class AccountKey(Enum):
     AMAZON: str = 'amazon'
 
 
-class AccountConfig(metaclass=ABCMeta):
-    """This class implements configuration for account."""
-    @staticmethod
-    def create(account_key: AccountKey, dict_account_config: dict) -> AccountConfig:
-        """This method creates """
-        account_config_class = {
-            AccountKey.WAON: WaonConfig,
-            AccountKey.GOLD_POINT_CARD_PLUS: GoldPointCardPlusConfig,
-            AccountKey.MUFG: MufgConfig,
-            AccountKey.PASMO: PasmoConfig,
-            AccountKey.AMAZON: AmazonConfig,
-        }.get(account_key)
-        try:
-            return account_config_class(**dict_account_config)
-        except TypeError as error:
-            matches = re.search(r"__init__\(\) got an unexpected keyword argument '(.*)'", str(error))
-            if matches:
-                raise TypeError(
-                    f'Key "{account_key.value}.{matches.group(1)}" is undefined key.'
-                    + f' Please confirm {Config.FILE_CONFIG}.'
-                ) from error
-            matches = re.search(r"__init__\(\) missing \d+ required positional argument: '(.*)'", str(error))
-            if matches:
-                raise TypeError(
-                    f'Key "{account_key.value}.{matches.group(1)}" is required.'
-                    + f' Please confirm {Config.FILE_CONFIG}.'
-                ) from error
-            raise error
-
-
 @dataclass
-class WaonConfig(AccountConfig):
+class WaonConfig(DataClassJsonMixin):
     """This class implements configuration for WAON."""
     account_name: str
     auto_charge_source: str
 
 
 @dataclass
-class GoldPointCardPlusConfig(AccountConfig):
+class GoldPointCardPlusConfig(DataClassJsonMixin):
     """This class implements configuration for GOLD POINT CARD+."""
     account_name: str
     skip_amazon_row: bool
 
 
 @dataclass
-class MufgConfig(AccountConfig):
+class MufgConfig(DataClassJsonMixin):
     """This class implements configuration for MUFG bank."""
     account_name: str
     transfer_account_name: str
 
 
 @dataclass
-class SFCardViewerConfig(AccountConfig):
+class SFCardViewerConfig(DataClassJsonMixin):
     """This class implements configuration for SF Card Viewer."""
     account_name: str
     auto_charge_source: str
@@ -86,31 +55,33 @@ class PasmoConfig(SFCardViewerConfig):
 
 
 @dataclass
-class AmazonConfig(AccountConfig):
+class AmazonConfig(DataClassJsonMixin):
     """This class implements configuration for Amazon.co.jp."""
     store_name_zaim: str
     payment_account_name: str
 
 
 @dataclass
-class Config:
+class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
-    waon: WaonConfig = None
-    gold_point_card_plus: GoldPointCardPlusConfig = None
-    mufg: MufgConfig = None
-    pasmo: PasmoConfig = None
-    amazon: AmazonConfig = None
-    FILE_CONFIG: Path = field(default=Path(__file__).parent.parent / 'config.yml', init=False)
-
-    def load(self):
-        """This method creates instance by dict."""
-        # pylint: disable=no-member
-        with self.FILE_CONFIG.open('r', encoding='UTF-8') as yml:
-            dictionary_config = yaml.load(yml)
-        account_config: Dict[str, AccountConfig] = {}
-        for key_string, dict_account_config in dictionary_config.items():
-            key_enum = AccountKey(key_string)
-            if key_enum is None:
-                raise ValueError(f'Key "{key_string}" is undefined key. Please confirm {Config.FILE_CONFIG}.')
-            account_config[key_string] = AccountConfig.create(key_enum, dict_account_config)
-        self.__dict__.update(Config(**account_config).__dict__)
+    waon: WaonConfig = field(
+        default=None,
+        metadata={'dataclasses_json': {'mm_field': WaonConfig}}
+    )
+    gold_point_card_plus: GoldPointCardPlusConfig = field(
+        default=None,
+        metadata={'dataclasses_json': {'mm_field': GoldPointCardPlusConfig}}
+    )
+    mufg: MufgConfig = field(
+        default=None,
+        metadata={'dataclasses_json': {'mm_field': MufgConfig}}
+    )
+    pasmo: PasmoConfig = field(
+        default=None,
+        metadata={'dataclasses_json': {'mm_field': PasmoConfig}}
+    )
+    amazon: AmazonConfig = field(
+        default=None,
+        metadata={'dataclasses_json': {'mm_field': AmazonConfig}}
+    )
+    FILE_PATH: Path = build_file_path(Path(__file__).parent.parent / 'config.yml')

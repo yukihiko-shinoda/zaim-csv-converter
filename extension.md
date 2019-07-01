@@ -7,12 +7,9 @@ config.yml によるユーザー設定を利用する場合、以下の開発を
 config.py の AccountKey Enum クラスに新規対応口座用の yaml キーを追加します。
 
 ### 1-2. 設定 dataclass の作成
-config.pyにAccountConfigを継承し、config.ymlで設定できる項目をpropertyとして定義したdataclassを作成します。
+config.py に DataClassJsonMixin を継承し、 config.yml で設定できる項目を property として定義した dataclass を作成します。
 
-### 1-3. Factory メソッドへの追加
-config.py の AccountConfig クラスの create メソッドの dict に新規対応口座用のキーを値を追加します。
-
-### 1-4. type hint の追加
+### 1-3. type hint の追加
 config.py の Config クラスに新規対応口座の AccountConfig インスタンスの type hint のための property を追加します。
 
 ## 2. 入力 CSV ファイルのフォーマットに依存する処理の追加
@@ -65,7 +62,7 @@ zaim_transfer_amount_transfer|この行が振替の行の場合、出力 CSV に
 
 手順2-2.の各プロパティの実装が if だらけにならないよう、
 Factory クラスで入力 CSV の行モデルクラスインスタンスを作り分けることで
-Strategy パターンを実装できます。(mufg.py, waonpy を参考にしてください。)
+Strategy パターンを実装できます。(mufg.py, waon.py を参考にしてください。)
 
 InputRowFactory を継承した Factory クラスを作成し、
 手順2-1.で作成した dataclass を引数に、手順2-2.で作成したモデルクラスを返す
@@ -89,6 +86,5 @@ csv_header|入力 CSV にヘッダーが含まれる場合、定義します。�
 ## 4. unittestの実行
 
 ```bash
-pipenv shell
-python -m unittest discover tests
+pipenv run test
 ```

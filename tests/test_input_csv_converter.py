@@ -23,7 +23,6 @@ class TestInputCsvConverter(ConfigurableDatabaseTestCase):
     @abstractmethod
     def suffix_file_name(self):
         """This property returns suffix of file name."""
-        pass
 
     @property
     def file_source(self) -> Path:

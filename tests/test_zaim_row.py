@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Tests for zaim_row.py."""
-from parameterized import parameterized
 from dataclasses import dataclass
+from parameterized import parameterized
 
 from tests.instance_fixture import InstanceFixture
 from tests.resource import StoreFactory, ConfigurableDatabaseTestCase, ItemFactory

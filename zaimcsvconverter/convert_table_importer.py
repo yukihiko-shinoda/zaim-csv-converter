@@ -4,7 +4,8 @@ import csv
 from pathlib import Path
 from typing import List
 
-from zaimcsvconverter.account import DirectoryCsv, Account
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.directory_csv import DirectoryCsv
 from zaimcsvconverter.models import Store, Item, StoreRowData, ItemRowData
 
 

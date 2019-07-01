@@ -4,7 +4,7 @@ import csv
 from pathlib import Path
 from typing import NoReturn, List
 
-from zaimcsvconverter.account import DirectoryCsv
+from zaimcsvconverter.directory_csv import DirectoryCsv
 from zaimcsvconverter.error_handler import ErrorHandler
 from zaimcsvconverter.input_csv_converter import InputCsvConverter
 

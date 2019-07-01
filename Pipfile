@@ -4,17 +4,26 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyyaml = "==5.1"
 inflector = "==2.0.12"
 sqlalchemy = "==1.3.4"
 numpy = "==1.16.4"
+# To read yaml file as config
+yamldataclassconfig = "==0.0a2"
 
 [dev-packages]
 argparse = "==1.4.0"
 factory_boy = "==2.12.0"
 parameterized = "*"
 pylint = "*"
-unittest2 = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+# dataclasses-json 0.2.7 depends on marshmallow 3.0.0rc6
+allow_prereleases = true
+
+[scripts]
+start = "python convert.py"
+test = "cd tests && pytest"

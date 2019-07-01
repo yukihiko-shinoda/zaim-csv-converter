@@ -93,19 +93,13 @@ Amazon.co.jp|amazon
 変換対象CSVの準備方法の詳細は[変換対象CSVの準備方法](#変換対象CSVの準備方法)を参照してください。
 
 
-### 2. 実行用仮想環境のshellを起動します
+### 2. 実行します
 
 ```bash
-pipenv shell
+pipenv run start
 ```
 
-### 3. 実行します
-
-```bash
-python convert.py
-```
-
-### 4. 実行結果の確認を行います
+### 3. 実行結果の確認を行います
 
 実行後、
  csvoutput/ に csvinput/ と同名のファイルが作成されます。
@@ -124,7 +118,7 @@ KeyError: 'Undefined store name in convert table CSV exists. Please check error.
 変換用テーブルのCSVに未定義のお店の名前、品目名の一覧が出力されますので、
 変換テーブルのCSVに変換の定義を追加してから、再度実行します。
 
-### 5. Zaimにインポートします
+### 4. Zaimにインポートします
 
 ブラウザーでWEB版のZaim: https://zaim.net/ にログインし、
 画面右上の
@@ -133,7 +127,7 @@ KeyError: 'Undefined store name in convert table CSV exists. Please check error.
 
 から csvoutput/ ディレクトリーに出力されたCSVをアップロードします。
 
-### 6. アップロードされた情報を確認します
+### 5. アップロードされた情報を確認します
 
 Zaim側のアップデートに伴う仕様変更等で、予期しない登録が発生する可能性を考慮し、
 Zaimの履歴画面で、 csvoutput/ ディレクトリーのCSVとZaim上の登録内容の比較を目視で行います。

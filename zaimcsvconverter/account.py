@@ -19,15 +19,6 @@ from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
 from zaimcsvconverter.models import Store, Item
 
 
-class DirectoryCsv(Enum):
-    """
-    This class implements constant of directory of CSV.
-    """
-    CONVERT: Path = Path('./csvconverttable/')
-    INPUT: Path = Path('./csvinput/')
-    OUTPUT: Path = Path('./csvoutput/')
-
-
 class Account(Enum):
     """
     This class implements constant of account in Zaim.

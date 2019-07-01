@@ -6,7 +6,7 @@ from parameterized import parameterized
 from zaimcsvconverter.utility import Utility
 
 
-class TestAccount(unittest.TestCase):
+class TestUtility(unittest.TestCase):
     """Tests for Account."""
     @parameterized.expand([
         ('', None),
