@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6a5cedbbcdc37d8fba12045da1f18a88490e04d7e7a9250e9d3a4115b139039d"
+            "sha256": "21d05995851fcb976c3e515ec6e0e0425aeb71b22a7469d2c6a19b4fc264419f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -113,11 +113,11 @@
         },
         "yamldataclassconfig": {
             "hashes": [
-                "sha256:b4053d0261e4b4f2f1c4b4e85c9adaa4c1c9616057b847d1ec5263872f2c537a",
-                "sha256:b4ba136ca43552c9f542312fe9cad596f995348ab3d158cbec428efcba33bd7e"
+                "sha256:849f20bb597f59f003548cc2f6d1a6b7756ceb8527b9293ca2dfb2447b68b8fe",
+                "sha256:8a46056ee07d25a73b53b129668bb72ba31fc5fb9cc9652f3da39e0a9e69df01"
             ],
             "index": "pypi",
-            "version": "==0.0a2"
+            "version": "==0.0a3"
         }
     },
     "develop": {

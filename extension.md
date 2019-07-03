@@ -83,7 +83,7 @@ input_row_factory|手順2.で作成した InputRowFactory を指定します。�
 encode|入力 CSV のエンコードが UTF-8 以外の場合、定義します。
 csv_header|入力 CSV にヘッダーが含まれる場合、定義します。定義すると、読み取り処理がヘッダーの行までを自動的に読み飛ばします。
 
-## 4. unittestの実行
+## 4. ユニットテストの実行
 
 ```bash
 pipenv run test

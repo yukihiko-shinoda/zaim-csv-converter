@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """Tests for sf_card_viewer.py."""
 from datetime import datetime
-import unittest2 as unittest
+
+import pytest
 from parameterized import parameterized
 
 from tests.resource import ConfigurableDatabaseTestCase, StoreFactory
@@ -13,7 +14,7 @@ from zaimcsvconverter.models import StoreRowData, Store
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimTransferRow
 
 
-class TestSFCardViewerRowData(unittest.TestCase):
+class TestSFCardViewerRowData:
     """Tests for SFCardViewerRowData."""
 
     def test_init_and_property(self):
@@ -35,16 +36,16 @@ class TestSFCardViewerRowData(unittest.TestCase):
                                                       station_name_enter, is_commuter_pass_exit,
                                                       railway_company_name_exit, station_name_exit, used_amount,
                                                       balance, note)
-        self.assertEqual(sf_card_viewer_row_data.is_commuter_pass_enter, is_commuter_pass_enter)
-        self.assertEqual(sf_card_viewer_row_data.railway_company_name_enter, railway_company_name_enter)
-        self.assertEqual(sf_card_viewer_row_data.station_name_enter, station_name_enter)
-        self.assertEqual(sf_card_viewer_row_data.is_commuter_pass_exit, is_commuter_pass_exit)
-        self.assertEqual(sf_card_viewer_row_data.railway_company_name_exit, railway_company_name_exit)
-        self.assertEqual(sf_card_viewer_row_data.used_amount, used_amount)
-        self.assertEqual(sf_card_viewer_row_data.balance, balance)
-        self.assertEqual(sf_card_viewer_row_data.note, note)
-        self.assertEqual(sf_card_viewer_row_data.date, datetime(2018, 11, 13, 0, 0))
-        self.assertEqual(sf_card_viewer_row_data.store_name, station_name_exit)
+        assert sf_card_viewer_row_data.is_commuter_pass_enter == is_commuter_pass_enter
+        assert sf_card_viewer_row_data.railway_company_name_enter == railway_company_name_enter
+        assert sf_card_viewer_row_data.station_name_enter == station_name_enter
+        assert sf_card_viewer_row_data.is_commuter_pass_exit == is_commuter_pass_exit
+        assert sf_card_viewer_row_data.railway_company_name_exit == railway_company_name_exit
+        assert sf_card_viewer_row_data.used_amount == used_amount
+        assert sf_card_viewer_row_data.balance == balance
+        assert sf_card_viewer_row_data.note == note
+        assert sf_card_viewer_row_data.date == datetime(2018, 11, 13, 0, 0)
+        assert sf_card_viewer_row_data.store_name == station_name_exit
 
 
 def prepare_fixture():
@@ -76,15 +77,15 @@ class TestSFCardViewerRow(ConfigurableDatabaseTestCase):
         config_account_name = 'PASMO'
         config_auto_charge_source = 'TOKYU CARD'
         sf_card_viewer_row = SFCardViewerTransportationRow(Account.PASMO, sf_card_viewer_row_data, CONFIG.pasmo)
-        self.assertEqual(sf_card_viewer_row.zaim_date, datetime(2018, 11, 13, 0, 0, 0))
-        self.assertIsInstance(sf_card_viewer_row.zaim_store, Store)
-        self.assertEqual(sf_card_viewer_row.zaim_store.name_zaim, '東京地下鉄株式会社　南北線後楽園駅')
-        self.assertEqual(sf_card_viewer_row.zaim_payment_cash_flow_source, config_account_name)
-        self.assertEqual(sf_card_viewer_row.zaim_payment_note, 'メトロ 六本木一丁目 → メトロ 後楽園')
-        self.assertEqual(sf_card_viewer_row.zaim_payment_amount_payment, expected_amount)
-        self.assertEqual(sf_card_viewer_row.zaim_transfer_cash_flow_source, config_auto_charge_source)
-        self.assertEqual(sf_card_viewer_row.zaim_transfer_cash_flow_target, config_account_name)
-        self.assertEqual(sf_card_viewer_row.zaim_transfer_amount_transfer, -1 * expected_amount)
+        assert sf_card_viewer_row.zaim_date == datetime(2018, 11, 13, 0, 0, 0)
+        assert isinstance(sf_card_viewer_row.zaim_store, Store)
+        assert sf_card_viewer_row.zaim_store.name_zaim == '東京地下鉄株式会社　南北線後楽園駅'
+        assert sf_card_viewer_row.zaim_payment_cash_flow_source == config_account_name
+        assert sf_card_viewer_row.zaim_payment_note == 'メトロ 六本木一丁目 → メトロ 後楽園'
+        assert sf_card_viewer_row.zaim_payment_amount_payment == expected_amount
+        assert sf_card_viewer_row.zaim_transfer_cash_flow_source == config_auto_charge_source
+        assert sf_card_viewer_row.zaim_transfer_cash_flow_target == config_account_name
+        assert sf_card_viewer_row.zaim_transfer_amount_transfer == -1 * expected_amount
 
 
 class TestSFCardViewerTransportationRow(ConfigurableDatabaseTestCase):
@@ -100,7 +101,7 @@ class TestSFCardViewerTransportationRow(ConfigurableDatabaseTestCase):
             SFCardViewerRowData('2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''),
             CONFIG.pasmo
         )
-        self.assertIsInstance(sf_card_viewer_row.convert_to_zaim_row(), ZaimPaymentRow)
+        assert isinstance(sf_card_viewer_row.convert_to_zaim_row(), ZaimPaymentRow)
 
 
 class TestSFCardViewerSalesGoodsRow(ConfigurableDatabaseTestCase):
@@ -117,7 +118,7 @@ class TestSFCardViewerSalesGoodsRow(ConfigurableDatabaseTestCase):
 
     def test_convert_to_zaim_row(self):
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
-        self.assertIsInstance(self.sf_card_viewer_row.convert_to_zaim_row(), ZaimPaymentRow)
+        assert isinstance(self.sf_card_viewer_row.convert_to_zaim_row(), ZaimPaymentRow)
 
 
 class TestSFCardViewerSalesGoodsRowSkip(TestSFCardViewerSalesGoodsRow):
@@ -129,7 +130,7 @@ class TestSFCardViewerSalesGoodsRowSkip(TestSFCardViewerSalesGoodsRow):
 
     def test_is_row_to_skip(self):
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
-        self.assertTrue(self.sf_card_viewer_row.is_row_to_skip)
+        assert self.sf_card_viewer_row.is_row_to_skip
 
 
 class TestSFCardViewerSalesGoodsRowNotSkip(TestSFCardViewerSalesGoodsRow):
@@ -141,7 +142,7 @@ class TestSFCardViewerSalesGoodsRowNotSkip(TestSFCardViewerSalesGoodsRow):
 
     def test_is_row_to_skip(self):
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
-        self.assertFalse(self.sf_card_viewer_row.is_row_to_skip)
+        assert not self.sf_card_viewer_row.is_row_to_skip
 
 
 class TestSFCardViewerAutoChargeRow(ConfigurableDatabaseTestCase):
@@ -157,7 +158,7 @@ class TestSFCardViewerAutoChargeRow(ConfigurableDatabaseTestCase):
             SFCardViewerRowData('2018/11/11', '', 'JR東', '秋葉原', '', '', '', '-3000', '5022', 'ｵｰﾄﾁｬｰｼﾞ'),
             CONFIG.pasmo
         )
-        self.assertIsInstance(sf_card_viewer_row.convert_to_zaim_row(), ZaimTransferRow)
+        assert isinstance(sf_card_viewer_row.convert_to_zaim_row(), ZaimTransferRow)
 
 
 class TestSFCardViewerExitByWindowRow(ConfigurableDatabaseTestCase):
@@ -173,9 +174,9 @@ class TestSFCardViewerExitByWindowRow(ConfigurableDatabaseTestCase):
             SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', '東武', '北千住', '0', '2621', '窓出'),
             CONFIG.pasmo
         )
-        self.assertIsInstance(sf_card_viewer_row.convert_to_zaim_row(), ZaimPaymentRow)
+        assert isinstance(sf_card_viewer_row.convert_to_zaim_row(), ZaimPaymentRow)
 
-    @parameterized.expand([
+    @pytest.mark.parametrize('sf_card_viewer_row_data, expected', [
         (SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', 'JR東', '北千住', '0', '2621', '窓出'),
          False),
         (SFCardViewerRowData('2018/11/25', '', '東武', 'とうきょうスカイツリー', '', '東武', '北千住', '0', '2621', '窓出'),
@@ -192,7 +193,7 @@ class TestSFCardViewerExitByWindowRow(ConfigurableDatabaseTestCase):
             sf_card_viewer_row_data,
             CONFIG.pasmo
         )
-        self.assertEqual(sf_card_viewer_row.is_row_to_skip, expected)
+        assert sf_card_viewer_row.is_row_to_skip == expected
 
 
 class TestSFCardViewerRowFactory(ConfigurableDatabaseTestCase):
@@ -201,7 +202,7 @@ class TestSFCardViewerRowFactory(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    @parameterized.expand([
+    @pytest.mark.parametrize('argument, expected', [
         (SFCardViewerRowData('2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''),
          SFCardViewerTransportationRow),
         (SFCardViewerRowData('2018/11/14', '', '', '', '', '', '', '480', '3005', '物販'),
@@ -215,11 +216,11 @@ class TestSFCardViewerRowFactory(ConfigurableDatabaseTestCase):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(Account.PASMO, argument)
-        self.assertIsInstance(sf_card_viewer_row, expected)
+        assert isinstance(sf_card_viewer_row, expected)
 
     def test_create_fail(self):
         """Method should raise ValueError when note is not defined."""
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             # pylint: disable=protected-access
             SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
                 Account.PASMO,

@@ -27,10 +27,10 @@ def call_session_maker(target_engine):
 
 
 ENGINE = create_engine('sqlite://')
-# ↓ To share same session with unittest and inject new engine on every unittest to run parallel
+# ↓ To share same session with unit testing and inject new engine on every unit testing to run parallel
 # pylint: disable=invalid-name
 Session = None
-if len(sys.argv) >= 1 and ('unittest' in sys.argv[0] or 'pytest' in sys.argv[0]):
+if len(sys.argv) >= 1 and ('pytest' in sys.argv[0]):
     # pylint: disable=invalid-name
     Session = scoped_session(call_session_maker(ENGINE))
 else:

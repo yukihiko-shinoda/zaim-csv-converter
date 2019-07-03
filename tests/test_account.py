@@ -3,8 +3,6 @@
 from enum import Enum
 from pathlib import Path
 
-import unittest2 as unittest
-
 from zaimcsvconverter.account import Account
 
 
@@ -28,14 +26,14 @@ class FilePathInput(Enum):
     AMAZON: Path = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\amazon201804.csv')
 
 
-class TestAccount(unittest.TestCase):
+class TestAccount:
     """Tests for Account."""
     def test_create_by_path_csv_convert(self):
         """All accounts should have definition of convert table file name."""
         for account in Account:
-            self.assertIsInstance(Account.create_by_path_csv_convert(FilePathConvertTable[account.name].value), Account)
+            assert isinstance(Account.create_by_path_csv_convert(FilePathConvertTable[account.name].value), Account)
 
     def test_create_by_path_csv_input(self):
         """All accounts should have regex."""
         for account in Account:
-            self.assertIsInstance(Account.create_by_path_csv_input(FilePathInput[account.name].value), Account)
+            assert isinstance(Account.create_by_path_csv_input(FilePathInput[account.name].value), Account)

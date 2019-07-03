@@ -12,8 +12,9 @@ from pathlib import Path
 from typing import Union, Type, NoReturn
 
 import factory
+import pytest
 import sqlalchemy
-import unittest2 as unittest
+from yamldataclassconfig.config_handler import YamlDataClassConfigHandler
 
 from zaimcsvconverter import Session, CONFIG
 from zaimcsvconverter.account import Account
@@ -22,7 +23,7 @@ from zaimcsvconverter.models import initialize_database, Store, Item, StoreRowDa
 
 def create_database():
     """
-    This function creates new in memory database to run unittest as parallel.
+    This function creates new in memory database to run unit testing as parallel.
     """
     engine = sqlalchemy.create_engine('sqlite://')
     # It's a scoped_session, and now is the time to configure it.
@@ -49,46 +50,28 @@ class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = Session
 
 
-class DatabaseTestCase(unittest.TestCase):
+class DatabaseTestCase:
     """
-    This class creates new in memory database to run unittest as parallel.
+    This class creates new in memory database to run unit testing as parallel.
     """
-    def setUp(self):
-        self._session = create_database()
+
+    @pytest.fixture(autouse=True)
+    def database_session(self):
+        session = create_database()
         self._prepare_fixture()
-        self._session.flush()
+        session.flush()
+        yield session
+        # Remove it, so that the next test gets a new Session()
+        Session.remove()
 
     @abstractmethod
     def _prepare_fixture(self):
         pass
 
-    def doCleanups(self):
-        # Remove it, so that the next test gets a new Session()
-        Session.remove()
 
-
-class ConfigHandler:
+class ConfigHandler(YamlDataClassConfigHandler):
     """This class handles config.yml."""
-    PATH_TARGET: Path = Path(__file__).parent.parent
-    PATH_SOURCE: Path = Path(__file__).parent
-    FILE_TARGET: Path = PATH_TARGET / 'config.yml'
-    FILE_SOURCE: Path = PATH_SOURCE / 'config.yml.dist'
-    FILE_BACK_UP: Path = PATH_TARGET / 'config.yml.bak'
-
-    @staticmethod
-    def set_up(file_source=FILE_SOURCE):
-        """This function set up config.yml."""
-        if ConfigHandler.FILE_TARGET.is_file():
-            shutil.move(str(ConfigHandler.FILE_TARGET), str(ConfigHandler.FILE_BACK_UP))
-        shutil.copy(str(file_source), str(ConfigHandler.FILE_TARGET))
-        CONFIG.load()
-
-    @staticmethod
-    def do_cleanups():
-        """This function clean up config.yml."""
-        if ConfigHandler.FILE_BACK_UP.is_file():
-            os.unlink(str(ConfigHandler.FILE_TARGET))
-            shutil.move(str(ConfigHandler.FILE_BACK_UP), str(ConfigHandler.FILE_TARGET))
+    PATH_REFERENCE_DIRECTORY = Path(__file__).parent.parent
 
 
 def create_path_as_same_as_file_name(argument: Union[object, Type[object]]) -> Path:
@@ -106,23 +89,22 @@ def clean_up_directory(path_to_directory: Path) -> NoReturn:
 
 class ConfigurableDatabaseTestCase(DatabaseTestCase):
     """
-    This class creates new in memory database to run unittest as parallel,
+    This class creates new in memory database to run unit testing as parallel,
     and also creates config.yml.
     """
-    def setUp(self):
-        super().setUp()
+    @pytest.fixture(autouse=True)
+    def yaml_config(self):
         if self.source_yaml_file is None:
             ConfigHandler.set_up()
         else:
             ConfigHandler.set_up(create_path_as_same_as_file_name(self) / self.source_yaml_file)
+        CONFIG.load()
+        yield
+        ConfigHandler.do_cleanups()
 
     @abstractmethod
     def _prepare_fixture(self):
         pass
-
-    def doCleanups(self):
-        ConfigHandler.do_cleanups()
-        super().doCleanups()
 
     @property
     def source_yaml_file(self) -> Union[str, None]:
@@ -130,17 +112,18 @@ class ConfigurableDatabaseTestCase(DatabaseTestCase):
         return None
 
 
-class ConfigurableTestCase(unittest.TestCase):
+class ConfigurableTestCase:
     """
     This class creates config.yml.
     """
-    def setUp(self):
+    @pytest.fixture(autouse=True)
+    def yaml_config(self):
         if self.source_yaml_file is None:
             ConfigHandler.set_up()
         else:
             ConfigHandler.set_up(create_path_as_same_as_file_name(self) / self.source_yaml_file)
-
-    def doCleanups(self):
+        CONFIG.load()
+        yield
         ConfigHandler.do_cleanups()
 
     @property

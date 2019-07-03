@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 """Tests for utility."""
-import unittest2 as unittest
-from parameterized import parameterized
+import pytest
 
 from zaimcsvconverter.utility import Utility
 
 
-class TestUtility(unittest.TestCase):
+class TestUtility:
     """Tests for Account."""
-    @parameterized.expand([
+    @pytest.mark.parametrize('argument, expected', [
         ('', None),
         ('1,000', 1000),
     ])
@@ -17,4 +16,4 @@ class TestUtility(unittest.TestCase):
         Method should return None when argument is empty string.
         Method should return integer even if argument include comma.
         """
-        self.assertEqual(Utility.convert_string_to_int_or_none(argument), expected)
+        assert Utility.convert_string_to_int_or_none(argument) == expected

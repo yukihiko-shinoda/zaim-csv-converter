@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """Tests for model."""
-from parameterized import parameterized
+import pytest
 
 from tests.resource import DatabaseTestCase, StoreFactory
 from zaimcsvconverter.account import Account
@@ -19,16 +19,16 @@ class TestModel(DatabaseTestCase):
             row_data=StoreRowData('カ）トウブカ－ドビ', '', '', '', '', '東武カード'),
         )
 
-    def test_save_all(self):
+    def test_save_all(self, database_session):
         """Arguments should insert into database."""
         stores = [Store(Account.WAON, StoreRowData('上尾', 'イオンモール　上尾'))]
         Store.save_all(stores)
-        stores = self._session.query(Store).filter(Store.name == '上尾').one()
+        stores = database_session.query(Store).filter(Store.name == '上尾').one()
         assert stores.name == '上尾'
         assert stores.name_zaim == 'イオンモール　上尾'
 
     # pylint: disable=no-self-use
-    @parameterized.expand([
+    @pytest.mark.parametrize('account, store_name, expected_store_name_zaim, expected_transfer_target', [
         (Account.WAON, '幕張新都心', 'イオンモール　幕張新都心', None),
         (Account.MUFG, 'カ）トウブカ－ドビ', None, '東武カード'),
     ])

@@ -2,6 +2,8 @@
 """Tests for convert_table_importer.py."""
 from typing import List
 
+import pytest
+
 from tests.resource import DatabaseTestCase, create_path_as_same_as_file_name
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 from zaimcsvconverter.models import Store, Item
@@ -14,13 +16,13 @@ class TestConvertTableImporter(DatabaseTestCase):
     def _prepare_fixture(self):
         pass
 
-    def setUp(self):
-        super().setUp()
+    @pytest.fixture(autouse=True)
+    def convert_table_importer(self, request):
         self.convert_table_importer = ConvertTableImporter(
-            create_path_as_same_as_file_name(self) / self._testMethodName
+            create_path_as_same_as_file_name(self) / request.node.name
         )
 
-    def test_success(self):
+    def test_success(self, database_session):
         """CSV should import into appropriate table."""
         self.convert_table_importer.execute()
         self.assertStoreEqual([
@@ -30,7 +32,7 @@ class TestConvertTableImporter(DatabaseTestCase):
             [4, 3, 'トウキヨウトスイドウ', '東京都水道局　経理部管理課', '水道・光熱', '水道料金', None, None],
             [5, 1, 'ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店', '食費', '食料品', None, None],
             [6, 1, '板橋前野町', 'イオンスタイル　板橋前野町', '食費', '食料品', 'その他', None],
-        ])
+        ], database_session)
         self.assertItemEqual([
             [1, 5, '（Amazon ポイント）', '通信', 'その他'],
             [2, 5, '（Amazonポイント）', '通信', 'その他'],
@@ -44,42 +46,44 @@ class TestConvertTableImporter(DatabaseTestCase):
                 '住まい',
                 '家具'
             ],
-        ])
+        ], database_session)
 
-    # pylint: disable=invalid-name
-    def assertStoreEqual(self, expected_stores):
+    # noinspection PyPep8Naming
+    @staticmethod
+    def assertStoreEqual(expected_stores, database_session):
         """This method asserts Store table."""
-        stores: List[Store] = self._session.query(Store).order_by(Store.id.asc()).all()
-        self.assertEqual(len(stores), len(expected_stores))
+        stores: List[Store] = database_session.query(Store).order_by(Store.id.asc()).all()
+        assert len(stores) == len(expected_stores)
         index = 0
         for store in stores:
             expected_store = expected_stores[index]
-            self.assertEqual(store.id, expected_store[0])
-            self.assertEqual(store.account_id, expected_store[1])
-            self.assertEqual(store.name, expected_store[2])
-            self.assertEqual(store.name_zaim, expected_store[3])
-            self.assertEqual(store.category_payment_large, expected_store[4])
-            self.assertEqual(store.category_payment_small, expected_store[5])
-            self.assertEqual(store.category_income, expected_store[6])
-            self.assertEqual(store.transfer_target, expected_store[7])
+            assert store.id == expected_store[0]
+            assert store.account_id == expected_store[1]
+            assert store.name == expected_store[2]
+            assert store.name_zaim == expected_store[3]
+            assert store.category_payment_large == expected_store[4]
+            assert store.category_payment_small == expected_store[5]
+            assert store.category_income == expected_store[6]
+            assert store.transfer_target == expected_store[7]
             index += 1
 
-    # pylint: disable=invalid-name
-    def assertItemEqual(self, expected_items):
+    # noinspection PyPep8Naming
+    @staticmethod
+    def assertItemEqual(expected_items, database_session):
         """This method asserts Store table."""
-        items: List[Item] = self._session.query(Item).order_by(Item.id.asc()).all()
-        self.assertEqual(len(items), len(expected_items))
+        items: List[Item] = database_session.query(Item).order_by(Item.id.asc()).all()
+        assert len(items) == len(expected_items)
         index = 0
         for item in items:
             expected_item = expected_items[index]
-            self.assertEqual(item.id, expected_item[0])
-            self.assertEqual(item.account_id, expected_item[1])
-            self.assertEqual(item.name, expected_item[2])
-            self.assertEqual(item.category_payment_large, expected_item[3])
-            self.assertEqual(item.category_payment_small, expected_item[4])
+            assert item.id == expected_item[0]
+            assert item.account_id == expected_item[1]
+            assert item.name == expected_item[2]
+            assert item.category_payment_large == expected_item[3]
+            assert item.category_payment_small == expected_item[4]
             index += 1
 
     def test_fail(self):
         """Method should raise error when the file which name is not correct is included."""
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             self.convert_table_importer.execute()

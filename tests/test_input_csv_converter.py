@@ -6,6 +6,8 @@ import csv
 from abc import abstractmethod
 from pathlib import Path
 
+import pytest
+
 from tests.resource import ConfigurableDatabaseTestCase, CsvHandler, create_path_as_same_as_file_name, \
     prepare_basic_store_waon
 from tests.test_zaim_row import ZaimRowDataForTest
@@ -19,6 +21,7 @@ def prepare_fixture():
 
 class TestInputCsvConverter(ConfigurableDatabaseTestCase):
     """Tests for AccountCsvConverter."""
+    request = None
     @property
     @abstractmethod
     def suffix_file_name(self):
@@ -27,18 +30,17 @@ class TestInputCsvConverter(ConfigurableDatabaseTestCase):
     @property
     def file_source(self) -> Path:
         """This property returns path to source file."""
-        return create_path_as_same_as_file_name(self) / (self._testMethodName + self.suffix_file_name)
+        return create_path_as_same_as_file_name(self) / (self.request.node.name + self.suffix_file_name)
 
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def setUp(self):
-        super().setUp()
+    @pytest.fixture(autouse=True)
+    def setup_method(self, request):
+        self.request = request
         CsvHandler.set_up(self.file_source)
-
-    def doCleanups(self):
+        yield
         CsvHandler.do_cleanups(self.file_source)
-        super().doCleanups()
 
 
 class TestInputCsvConverterForStore(TestInputCsvConverter):
@@ -53,39 +55,39 @@ class TestInputCsvConverterForStore(TestInputCsvConverter):
         First line should be header.
         """
         input_csv_converter = InputCsvConverter(self.file_source)
-        self.assertEqual(input_csv_converter.error_handler.list_error, [])
+        assert input_csv_converter.error_handler.list_error == []
         input_csv_converter.execute()
         with open(
                 str(CsvHandler.PATH_TARGET_OUTPUT / self.file_source.name), 'r', encoding='UTF-8', newline='\n'
         ) as file_zaim:
             # noinspection PyUnusedLocal
-            self.assertEqual(sum(1 for row in file_zaim), 2)
+            assert sum(1 for row in file_zaim) == 2
             file_zaim.seek(0)
             reader_zaim = csv.reader(file_zaim)
             list_zaim_row = reader_zaim.__next__()
             zaim_row_data = ZaimRowDataForTest(*list_zaim_row)
-            self.assertEqual(zaim_row_data.date, '日付')
-            self.assertEqual(zaim_row_data.method, '方法')
-            self.assertEqual(zaim_row_data.category_large, 'カテゴリ')
-            self.assertEqual(zaim_row_data.category_small, 'カテゴリの内訳')
-            self.assertEqual(zaim_row_data.cash_flow_source, '支払元')
-            self.assertEqual(zaim_row_data.cash_flow_target, '入金先')
-            self.assertEqual(zaim_row_data.item_name, '品目')
-            self.assertEqual(zaim_row_data.note, 'メモ')
-            self.assertEqual(zaim_row_data.store_name, 'お店')
-            self.assertEqual(zaim_row_data.currency, '通貨')
-            self.assertEqual(zaim_row_data.amount_income, '収入')
-            self.assertEqual(zaim_row_data.amount_payment, '支出')
-            self.assertEqual(zaim_row_data.amount_transfer, '振替')
-            self.assertEqual(zaim_row_data.balance_adjustment, '残高調整')
-            self.assertEqual(zaim_row_data.amount_before_currency_conversion, '通貨変換前の金額')
-            self.assertEqual(zaim_row_data.setting_aggregate, '集計の設定')
+            assert zaim_row_data.date == '日付'
+            assert zaim_row_data.method == '方法'
+            assert zaim_row_data.category_large == 'カテゴリ'
+            assert zaim_row_data.category_small == 'カテゴリの内訳'
+            assert zaim_row_data.cash_flow_source == '支払元'
+            assert zaim_row_data.cash_flow_target == '入金先'
+            assert zaim_row_data.item_name == '品目'
+            assert zaim_row_data.note == 'メモ'
+            assert zaim_row_data.store_name == 'お店'
+            assert zaim_row_data.currency == '通貨'
+            assert zaim_row_data.amount_income == '収入'
+            assert zaim_row_data.amount_payment == '支出'
+            assert zaim_row_data.amount_transfer == '振替'
+            assert zaim_row_data.balance_adjustment == '残高調整'
+            assert zaim_row_data.amount_before_currency_conversion == '通貨変換前の金額'
+            assert zaim_row_data.setting_aggregate == '集計の設定'
 
     def test_stop_iteration(self):
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
         input_csv_converter = InputCsvConverter(self.file_source)
-        self.assertEqual(input_csv_converter.error_handler.list_error, [])
-        with self.assertRaises(StopIteration):
+        assert input_csv_converter.error_handler.list_error == []
+        with pytest.raises(StopIteration):
             input_csv_converter.execute()
 
     def test_key_error(self):
@@ -94,10 +96,10 @@ class TestInputCsvConverterForStore(TestInputCsvConverter):
         Undefined store is listed up on property.
         """
         input_csv_converter = InputCsvConverter(self.file_source)
-        self.assertEqual(input_csv_converter.error_handler.list_error, [])
-        with self.assertRaises(KeyError):
+        assert input_csv_converter.error_handler.list_error == []
+        with pytest.raises(KeyError):
             input_csv_converter.execute()
-        self.assertEqual(input_csv_converter.error_handler.list_error, [['waon.csv', 'マクドナルド津田沼駅前店', '']])
+        assert input_csv_converter.error_handler.list_error == [['waon.csv', 'マクドナルド津田沼駅前店', '']]
 
 
 class TestInputCsvConverterForItem(TestInputCsvConverter):
@@ -112,10 +114,10 @@ class TestInputCsvConverterForItem(TestInputCsvConverter):
         Undefined item is listed up on property.
         """
         input_csv_converter = InputCsvConverter(self.file_source)
-        self.assertEqual(input_csv_converter.error_handler.list_error, [])
-        with self.assertRaises(KeyError):
+        assert input_csv_converter.error_handler.list_error == []
+        with pytest.raises(KeyError):
             input_csv_converter.execute()
-        self.assertEqual(
-            input_csv_converter.error_handler.list_error,
-            [['amazon.csv', '', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト']]
-        )
+        assert input_csv_converter.error_handler.list_error == [
+            ['amazon.csv', '', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト']
+        ]
+

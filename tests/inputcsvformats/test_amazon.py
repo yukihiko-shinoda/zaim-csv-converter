@@ -2,8 +2,7 @@
 """Tests for AmazonRow."""
 from datetime import datetime
 
-import unittest2 as unittest
-from parameterized import parameterized
+import pytest
 
 from tests.instance_fixture import InstanceFixture
 from tests.resource import ItemFactory, ConfigurableDatabaseTestCase
@@ -13,7 +12,7 @@ from zaimcsvconverter.models import ItemRowData, Store, Item
 from zaimcsvconverter.zaim_row import ZaimPaymentRow
 
 
-class TestAmazonRowData(unittest.TestCase):
+class TestAmazonRowData:
     """Tests for AmazonRowData."""
     # pylint: disable=too-many-locals
     def test_init_and_property(self):
@@ -44,24 +43,24 @@ class TestAmazonRowData(unittest.TestCase):
                                  total_order, destination, status, billing_address, billing_amount,
                                  credit_card_billing_date, credit_card_billing_amount, credit_card_identity,
                                  url_order_summary, url_receipt, url_item)
-        self.assertEqual(row_data.order_id, order_id)
-        self.assertEqual(row_data.note, note)
-        self.assertEqual(row_data.price, price)
-        self.assertEqual(row_data.number, number)
-        self.assertEqual(row_data.subtotal_price_item, subtotal_price_item)
-        self.assertEqual(row_data.total_order, total_order)
-        self.assertEqual(row_data.destination, destination)
-        self.assertEqual(row_data.status, status)
-        self.assertEqual(row_data.billing_address, billing_address)
-        self.assertEqual(row_data.billing_amount, billing_amount)
-        self.assertEqual(row_data.credit_card_billing_date, credit_card_billing_date)
-        self.assertEqual(row_data.credit_card_billing_amount, credit_card_billing_amount)
-        self.assertEqual(row_data.credit_card_identity, credit_card_identity)
-        self.assertEqual(row_data.url_order_summary, url_order_summary)
-        self.assertEqual(row_data.url_receipt, url_receipt)
-        self.assertEqual(row_data.url_item, url_item)
-        self.assertEqual(row_data.date, datetime(2018, 10, 23, 0, 0))
-        self.assertEqual(row_data.item_name, item_name)
+        assert row_data.order_id == order_id
+        assert row_data.note == note
+        assert row_data.price == price
+        assert row_data.number == number
+        assert row_data.subtotal_price_item == subtotal_price_item
+        assert row_data.total_order == total_order
+        assert row_data.destination == destination
+        assert row_data.status == status
+        assert row_data.billing_address == billing_address
+        assert row_data.billing_amount == billing_amount
+        assert row_data.credit_card_billing_date == credit_card_billing_date
+        assert row_data.credit_card_billing_amount == credit_card_billing_amount
+        assert row_data.credit_card_identity == credit_card_identity
+        assert row_data.url_order_summary == url_order_summary
+        assert row_data.url_receipt == url_receipt
+        assert row_data.url_item == url_item
+        assert row_data.date == datetime(2018, 10, 23, 0, 0)
+        assert row_data.item_name == item_name
 
 
 def prepare_fixture():
@@ -84,21 +83,21 @@ class TestAmazonRow(ConfigurableDatabaseTestCase):
         store_name = 'Amazon Japan G.K.'
         item_name = 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト'
         mufg_row = AmazonRow(Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON)
-        self.assertEqual(mufg_row.price, 4980)
-        self.assertEqual(mufg_row.number, 1)
-        self.assertEqual(mufg_row.zaim_date, datetime(2018, 10, 23, 0, 0, 0))
-        self.assertIsInstance(mufg_row.zaim_store, Store)
-        self.assertEqual(mufg_row.zaim_store.name_zaim, store_name)
-        self.assertIsInstance(mufg_row.zaim_item, Item)
-        self.assertEqual(mufg_row.zaim_item.name, item_name)
-        self.assertEqual(mufg_row.zaim_payment_cash_flow_source, 'ヨドバシゴールドポイントカード・プラス')
-        self.assertEqual(mufg_row.zaim_payment_note, '')
-        self.assertEqual(mufg_row.zaim_payment_amount_payment, expected_amount)
+        assert mufg_row.price == 4980
+        assert mufg_row.number == 1
+        assert mufg_row.zaim_date == datetime(2018, 10, 23, 0, 0, 0)
+        assert isinstance(mufg_row.zaim_store, Store)
+        assert mufg_row.zaim_store.name_zaim == store_name
+        assert isinstance(mufg_row.zaim_item, Item)
+        assert mufg_row.zaim_item.name == item_name
+        assert mufg_row.zaim_payment_cash_flow_source == 'ヨドバシゴールドポイントカード・プラス'
+        assert mufg_row.zaim_payment_note == ''
+        assert mufg_row.zaim_payment_amount_payment == expected_amount
 
     def test_convert_to_zaim_row(self):
         """MufgTransferIncomeRow should convert to suitable ZaimRow by transfer target."""
         mufg_row = AmazonRow(Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON)
-        self.assertIsInstance(mufg_row.convert_to_zaim_row(), ZaimPaymentRow)
+        assert isinstance(mufg_row.convert_to_zaim_row(), ZaimPaymentRow)
 
 
 class TestAmazonRowFactory(ConfigurableDatabaseTestCase):
@@ -107,11 +106,11 @@ class TestAmazonRowFactory(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    @parameterized.expand([
+    @pytest.mark.parametrize('argument, expected', [
         (InstanceFixture.ROW_DATA_AMAZON, AmazonRow),
     ])
     def test_create(self, argument, expected):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = AmazonRowFactory().create(Account.AMAZON, argument)
-        self.assertIsInstance(gold_point_card_plus_row, expected)
+        assert isinstance(gold_point_card_plus_row, expected)
