@@ -28,12 +28,14 @@ class FilePathInput(Enum):
 
 class TestAccount:
     """Tests for Account."""
-    def test_create_by_path_csv_convert(self):
+    @staticmethod
+    def test_create_by_path_csv_convert():
         """All accounts should have definition of convert table file name."""
         for account in Account:
             assert isinstance(Account.create_by_path_csv_convert(FilePathConvertTable[account.name].value), Account)
 
-    def test_create_by_path_csv_input(self):
+    @staticmethod
+    def test_create_by_path_csv_input():
         """All accounts should have regex."""
         for account in Account:
             assert isinstance(Account.create_by_path_csv_input(FilePathInput[account.name].value), Account)

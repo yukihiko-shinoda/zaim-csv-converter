@@ -7,11 +7,13 @@ from zaimcsvconverter.error_handler import ErrorHandler
 
 class TestErrorHandler:
     """Tests for ErrorHandler"""
-    def test_init_is_presented_false(self):
+    @staticmethod
+    def test_init_is_presented_false():
         """list_error should be empty when initialized."""
         assert not ErrorHandler().is_presented
 
-    def test_append_undefined_content_extend_is_presented_true_uniquify_iter(self):
+    @staticmethod
+    def test_append_undefined_content_extend_is_presented_true_uniquify_iter():
         """Instance should be iterable."""
         error_amazon = ['amazon.csv', '', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト']
         error_waon = ['waon.csv', 'ファミリーマートかぶと町永代', '']

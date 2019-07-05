@@ -19,7 +19,8 @@ class TestModel(DatabaseTestCase):
             row_data=StoreRowData('カ）トウブカ－ドビ', '', '', '', '', '東武カード'),
         )
 
-    def test_save_all(self, database_session):
+    @staticmethod
+    def test_save_all(database_session):
         """Arguments should insert into database."""
         stores = [Store(Account.WAON, StoreRowData('上尾', 'イオンモール　上尾'))]
         Store.save_all(stores)

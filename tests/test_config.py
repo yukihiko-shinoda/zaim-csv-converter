@@ -6,7 +6,8 @@ from zaimcsvconverter import Config
 
 class TestConfig(ConfigurableTestCase):
     """Tests for Config."""
-    def test_init(self):
+    @staticmethod
+    def test_init():
         """Constructor should leave to load yaml file."""
         config = Config()
         assert config.waon is None
@@ -15,7 +16,8 @@ class TestConfig(ConfigurableTestCase):
         assert config.pasmo is None
         assert config.amazon is None
 
-    def test_load(self):
+    @staticmethod
+    def test_load():
         """Arguments should load yaml file."""
         config = Config()
         config.load()

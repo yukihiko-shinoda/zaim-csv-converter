@@ -3,7 +3,6 @@
 from datetime import datetime
 
 import pytest
-from parameterized import parameterized
 
 from tests.resource import ConfigurableDatabaseTestCase, StoreFactory
 from zaimcsvconverter import CONFIG
@@ -17,7 +16,8 @@ from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimTransferRow
 class TestSFCardViewerRowData:
     """Tests for SFCardViewerRowData."""
 
-    def test_init_and_property(self):
+    @staticmethod
+    def test_init_and_property():
         """
         Property date should return datetime object.
         Property store_date should return used_store.
@@ -66,7 +66,8 @@ class TestSFCardViewerRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_init(self):
+    @staticmethod
+    def test_init():
         """
         Arguments should set into properties.
         """
@@ -94,7 +95,8 @@ class TestSFCardViewerTransportationRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_convert_to_zaim_row(self):
+    @staticmethod
+    def test_convert_to_zaim_row():
         """SFCardViewerTransportationRow should convert to ZaimPaymentRow."""
         sf_card_viewer_row = SFCardViewerTransportationRow(
             Account.PASMO,
@@ -151,7 +153,8 @@ class TestSFCardViewerAutoChargeRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_convert_to_zaim_row(self):
+    @staticmethod
+    def test_convert_to_zaim_row():
         """SFCardViewerTransportationRow should convert to ZaimTransferRow."""
         sf_card_viewer_row = SFCardViewerAutoChargeRow(
             Account.PASMO,
@@ -167,7 +170,8 @@ class TestSFCardViewerExitByWindowRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_convert_to_zaim_row(self):
+    @staticmethod
+    def test_convert_to_zaim_row():
         """SFCardViewerTransportationRow should convert to ZaimPaymentRow."""
         sf_card_viewer_row = SFCardViewerExitByWindowRow(
             Account.PASMO,
@@ -176,6 +180,7 @@ class TestSFCardViewerExitByWindowRow(ConfigurableDatabaseTestCase):
         )
         assert isinstance(sf_card_viewer_row.convert_to_zaim_row(), ZaimPaymentRow)
 
+    @staticmethod
     @pytest.mark.parametrize('sf_card_viewer_row_data, expected', [
         (SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', 'JR東', '北千住', '0', '2621', '窓出'),
          False),
@@ -186,7 +191,7 @@ class TestSFCardViewerExitByWindowRow(ConfigurableDatabaseTestCase):
         (SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', '東武', '北千住', '0', '2621', '窓出'),
          True),
     ])
-    def test_is_row_to_skip(self, sf_card_viewer_row_data, expected):
+    def test_is_row_to_skip(sf_card_viewer_row_data, expected):
         """Method should return true when entered station is as same as exit station and used amount is 0."""
         sf_card_viewer_row = SFCardViewerExitByWindowRow(
             Account.PASMO,
@@ -202,6 +207,7 @@ class TestSFCardViewerRowFactory(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
+    @staticmethod
     @pytest.mark.parametrize('argument, expected', [
         (SFCardViewerRowData('2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''),
          SFCardViewerTransportationRow),
@@ -212,13 +218,14 @@ class TestSFCardViewerRowFactory(ConfigurableDatabaseTestCase):
         (SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', '東武', '北千住', '0', '2621', '窓出'),
          SFCardViewerExitByWindowRow),
     ])
-    def test_create_success(self, argument, expected):
+    def test_create_success(argument, expected):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(Account.PASMO, argument)
         assert isinstance(sf_card_viewer_row, expected)
 
-    def test_create_fail(self):
+    @staticmethod
+    def test_create_fail():
         """Method should raise ValueError when note is not defined."""
         with pytest.raises(ValueError):
             # pylint: disable=protected-access

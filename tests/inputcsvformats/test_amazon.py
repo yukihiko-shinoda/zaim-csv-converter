@@ -14,8 +14,9 @@ from zaimcsvconverter.zaim_row import ZaimPaymentRow
 
 class TestAmazonRowData:
     """Tests for AmazonRowData."""
+    @staticmethod
     # pylint: disable=too-many-locals
-    def test_init_and_property(self):
+    def test_init_and_property():
         """
         Property date should return datetime object.
         Property store_date should return used_store.
@@ -77,7 +78,8 @@ class TestAmazonRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_init(self):
+    @staticmethod
+    def test_init():
         """Arguments should set into properties."""
         expected_amount = 4980
         store_name = 'Amazon Japan G.K.'
@@ -94,7 +96,8 @@ class TestAmazonRow(ConfigurableDatabaseTestCase):
         assert mufg_row.zaim_payment_note == ''
         assert mufg_row.zaim_payment_amount_payment == expected_amount
 
-    def test_convert_to_zaim_row(self):
+    @staticmethod
+    def test_convert_to_zaim_row():
         """MufgTransferIncomeRow should convert to suitable ZaimRow by transfer target."""
         mufg_row = AmazonRow(Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON)
         assert isinstance(mufg_row.convert_to_zaim_row(), ZaimPaymentRow)
@@ -106,10 +109,11 @@ class TestAmazonRowFactory(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
+    @staticmethod
     @pytest.mark.parametrize('argument, expected', [
         (InstanceFixture.ROW_DATA_AMAZON, AmazonRow),
     ])
-    def test_create(self, argument, expected):
+    def test_create(argument, expected):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = AmazonRowFactory().create(Account.AMAZON, argument)

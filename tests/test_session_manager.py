@@ -8,13 +8,16 @@ from zaimcsvconverter.session_manager import SessionManager
 
 class TestAccount:
     """Tests for session manager"""
+    @staticmethod
     @pytest.fixture(autouse=True)
-    def database_session(self):
+    def database_session():
+        """This fixture remove created session after test."""
         yield
         # Remove it, so that the next test gets a new Session()
         Session.remove()
 
-    def test_convert_string_to_int_or_none(self):
+    @staticmethod
+    def test_convert_string_to_int_or_none():
         """Seesion should be non'active."""
         with SessionManager() as session:
             extracted_session = session

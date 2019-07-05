@@ -7,7 +7,8 @@ from zaimcsvconverter.models import Store
 
 class TestAccount:
     """Tests for account dependency."""
-    def test_convert_string_to_int_or_none(self):
+    @staticmethod
+    def test_convert_string_to_int_or_none():
         """
         Argument should set into properties.
         Default encode should be UTF-8.

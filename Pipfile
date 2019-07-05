@@ -8,8 +8,7 @@ inflector = "==2.0.12"
 sqlalchemy = "==1.3.4"
 numpy = "==1.16.4"
 # To read yaml file as config
-yamldataclassconfig = "==0.0a3"
-
+yamldataclassconfig = "==1.0.0"
 [dev-packages]
 argparse = "==1.4.0"
 factory_boy = "==2.12.0"

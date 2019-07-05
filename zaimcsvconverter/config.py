@@ -7,7 +7,7 @@ from pathlib import Path
 
 from dataclasses import dataclass, field
 from dataclasses_json import DataClassJsonMixin
-from yamldataclassconfig import build_file_path
+from yamldataclassconfig import create_file_path_field
 from yamldataclassconfig.config import YamlDataClassConfig
 
 
@@ -84,4 +84,4 @@ class Config(YamlDataClassConfig):
         default=None,
         metadata={'dataclasses_json': {'mm_field': AmazonConfig}}
     )
-    FILE_PATH: Path = build_file_path(Path(__file__).parent.parent / 'config.yml')
+    FILE_PATH: Path = create_file_path_field(Path(__file__).parent.parent / 'config.yml')

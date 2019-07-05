@@ -58,7 +58,8 @@ class TestZaimIncomeRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_all(self):
+    @staticmethod
+    def test_all():
         """Argument should set into properties."""
         zaim_low = ZaimIncomeRow(MufgTransferIncomeRow(Account.MUFG, MufgRowData(
             '2018/8/20', '利息', 'スーパーフツウ', '', '20', '2000000', '', '', '振替入金'
@@ -88,13 +89,14 @@ class TestZaimPaymentRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
+    @staticmethod
     # pylint: disable=too-many-arguments,too-many-locals
     @pytest.mark.parametrize(
         (
             'input_row_factory, account, input_row_data, expected_date, expected_category_large, '
             'expected_category_small, expected_cash_flow_source, expected_item_name, expected_note, '
             'expected_store_name, expected_amount_payment'
-        ),[
+        ), [
             (SFCardViewerRowFactory(lambda: CONFIG.pasmo), Account.PASMO, SFCardViewerRowData(
                 '2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''
             ), '2018-11-13', '交通', '電車', 'PASMO', None, 'メトロ 六本木一丁目 → メトロ 後楽園',
@@ -105,7 +107,7 @@ class TestZaimPaymentRow(ConfigurableDatabaseTestCase):
              'Amazon Japan G.K.', 4980),
         ]
     )
-    def test_all(self, input_row_factory, account, input_row_data, expected_date, expected_category_large,
+    def test_all(input_row_factory, account, input_row_data, expected_date, expected_category_large,
                  expected_category_small, expected_cash_flow_source, expected_item_name, expected_note,
                  expected_store_name, expected_amount_payment):
         """Argument should set into properties."""
@@ -135,7 +137,8 @@ class TestZaimTransferRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_all(self):
+    @staticmethod
+    def test_all():
         """Argument should set into properties."""
         zaim_low = ZaimTransferRow(WaonAutoChargeRow(Account.WAON, WaonRowData(
             '2018/11/11', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座')))

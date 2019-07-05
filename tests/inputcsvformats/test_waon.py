@@ -15,7 +15,8 @@ from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimIncomeRow, ZaimTransfe
 
 class TestWaonRowData:
     """Tests for WaonRowData."""
-    def test_init_and_property(self):
+    @staticmethod
+    def test_init_and_property():
         """
         Property date should return datetime object.
         Property store_date should return used_store.
@@ -43,6 +44,7 @@ class TestWaonRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
+    @staticmethod
     # pylint: disable=too-many-arguments
     @pytest.mark.parametrize(
         (
@@ -56,7 +58,7 @@ class TestWaonRow(ConfigurableDatabaseTestCase):
              'イオンスタイル　板橋前野町', 1489, None),
         ]
     )
-    def test_init_success(self, waon_row_data, expected_date, expected_store_name_zaim,
+    def test_init_success(waon_row_data, expected_date, expected_store_name_zaim,
                           expected_amount, expected_charge_kind):
         """
         Arguments should set into properties.
@@ -78,7 +80,8 @@ class TestWaonRow(ConfigurableDatabaseTestCase):
         # pylint: disable=protected-access
         assert waon_row._charge_kind == expected_charge_kind
 
-    def test_init_fail(self):
+    @staticmethod
+    def test_init_fail():
         """Constructor should raise ValueError when got undefined charge kind."""
         with pytest.raises(ValueError):
             WaonPaymentRow(Account.WAON, WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', 'クレジットカード'))
@@ -89,7 +92,8 @@ class TestWaonPaymentRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_convert_to_zaim_row(self):
+    @staticmethod
+    def test_convert_to_zaim_row():
         """WaonPaymentRow should convert to ZaimPaymentRow."""
         waon_row = WaonPaymentRow(Account.WAON,
                                   InstanceFixture.ROW_DATA_WAON)
@@ -101,11 +105,12 @@ class TestWaonChargeRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
+    @staticmethod
     @pytest.mark.parametrize('waon_row_data, zaim_row_class', [
         (WaonRowData('2018/10/22', '板橋前野町', '1,504円', 'チャージ', 'ポイント'), ZaimIncomeRow),
         (WaonRowData('2018/11/11', '板橋前野町', '5,000円', 'チャージ', '銀行口座'), ZaimTransferRow),
     ])
-    def test_convert_to_zaim_row(self, waon_row_data, zaim_row_class):
+    def test_convert_to_zaim_row(waon_row_data, zaim_row_class):
         """
         WaonChargeRow for point should convert to ZaimIncomeRow.
         WaonChargeRow for bank account should convert to ZaimTransferRow.
@@ -119,7 +124,8 @@ class TestWaonAutoChargeRow(ConfigurableDatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
-    def test_convert_to_zaim_row(self):
+    @staticmethod
+    def test_convert_to_zaim_row():
         """WaonAutoChargeRow should convert to ZaimTransferRow."""
         waon_row = WaonAutoChargeRow(Account.WAON,
                                      WaonRowData('2018/11/11', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座'))
@@ -150,19 +156,21 @@ class TestWaonRowFactory(DatabaseTestCase):
     def _prepare_fixture(self):
         prepare_fixture()
 
+    @staticmethod
     @pytest.mark.parametrize('argument, expected', [
         (InstanceFixture.ROW_DATA_WAON, WaonPaymentRow),
         (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'チャージ', 'ポイント'), WaonChargeRow),
         (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座'), WaonAutoChargeRow),
         (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'ポイントダウンロード', '-'), WaonDownloadPointRow),
     ])
-    def test_create_success(self, argument, expected):
+    def test_create_success(argument, expected):
         """Method should return Store model when use kind is defined."""
         # pylint: disable=protected-access
         waon_row = WaonRowFactory().create(Account.WAON, argument)
         assert isinstance(waon_row, expected)
 
-    def test_create_fail(self):
+    @staticmethod
+    def test_create_fail():
         """Method should raise ValueError when use kind is not defined."""
         with pytest.raises(ValueError):
             # pylint: disable=protected-access

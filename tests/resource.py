@@ -14,7 +14,7 @@ from typing import Union, Type, NoReturn
 import factory
 import pytest
 import sqlalchemy
-from yamldataclassconfig.config_handler import YamlDataClassConfigHandler
+from yamldataclassconfig.config_handler import YamlDataClassConfigHandler, ConfigFilePathBuilder
 
 from zaimcsvconverter import Session, CONFIG
 from zaimcsvconverter.account import Account
@@ -57,6 +57,7 @@ class DatabaseTestCase:
 
     @pytest.fixture(autouse=True)
     def database_session(self):
+        """This fixture prepares database and fixture records."""
         session = create_database()
         self._prepare_fixture()
         session.flush()
@@ -71,7 +72,7 @@ class DatabaseTestCase:
 
 class ConfigHandler(YamlDataClassConfigHandler):
     """This class handles config.yml."""
-    PATH_REFERENCE_DIRECTORY = Path(__file__).parent.parent
+    CONFIG_FILE_PATH = ConfigFilePathBuilder(path_target_directory=Path(__file__).parent.parent)
 
 
 def create_path_as_same_as_file_name(argument: Union[object, Type[object]]) -> Path:
@@ -94,6 +95,7 @@ class ConfigurableDatabaseTestCase(DatabaseTestCase):
     """
     @pytest.fixture(autouse=True)
     def yaml_config(self):
+        """This fixture prepares YAML config file and loads it."""
         if self.source_yaml_file is None:
             ConfigHandler.set_up()
         else:
@@ -118,6 +120,7 @@ class ConfigurableTestCase:
     """
     @pytest.fixture(autouse=True)
     def yaml_config(self):
+        """This fixture prepares YAML config file and loads it."""
         if self.source_yaml_file is None:
             ConfigHandler.set_up()
         else:
@@ -143,7 +146,6 @@ class CsvHandler:
         file_back_up_output = CsvHandler.__file_back_up_output(file_source)
         if file_target_output.is_file():
             shutil.move(str(file_target_output), str(file_back_up_output))
-        CONFIG.load()
 
     @staticmethod
     def do_cleanups(file_source: Path):

@@ -11,6 +11,7 @@ import pytest
 from tests.resource import ConfigurableDatabaseTestCase, CsvHandler, create_path_as_same_as_file_name, \
     prepare_basic_store_waon
 from tests.test_zaim_row import ZaimRowDataForTest
+from zaimcsvconverter import CONFIG
 from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
 
@@ -21,7 +22,7 @@ def prepare_fixture():
 
 class TestInputCsvConverter(ConfigurableDatabaseTestCase):
     """Tests for AccountCsvConverter."""
-    request = None
+    method_name: str = None
     @property
     @abstractmethod
     def suffix_file_name(self):
@@ -30,15 +31,17 @@ class TestInputCsvConverter(ConfigurableDatabaseTestCase):
     @property
     def file_source(self) -> Path:
         """This property returns path to source file."""
-        return create_path_as_same_as_file_name(self) / (self.request.node.name + self.suffix_file_name)
+        return create_path_as_same_as_file_name(self) / (self.method_name + self.suffix_file_name)
 
     def _prepare_fixture(self):
         prepare_fixture()
 
     @pytest.fixture(autouse=True)
-    def setup_method(self, request):
-        self.request = request
+    def csv_output_directory(self, request):
+        """This fixture prepare CSV output directory."""
+        self.method_name = request.node.name
         CsvHandler.set_up(self.file_source)
+        CONFIG.load()
         yield
         CsvHandler.do_cleanups(self.file_source)
 
@@ -120,4 +123,3 @@ class TestInputCsvConverterForItem(TestInputCsvConverter):
         assert input_csv_converter.error_handler.list_error == [
             ['amazon.csv', '', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト']
         ]
-

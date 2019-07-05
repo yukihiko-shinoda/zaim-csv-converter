@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from tests.resource import DatabaseTestCase, create_path_as_same_as_file_name, StoreFactory, clean_up_directory, \
+from tests.resource import create_path_as_same_as_file_name, StoreFactory, clean_up_directory, \
     ItemFactory, ConfigurableDatabaseTestCase
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.input_csv_converter_iterator import InputCsvConverterIterator
@@ -22,10 +22,6 @@ class ErrorRowDataForTest:
 
 class TestInputCsvConverterIterator(ConfigurableDatabaseTestCase):
     """Tests for AccountCsvConverterIterator."""
-    input_csv_converter = None
-    directory_csv_input = None
-    directory_csv_output = None
-
     def _prepare_fixture(self):
         StoreFactory(
             account=Account.WAON,
@@ -40,28 +36,31 @@ class TestInputCsvConverterIterator(ConfigurableDatabaseTestCase):
 
     @pytest.fixture(autouse=True)
     def input_csv_converter_iterator(self, request):
-        self.directory_csv_input = create_path_as_same_as_file_name(self) / request.node.name / 'csvinput'
-        self.directory_csv_output = create_path_as_same_as_file_name(self) / request.node.name / 'csvoutput'
-        self.input_csv_converter = InputCsvConverterIterator(self.directory_csv_input, self.directory_csv_output)
-        yield
-        clean_up_directory(self.directory_csv_output)
+        """This fixture prepares ImputCsvConverterIterator."""
+        directory_csv_input = create_path_as_same_as_file_name(self) / request.node.name / 'csvinput'
+        directory_csv_output = create_path_as_same_as_file_name(self) / request.node.name / 'csvoutput'
+        input_csv_converter_iterator = InputCsvConverterIterator(directory_csv_input, directory_csv_output)
+        yield input_csv_converter_iterator
+        clean_up_directory(directory_csv_output)
 
-    def test_success(self):
+    @staticmethod
+    def test_success(input_csv_converter_iterator):
         """Method processes all csv files in specified diretory."""
-        self.input_csv_converter.execute()
-        files = sorted(self.directory_csv_output.rglob('*[!.gitkeep]'))
+        input_csv_converter_iterator.execute()
+        files = sorted(input_csv_converter_iterator.directory_csv_output.rglob('*[!.gitkeep]'))
         assert len(files) == 2
         assert files[0].name == 'test_amazon.csv'
         assert files[1].name == 'test_waon.csv'
 
-    def test_fail(self):
+    @staticmethod
+    def test_fail(input_csv_converter_iterator):
         """
         Method exports error csv files in specified diretory.
         Same content should be unified.
         """
         with pytest.raises(KeyError):
-            self.input_csv_converter.execute()
-        files = sorted(self.directory_csv_output.rglob('*[!.gitkeep]'))
+            input_csv_converter_iterator.execute()
+        files = sorted(input_csv_converter_iterator.directory_csv_output.rglob('*[!.gitkeep]'))
         assert len(files) == 3
         assert files[0].name == 'error.csv'
         assert files[1].name == 'test_amazon.csv'

@@ -11,21 +11,20 @@ from zaimcsvconverter.models import Store, Item
 
 class TestConvertTableImporter(DatabaseTestCase):
     """Tests for ConvertTableImporter"""
-    convert_table_importer = None
-
     def _prepare_fixture(self):
         pass
 
-    @pytest.fixture(autouse=True)
-    def convert_table_importer(self, request):
-        self.convert_table_importer = ConvertTableImporter(
+    @pytest.fixture
+    def fixture_convert_table_importer(self, request):
+        """This fixture prepares ConvertTableImporter instance."""
+        return ConvertTableImporter(
             create_path_as_same_as_file_name(self) / request.node.name
         )
 
-    def test_success(self, database_session):
+    def test_success(self, database_session, fixture_convert_table_importer):
         """CSV should import into appropriate table."""
-        self.convert_table_importer.execute()
-        self.assertStoreEqual([
+        fixture_convert_table_importer.execute()
+        self.assert_store_equal([
             [1, 3, '', None, None, None, None, 'お財布'],
             [2, 3, 'トウキヨウガス', '東京ガス（株）', '水道・光熱', 'ガス料金', None, None],
             [3, 3, 'ＧＰマーケテイング', None, None, None, None, 'ゴールドポイントカード・プラス'],
@@ -33,7 +32,7 @@ class TestConvertTableImporter(DatabaseTestCase):
             [5, 1, 'ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店', '食費', '食料品', None, None],
             [6, 1, '板橋前野町', 'イオンスタイル　板橋前野町', '食費', '食料品', 'その他', None],
         ], database_session)
-        self.assertItemEqual([
+        self.assert_item_equal([
             [1, 5, '（Amazon ポイント）', '通信', 'その他'],
             [2, 5, '（Amazonポイント）', '通信', 'その他'],
             [3, 5, '（割引）', '通信', 'その他'],
@@ -48,9 +47,8 @@ class TestConvertTableImporter(DatabaseTestCase):
             ],
         ], database_session)
 
-    # noinspection PyPep8Naming
     @staticmethod
-    def assertStoreEqual(expected_stores, database_session):
+    def assert_store_equal(expected_stores, database_session):
         """This method asserts Store table."""
         stores: List[Store] = database_session.query(Store).order_by(Store.id.asc()).all()
         assert len(stores) == len(expected_stores)
@@ -67,9 +65,8 @@ class TestConvertTableImporter(DatabaseTestCase):
             assert store.transfer_target == expected_store[7]
             index += 1
 
-    # noinspection PyPep8Naming
     @staticmethod
-    def assertItemEqual(expected_items, database_session):
+    def assert_item_equal(expected_items, database_session):
         """This method asserts Store table."""
         items: List[Item] = database_session.query(Item).order_by(Item.id.asc()).all()
         assert len(items) == len(expected_items)
@@ -83,7 +80,8 @@ class TestConvertTableImporter(DatabaseTestCase):
             assert item.category_payment_small == expected_item[4]
             index += 1
 
-    def test_fail(self):
+    @staticmethod
+    def test_fail(fixture_convert_table_importer):
         """Method should raise error when the file which name is not correct is included."""
         with pytest.raises(ValueError):
-            self.convert_table_importer.execute()
+            fixture_convert_table_importer.execute()
