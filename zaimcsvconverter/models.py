@@ -1,13 +1,8 @@
-#!/usr/bin/env python
-
-"""
-This module implements SQLAlchemy database models.
-"""
-
+"""This module implements SQLAlchemy database models."""
 from __future__ import annotations
 
 import warnings
-from typing import NoReturn, List, TYPE_CHECKING, Type, TypeVar
+from typing import List, TYPE_CHECKING, Type, TypeVar, Optional
 
 from dataclasses import dataclass
 from inflector import Inflector
@@ -23,11 +18,14 @@ if TYPE_CHECKING:
 Base: DeclarativeMeta = declarative_base()
 
 # noinspection Pylint
-T: TypeVar = TypeVar('T')
+TypeVarBase = TypeVar('TypeVarBase', bound=Base)
 
 
 class ConvertTableMixin:
-    """This class implements convert table mixin."""
+    """
+    This class implements convert table mixin.
+    @see https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/mixins.html
+    """
     @declared_attr
     def __tablename__(self):
         return Inflector().pluralize(self.__name__.lower())
@@ -41,11 +39,11 @@ class ConvertTableMixin:
     __table_args__ = (UniqueConstraint('account_id', 'name', name='_name_on_each_account_uc'),)
 
     @staticmethod
-    def _get_str_or_none(value: str) -> str:
+    def _get_str_or_none(value: Optional[str]) -> Optional[str]:
         return value if value != '' else None
 
     @classmethod
-    def try_to_find(cls: Type[T], account: 'Account', name: str) -> T:
+    def try_to_find(cls: Type[ConvertTableMixin], account: 'Account', name: str) -> Optional[TypeVarBase]:
         """
         This method select Store model from database. If record is not exist, raise NoResultFound.
         """
@@ -60,7 +58,7 @@ class ConvertTableMixin:
             return None
 
     @classmethod
-    def find(cls: Type[T], account: 'Account', name: str) -> T:
+    def find(cls: Type[ConvertTableMixin], account: 'Account', name: str) -> TypeVarBase:
         """
         This method select Store model from database.
         """
@@ -71,7 +69,7 @@ class ConvertTableMixin:
             ).one()
 
     @classmethod
-    def save_all(cls: Type[T], models: List[T]) -> NoReturn:
+    def save_all(cls: Type[TypeVarBase], models: List[TypeVarBase]) -> None:
         """
         This method insert Store models into database.
         """
@@ -83,17 +81,15 @@ class ConvertTableMixin:
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=exc.SAWarning)
 
-
     @dataclass
     class StoreRowData:
         """This class implements data class for wrapping list of store convert table row model."""
         name: str
-        name_zaim: str = None
-        category_payment_large: str = None
-        category_payment_small: str = None
-        category_income: str = None
-        transfer_account: str = None
-
+        name_zaim: Optional[str] = None
+        category_payment_large: Optional[str] = None
+        category_payment_small: Optional[str] = None
+        category_income: Optional[str] = None
+        transfer_account: Optional[str] = None
 
     class Store(Base, ConvertTableMixin):
         """
@@ -106,25 +102,23 @@ with warnings.catch_warnings():
         def __init__(self, account: 'Account', row_data: StoreRowData):
             self.account_id: int = account.value.id
             self.name: str = row_data.name
-            self.name_zaim: str = self._get_str_or_none(row_data.name_zaim)
-            self.category_payment_large: str = self._get_str_or_none(row_data.category_payment_large)
-            self.category_payment_small: str = self._get_str_or_none(row_data.category_payment_small)
-            self.category_income: str = self._get_str_or_none(row_data.category_income)
-            self.transfer_target: str = self._get_str_or_none(row_data.transfer_account)
+            self.name_zaim: Optional[str] = self._get_str_or_none(row_data.name_zaim)
+            self.category_payment_large: Optional[str] = self._get_str_or_none(row_data.category_payment_large)
+            self.category_payment_small: Optional[str] = self._get_str_or_none(row_data.category_payment_small)
+            self.category_income: Optional[str] = self._get_str_or_none(row_data.category_income)
+            self.transfer_target: Optional[str] = self._get_str_or_none(row_data.transfer_account)
 
         @property
         def is_amazon(self) -> bool:
             """This property returns wheter this store is Amazon.co.jp or not."""
             return self.name in {'Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ', 'ＡＭＡＺＯＮ．ＣＯ．ＪＰ'}
 
-
     @dataclass
     class ItemRowData:
         """This class implements data class for wrapping list of item and category row model."""
         name: str
-        category_payment_large: str = None
-        category_payment_small: str = None
-
+        category_payment_large: Optional[str] = None
+        category_payment_small: Optional[str] = None
 
     class Item(Base, ConvertTableMixin):
         """
@@ -134,11 +128,11 @@ with warnings.catch_warnings():
         def __init__(self, account: 'Account', row_data: ItemRowData):
             self.account_id: int = account.value.id
             self.name: str = row_data.name
-            self.category_payment_large: str = self._get_str_or_none(row_data.category_payment_large)
-            self.category_payment_small: str = self._get_str_or_none(row_data.category_payment_small)
+            self.category_payment_large: Optional[str] = self._get_str_or_none(row_data.category_payment_large)
+            self.category_payment_small: Optional[str] = self._get_str_or_none(row_data.category_payment_small)
 
 
-def initialize_database(target_engine=ENGINE) -> NoReturn:
+def initialize_database(target_engine=ENGINE) -> None:
     """
     This function create empty tables from SQLAlchemy models.
     """

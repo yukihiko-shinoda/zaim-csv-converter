@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Tests for account_dependency.py ."""
 from zaimcsvconverter.account_dependency import AccountDependency
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory

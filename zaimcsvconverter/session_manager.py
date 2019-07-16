@@ -1,11 +1,5 @@
-#!/usr/bin/env python
-
-"""
-This module implements SQLAlchemy session life cycle to prevent forgetting close.
-"""
-
+"""This module implements SQLAlchemy session life cycle to prevent forgetting close."""
 from sqlalchemy.orm.session import Session as SQLAlchemySession
-
 from zaimcsvconverter import Session
 
 

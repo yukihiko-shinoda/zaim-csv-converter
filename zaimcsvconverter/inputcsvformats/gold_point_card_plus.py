@@ -1,14 +1,13 @@
-#!/usr/bin/env python
-
 """This module implements row model of GOLD POINT CARD+ CSV."""
-
 from __future__ import annotations
-import datetime
-from typing import TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING, Type
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
+from zaimcsvconverter.models import Store
+
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
@@ -39,7 +38,7 @@ class GoldPointCardPlusRowData(InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        return datetime.datetime.strptime(self._used_date, "%Y/%m/%d")
+        return datetime.strptime(self._used_date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
@@ -52,13 +51,12 @@ class GoldPointCardPlusRow(InputStoreRow):
         super().__init__(account, row_data)
         self._used_amount: int = int(row_data.used_amount)
 
-    @property
-    def is_row_to_skip(self) -> bool:
-        return CONFIG.gold_point_card_plus.skip_amazon_row and self.zaim_store.is_amazon
+    def is_row_to_skip(self, store: Store) -> bool:
+        return CONFIG.gold_point_card_plus.skip_amazon_row and store.is_amazon
 
-    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow(self)
+        return ZaimPaymentRow
 
     @property
     def zaim_income_cash_flow_target(self) -> str:

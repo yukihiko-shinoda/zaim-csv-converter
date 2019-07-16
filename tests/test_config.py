@@ -1,13 +1,12 @@
-#!/usr/bin/env python
 """Tests for Config."""
-from tests.resource import ConfigurableTestCase
 from zaimcsvconverter import Config
 
 
-class TestConfig(ConfigurableTestCase):
+class TestConfig:
     """Tests for Config."""
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_init():
+    def test_init(yaml_config):
         """Constructor should leave to load yaml file."""
         config = Config()
         assert config.waon is None
@@ -16,8 +15,9 @@ class TestConfig(ConfigurableTestCase):
         assert config.pasmo is None
         assert config.amazon is None
 
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_load():
+    def test_load(yaml_config):
         """Arguments should load yaml file."""
         config = Config()
         config.load()

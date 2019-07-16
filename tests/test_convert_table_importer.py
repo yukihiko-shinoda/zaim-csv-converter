@@ -1,25 +1,25 @@
-#!/usr/bin/env python
 """Tests for convert_table_importer.py."""
 from typing import List
 
 import pytest
 
-from tests.resource import DatabaseTestCase, create_path_as_same_as_file_name
+from tests.testlibraries.file import create_path_as_same_as_file_name
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 from zaimcsvconverter.models import Store, Item
 
 
-class TestConvertTableImporter(DatabaseTestCase):
+@pytest.fixture
+def fixture_convert_table_importer(request):
+    """This fixture prepares ConvertTableImporter instance."""
+    return ConvertTableImporter(
+        create_path_as_same_as_file_name(request.function) / request.node.name
+    )
+
+
+class TestConvertTableImporter:
     """Tests for ConvertTableImporter"""
     def _prepare_fixture(self):
         pass
-
-    @pytest.fixture
-    def fixture_convert_table_importer(self, request):
-        """This fixture prepares ConvertTableImporter instance."""
-        return ConvertTableImporter(
-            create_path_as_same_as_file_name(self) / request.node.name
-        )
 
     def test_success(self, database_session, fixture_convert_table_importer):
         """CSV should import into appropriate table."""
@@ -80,8 +80,9 @@ class TestConvertTableImporter(DatabaseTestCase):
             assert item.category_payment_small == expected_item[4]
             index += 1
 
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_fail(fixture_convert_table_importer):
+    def test_fail(fixture_convert_table_importer, database_session):
         """Method should raise error when the file which name is not correct is included."""
         with pytest.raises(ValueError):
             fixture_convert_table_importer.execute()

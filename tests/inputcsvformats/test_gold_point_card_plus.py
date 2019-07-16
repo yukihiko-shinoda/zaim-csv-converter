@@ -1,10 +1,10 @@
-#!/usr/bin/env python
 """Tests for GoldPointCartPlusRow."""
 from datetime import datetime
 
 import pytest
 
-from tests.resource import StoreFactory, DatabaseTestCase, ConfigurableDatabaseTestCase
+from tests.testlibraries.database import StoreFactory
+from tests.conftest import database_session_with_records
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData, \
     GoldPointCardPlusRowFactory
@@ -53,25 +53,25 @@ class TestGoldPointCardPlusRowData:
         assert gold_point_card_plus_row_data.store_name == used_store
 
 
-def prepare_fixture():
-    """This function prepare common fixture with some tests."""
-    StoreFactory(
-        account=Account.GOLD_POINT_CARD_PLUS,
-        row_data=StoreRowData('東京電力  電気料金等', '東京電力エナジーパートナー株式会社'),
-    )
-    StoreFactory(
-        account=Account.GOLD_POINT_CARD_PLUS,
-        row_data=StoreRowData('ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'Amazon Japan G.K.'),
-    )
+@pytest.fixture
+def database_session_stores():
+    """This fixture prepares database session and records."""
+    def fixture_records():
+        StoreFactory(
+            account=Account.GOLD_POINT_CARD_PLUS,
+            row_data=StoreRowData('東京電力  電気料金等', '東京電力エナジーパートナー株式会社'),
+        )
+        StoreFactory(
+            account=Account.GOLD_POINT_CARD_PLUS,
+            row_data=StoreRowData('ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'Amazon Japan G.K.'),
+        )
+    yield from database_session_with_records(fixture_records)
 
 
-class TestGoldPointCardPlusRow(ConfigurableDatabaseTestCase):
+class TestGoldPointCardPlusRow:
     """Tests for GoldPointCartPlusRow."""
-    def _prepare_fixture(self):
-        prepare_fixture()
-
+    # pylint: disable=protected-access,too-many-arguments,unused-argument
     @staticmethod
-    # pylint: disable=protected-access,too-many-arguments
     @pytest.mark.parametrize(
         (
             'gold_point_card_plus_row_data, expected_date, '
@@ -99,46 +99,48 @@ class TestGoldPointCardPlusRow(ConfigurableDatabaseTestCase):
             expected_date,
             expected_store_name_zaim,
             expected_use_amount,
-            expected_is_row_to_skip
+            expected_is_row_to_skip,
+            yaml_config_load,
+            database_session_stores
     ):
         """
         Arguments should set into properties.
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
         row = GoldPointCardPlusRow(Account.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
+        validated_row = row.validate()
         assert row.zaim_date == expected_date
         assert isinstance(row.zaim_store, Store)
         # pylint: disable=protected-access
         assert row.zaim_store.name == gold_point_card_plus_row_data._used_store
         assert row.zaim_store.name_zaim == expected_store_name_zaim
-        assert row.is_row_to_skip == expected_is_row_to_skip
+        assert row.is_row_to_skip(validated_row.zaim_store) == expected_is_row_to_skip
         assert row.zaim_payment_cash_flow_source == 'ヨドバシゴールドポイントカード・プラス'
         assert row.zaim_payment_amount_payment == expected_use_amount
 
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_convert_to_zaim_row():
+    def test_zaim_row_class_to_convert(yaml_config_load, database_session_stores):
         """GoldPointCardPlusRow should convert to ZaimPaymentRow."""
         sf_card_viewer_row = GoldPointCardPlusRow(
             Account.GOLD_POINT_CARD_PLUS,
             GoldPointCardPlusRowData('2018/11/2', '東京電力  電気料金等', 'ご本人', '1回払い', '', '18/12', '10997',
                                      '10997', '', '', '', '', '')
         )
-        assert isinstance(sf_card_viewer_row.convert_to_zaim_row(), ZaimPaymentRow)
+        validated_input_row = sf_card_viewer_row.validate()
+        assert validated_input_row.zaim_row_class_to_convert() == ZaimPaymentRow
 
 
-class TestGoldPointCardPlusRowFactory(DatabaseTestCase):
+class TestGoldPointCardPlusRowFactory:
     """Tests for GoldPointCardPlusRowFactory."""
-
-    def _prepare_fixture(self):
-        prepare_fixture()
-
+    # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize('argument, expected', [
         (GoldPointCardPlusRowData('2018/11/2', '東京電力  電気料金等', 'ご本人', '1回払い', '', '18/12', '10997', '10997',
                                   '', '', '', '', ''),
          GoldPointCardPlusRow),
     ])
-    def test_create(argument, expected):
+    def test_create(argument, expected, database_session_stores):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(Account.MUFG, argument)

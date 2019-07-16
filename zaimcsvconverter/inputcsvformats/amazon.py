@@ -1,12 +1,8 @@
-#!/usr/bin/env python
-
-"""
-This module implements row model of Amazon.co.jp CSV.
-"""
+"""This module implements row model of Amazon.co.jp CSV."""
 
 from __future__ import annotations
-import datetime
-from typing import TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING, Optional, Type
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
@@ -16,12 +12,6 @@ from zaimcsvconverter.models import Store, Item, StoreRowData
 if TYPE_CHECKING:
     from zaimcsvconverter.zaim_row import ZaimPaymentRow
     from zaimcsvconverter.account import Account
-
-
-class AmazonRowFactory(InputRowFactory):
-    """This class implements factory to create Amazon.co.jp CSV row instance."""
-    def create(self, account: 'Account', row_data: AmazonRowData) -> AmazonRow:
-        return AmazonRow(account, row_data)
 
 
 @dataclass
@@ -48,11 +38,17 @@ class AmazonRowData(InputItemRowData):
 
     @property
     def date(self) -> datetime:
-        return datetime.datetime.strptime(self._ordered_date, "%Y/%m/%d")
+        return datetime.strptime(self._ordered_date, "%Y/%m/%d")
 
     @property
     def item_name(self) -> str:
         return self._item_name
+
+
+class AmazonRowFactory(InputRowFactory[AmazonRowData]):
+    """This class implements factory to create Amazon.co.jp CSV row instance."""
+    def create(self, account: 'Account', row_data: AmazonRowData) -> AmazonRow:
+        return AmazonRow(account, row_data)
 
 
 # pylint: disable=too-many-instance-attributes
@@ -63,20 +59,20 @@ class AmazonRow(InputItemRow):
     def __init__(self, account: Account, row_data: AmazonRowData):
         super().__init__(account, row_data)
         self._store: Store = Store(account, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
-        self._item: Item = self.try_to_find_item(row_data.item_name)
+        self._item: Optional[Item] = self.try_to_find_item(row_data.item_name)
         self.price: int = int(row_data.price)
         self.number: int = int(row_data.number)
 
-    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow(self)
+        return ZaimPaymentRow
 
     @property
     def zaim_store(self) -> Store:
         return self._store
 
     @property
-    def zaim_item(self) -> Item:
+    def zaim_item(self) -> Optional[Item]:
         return self._item
 
     @property

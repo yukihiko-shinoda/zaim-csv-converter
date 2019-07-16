@@ -1,8 +1,4 @@
-#!/usr/bin/env python
-
-"""
-This module implements constants which suitable module to belong is not defined.
-"""
+"""This module implements constants which suitable module to belong is not defined."""
 from __future__ import annotations
 
 import re
@@ -102,4 +98,4 @@ class Account(Enum):
         for account in Account:
             if re.search(account.value.regex_csv_file_name, path.name):
                 return account
-        raise ValueError('can\'t detect account type by csv file name. Please confirm csv file name.')
+        raise ValueError("can't detect account type by csv file name. Please confirm csv file name.")

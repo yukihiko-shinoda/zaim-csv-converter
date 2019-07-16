@@ -8,13 +8,17 @@ inflector = "==2.0.12"
 sqlalchemy = "==1.3.4"
 numpy = "==1.16.4"
 # To read yaml file as config
-yamldataclassconfig = "==1.0.0"
+yamldataclassconfig = "==1.2.0"
+
 [dev-packages]
-argparse = "==1.4.0"
 factory_boy = "==2.12.0"
-parameterized = "*"
+flake8 = "*"
+mypy = "*"
 pylint = "*"
 pytest = "*"
+pytest-cov = "*"
+radon = "*"
+fixturefilehandler = "*"
 
 [requires]
 python_version = "3.7"
@@ -26,3 +30,7 @@ allow_prereleases = true
 [scripts]
 start = "python convert.py"
 test = "cd tests && pytest"
+coverage = "cd tests && pytest --verbose --cov=zaimcsvconverter --cov-report=term-missing"
+flake8 = "flake8 --max-line-length=120 --statistics --show-source --radon-show-closures ."
+cc = "radon cc --show-complexity --min B ."
+mi = "radon mi --show ."

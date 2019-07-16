@@ -1,12 +1,11 @@
-#!/usr/bin/env python
 """This module implements abstract converting steps for CSV."""
 import csv
 from pathlib import Path
-from typing import NoReturn
 
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.directory_csv import DirectoryCsv
 from zaimcsvconverter.error_handler import ErrorHandler
+from zaimcsvconverter.exceptions import InvalidRowError, RowToSkip
 
 
 class InputCsvConverter:
@@ -17,7 +16,7 @@ class InputCsvConverter:
         self._account = Account.create_by_path_csv_input(path_csv_file)
         self.error_handler: ErrorHandler = ErrorHandler()
 
-    def execute(self) -> NoReturn:
+    def execute(self) -> None:
         """This method executes CSV convert steps."""
         with (self.directory_csv_output / self._path_csv_file.name).open(
                 'w', encoding='UTF-8', newline='\n'
@@ -43,7 +42,7 @@ class InputCsvConverter:
             ])
             self._convert_from_account(writer_zaim)
 
-    def _convert_from_account(self, writer_zaim) -> NoReturn:
+    def _convert_from_account(self, writer_zaim) -> None:
         account_dependency = self._account.value
         with self._path_csv_file.open('r', encoding=account_dependency.encode) as file_account:
             reader_account = csv.reader(file_account)
@@ -59,17 +58,18 @@ class InputCsvConverter:
                     ) from error
             self._iterate_convert(reader_account, writer_zaim)
 
-    def _iterate_convert(self, reader_account, writer_zaim) -> NoReturn:
+    def _iterate_convert(self, reader_account, writer_zaim) -> None:
         for list_row_account in reader_account:
             account_dependency = self._account.value
             input_row_data = account_dependency.input_row_data_class(*list_row_account)
             input_row = account_dependency.input_row_factory.create(self._account, input_row_data)
-            if not input_row.is_valid:
+            try:
+                zaim_row = input_row.try_to_convert_to_zaim_row()
+            except InvalidRowError:
                 self.error_handler.append_undefined_content(self._account, input_row_data)
                 continue
-            if input_row.is_row_to_skip:
+            except RowToSkip:
                 continue
-            zaim_row = input_row.convert_to_zaim_row()
             list_row_zaim = zaim_row.convert_to_list()
             writer_zaim.writerow(list_row_zaim)
         if self.error_handler.is_presented:

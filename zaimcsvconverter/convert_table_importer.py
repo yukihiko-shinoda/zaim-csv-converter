@@ -1,8 +1,6 @@
-#!/usr/bin/env python
 """This module implements importing process for convert table CSV."""
 import csv
 from pathlib import Path
-from typing import List
 
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.directory_csv import DirectoryCsv
@@ -29,7 +27,9 @@ class ConvertTableImporter:
                 Store: StoreRowData,
                 Item: ItemRowData,
             }.get(model_class)
-            list_convert_table: List[model_class] = []
+            if row_data_class is None:
+                raise ValueError('Account dependency setting is not correct. Please check account.py.')
+            list_convert_table = []
             for list_row_convert_table in reader_convert_table:
                 list_convert_table.append(model_class(account, row_data_class(*list_row_convert_table)))
             model_class.save_all(list_convert_table)

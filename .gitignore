@@ -1,8 +1,11 @@
+.coverage
+.env
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/encodings.xml
 .idea/**/pylint.xml
 .idea/sonarlint/*
+.mypy_cache
 __pycache__/
 csvconverttable/*
 !csvconverttable/.gitkeep

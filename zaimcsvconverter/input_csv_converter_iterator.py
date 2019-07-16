@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 """This module implements iterating steps from input_csv_converter."""
 import csv
 from pathlib import Path
-from typing import NoReturn, List
+from typing import List
 
 from zaimcsvconverter.directory_csv import DirectoryCsv
 from zaimcsvconverter.error_handler import ErrorHandler
@@ -21,7 +20,7 @@ class InputCsvConverterIterator:
         self.directory_csv_input = directory_csv_input
         self.directory_csv_output = directory_csv_output
 
-    def execute(self) -> NoReturn:
+    def execute(self) -> None:
         """This method executes all CSV converters."""
         list_csv_converter: List[InputCsvConverter] = []
         for path in self.directory_csv_input.glob('*.csv'):

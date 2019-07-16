@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """This module implements configuration."""
 from __future__ import annotations
 
@@ -6,6 +5,7 @@ from enum import Enum
 from pathlib import Path
 
 from dataclasses import dataclass, field
+
 from dataclasses_json import DataClassJsonMixin
 from yamldataclassconfig import create_file_path_field
 from yamldataclassconfig.config import YamlDataClassConfig
@@ -64,23 +64,23 @@ class AmazonConfig(DataClassJsonMixin):
 @dataclass
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
-    waon: WaonConfig = field(
+    waon: WaonConfig = field(  # type: ignore
         default=None,
         metadata={'dataclasses_json': {'mm_field': WaonConfig}}
     )
-    gold_point_card_plus: GoldPointCardPlusConfig = field(
+    gold_point_card_plus: GoldPointCardPlusConfig = field(  # type: ignore
         default=None,
         metadata={'dataclasses_json': {'mm_field': GoldPointCardPlusConfig}}
     )
-    mufg: MufgConfig = field(
+    mufg: MufgConfig = field(  # type: ignore
         default=None,
         metadata={'dataclasses_json': {'mm_field': MufgConfig}}
     )
-    pasmo: PasmoConfig = field(
+    pasmo: PasmoConfig = field(  # type: ignore
         default=None,
         metadata={'dataclasses_json': {'mm_field': PasmoConfig}}
     )
-    amazon: AmazonConfig = field(
+    amazon: AmazonConfig = field(  # type: ignore
         default=None,
         metadata={'dataclasses_json': {'mm_field': AmazonConfig}}
     )

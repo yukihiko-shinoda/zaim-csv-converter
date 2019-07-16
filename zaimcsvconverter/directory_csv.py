@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """This module defines path to directory of CSV."""
 from enum import Enum
 from pathlib import Path

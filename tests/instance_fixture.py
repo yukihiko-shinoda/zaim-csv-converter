@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """This module implements fixture of instance."""
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData

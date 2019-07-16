@@ -1,10 +1,10 @@
-#!/usr/bin/env python
 """Tests for mufg.py."""
 from datetime import datetime
 
 import pytest
 
-from tests.resource import DatabaseTestCase, StoreFactory, ConfigurableDatabaseTestCase
+from tests.testlibraries.database import StoreFactory
+from tests.conftest import database_session_with_records
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgIncomeRow, MufgPaymentRow, MufgTransferIncomeRow, \
     MufgTransferPaymentRow, MufgRowFactory
@@ -43,34 +43,38 @@ class TestMufgRowData:
         assert mufg_row_data.store_name == summary_content
 
 
-def prepare_fixture():
-    """This function prepare common fixture with some tests."""
-    StoreFactory(
-        account=Account.MUFG,
-        row_data=StoreRowData('', '', '', '', '', ''),
-    )
-    StoreFactory(
-        account=Account.MUFG,
-        row_data=StoreRowData('スーパーフツウ', '三菱UFJ銀行', 'その他', 'その他', '臨時収入', ''),
-    )
-    StoreFactory(
-        account=Account.MUFG,
-        row_data=StoreRowData('トウキヨウトスイドウ', '東京都水道局　経理部管理課', '水道・光熱', '水道料金', '立替金返済', ''),
-    )
-    StoreFactory(
-        account=Account.MUFG,
-        row_data=StoreRowData('ＧＰマーケテイング', '', '', '', '', 'ゴールドポイントカード・プラス'),
-    )
+@pytest.fixture
+def database_session_stores():
+    """This fixture prepares database session and records."""
+    def fixture_records():
+        StoreFactory(
+            account=Account.MUFG,
+            row_data=StoreRowData('', '', '', '', '', ''),
+        )
+        StoreFactory(
+            account=Account.MUFG,
+            row_data=StoreRowData('スーパーフツウ', '三菱UFJ銀行', 'その他', 'その他', '臨時収入', ''),
+        )
+        StoreFactory(
+            account=Account.MUFG,
+            row_data=StoreRowData('トウキヨウトスイドウ', '東京都水道局　経理部管理課', '水道・光熱', '水道料金', '立替金返済', ''),
+        )
+        StoreFactory(
+            account=Account.MUFG,
+            row_data=StoreRowData('ＧＰマーケテイング', '', '', '', '', 'ゴールドポイントカード・プラス'),
+        )
+        StoreFactory(
+            account=Account.MUFG,
+            row_data=StoreRowData('フリコミモト－アカウント', 'フリコミモト－アカウント', '', '', '臨時収入', ''),
+        )
+    yield from database_session_with_records(fixture_records)
 
 
-class TestMufgIncomeRow(ConfigurableDatabaseTestCase):
+class TestMufgIncomeRow:
     """Tests for MufgIncomeRow."""
-
-    def _prepare_fixture(self):
-        prepare_fixture()
-
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_init():
+    def test_init(yaml_config_load, database_session_stores):
         """Arguments should set into properties."""
         expected_amount = 10000
         config_account_name = '三菱UFJ銀行'
@@ -96,19 +100,18 @@ class TestMufgIncomeRow(ConfigurableDatabaseTestCase):
         (MufgRowData('2018/10/1', '振込９', 'フリコミモト－アカウント', '', '10000', '3000000', '', '',	'入金'),
          ZaimIncomeRow),
     ])
-    def test_convert_to_zaim_row(argument, expected):
+    def test_zaim_row_class_to_convert(argument, expected, yaml_config_load, database_session_stores):
         """MufgTransferPaymentRow should convert to ZaimTransferRow."""
         mufg_row = MufgIncomeRow(Account.MUFG, argument)
-        assert isinstance(mufg_row.convert_to_zaim_row(), expected)
+        validated_input_row = mufg_row.validate()
+        assert validated_input_row.zaim_row_class_to_convert() == expected
 
 
-class TestMufgPaymentRow(ConfigurableDatabaseTestCase):
+class TestMufgPaymentRow:
     """Tests for MufgPaymentRow."""
-    def _prepare_fixture(self):
-        prepare_fixture()
-
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_init():
+    def test_init(yaml_config_load, database_session_stores):
         """Arguments should set into properties."""
         mufg_row = MufgPaymentRow(Account.MUFG,
                                   MufgRowData('2018/11/5', 'カ－ド', '', '9000', '', '4000000', '', '', '支払い'))
@@ -127,22 +130,21 @@ class TestMufgPaymentRow(ConfigurableDatabaseTestCase):
         assert mufg_row.zaim_transfer_cash_flow_target == config_transfer_account_name
         assert mufg_row.zaim_transfer_amount_transfer == expected_amount
 
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_convert_to_zaim_row():
+    def test_zaim_row_class_to_convert(yaml_config_load, database_session_stores):
         """MufgPaymentRow should convert to ZaimTransferRow."""
         mufg_row = MufgPaymentRow(Account.MUFG,
                                   MufgRowData('2018/11/5', 'カ－ド', '', '9000', '', '4000000', '', '', '支払い'))
-        assert isinstance(mufg_row.convert_to_zaim_row(), ZaimTransferRow)
+        validated_input_row = mufg_row.validate()
+        assert validated_input_row.zaim_row_class_to_convert() == ZaimTransferRow
 
 
-class TestMufgTransferIncomeRow(ConfigurableDatabaseTestCase):
+class TestMufgTransferIncomeRow:
     """Tests for MufgTransferIncomeRow."""
-
-    def _prepare_fixture(self):
-        prepare_fixture()
-
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_init():
+    def test_init(yaml_config_load, database_session_stores):
         """Arguments should set into properties."""
         expected_amount = 20
         transfer_target = '三菱UFJ銀行'
@@ -161,25 +163,24 @@ class TestMufgTransferIncomeRow(ConfigurableDatabaseTestCase):
         assert mufg_row.zaim_transfer_cash_flow_target == transfer_target
         assert mufg_row.zaim_transfer_amount_transfer == expected_amount
 
+    # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize('argument, expected', [
         (MufgRowData('2018/8/20', '利息', 'スーパーフツウ', '', '20', '2000000', '', '', '振替入金'), ZaimIncomeRow),
         (MufgRowData('2018/10/29', '口座振替３', 'ＧＰマ−ケテイング', '', '59260', '3000000', '', '', '振替支払い'), ZaimTransferRow),
     ])
-    def test_convert_to_zaim_row(argument, expected):
+    def test_zaim_row_class_to_convert(argument, expected, yaml_config_load, database_session_stores):
         """MufgTransferIncomeRow should convert to suitable ZaimRow by transfer target."""
         mufg_row = MufgTransferIncomeRow(Account.MUFG, argument)
-        assert isinstance(mufg_row.convert_to_zaim_row(), expected)
+        validated_input_row = mufg_row.validate()
+        assert validated_input_row.zaim_row_class_to_convert() == expected
 
 
-class TestMufgTransferPaymentRow(ConfigurableDatabaseTestCase):
+class TestMufgTransferPaymentRow:
     """Tests for MufgTransferPaymentRow."""
-
-    def _prepare_fixture(self):
-        prepare_fixture()
-
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_init():
+    def test_init(yaml_config_load, database_session_stores):
         """Arguments should set into properties."""
         expected_amount = 3628
         config_account_name = '三菱UFJ銀行'
@@ -200,23 +201,21 @@ class TestMufgTransferPaymentRow(ConfigurableDatabaseTestCase):
         assert mufg_row.zaim_transfer_cash_flow_target == transfer_target
         assert mufg_row.zaim_transfer_amount_transfer == expected_amount
 
+    # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize('argument, expected', [
         (MufgRowData('2018/11/28', '水道', 'トウキヨウトスイドウ', '3628', '', '5000000', '', '', '振替支払い'), ZaimPaymentRow),
-        (MufgRowData('2018/10/29', '口座振替３', 'ＧＰマ−ケテイング', '', '59260', '3000000', '', '', '振替支払い'), ZaimTransferRow),
     ])
-    def test_convert_to_zaim_row(argument, expected):
+    def test_zaim_row_class_to_convert(argument, expected, yaml_config_load, database_session_stores):
         """MufgTransferPaymentRow should convert to suitable ZaimRow by transfer target."""
         mufg_row = MufgTransferPaymentRow(Account.MUFG, argument)
-        assert isinstance(mufg_row.convert_to_zaim_row(), expected)
+        validated_input_row = mufg_row.validate()
+        assert validated_input_row.zaim_row_class_to_convert() == expected
 
 
-class TestMufgRowFactory(DatabaseTestCase):
+class TestMufgRowFactory:
     """Tests for MufgRowFactory."""
-
-    def _prepare_fixture(self):
-        prepare_fixture()
-
+    # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize('argument, expected', [
         (MufgRowData('2018/10/1', 'カ－ド', '', '', '10000', '3000000', '', '',	'入金'),
@@ -228,14 +227,15 @@ class TestMufgRowFactory(DatabaseTestCase):
         (MufgRowData('2018/11/28', '水道', 'トウキヨウトスイドウ', '3628', '', '5000000', '', '', '振替支払い'),
          MufgTransferPaymentRow),
     ])
-    def test_create_success(argument, expected):
+    def test_create_success(argument, expected, database_session_stores):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         mufg_row = MufgRowFactory().create(Account.MUFG, argument)
         assert isinstance(mufg_row, expected)
 
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_create_fail():
+    def test_create_fail(database_session_stores):
         """Method should raise ValueError when note is not defined."""
         with pytest.raises(ValueError):
             # pylint: disable=protected-access

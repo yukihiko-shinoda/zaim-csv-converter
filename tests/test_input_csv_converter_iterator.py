@@ -1,12 +1,12 @@
-#!/usr/bin/env python
 """Tests for input_csv_converter_iterator.py."""
 import csv
 from dataclasses import dataclass
 
 import pytest
 
-from tests.resource import create_path_as_same_as_file_name, StoreFactory, clean_up_directory, \
-    ItemFactory, ConfigurableDatabaseTestCase
+from tests.testlibraries.database import StoreFactory, ItemFactory
+from tests.conftest import database_session_with_records
+from tests.testlibraries.file import create_path_as_same_as_file_name, clean_up_directory
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.input_csv_converter_iterator import InputCsvConverterIterator
 from zaimcsvconverter.models import StoreRowData, ItemRowData
@@ -20,9 +20,21 @@ class ErrorRowDataForTest:
     item_name: str
 
 
-class TestInputCsvConverterIterator(ConfigurableDatabaseTestCase):
-    """Tests for AccountCsvConverterIterator."""
-    def _prepare_fixture(self):
+@pytest.fixture
+def input_csv_converter_iterator(request):
+    """This fixture prepares InputCsvConverterIterator."""
+    path_as_same_as_file_name = create_path_as_same_as_file_name(request.function)
+    directory_csv_input = path_as_same_as_file_name / request.node.name / 'csvinput'
+    directory_csv_output = path_as_same_as_file_name / request.node.name / 'csvoutput'
+    input_csv_converter_iterator = InputCsvConverterIterator(directory_csv_input, directory_csv_output)
+    yield input_csv_converter_iterator
+    clean_up_directory(directory_csv_output)
+
+
+@pytest.fixture
+def database_session_store_item():
+    """This fixture prepares database session and records."""
+    def fixture_records():
         StoreFactory(
             account=Account.WAON,
             row_data=StoreRowData('ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店'),
@@ -33,18 +45,14 @@ class TestInputCsvConverterIterator(ConfigurableDatabaseTestCase):
                 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '大型出費', '家電'
             ),
         )
+    yield from database_session_with_records(fixture_records)
 
-    @pytest.fixture(autouse=True)
-    def input_csv_converter_iterator(self, request):
-        """This fixture prepares ImputCsvConverterIterator."""
-        directory_csv_input = create_path_as_same_as_file_name(self) / request.node.name / 'csvinput'
-        directory_csv_output = create_path_as_same_as_file_name(self) / request.node.name / 'csvoutput'
-        input_csv_converter_iterator = InputCsvConverterIterator(directory_csv_input, directory_csv_output)
-        yield input_csv_converter_iterator
-        clean_up_directory(directory_csv_output)
 
+class TestInputCsvConverterIterator:
+    """Tests for AccountCsvConverterIterator."""
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_success(input_csv_converter_iterator):
+    def test_success(input_csv_converter_iterator, yaml_config_load, database_session_store_item):
         """Method processes all csv files in specified diretory."""
         input_csv_converter_iterator.execute()
         files = sorted(input_csv_converter_iterator.directory_csv_output.rglob('*[!.gitkeep]'))
@@ -52,8 +60,9 @@ class TestInputCsvConverterIterator(ConfigurableDatabaseTestCase):
         assert files[0].name == 'test_amazon.csv'
         assert files[1].name == 'test_waon.csv'
 
+    # pylint: disable=unused-argument
     @staticmethod
-    def test_fail(input_csv_converter_iterator):
+    def test_fail(input_csv_converter_iterator, yaml_config_load, database_session_store_item):
         """
         Method exports error csv files in specified diretory.
         Same content should be unified.

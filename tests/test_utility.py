@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Tests for utility."""
 import pytest
 

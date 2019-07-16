@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Tests for error_handler.py."""
 from tests.instance_fixture import InstanceFixture
 from zaimcsvconverter.account import Account

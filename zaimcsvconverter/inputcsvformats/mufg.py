@@ -1,20 +1,18 @@
-#!/usr/bin/env python
-
-"""
-This module implements row model of MUFG bank CSV.
-"""
+"""This module implements row model of MUFG bank CSV."""
 
 from __future__ import annotations
 from abc import abstractmethod
-import datetime
+from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Dict, Type
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
+from zaimcsvconverter.models import Store
 from zaimcsvconverter.utility import Utility
-from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow
+from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimIncomeRow, ZaimPaymentRow, ZaimRow
+
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
 
@@ -36,18 +34,26 @@ class MufgRowFactory(InputRowFactory):
             cash_flow_kind = CashFlowKind(row_data.cash_flow_kind)
         except ValueError as error:
             raise ValueError(
-                'The value of "Cash flow kind" has not been defined in this code. Cash flow kind ='
-                + row_data.cash_flow_kind
+                'The value of "Cash flow kind" has not been defined in this code.'
+                f'Cash flow kind = {row_data.cash_flow_kind}'
             ) from error
 
-        mufg_row_class = {
+        mufg_row_class = self.get_appropriate_row_class(cash_flow_kind)
+        return mufg_row_class(account, row_data)
+
+    @staticmethod
+    def get_appropriate_row_class(cash_flow_kind: CashFlowKind) -> Type[MufgRow]:
+        """This method returns appropriate row class."""
+        dictionary_mufg_row: Dict[CashFlowKind, Type[MufgRow]] = {
             CashFlowKind.INCOME: MufgIncomeRow,
             CashFlowKind.PAYMENT: MufgPaymentRow,
             CashFlowKind.TRANSFER_INCOME: MufgTransferIncomeRow,
             CashFlowKind.TRANSFER_PAYMENT: MufgTransferPaymentRow,
-        }.get(cash_flow_kind)
-
-        return mufg_row_class(account, row_data)
+        }
+        mufg_row_class = dictionary_mufg_row.get(cash_flow_kind)
+        if mufg_row_class is None:
+            raise ValueError(f'The mufg_row_class for {cash_flow_kind} has not been defined in this code.')
+        return mufg_row_class
 
 
 @dataclass
@@ -65,7 +71,7 @@ class MufgRowData(InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        return datetime.datetime.strptime(self._date, "%Y/%m/%d")
+        return datetime.strptime(self._date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
@@ -80,8 +86,8 @@ class MufgRow(InputStoreRow):
     def __init__(self, account: 'Account', row_data: MufgRowData):
         super().__init__(account, row_data)
         self._summary: str = row_data.summary
-        self._payed_amount: int = Utility.convert_string_to_int_or_none(row_data.payed_amount)
-        self._deposit_amount: int = Utility.convert_string_to_int_or_none(row_data.deposit_amount)
+        self._payed_amount: Optional[int] = Utility.convert_string_to_int_or_none(row_data.payed_amount)
+        self._deposit_amount: Optional[int] = Utility.convert_string_to_int_or_none(row_data.deposit_amount)
 
     @property
     @abstractmethod
@@ -95,7 +101,7 @@ class MufgRow(InputStoreRow):
 
     @property
     @abstractmethod
-    def _amount(self) -> int:
+    def _amount(self) -> Optional[int]:
         pass
 
     @property
@@ -104,6 +110,8 @@ class MufgRow(InputStoreRow):
 
     @property
     def zaim_income_ammount_income(self) -> int:
+        if self._amount is None:
+            raise ValueError('Income amount on MUFG income row must be not None.')
         return self._amount
 
     @property
@@ -112,6 +120,8 @@ class MufgRow(InputStoreRow):
 
     @property
     def zaim_payment_amount_payment(self) -> int:
+        if self._amount is None:
+            raise ValueError('Payment amount on MUFG payment row must be not None.')
         return self._amount
 
     @property
@@ -124,6 +134,8 @@ class MufgRow(InputStoreRow):
 
     @property
     def zaim_transfer_amount_transfer(self) -> int:
+        if self._amount is None:
+            raise ValueError('Transfer amount on MUFG transfer row must be not None.')
         return self._amount
 
 
@@ -142,6 +154,8 @@ class MufgAbstractIncomeRow(MufgRow):
 
     @property
     def _amount(self) -> int:
+        if self._deposit_amount is None:
+            raise ValueError('Deposit amount on income row must be not None.')
         return self._deposit_amount
 
 
@@ -159,7 +173,7 @@ class MufgAbstractPaymentRow(MufgRow):
         pass
 
     @property
-    def _amount(self) -> int:
+    def _amount(self) -> Optional[int]:
         return self._payed_amount
 
 
@@ -167,10 +181,10 @@ class MufgIncomeRow(MufgAbstractIncomeRow):
     """
     This class implements income row model of MUFG bank CSV.
     """
-    def convert_to_zaim_row(self):
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimRow']:
         if self._summary == 'カ－ド':
-            return ZaimTransferRow(self)
-        return ZaimIncomeRow(self)
+            return ZaimTransferRow
+        return ZaimIncomeRow
 
     @property
     def _cash_flow_source_on_zaim(self) -> str:
@@ -181,8 +195,8 @@ class MufgPaymentRow(MufgAbstractPaymentRow):
     """
     This class implements payment row model of MUFG bank CSV.
     """
-    def convert_to_zaim_row(self):
-        return ZaimTransferRow(self)
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimTransferRow']:
+        return ZaimTransferRow
 
     @property
     def _cash_flow_target_on_zaim(self) -> str:
@@ -193,13 +207,15 @@ class MufgTransferIncomeRow(MufgAbstractIncomeRow):
     """
     This class implements transfer income row model of MUFG bank CSV.
     """
-    def convert_to_zaim_row(self):
-        if self.zaim_store.transfer_target is None:
-            return ZaimIncomeRow(self)
-        return ZaimTransferRow(self)
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimRow']:
+        if store.transfer_target is None:
+            return ZaimIncomeRow
+        return ZaimTransferRow
 
     @property
     def _cash_flow_source_on_zaim(self) -> str:
+        if self.zaim_store is None:
+            raise UnboundLocalError('Store data on this row is not in database.')
         return self.zaim_store.transfer_target
 
 
@@ -207,11 +223,13 @@ class MufgTransferPaymentRow(MufgAbstractPaymentRow):
     """
     This class implements transfer payment row model of MUFG bank CSV.
     """
-    def convert_to_zaim_row(self):
-        if self.zaim_store.transfer_target is None:
-            return ZaimPaymentRow(self)
-        return ZaimTransferRow(self)
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimRow']:
+        if store.transfer_target is None:
+            return ZaimPaymentRow
+        return ZaimTransferRow
 
     @property
     def _cash_flow_target_on_zaim(self) -> str:
+        if self.zaim_store is None:
+            raise UnboundLocalError('Store data on this row is not in database.')
         return self.zaim_store.transfer_target

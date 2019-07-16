@@ -1,14 +1,9 @@
-#!/usr/bin/env python
-
-"""
-This module implements row model of SF Card Viewer CSV.
-"""
-
+"""This module implements row model of SF Card Viewer CSV."""
 from __future__ import annotations
-import datetime
+from datetime import datetime
 from abc import abstractmethod
 from enum import Enum
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Optional, Type, Dict
 from dataclasses import dataclass
 
 from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
@@ -17,13 +12,13 @@ from zaimcsvconverter.models import Store, StoreRowData
 
 if TYPE_CHECKING:
     from zaimcsvconverter.account import Account
-    from zaimcsvconverter.zaim_row import ZaimPaymentRow
+    from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRow
     from zaimcsvconverter.zaim_row import ZaimTransferRow
 
 
 class SFCardViewerRowFactory(InputRowFactory):
     """This class implements factory to create WAON CSV row instance."""
-    def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
+    def __init__(self, account_config: Callable[[], Optional[SFCardViewerConfig]]):
         self._account_config = account_config
 
     def create(self, account: 'Account', row_data: SFCardViewerRowData) -> SFCardViewerRow:
@@ -34,15 +29,27 @@ class SFCardViewerRowFactory(InputRowFactory):
                 f'The value of "Note" has not been defined in this code. Note = {row_data.note}'
             ) from error
 
-        sf_card_viewer_row_class = {
+        sf_card_viewer_row_class = self.get_appropriate_row_class(note)
+
+        config = self._account_config()
+        if config is None:
+            raise ValueError('Config has not been loaded. Please check when CONFIG.load() is called.')
+        return sf_card_viewer_row_class(account, row_data, config)
+
+    @staticmethod
+    def get_appropriate_row_class(note: Note) -> Type[SFCardViewerRow]:
+        """This method returns appropriate row class."""
+        dictionary_sf_card_viewer_row: Dict[Note, Type[SFCardViewerRow]] = {
             Note.EMPTY: SFCardViewerTransportationRow,
             Note.SALES_GOODS: SFCardViewerSalesGoodsRow,
             Note.AUTO_CHARGE: SFCardViewerAutoChargeRow,
             Note.EXIT_BY_WINDOW: SFCardViewerExitByWindowRow,
             Note.BUS_TRAM: SFCardViewerBusTramRow,
-        }.get(note)
-
-        return sf_card_viewer_row_class(account, row_data, self._account_config())
+        }
+        sf_card_viewer_row_class = dictionary_sf_card_viewer_row.get(note)
+        if sf_card_viewer_row_class is None:
+            raise ValueError(f'The mufg_row_class for {note} has not been defined in this code.')
+        return sf_card_viewer_row_class
 
 
 class Note(Enum):
@@ -72,7 +79,7 @@ class SFCardViewerRowData(InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        return datetime.datetime.strptime(self._used_date, "%Y/%m/%d")
+        return datetime.strptime(self._used_date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
@@ -93,7 +100,7 @@ class SFCardViewerRow(InputStoreRow):
         self._account_config: SFCardViewerConfig = account_config
 
     @abstractmethod
-    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimRow']:
         pass
 
     @property
@@ -134,40 +141,38 @@ class SFCardViewerRow(InputStoreRow):
 
 class SFCardViewerTransportationRow(SFCardViewerRow):
     """This class implements transportation row model of SF Card Viewer CSV."""
-    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow(self)
+        return ZaimPaymentRow
 
 
 class SFCardViewerSalesGoodsRow(SFCardViewerRow):
     """This class implements sales goods row model of SF Card Viewer CSV."""
-    @property
-    def is_row_to_skip(self) -> bool:
+    def is_row_to_skip(self, store: Store) -> bool:
         return self._account_config.skip_sales_goods_row
 
-    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow(self)
+        return ZaimPaymentRow
 
 
 class SFCardViewerAutoChargeRow(SFCardViewerRow):
     """This class implements auto charge row model of SF Card Viewer CSV."""
-    def convert_to_zaim_row(self) -> 'ZaimTransferRow':
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimTransferRow']:
         from zaimcsvconverter.zaim_row import ZaimTransferRow
-        return ZaimTransferRow(self)
+        return ZaimTransferRow
 
 
 class SFCardViewerExitByWindowRow(SFCardViewerRow):
     """This class implements exit by window row model of SF Card Viewer CSV."""
-    @property
-    def is_row_to_skip(self) -> bool:
+    def is_row_to_skip(self, store: Store) -> bool:
         return self._used_amount == 0 and \
                self._railway_company_name_enter == self._railway_company_name_exit and \
-               self._station_name_enter == self.zaim_store.name
+               self._station_name_enter == store.name
 
-    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow(self)
+        return ZaimPaymentRow
 
 
 class SFCardViewerBusTramRow(SFCardViewerRow):
@@ -176,6 +181,6 @@ class SFCardViewerBusTramRow(SFCardViewerRow):
         super().__init__(account, row_data, account_config)
         self._zaim_store: Store = Store(account, StoreRowData('', '', '交通', '電車'))
 
-    def convert_to_zaim_row(self) -> 'ZaimPaymentRow':
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
         from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow(self)
+        return ZaimPaymentRow

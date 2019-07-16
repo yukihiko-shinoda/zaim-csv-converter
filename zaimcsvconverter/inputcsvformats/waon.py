@@ -1,19 +1,15 @@
-#!/usr/bin/env python
-
-"""
-This module implements row model of WAON CSV.
-"""
-
+"""This module implements row model of WAON CSV."""
 from __future__ import annotations
 from abc import abstractmethod
-import datetime
+from datetime import datetime
 from enum import Enum
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Type, Dict
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
+from zaimcsvconverter.models import Store
 from zaimcsvconverter.zaim_row import ZaimRow, ZaimPaymentRow, ZaimTransferRow, ZaimIncomeRow
 
 if TYPE_CHECKING:
@@ -27,17 +23,26 @@ class WaonRowFactory(InputRowFactory):
             use_kind = WaonRow.UseKind(row_data.use_kind)
         except ValueError as error:
             raise ValueError(
-                'The value of "Use kind" has not been defined in this code. Use kind =' + row_data.use_kind
+                f'The value of "Use kind" has not been defined in this code. Use kind = {row_data.use_kind}'
             ) from error
 
-        waon_row_class = {
+        waon_row_class = self.get_appropriate_row_class(use_kind)
+
+        return waon_row_class(account, row_data)
+
+    @staticmethod
+    def get_appropriate_row_class(use_kind: WaonRow.UseKind) -> Type[WaonRow]:
+        """This method returns appropriate row class."""
+        dictionary_waon_row = {
             WaonRow.UseKind.PAYMENT: WaonPaymentRow,
             WaonRow.UseKind.CHARGE: WaonChargeRow,
             WaonRow.UseKind.AUTO_CHARGE: WaonAutoChargeRow,
             WaonRow.UseKind.DOWNLOAD_POINT: WaonDownloadPointRow,
-        }.get(use_kind)
-
-        return waon_row_class(account, row_data)
+        }
+        waon_row_class = dictionary_waon_row.get(use_kind)
+        if waon_row_class is None:
+            raise ValueError(f'The mufg_row_class for {use_kind} has not been defined in this code.')
+        return waon_row_class
 
 
 @dataclass
@@ -51,7 +56,7 @@ class WaonRowData(InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        return datetime.datetime.strptime(self._date, "%Y/%m/%d")
+        return datetime.strptime(self._date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
@@ -75,6 +80,8 @@ class WaonRow(InputStoreRow):
     def __init__(self, account: 'Account', row_data: WaonRowData):
         super().__init__(account, row_data)
         matches = re.search(r'([\d,]+)円', row_data.used_amount)
+        if matches is None:
+            raise ValueError(f'Invalid used amount. Used amount = {row_data.used_amount}')
         self._used_amount: int = int(matches.group(1).replace(',', ''))
         self._charge_kind: WaonRow.ChargeKind = self._convert_charge_kind_to_enum(row_data.charge_kind)
 
@@ -90,7 +97,7 @@ class WaonRow(InputStoreRow):
             ) from error
 
     @abstractmethod
-    def convert_to_zaim_row(self) -> ZaimRow:
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimRow']:
         pass
 
     @property
@@ -126,39 +133,40 @@ class WaonPaymentRow(WaonRow):
     """
     This class implements payment row model of WAON.
     """
-    def convert_to_zaim_row(self) -> ZaimPaymentRow:
-        return ZaimPaymentRow(self)
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
+        return ZaimPaymentRow
 
 
 class WaonChargeRow(WaonRow):
     """
     This class implements auto charge row model of WAON.
     """
-    def convert_to_zaim_row(self) -> ZaimTransferRow:
-        zaim_row_class = {
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimRow']:
+        dictionary_zaim_row: Dict[WaonRow.ChargeKind, Type[ZaimRow]] = {
             WaonRow.ChargeKind.POINT: ZaimIncomeRow,
             WaonRow.ChargeKind.BANK_ACCOUNT: ZaimTransferRow,
-        }.get(self._charge_kind)
-
-        return zaim_row_class(self)
+        }
+        zaim_row_class = dictionary_zaim_row.get(self._charge_kind)
+        if zaim_row_class is None:
+            raise ValueError(f'{WaonRow.ChargeKind} is not registered into dictionary_zaim_row.')
+        return zaim_row_class
 
 
 class WaonAutoChargeRow(WaonRow):
     """
     This class implements auto charge row model of WAON.
     """
-    def convert_to_zaim_row(self) -> ZaimTransferRow:
-        return ZaimTransferRow(self)
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimTransferRow']:
+        return ZaimTransferRow
 
 
 class WaonDownloadPointRow(WaonRow):
     """
     This class implements auto charge row model of WAON.
     """
-    def convert_to_zaim_row(self) -> ZaimTransferRow:
-        raise ValueError('WAON download point row is only history data. It\'s no need to import into Zaim.')
+    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimTransferRow']:
+        raise ValueError("WAON download point row is only history data. It's no need to import into Zaim.")
 
-    @property
-    def is_row_to_skip(self) -> bool:
+    def is_row_to_skip(self, store: Store) -> bool:
         """This property returns whether this row should be skipped or not."""
         return True
