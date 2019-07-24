@@ -1,9 +1,12 @@
 <component name="ProjectDictionaryState">
   <dictionary name="master">
     <words>
+      <w>deployer</w>
       <w>mufg</w>
       <w>pasmo</w>
       <w>pylint</w>
+      <w>sqlalchemy</w>
+      <w>tablename</w>
       <w>waon</w>
       <w>zaim</w>
     </words>

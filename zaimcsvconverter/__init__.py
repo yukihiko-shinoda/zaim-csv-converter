@@ -1,9 +1,15 @@
 """This module implements default database settings."""
 from sqlalchemy import create_engine
+# noinspection PyProtectedMember
+from sqlalchemy.orm import sessionmaker, scoped_session
+
 from zaimcsvconverter.config import Config
-from zaimcsvconverter.session_factory import SessionFactory
-ENGINE = create_engine('sqlite://')
-# ↓ To share same session with unit testing and inject new engine on every unit testing to run parallel
 # pylint: disable=invalid-name
-Session = SessionFactory.create(ENGINE)
+Session = scoped_session(sessionmaker(
+    bind=create_engine('sqlite://'),
+    # ↓ @ see https://stackoverflow.com/questions/32922210/why-does-a-query-invoke-a-auto-flush-in-sqlalchemy
+    autoflush=False,
+    # ↓ To use with-statement
+    autocommit=True
+))
 CONFIG: Config = Config()

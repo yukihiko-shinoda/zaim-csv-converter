@@ -1,66 +1,12 @@
 """This module implements row model of SF Card Viewer CSV."""
-from __future__ import annotations
 from datetime import datetime
-from abc import abstractmethod
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, Optional, Type, Dict
+from typing import Callable
 from dataclasses import dataclass
 
-from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
+from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory, ValidatedInputStoreRow
 from zaimcsvconverter.config import SFCardViewerConfig
-from zaimcsvconverter.models import Store, StoreRowData
-
-if TYPE_CHECKING:
-    from zaimcsvconverter.account import Account
-    from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRow
-    from zaimcsvconverter.zaim_row import ZaimTransferRow
-
-
-class SFCardViewerRowFactory(InputRowFactory):
-    """This class implements factory to create WAON CSV row instance."""
-    def __init__(self, account_config: Callable[[], Optional[SFCardViewerConfig]]):
-        self._account_config = account_config
-
-    def create(self, account: 'Account', row_data: SFCardViewerRowData) -> SFCardViewerRow:
-        try:
-            note = Note(row_data.note)
-        except ValueError as error:
-            raise ValueError(
-                f'The value of "Note" has not been defined in this code. Note = {row_data.note}'
-            ) from error
-
-        sf_card_viewer_row_class = self.get_appropriate_row_class(note)
-
-        config = self._account_config()
-        if config is None:
-            raise ValueError('Config has not been loaded. Please check when CONFIG.load() is called.')
-        return sf_card_viewer_row_class(account, row_data, config)
-
-    @staticmethod
-    def get_appropriate_row_class(note: Note) -> Type[SFCardViewerRow]:
-        """This method returns appropriate row class."""
-        dictionary_sf_card_viewer_row: Dict[Note, Type[SFCardViewerRow]] = {
-            Note.EMPTY: SFCardViewerTransportationRow,
-            Note.SALES_GOODS: SFCardViewerSalesGoodsRow,
-            Note.AUTO_CHARGE: SFCardViewerAutoChargeRow,
-            Note.EXIT_BY_WINDOW: SFCardViewerExitByWindowRow,
-            Note.BUS_TRAM: SFCardViewerBusTramRow,
-        }
-        sf_card_viewer_row_class = dictionary_sf_card_viewer_row.get(note)
-        if sf_card_viewer_row_class is None:
-            raise ValueError(f'The mufg_row_class for {note} has not been defined in this code.')
-        return sf_card_viewer_row_class
-
-
-class Note(Enum):
-    """
-    This class implements constant of note in SF Card Viewer CSV.
-    """
-    EMPTY: str = ''
-    SALES_GOODS: str = '物販'
-    AUTO_CHARGE: str = 'ｵｰﾄﾁｬｰｼﾞ'
-    EXIT_BY_WINDOW: str = '窓出'
-    BUS_TRAM: str = 'ﾊﾞｽ/路面等'
+from zaimcsvconverter.models import Store, StoreRowData, AccountId
 
 
 @dataclass
@@ -88,99 +34,70 @@ class SFCardViewerRowData(InputStoreRowData):
 
 # pylint: disable=too-many-instance-attributes
 class SFCardViewerRow(InputStoreRow):
-    """
-    This class implements row model of SF Card Viewer CSV.
-    """
-    def __init__(self, account: 'Account', row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
-        super().__init__(account, row_data)
-        self._railway_company_name_enter: str = row_data.railway_company_name_enter
-        self._station_name_enter: str = row_data.station_name_enter
-        self._railway_company_name_exit: str = row_data.railway_company_name_exit
-        self._used_amount: int = int(row_data.used_amount)
+    """This class implements row model of SF Card Viewer CSV."""
+    class Note(Enum):
+        """This class implements constant of note in SF Card Viewer CSV."""
+        EMPTY = ''
+        SALES_GOODS = '物販'
+        AUTO_CHARGE = 'ｵｰﾄﾁｬｰｼﾞ'
+        EXIT_BY_WINDOW = '窓出'
+        BUS_TRAM = 'ﾊﾞｽ/路面等'
+
+    def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+        super().__init__(account_id, row_data)
+        self.railway_company_name_enter: str = row_data.railway_company_name_enter
+        self.station_name_enter: str = row_data.station_name_enter
+        self.railway_company_name_exit: str = row_data.railway_company_name_exit
+        self.used_amount: int = int(row_data.used_amount)
         self._account_config: SFCardViewerConfig = account_config
+        self.note = SFCardViewerRow.Note(row_data.note)
+        if self.note == SFCardViewerRow.Note.BUS_TRAM:
+            self._zaim_store: Store = Store(account_id, StoreRowData('', '', '交通', '電車'))
 
-    @abstractmethod
-    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimRow']:
-        pass
+    def validate(self) -> ValidatedInputStoreRow:
+        if self.note is None:
+            raise ValueError(
+                f'The value of "Note" has not been defined in this code. Note = {self.data.note}'
+            )
+        return super().validate()
 
-    @property
-    def zaim_income_cash_flow_target(self) -> str:
-        raise ValueError('Income row for SF Card Viewer is not defined. Please confirm CSV file.')
-
-    @property
-    def zaim_income_ammount_income(self) -> int:
-        raise ValueError('Income row for SF Card Viewer is not defined. Please confirm CSV file.')
-
-    @property
-    def zaim_payment_cash_flow_source(self) -> str:
-        return self._account_config.account_name
-
-    @property
-    def zaim_payment_note(self) -> str:
-        if self.zaim_store is None:
-            return ''
-        return f'{self._railway_company_name_enter} {self._station_name_enter}' \
-               + f' → {self._railway_company_name_exit} {self.zaim_store.name}'
-
-    @property
-    def zaim_payment_amount_payment(self) -> int:
-        return self._used_amount
-
-    @property
-    def zaim_transfer_cash_flow_source(self) -> str:
-        return self._account_config.auto_charge_source
-
-    @property
-    def zaim_transfer_cash_flow_target(self) -> str:
-        return self._account_config.account_name
-
-    @property
-    def zaim_transfer_amount_transfer(self) -> int:
-        return -1 * self._used_amount
-
-
-class SFCardViewerTransportationRow(SFCardViewerRow):
-    """This class implements transportation row model of SF Card Viewer CSV."""
-    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
-        from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow
-
-
-class SFCardViewerSalesGoodsRow(SFCardViewerRow):
-    """This class implements sales goods row model of SF Card Viewer CSV."""
     def is_row_to_skip(self, store: Store) -> bool:
-        return self._account_config.skip_sales_goods_row
+        return self.note == SFCardViewerRow.Note.SALES_GOODS and self._account_config.skip_sales_goods_row or \
+               self.note == SFCardViewerRow.Note.EXIT_BY_WINDOW and \
+               self.used_amount == 0 and \
+               self.railway_company_name_enter == self.railway_company_name_exit and \
+               self.station_name_enter == store.name
 
-    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
-        from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow
+    @property
+    def is_transportation(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.note == SFCardViewerRow.Note.EMPTY
+
+    @property
+    def is_sales_goods(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.note == SFCardViewerRow.Note.SALES_GOODS
+
+    @property
+    def is_auto_charge(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.note == SFCardViewerRow.Note.AUTO_CHARGE
+
+    @property
+    def is_exit_by_window(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.note == SFCardViewerRow.Note.EXIT_BY_WINDOW
+
+    @property
+    def is_bus_tram(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.note == SFCardViewerRow.Note.BUS_TRAM
 
 
-class SFCardViewerAutoChargeRow(SFCardViewerRow):
-    """This class implements auto charge row model of SF Card Viewer CSV."""
-    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimTransferRow']:
-        from zaimcsvconverter.zaim_row import ZaimTransferRow
-        return ZaimTransferRow
+class SFCardViewerRowFactory(InputRowFactory):
+    """This class implements factory to create WAON CSV row instance."""
+    def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
+        self._account_config = account_config
 
-
-class SFCardViewerExitByWindowRow(SFCardViewerRow):
-    """This class implements exit by window row model of SF Card Viewer CSV."""
-    def is_row_to_skip(self, store: Store) -> bool:
-        return self._used_amount == 0 and \
-               self._railway_company_name_enter == self._railway_company_name_exit and \
-               self._station_name_enter == store.name
-
-    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
-        from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow
-
-
-class SFCardViewerBusTramRow(SFCardViewerRow):
-    """This class implements bus tram row model of SF Card Viewer CSV."""
-    def __init__(self, account: Account, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
-        super().__init__(account, row_data, account_config)
-        self._zaim_store: Store = Store(account, StoreRowData('', '', '交通', '電車'))
-
-    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
-        from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow
+    def create(self, account_id: AccountId, row_data: SFCardViewerRowData) -> SFCardViewerRow:
+        return SFCardViewerRow(account_id, row_data, self._account_config())

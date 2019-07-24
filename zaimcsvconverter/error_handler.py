@@ -4,8 +4,8 @@ from typing import List
 
 import numpy
 
-from zaimcsvconverter.account import Account
-from zaimcsvconverter.input_row import InputRowData
+from zaimcsvconverter.account import FileNameCsvConvert
+from zaimcsvconverter.inputcsvformats import InputRowData
 
 
 class ErrorHandler:
@@ -17,10 +17,10 @@ class ErrorHandler:
         for error_row in self.list_error:
             yield error_row
 
-    def append_undefined_content(self, account: Account, input_row_data: InputRowData) -> None:
+    def append_undefined_content(self, file_name_csv_convert: FileNameCsvConvert, input_row_data: InputRowData) -> None:
         """This method appends error list argument into error list property."""
         self.list_error.append([
-            account.value.file_name_csv_convert,
+            file_name_csv_convert.value,
             input_row_data.store_name,
             input_row_data.item_name
         ])

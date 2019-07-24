@@ -3,13 +3,10 @@ from datetime import datetime
 
 import pytest
 
-from tests.testlibraries.database import StoreFactory
-from tests.conftest import database_session_with_records
-from zaimcsvconverter.account import Account
+from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData, \
     GoldPointCardPlusRowFactory
-from zaimcsvconverter.models import Store, StoreRowData
-from zaimcsvconverter.zaim_row import ZaimPaymentRow
+from zaimcsvconverter.models import Store, AccountId
 
 
 class TestGoldPointCardPlusRowData:
@@ -53,82 +50,45 @@ class TestGoldPointCardPlusRowData:
         assert gold_point_card_plus_row_data.store_name == used_store
 
 
-@pytest.fixture
-def database_session_stores():
-    """This fixture prepares database session and records."""
-    def fixture_records():
-        StoreFactory(
-            account=Account.GOLD_POINT_CARD_PLUS,
-            row_data=StoreRowData('東京電力  電気料金等', '東京電力エナジーパートナー株式会社'),
-        )
-        StoreFactory(
-            account=Account.GOLD_POINT_CARD_PLUS,
-            row_data=StoreRowData('ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'Amazon Japan G.K.'),
-        )
-    yield from database_session_with_records(fixture_records)
-
-
 class TestGoldPointCardPlusRow:
     """Tests for GoldPointCartPlusRow."""
     # pylint: disable=protected-access,too-many-arguments,unused-argument
     @staticmethod
     @pytest.mark.parametrize(
         (
-            'gold_point_card_plus_row_data, expected_date, '
-            'expected_store_name_zaim, expected_use_amount, expected_is_row_to_skip'
+            'gold_point_card_plus_row_data, expected_date, expected_store_name_zaim, expected_is_row_to_skip'
         ),
         [
             (
-                GoldPointCardPlusRowData(
-                    '2018/7/3', '東京電力  電気料金等', 'ご本人', '1回払い', '', '18/8', '11402', '11402',
-                    '', '', '', '', ''
-                ),
-                datetime(2018, 7, 3, 0, 0, 0), '東京電力エナジーパートナー株式会社', 11402, False
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC,
+                datetime(2018, 7, 3, 0, 0, 0), '東京電力エナジーパートナー株式会社', False
             ),
             (
-                GoldPointCardPlusRowData(
-                    '2018/7/4', 'ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'ご本人', '1回払い', '', '18/8', '3456', '3456',
-                    '', '', '', '', ''
-                ),
-                datetime(2018, 7, 4, 0, 0, 0), 'Amazon Japan G.K.', 3456, True
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP,
+                datetime(2018, 7, 4, 0, 0, 0), 'Amazon Japan G.K.', True
             ),
         ]
     )
     def test_init(
+            yaml_config_load,
+            database_session_stores_gold_point_card_plus,
             gold_point_card_plus_row_data,
             expected_date,
             expected_store_name_zaim,
-            expected_use_amount,
-            expected_is_row_to_skip,
-            yaml_config_load,
-            database_session_stores
+            expected_is_row_to_skip
     ):
         """
         Arguments should set into properties.
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
-        row = GoldPointCardPlusRow(Account.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
+        row = GoldPointCardPlusRow(AccountId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
         validated_row = row.validate()
         assert row.zaim_date == expected_date
-        assert isinstance(row.zaim_store, Store)
+        assert isinstance(row.store, Store)
         # pylint: disable=protected-access
-        assert row.zaim_store.name == gold_point_card_plus_row_data._used_store
-        assert row.zaim_store.name_zaim == expected_store_name_zaim
-        assert row.is_row_to_skip(validated_row.zaim_store) == expected_is_row_to_skip
-        assert row.zaim_payment_cash_flow_source == 'ヨドバシゴールドポイントカード・プラス'
-        assert row.zaim_payment_amount_payment == expected_use_amount
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_zaim_row_class_to_convert(yaml_config_load, database_session_stores):
-        """GoldPointCardPlusRow should convert to ZaimPaymentRow."""
-        sf_card_viewer_row = GoldPointCardPlusRow(
-            Account.GOLD_POINT_CARD_PLUS,
-            GoldPointCardPlusRowData('2018/11/2', '東京電力  電気料金等', 'ご本人', '1回払い', '', '18/12', '10997',
-                                     '10997', '', '', '', '', '')
-        )
-        validated_input_row = sf_card_viewer_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == ZaimPaymentRow
+        assert row.store.name == gold_point_card_plus_row_data._used_store
+        assert row.store.name_zaim == expected_store_name_zaim
+        assert row.is_row_to_skip(validated_row.store) == expected_is_row_to_skip
 
 
 class TestGoldPointCardPlusRowFactory:
@@ -136,12 +96,10 @@ class TestGoldPointCardPlusRowFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize('argument, expected', [
-        (GoldPointCardPlusRowData('2018/11/2', '東京電力  電気料金等', 'ご本人', '1回払い', '', '18/12', '10997', '10997',
-                                  '', '', '', '', ''),
-         GoldPointCardPlusRow),
+        (InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC, GoldPointCardPlusRow),
     ])
-    def test_create(argument, expected, database_session_stores):
+    def test_create(argument, expected, database_session_stores_gold_point_card_plus):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(Account.MUFG, argument)
+        gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(AccountId.MUFG, argument)
         assert isinstance(gold_point_card_plus_row, expected)

@@ -5,7 +5,8 @@ from pathlib import Path
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.directory_csv import DirectoryCsv
 from zaimcsvconverter.error_handler import ErrorHandler
-from zaimcsvconverter.exceptions import InvalidRowError, RowToSkip
+from zaimcsvconverter.exceptions import InvalidRowError
+from zaimcsvconverter.zaim_row import ZaimRow
 
 
 class InputCsvConverter:
@@ -22,33 +23,16 @@ class InputCsvConverter:
                 'w', encoding='UTF-8', newline='\n'
         ) as file_zaim:
             writer_zaim = csv.writer(file_zaim)
-            writer_zaim.writerow([
-                '日付',
-                '方法',
-                'カテゴリ',
-                'カテゴリの内訳',
-                '支払元',
-                '入金先',
-                '品目',
-                'メモ',
-                'お店',
-                '通貨',
-                '収入',
-                '支出',
-                '振替',
-                '残高調整',
-                '通貨変換前の金額',
-                '集計の設定'
-            ])
+            writer_zaim.writerow(ZaimRow.HEADER)
             self._convert_from_account(writer_zaim)
 
     def _convert_from_account(self, writer_zaim) -> None:
         account_dependency = self._account.value
-        with self._path_csv_file.open('r', encoding=account_dependency.encode) as file_account:
-            reader_account = csv.reader(file_account)
+        with self._path_csv_file.open('r', encoding=account_dependency.encode) as file_input:
+            reader_input = csv.reader(file_input)
             if account_dependency.csv_header:
                 try:
-                    while reader_account.__next__() != account_dependency.csv_header:
+                    while reader_input.__next__() != account_dependency.csv_header:
                         pass
                 except StopIteration as error:
                     raise StopIteration(
@@ -56,20 +40,21 @@ class InputCsvConverter:
                         + 'Please confirm AccountConfig.csv_header. '
                         + f'AccountConfig.csv_header = {account_dependency.csv_header}'
                     ) from error
-            self._iterate_convert(reader_account, writer_zaim)
+            self._iterate_convert(reader_input, writer_zaim)
 
-    def _iterate_convert(self, reader_account, writer_zaim) -> None:
-        for list_row_account in reader_account:
-            account_dependency = self._account.value
-            input_row_data = account_dependency.input_row_data_class(*list_row_account)
-            input_row = account_dependency.input_row_factory.create(self._account, input_row_data)
+    def _iterate_convert(self, reader_input, writer_zaim) -> None:
+        for list_input_row_standard_type_value in reader_input:
+            input_row_data = self._account.create_input_row_data_instance(list_input_row_standard_type_value)
+            input_row = self._account.create_input_row_instance(input_row_data)
             try:
-                zaim_row = input_row.try_to_convert_to_zaim_row()
+                validated_input_row = input_row.validate()
             except InvalidRowError:
-                self.error_handler.append_undefined_content(self._account, input_row_data)
+                self.error_handler.append_undefined_content(self._account.value.file_name_csv_convert, input_row_data)
                 continue
-            except RowToSkip:
+            if validated_input_row.is_row_to_skip:
                 continue
+            converter = self._account.value.zaim_row_converter_selector.select(validated_input_row)
+            zaim_row = converter(validated_input_row).convert()
             list_row_zaim = zaim_row.convert_to_list()
             writer_zaim.writerow(list_row_zaim)
         if self.error_handler.is_presented:

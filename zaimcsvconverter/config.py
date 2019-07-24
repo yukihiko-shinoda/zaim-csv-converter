@@ -1,7 +1,6 @@
 """This module implements configuration."""
 from __future__ import annotations
 
-from enum import Enum
 from pathlib import Path
 
 from dataclasses import dataclass, field
@@ -9,15 +8,6 @@ from dataclasses import dataclass, field
 from dataclasses_json import DataClassJsonMixin
 from yamldataclassconfig import create_file_path_field
 from yamldataclassconfig.config import YamlDataClassConfig
-
-
-class AccountKey(Enum):
-    """This class implements constant of account key for config.yml."""
-    WAON: str = 'waon'
-    GOLD_POINT_CARD_PLUS: str = 'gold_point_card_plus'
-    MUFG: str = 'mufg'
-    PASMO: str = 'pasmo'
-    AMAZON: str = 'amazon'
 
 
 @dataclass

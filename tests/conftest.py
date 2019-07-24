@@ -1,5 +1,5 @@
 """This module implements config for pytest."""
-from typing import Callable
+from pathlib import Path
 
 import pytest
 from _pytest.fixtures import FixtureRequest  # type: ignore
@@ -7,50 +7,115 @@ from fixturefilehandler import ResourceFileDeployer
 from fixturefilehandler.factories import DeployerFactory
 from fixturefilehandler.file_paths import YamlConfigFilePathBuilder, SimpleDeployFilePath
 
-from tests.testlibraries import PATH_PROJECT_HOME_DIRECTORY
-from tests.testlibraries.database import create_database, StoreFactory
-from tests.testlibraries.file import create_path_as_same_as_file_name
-from zaimcsvconverter import Session, CONFIG
-from zaimcsvconverter.account import Account
-from zaimcsvconverter.models import StoreRowData
+from tests.testlibraries.instance_resource import InstanceResource
+from tests.testlibraries.database_for_test import DatabaseForTest
+from tests.testlibraries.file import FilePathUtility
+from zaimcsvconverter import CONFIG
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRow
+from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRow
+from zaimcsvconverter.models import AccountId
 
 
 @pytest.fixture
 def database_session():
     """This fixture prepares database and fixture records."""
-    session = create_database()
-    session.flush()
-    yield session
-    # Remove it, so that the next test gets a new Session()
-    Session.remove()
+    yield from DatabaseForTest.database_session()
+
+
+@pytest.fixture
+def database_session_with_schema(request):
+    """This fixture prepares database and fixture records."""
+    yield from DatabaseForTest.database_session_with_schema(getattr(request, 'param', None))
 
 
 @pytest.fixture
 def database_session_basic_store_waon():
     """This function prepare common fixture with some tests."""
-    def fixture_records():
-        StoreFactory(
-            account=Account.WAON,
-            row_data=StoreRowData('ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店'),
-        )
-        StoreFactory(
-            account=Account.WAON,
-            row_data=StoreRowData('板橋前野町', 'イオンスタイル　板橋前野町'),
-        )
-    yield from database_session_with_records(fixture_records)
+    yield from DatabaseForTest.database_session_with_schema([
+        InstanceResource.FIXTURE_RECORD_STORE_WAON_FAMILY_MART_KABUTOCHOEITAIDORI,
+        InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO,
+    ])
 
 
-def database_session_with_records(fixture_records: Callable[[], None]):
-    """This fixture prepares database and fixture records."""
-    session = create_database()
-    fixture_records()
-    session.flush()
-    yield session
-    # Remove it, so that the next test gets a new Session()
-    Session.remove()
+@pytest.fixture
+def database_session_stores_gold_point_card_plus():
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema([
+        InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC,
+        InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP,
+    ])
 
 
-YAML_CONFIG_FILE_PATH = YamlConfigFilePathBuilder(path_target_directory=PATH_PROJECT_HOME_DIRECTORY)
+@pytest.fixture
+def database_session_stores_mufg():
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema([
+        InstanceResource.FIXTURE_RECORD_STORE_MUFG_EMPTY,
+        InstanceResource.FIXTURE_RECORD_STORE_MUFG_MUFG,
+        InstanceResource.FIXTURE_RECORD_STORE_MUFG_TOKYO_WATERWORKS,
+        InstanceResource.FIXTURE_RECORD_STORE_MUFG_GOLD_POINT_MARKETING,
+        InstanceResource.FIXTURE_RECORD_STORE_MUFG_OTHER_ACCOUNT,
+        InstanceResource.FIXTURE_RECORD_STORE_MUFG_MUFG_TRUST_AND_BANK,
+    ])
+
+
+@pytest.fixture
+def database_session_stores_sf_card_viewer():
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema([
+        InstanceResource.FIXTURE_RECORD_STORE_PASMO_KOHRAKUEN_STATION,
+        InstanceResource.FIXTURE_RECORD_STORE_PASMO_KITASENJU_STATION,
+        InstanceResource.FIXTURE_RECORD_STORE_PASMO_AKIHABARA_STATION,
+        InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY,
+    ])
+
+
+@pytest.fixture
+def database_session_store_item():
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema([
+        InstanceResource.FIXTURE_RECORD_STORE_WAON_FAMILY_MART_KABUTOCHOEITAIDORI,
+        InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT,
+    ])
+
+
+@pytest.fixture
+def database_session_stores_item():
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema([
+        InstanceResource.FIXTURE_RECORD_STORE_MUFG_MUFG,
+        InstanceResource.FIXTURE_RECORD_STORE_PASMO_KOHRAKUEN_STATION,
+        InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO,
+        InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT,
+    ])
+
+
+@pytest.fixture
+def database_session_item():
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema([
+        InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT,
+    ])
+
+
+@pytest.fixture
+def waon_row():
+    """This fixture prepares WaonDownloadPointRow instance."""
+    yield WaonRow(AccountId.WAON, WaonRowData('2018/10/22', '板橋前野町', '0円', 'ポイントダウンロード', '-'))
+
+
+@pytest.fixture
+def sf_card_viewer_row():
+    """This fixture prepares SFCardViewerSalesGoodsRow instance."""
+    yield SFCardViewerRow(
+        AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, CONFIG.pasmo
+    )
+
+
+YAML_CONFIG_FILE_PATH = YamlConfigFilePathBuilder(
+    path_target_directory=InstanceResource.PATH_PROJECT_HOME_DIRECTORY,
+    path_test_directory=Path('tests/testresources')
+)
 YamlConfigFileDeployer = DeployerFactory.create(YAML_CONFIG_FILE_PATH)
 
 
@@ -88,7 +153,7 @@ def yaml_config_specific_source_yaml_file(request: FixtureRequest, source_yaml_f
     deploy_file_path = SimpleDeployFilePath(
         YAML_CONFIG_FILE_PATH.target,
         YAML_CONFIG_FILE_PATH.backup,
-        create_path_as_same_as_file_name(request.function) / source_yaml_file
+        FilePathUtility.create_path_to_resource_directory(request.function) / source_yaml_file
     )
     ResourceFileDeployer.setup(deploy_file_path)
     CONFIG.load()

@@ -7,6 +7,11 @@ class DirectoryCsv(Enum):
     """
     This class implements constant of path to directory of CSV.
     """
-    CONVERT: Path = Path(__file__).parent.parent / './csvconverttable/'
-    INPUT: Path = Path(__file__).parent.parent / './csvinput/'
-    OUTPUT: Path = Path(__file__).parent.parent / './csvoutput/'
+    CONVERT = Path(__file__).parent.parent / './csvconverttable/'
+    INPUT = Path(__file__).parent.parent / './csvinput/'
+    OUTPUT = Path(__file__).parent.parent / './csvoutput/'
+
+    @property
+    def value(self) -> Path:
+        """This method overwrite super method for type hint."""
+        return super().value

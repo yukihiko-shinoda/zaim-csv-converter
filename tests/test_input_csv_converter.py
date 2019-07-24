@@ -2,15 +2,15 @@
 from __future__ import annotations
 
 import csv
+from pathlib import Path
 
 import pytest
 from _pytest.fixtures import FixtureRequest  # type: ignore
 from fixturefilehandler import TargetFilePathVacator
 
-from tests.testlibraries import PATH_PROJECT_HOME_DIRECTORY
-from tests.testlibraries.file import create_path_as_same_as_file_name
+from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.csv_file_path_builder import CsvFilePathBuilder
-from tests.test_zaim_row import ZaimRowDataForTest
+from tests.testlibraries.zaim_row_data import ZaimRowData
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
@@ -31,11 +31,11 @@ def path_file_csv_input(request: FixtureRequest, suffix_file_name: str):
     """This fixture prepare CSV output directory."""
     csv_file_path = CsvFilePathBuilder(
         target=request.node.name + suffix_file_name,
-        base=PATH_PROJECT_HOME_DIRECTORY
+        base=InstanceResource.PATH_PROJECT_HOME_DIRECTORY
     )
     TargetFilePathVacator.setup(csv_file_path)
     CONFIG.load()
-    yield create_path_as_same_as_file_name(request.function) / (request.node.name + suffix_file_name)
+    yield InstanceResource.PATH_TEST_RESOURCES / Path(__file__).stem / (request.node.name + suffix_file_name)
     TargetFilePathVacator.teardown(csv_file_path)
 
 
@@ -52,14 +52,14 @@ class TestInputCsvConverterForStore:
         assert input_csv_converter.error_handler.list_error == []
         input_csv_converter.execute()
         with (
-                PATH_PROJECT_HOME_DIRECTORY / 'csvoutput' / path_file_csv_input_waon.name
+                InstanceResource.PATH_PROJECT_HOME_DIRECTORY / 'csvoutput' / path_file_csv_input_waon.name
         ).open('r', encoding='UTF-8', newline='\n') as file_zaim:
             # noinspection PyUnusedLocal
             assert sum(1 for row in file_zaim) == 2
             file_zaim.seek(0)
             reader_zaim = csv.reader(file_zaim)
             list_zaim_row = reader_zaim.__next__()
-            zaim_row_data = ZaimRowDataForTest(*list_zaim_row)
+            zaim_row_data = ZaimRowData(*list_zaim_row)
             assert zaim_row_data.date == '日付'
             assert zaim_row_data.method == '方法'
             assert zaim_row_data.category_large == 'カテゴリ'

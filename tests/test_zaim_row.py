@@ -1,63 +1,19 @@
 """Tests for zaim_row.py."""
-from dataclasses import dataclass
 
 import pytest
 
-from tests.testlibraries.database import StoreFactory, ItemFactory
-from tests.conftest import database_session_with_records
-from tests.instance_fixture import InstanceFixture
+from tests.testlibraries.instance_resource import InstanceResource
+from tests.testlibraries.zaim_row_data import ZaimRowData
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
-from zaimcsvconverter.inputcsvformats.mufg import MufgTransferIncomeRow, MufgRowData
+from zaimcsvconverter.inputcsvformats.mufg import MufgRow
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
-from zaimcsvconverter.inputcsvformats.waon import WaonAutoChargeRow, WaonRowData
-from zaimcsvconverter.models import StoreRowData, ItemRowData
-from zaimcsvconverter.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
-
-
-@dataclass
-class ZaimRowDataForTest:
-    """This class implements data class for wrapping list of Zaim CSV row model."""
-    date: str
-    method: str
-    category_large: str
-    category_small: str
-    cash_flow_source: str
-    cash_flow_target: str
-    item_name: str
-    note: str
-    store_name: str
-    currency: str
-    amount_income: str
-    amount_payment: str
-    amount_transfer: str
-    balance_adjustment: str
-    amount_before_currency_conversion: str
-    setting_aggregate: str
-
-
-@pytest.fixture
-def database_session_stores_item():
-    """This fixture prepares database session and records."""
-    def fixture_records():
-        StoreFactory(
-            account=Account.MUFG,
-            row_data=StoreRowData('スーパーフツウ', '三菱UFJ銀行', 'その他', 'その他', '臨時収入', ''),
-        )
-        StoreFactory(
-            account=Account.PASMO,
-            row_data=StoreRowData('後楽園', '東京地下鉄株式会社　南北線後楽園駅', '交通', '電車'),
-        )
-        StoreFactory(
-            account=Account.WAON,
-            row_data=StoreRowData('板橋前野町', 'イオンスタイル　板橋前野町'),
-        )
-        ItemFactory(
-            account=Account.AMAZON,
-            row_data=ItemRowData('Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '大型出費', '家電'),
-        )
-    yield from database_session_with_records(fixture_records)
+from zaimcsvconverter.inputcsvformats.waon import WaonRow
+from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterSelector
+from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterSelector
+from zaimcsvconverter.rowconverters.mufg import MufgZaimIncomeRowConverter
+from zaimcsvconverter.rowconverters.waon import WaonZaimTransferRowConverter
 
 
 class TestZaimIncomeRow:
@@ -66,13 +22,11 @@ class TestZaimIncomeRow:
     @staticmethod
     def test_all(yaml_config_load, database_session_stores_item):
         """Argument should set into properties."""
-        mufg_row = MufgTransferIncomeRow(
-            Account.MUFG, MufgRowData('2018/8/20', '利息', 'スーパーフツウ', '', '20', '2000000', '', '', '振替入金')
-        )
+        mufg_row = MufgRow(AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
         validated_input_row = mufg_row.validate()
-        zaim_low = ZaimIncomeRow(validated_input_row)
+        zaim_low = MufgZaimIncomeRowConverter(validated_input_row).convert()
         list_zaim_row = zaim_low.convert_to_list()
-        zaim_row_data = ZaimRowDataForTest(*list_zaim_row)
+        zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == '2018-08-20'
         assert zaim_row_data.method == 'income'
         assert zaim_row_data.category_large == '臨時収入'
@@ -97,29 +51,30 @@ class TestZaimPaymentRow:
     @staticmethod
     @pytest.mark.parametrize(
         (
-            'input_row_factory, account, input_row_data, expected_date, expected_category_large, '
-            'expected_category_small, expected_cash_flow_source, expected_item_name, expected_note, '
-            'expected_store_name, expected_amount_payment'
+            'input_row_factory, account_id, input_row_data, zaim_row_converter_selector, expected_date, '
+            'expected_category_large, expected_category_small, expected_cash_flow_source, expected_item_name, '
+            'expected_note, expected_store_name, expected_amount_payment'
         ), [
-            (SFCardViewerRowFactory(lambda: CONFIG.pasmo), Account.PASMO, SFCardViewerRowData(
-                '2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''
-            ), '2018-11-13', '交通', '電車', 'PASMO', None, 'メトロ 六本木一丁目 → メトロ 後楽園',
-             '東京地下鉄株式会社　南北線後楽園駅', 195),
-            (AmazonRowFactory(), Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON,
-             '2018-10-23', '大型出費', '家電', 'ヨドバシゴールドポイントカード・プラス',
+            (SFCardViewerRowFactory(lambda: CONFIG.pasmo), AccountId.PASMO,
+             InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
+             SFCardViewerZaimRowConverterSelector(lambda: CONFIG.pasmo), '2018-11-13', '交通', '電車', 'PASMO', None,
+             'メトロ 六本木一丁目 → メトロ 後楽園', '東京地下鉄株式会社　南北線後楽園駅', 195),
+            (AmazonRowFactory(), AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT,
+             AmazonZaimRowConverterSelector(), '2018-10-23', '大型出費', '家電', 'ヨドバシゴールドポイントカード・プラス',
              'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '',
              'Amazon Japan G.K.', 4980),
         ]
     )
-    def test_all(input_row_factory, account, input_row_data, expected_date, expected_category_large,
-                 expected_category_small, expected_cash_flow_source, expected_item_name, expected_note,
-                 expected_store_name, expected_amount_payment, yaml_config_load, database_session_stores_item):
+    def test_all(yaml_config_load, database_session_stores_item, input_row_factory, account_id,
+                 input_row_data: SFCardViewerRowData, zaim_row_converter_selector, expected_date,
+                 expected_category_large, expected_category_small, expected_cash_flow_source, expected_item_name,
+                 expected_note, expected_store_name, expected_amount_payment):
         """Argument should set into properties."""
-        input_row = input_row_factory.create(account, input_row_data)
+        input_row = input_row_factory.create(account_id, input_row_data)
         validated_input_row = input_row.validate()
-        zaim_low = ZaimPaymentRow(validated_input_row)
+        zaim_low = zaim_row_converter_selector.select(validated_input_row)(validated_input_row).convert()
         list_zaim_row = zaim_low.convert_to_list()
-        zaim_row_data = ZaimRowDataForTest(*list_zaim_row)
+        zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
         assert zaim_row_data.method == 'payment'
         assert zaim_row_data.category_large == expected_category_large
@@ -144,13 +99,13 @@ class TestZaimTransferRow:
     @staticmethod
     def test_all(yaml_config_load, database_session_stores_item):
         """Argument should set into properties."""
-        waon_auto_charge_row = WaonAutoChargeRow(
-            Account.WAON, WaonRowData('2018/11/11', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座')
+        waon_auto_charge_row = WaonRow(
+            AccountId.WAON, InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO
         )
         validated_input_row = waon_auto_charge_row.validate()
-        zaim_low = ZaimTransferRow(validated_input_row)
+        zaim_low = WaonZaimTransferRowConverter(validated_input_row).convert()
         list_zaim_row = zaim_low.convert_to_list()
-        zaim_row_data = ZaimRowDataForTest(*list_zaim_row)
+        zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == '2018-11-11'
         assert zaim_row_data.method == 'transfer'
         assert zaim_row_data.category_large == '-'

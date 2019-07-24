@@ -1,10 +1,11 @@
 """This module implements importing process for convert table CSV."""
 import csv
 from pathlib import Path
+from typing import List
 
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.directory_csv import DirectoryCsv
-from zaimcsvconverter.models import Store, Item, StoreRowData, ItemRowData
+from zaimcsvconverter.models import ConvertTableRecordMixin
 
 
 class ConvertTableImporter:
@@ -12,24 +13,23 @@ class ConvertTableImporter:
     def __init__(self, directory_csv_convert: Path = DirectoryCsv.CONVERT.value):
         self.directory_csv_convert = directory_csv_convert
 
-    def execute(self):
+    def execute(self) -> None:
         """This method executes importing process for convert table CSV"""
         for path in self.directory_csv_convert.glob('*.csv'):
-            self._import_convert_table_to_database(path)
+            self._import_csv_to_database(path)
 
-    @staticmethod
-    def _import_convert_table_to_database(path: Path):
+    @classmethod
+    def _import_csv_to_database(cls, path: Path) -> None:
         account = Account.create_by_path_csv_convert(path)
+        list_convert_table = cls._load_csv(account, path)
+        account.value.convert_table_type.value.model.save_all(list_convert_table)
+
+    @classmethod
+    def _load_csv(cls, account: Account, path: Path) -> List[ConvertTableRecordMixin]:
+        list_convert_table = []
         with path.open('r', encoding='UTF-8') as file_convert_table:
-            reader_convert_table = csv.reader(file_convert_table)
-            model_class = account.value.convert_table_model_class
-            row_data_class = {
-                Store: StoreRowData,
-                Item: ItemRowData,
-            }.get(model_class)
-            if row_data_class is None:
-                raise ValueError('Account dependency setting is not correct. Please check account.py.')
-            list_convert_table = []
-            for list_row_convert_table in reader_convert_table:
-                list_convert_table.append(model_class(account, row_data_class(*list_row_convert_table)))
-            model_class.save_all(list_convert_table)
+            for list_convert_table_row_standard_type_value in csv.reader(file_convert_table):
+                list_convert_table.append(
+                    account.create_convert_table_row_instance(list_convert_table_row_standard_type_value)
+                )
+        return list_convert_table

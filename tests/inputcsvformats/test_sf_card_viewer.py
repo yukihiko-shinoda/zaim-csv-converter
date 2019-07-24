@@ -3,14 +3,10 @@ from datetime import datetime
 
 import pytest
 
-from tests.testlibraries.database import StoreFactory
-from tests.conftest import database_session_with_records
+from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, \
-    SFCardViewerExitByWindowRow, SFCardViewerAutoChargeRow, SFCardViewerSalesGoodsRow, SFCardViewerTransportationRow
-from zaimcsvconverter.models import StoreRowData, Store
-from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimTransferRow
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, SFCardViewerRow
+from zaimcsvconverter.models import Store, AccountId
 
 
 class TestSFCardViewerRowData:
@@ -48,128 +44,52 @@ class TestSFCardViewerRowData:
         assert sf_card_viewer_row_data.store_name == station_name_exit
 
 
-@pytest.fixture
-def database_session_stores():
-    """This fixture prepares database session and records."""
-    def fixture_records():
-        StoreFactory(
-            account=Account.PASMO,
-            row_data=StoreRowData('後楽園', '東京地下鉄株式会社　南北線後楽園駅', '交通', '電車'),
-        )
-        StoreFactory(
-            account=Account.PASMO,
-            row_data=StoreRowData('北千住', '北千住', '交通', '電車'),
-        )
-        StoreFactory(
-            account=Account.PASMO,
-            row_data=StoreRowData('', '', '', ''),
-        )
-    yield from database_session_with_records(fixture_records)
-
-
 class TestSFCardViewerRow:
     """Tests for SFCardViewerRow."""
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_stores):
+    def test_init(yaml_config_load, database_session_stores_sf_card_viewer):
         """
         Arguments should set into properties.
         """
-        sf_card_viewer_row_data = SFCardViewerRowData(
-            '2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''
+        sf_card_viewer_row = SFCardViewerRow(
+            AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
         )
-        expected_amount = 195
-        config_account_name = 'PASMO'
-        config_auto_charge_source = 'TOKYU CARD'
-        sf_card_viewer_row = SFCardViewerTransportationRow(Account.PASMO, sf_card_viewer_row_data, CONFIG.pasmo)
         assert sf_card_viewer_row.zaim_date == datetime(2018, 11, 13, 0, 0, 0)
-        assert isinstance(sf_card_viewer_row.zaim_store, Store)
-        assert sf_card_viewer_row.zaim_store.name_zaim == '東京地下鉄株式会社　南北線後楽園駅'
-        assert sf_card_viewer_row.zaim_payment_cash_flow_source == config_account_name
-        assert sf_card_viewer_row.zaim_payment_note == 'メトロ 六本木一丁目 → メトロ 後楽園'
-        assert sf_card_viewer_row.zaim_payment_amount_payment == expected_amount
-        assert sf_card_viewer_row.zaim_transfer_cash_flow_source == config_auto_charge_source
-        assert sf_card_viewer_row.zaim_transfer_cash_flow_target == config_account_name
-        assert sf_card_viewer_row.zaim_transfer_amount_transfer == -1 * expected_amount
+        assert isinstance(sf_card_viewer_row.store, Store)
+        assert sf_card_viewer_row.store.name_zaim == '東京地下鉄株式会社　南北線後楽園駅'
 
 
 class TestSFCardViewerTransportationRow:
     """Tests for SFCardViewerTransportationRow."""
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_zaim_row_class_to_convert(yaml_config_load, database_session_stores):
-        """SFCardViewerTransportationRow should convert to ZaimPaymentRow."""
-        sf_card_viewer_row = SFCardViewerTransportationRow(
-            Account.PASMO,
-            SFCardViewerRowData('2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''),
-            CONFIG.pasmo
-        )
-        validated_input_row = sf_card_viewer_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == ZaimPaymentRow
-
-
-@pytest.fixture
-def sf_card_viewer_row():
-    """This fixture prepares SFCardViewerSalesGoodsRow instance."""
-    yield SFCardViewerSalesGoodsRow(
-        Account.PASMO,
-        SFCardViewerRowData('2018/11/14', '', '', '', '', '', '', '480', '3005', '物販'),
-        CONFIG.pasmo
-    )
 
 
 class TestSFCardViewerSalesGoodsRow:
     """Tests for SFCardViewerSalesGoodsRow."""
     # pylint: disable=unused-argument
     @staticmethod
-    def test_zaim_row_class_to_convert(database_session_stores, sf_card_viewer_row):
-        """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
-        validated_input_row = sf_card_viewer_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == ZaimPaymentRow
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_is_row_to_skip_skip(yaml_config_skip_sales_goods_row, database_session_stores, sf_card_viewer_row):
+    def test_is_row_to_skip_skip(
+            yaml_config_skip_sales_goods_row, database_session_stores_sf_card_viewer, sf_card_viewer_row
+    ):
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
         assert sf_card_viewer_row.is_row_to_skip
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_is_row_to_skip_not_skip(yaml_config_not_skip_sales_goods_row, database_session_stores, sf_card_viewer_row):
+    def test_is_row_to_skip_not_skip(
+            yaml_config_not_skip_sales_goods_row, database_session_stores_sf_card_viewer, sf_card_viewer_row
+    ):
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
         validated_row = sf_card_viewer_row.validate()
-        assert not sf_card_viewer_row.is_row_to_skip(validated_row.zaim_store)
+        assert not sf_card_viewer_row.is_row_to_skip(validated_row.store)
 
 
 class TestSFCardViewerAutoChargeRow:
     """Tests for SFCardViewerTransportationRow."""
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_zaim_row_class_to_convert(yaml_config_load, database_session_stores):
-        """SFCardViewerTransportationRow should convert to ZaimTransferRow."""
-        sf_card_viewer_row = SFCardViewerAutoChargeRow(
-            Account.PASMO,
-            SFCardViewerRowData('2018/11/11', '', 'JR東', '秋葉原', '', '', '', '-3000', '5022', 'ｵｰﾄﾁｬｰｼﾞ'),
-            CONFIG.pasmo
-        )
-        validated_input_row = sf_card_viewer_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == ZaimTransferRow
 
 
 class TestSFCardViewerExitByWindowRow:
     """Tests for SFCardViewerTransportationRow."""
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_zaim_row_class_to_convert(yaml_config_load, database_session_stores):
-        """SFCardViewerTransportationRow should convert to ZaimPaymentRow."""
-        sf_card_viewer_row = SFCardViewerExitByWindowRow(
-            Account.PASMO,
-            SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', '東武', '北千住', '0', '2621', '窓出'),
-            CONFIG.pasmo
-        )
-        validated_input_row = sf_card_viewer_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == ZaimPaymentRow
-
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize('sf_card_viewer_row_data, expected', [
@@ -179,46 +99,58 @@ class TestSFCardViewerExitByWindowRow:
          False),
         (SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', '東武', '北千住', '100', '2621', '窓出'),
          False),
-        (SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', '東武', '北千住', '0', '2621', '窓出'),
-         True),
+        (InstanceResource.ROW_DATA_SF_CARD_VIEWER_EXIT_BY_WINDOW_KITASENJU_STATION, True),
     ])
-    def test_is_row_to_skip(sf_card_viewer_row_data, expected, yaml_config_load, database_session_stores):
+    def test_is_row_to_skip(
+            sf_card_viewer_row_data, expected, yaml_config_load, database_session_stores_sf_card_viewer
+    ):
         """Method should return true when entered station is as same as exit station and used amount is 0."""
-        sf_card_viewer_row = SFCardViewerExitByWindowRow(
-            Account.PASMO,
+        sf_card_viewer_row = SFCardViewerRow(
+            AccountId.PASMO,
             sf_card_viewer_row_data,
             CONFIG.pasmo
         )
         validated_row = sf_card_viewer_row.validate()
-        assert sf_card_viewer_row.is_row_to_skip(validated_row.zaim_store) == expected
+        assert sf_card_viewer_row.is_row_to_skip(validated_row.store) == expected
 
 
 class TestSFCardViewerRowFactory:
     """Tests for SFCardViewerRowFactory."""
-    # pylint: disable=unused-argument
+    # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
-    @pytest.mark.parametrize('argument, expected', [
-        (SFCardViewerRowData('2018/11/13', '', 'メトロ', '六本木一丁目', '', 'メトロ', '後楽園', '195', '3601', ''),
-         SFCardViewerTransportationRow),
-        (SFCardViewerRowData('2018/11/14', '', '', '', '', '', '', '480', '3005', '物販'),
-         SFCardViewerSalesGoodsRow),
-        (SFCardViewerRowData('2018/11/11', '', 'JR東', '秋葉原', '', '', '', '-3000', '5022', 'ｵｰﾄﾁｬｰｼﾞ'),
-         SFCardViewerAutoChargeRow),
-        (SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', '東武', '北千住', '0', '2621', '窓出'),
-         SFCardViewerExitByWindowRow),
-    ])
-    def test_create_success(argument, expected, yaml_config_load, database_session_stores):
+    @pytest.mark.parametrize(
+        (
+            'argument, expected_is_transportation, expected_is_sales_goods, '
+            'expected_is_auto_charge, expected_is_exit_by_window, expected_is_bus_tram'
+        ),
+        [
+            (InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
+             True, False, False, False, False),
+            (InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, False, True, False, False, False),
+            (InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION, False, False, True, False, False),
+            (InstanceResource.ROW_DATA_SF_CARD_VIEWER_EXIT_BY_WINDOW_KITASENJU_STATION,
+             False, False, False, True, False),
+            (InstanceResource.ROW_DATA_SF_CARD_VIEWER_BUS_TRAM, False, False, False, False, True),
+        ]
+    )
+    def test_create_success(yaml_config_load, database_session_stores_sf_card_viewer, argument: SFCardViewerRowData,
+                            expected_is_transportation, expected_is_sales_goods, expected_is_auto_charge,
+                            expected_is_exit_by_window, expected_is_bus_tram):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(Account.PASMO, argument)
-        assert isinstance(sf_card_viewer_row, expected)
+        sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(AccountId.PASMO, argument)
+        assert isinstance(sf_card_viewer_row, SFCardViewerRow)
+        assert sf_card_viewer_row.is_transportation == expected_is_transportation
+        assert sf_card_viewer_row.is_sales_goods == expected_is_sales_goods
+        assert sf_card_viewer_row.is_auto_charge == expected_is_auto_charge
+        assert sf_card_viewer_row.is_exit_by_window == expected_is_exit_by_window
+        assert sf_card_viewer_row.is_bus_tram == expected_is_bus_tram
 
     @staticmethod
-    def test_create_fail(yaml_config_load, database_session_stores):
+    def test_create_fail(yaml_config_load, database_session_stores_sf_card_viewer):
         """Method should raise ValueError when note is not defined."""
         with pytest.raises(ValueError):
             # pylint: disable=protected-access
             SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
-                Account.PASMO,
-                SFCardViewerRowData('2018/11/25', '', '東武', '北千住', '', '東武', '北千住', '0', '2621', 'ﾁｬｰｼﾞ')
+                AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE
             )

@@ -3,12 +3,9 @@ from datetime import datetime
 
 import pytest
 
-from tests.instance_fixture import InstanceFixture
-from zaimcsvconverter.inputcsvformats.waon import WaonPaymentRow, WaonAutoChargeRow, WaonRowData, WaonRowFactory, \
-    WaonChargeRow, WaonDownloadPointRow
-from zaimcsvconverter.account import Account
-from zaimcsvconverter.models import Store
-from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimIncomeRow, ZaimTransferRow
+from tests.testlibraries.instance_resource import InstanceResource
+from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory, WaonRow
+from zaimcsvconverter.models import Store, AccountId
 
 
 class TestWaonRowData:
@@ -42,9 +39,9 @@ class TestWaonRow:
             'expected_amount, expected_charge_kind'
         ),
         [
-            (InstanceFixture.ROW_DATA_WAON, datetime(2018, 8, 7, 0, 0, 0),
+            (InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI, datetime(2018, 8, 7, 0, 0, 0),
              'ファミリーマート　かぶと町永代通り店', 129, None),
-            (WaonRowData('2018/8/30', '板橋前野町', '1,489円', '支払', '-'), datetime(2018, 8, 30, 0, 0, 0),
+            (InstanceResource.ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO, datetime(2018, 8, 30, 0, 0, 0),
              'イオンスタイル　板橋前野町', 1489, None),
         ]
     )
@@ -54,89 +51,35 @@ class TestWaonRow:
         Arguments should set into properties.
         :param WaonRowData waon_row_data:
         """
-        config_account_name = 'WAON'
-        config_auto_charge_source = 'イオン銀行'
-        waon_row = WaonPaymentRow(Account.WAON, waon_row_data)
+        waon_row = WaonRow(AccountId.WAON, waon_row_data)
         assert waon_row.zaim_date == expected_date
-        assert isinstance(waon_row.zaim_store, Store)
-        assert waon_row.zaim_store.name_zaim == expected_store_name_zaim
-        assert waon_row.zaim_income_cash_flow_target == config_account_name
-        assert waon_row.zaim_income_ammount_income == expected_amount
-        assert waon_row.zaim_payment_cash_flow_source == config_account_name
-        assert waon_row.zaim_payment_amount_payment == expected_amount
-        assert waon_row.zaim_transfer_cash_flow_source == config_auto_charge_source
-        assert waon_row.zaim_transfer_cash_flow_target == config_account_name
-        assert waon_row.zaim_transfer_amount_transfer == expected_amount
+        assert isinstance(waon_row.store, Store)
+        assert waon_row.store.name_zaim == expected_store_name_zaim
         # pylint: disable=protected-access
-        assert waon_row._charge_kind == expected_charge_kind
+        assert waon_row.charge_kind == expected_charge_kind
 
     # pylint: disable=unused-argument
     @staticmethod
     def test_init_fail(yaml_config_load, database_session_basic_store_waon):
         """Constructor should raise ValueError when got undefined charge kind."""
         with pytest.raises(ValueError):
-            WaonPaymentRow(Account.WAON, WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', 'クレジットカード'))
+            WaonRow(AccountId.WAON, InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
 
 
 class TestWaonPaymentRow:
     """Tests for WaonPaymentRow."""
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_zaim_row_class_to_convert(yaml_config_load, database_session_basic_store_waon):
-        """WaonPaymentRow should convert to ZaimPaymentRow."""
-        waon_row = WaonPaymentRow(Account.WAON, InstanceFixture.ROW_DATA_WAON)
-        validated_input_row = waon_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == ZaimPaymentRow
 
 
 class TestWaonChargeRow:
     """Tests for WaonChargeRow."""
-    # pylint: disable=unused-argument
-    @staticmethod
-    @pytest.mark.parametrize('waon_row_data, zaim_row_class', [
-        (WaonRowData('2018/10/22', '板橋前野町', '1,504円', 'チャージ', 'ポイント'), ZaimIncomeRow),
-        (WaonRowData('2018/11/11', '板橋前野町', '5,000円', 'チャージ', '銀行口座'), ZaimTransferRow),
-    ])
-    def test_zaim_row_class_to_convert(
-            waon_row_data, zaim_row_class, yaml_config_load, database_session_basic_store_waon
-    ):
-        """
-        WaonChargeRow for point should convert to ZaimIncomeRow.
-        WaonChargeRow for bank account should convert to ZaimTransferRow.
-        """
-        waon_row = WaonChargeRow(Account.WAON, waon_row_data)
-        validated_input_row = waon_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == zaim_row_class
 
 
 class TestWaonAutoChargeRow:
     """Tests for WaonAutoChargeRow."""
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_zaim_row_class_to_convert(yaml_config_load, database_session_basic_store_waon):
-        """WaonAutoChargeRow should convert to ZaimTransferRow."""
-        waon_row = WaonAutoChargeRow(Account.WAON,
-                                     WaonRowData('2018/11/11', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座'))
-        validated_input_row = waon_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == ZaimTransferRow
-
-
-@pytest.fixture
-def waon_row():
-    """This fixture prepares WaonDownloadPointRow instance."""
-    yield WaonDownloadPointRow(Account.WAON, WaonRowData('2018/10/22', '板橋前野町', '0円', 'ポイントダウンロード', '-'))
 
 
 class TestWaonDownloadPointRow:
     """Tests for WaonDownloadPointRow."""
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_zaim_row_class_to_convert(database_session_basic_store_waon, waon_row):
-        """WaonDownloadPointRow should raise ValueError when convert to ZaimRow."""
-        with pytest.raises(ValueError):
-            validated_input_row = waon_row.validate()
-            validated_input_row.zaim_row_class_to_convert()
-
     # pylint: disable=unused-argument
     @staticmethod
     def test_is_row_to_skip(database_session_basic_store_waon, waon_row):
@@ -146,19 +89,27 @@ class TestWaonDownloadPointRow:
 
 class TestWaonRowFactory:
     """Tests for WaonRowFactory."""
-    # pylint: disable=unused-argument
+    # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
-    @pytest.mark.parametrize('argument, expected', [
-        (InstanceFixture.ROW_DATA_WAON, WaonPaymentRow),
-        (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'チャージ', 'ポイント'), WaonChargeRow),
-        (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座'), WaonAutoChargeRow),
-        (WaonRowData('2018/8/22', '板橋前野町', '5,000円', 'ポイントダウンロード', '-'), WaonDownloadPointRow),
-    ])
-    def test_create_success(argument, expected, database_session_basic_store_waon):
+    @pytest.mark.parametrize(
+        'argument, expected_is_payment, expected_is_charge, expected_is_auto_charge, expected_is_download_point',
+        [
+            (InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI, True, False, False, False),
+            (InstanceResource.ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO, False, True, False, False),
+            (InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO, False, False, True, False),
+            (InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO, False, False, False, True),
+        ]
+    )
+    def test_create_success(database_session_basic_store_waon, argument, expected_is_payment, expected_is_charge,
+                            expected_is_auto_charge, expected_is_download_point):
         """Method should return Store model when use kind is defined."""
         # pylint: disable=protected-access
-        waon_row = WaonRowFactory().create(Account.WAON, argument)
-        assert isinstance(waon_row, expected)
+        waon_row = WaonRowFactory().create(AccountId.WAON, argument)
+        assert isinstance(waon_row, WaonRow)
+        assert waon_row.is_payment == expected_is_payment
+        assert waon_row.is_charge == expected_is_charge
+        assert waon_row.is_auto_charge == expected_is_auto_charge
+        assert waon_row.is_download_point == expected_is_download_point
 
     # pylint: disable=unused-argument
     @staticmethod
@@ -166,4 +117,4 @@ class TestWaonRowFactory:
         """Method should raise ValueError when use kind is not defined."""
         with pytest.raises(ValueError):
             # pylint: disable=protected-access
-            WaonRowFactory().create(Account.WAON, WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '10000円', '入金', '-'))
+            WaonRowFactory().create(AccountId.WAON, InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND)

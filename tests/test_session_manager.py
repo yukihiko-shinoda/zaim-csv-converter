@@ -6,7 +6,7 @@ from zaimcsvconverter.session_manager import SessionManager
 
 
 @pytest.fixture
-def database_session():
+def database_session_remove():
     """This fixture remove created session after test."""
     yield
     # Remove it, so that the next test gets a new Session()
@@ -18,8 +18,8 @@ class TestAccount:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_convert_string_to_int_or_none(database_session):
-        """Seesion should be non'active."""
+    def test_convert_string_to_int_or_none(database_session_remove):
+        """Session should be non'active."""
         with SessionManager() as session:
             extracted_session = session
         assert not extracted_session.is_active

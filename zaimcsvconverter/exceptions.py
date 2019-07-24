@@ -10,7 +10,3 @@ class Error(Exception):
 
 class InvalidRowError(Error):
     """Target row is invalid."""
-
-
-class RowToSkip(Error):
-    """Target row is invalid."""

@@ -1,6 +1,6 @@
 """Tests for error_handler.py."""
-from tests.instance_fixture import InstanceFixture
-from zaimcsvconverter.account import Account
+from tests.testlibraries.instance_resource import InstanceResource
+from zaimcsvconverter.account import FileNameCsvConvert
 from zaimcsvconverter.error_handler import ErrorHandler
 
 
@@ -17,11 +17,13 @@ class TestErrorHandler:
         error_amazon = ['amazon.csv', '', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト']
         error_waon = ['waon.csv', 'ファミリーマートかぶと町永代', '']
         error_handler_a = ErrorHandler()
-        error_handler_a.append_undefined_content(Account.WAON, InstanceFixture.ROW_DATA_WAON)
+        error_handler_a.append_undefined_content(
+            FileNameCsvConvert.WAON, InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI
+        )
         assert error_handler_a.list_error == [error_waon]
         error_handler_b = ErrorHandler()
-        error_handler_b.append_undefined_content(Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON)
-        error_handler_b.append_undefined_content(Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON)
+        error_handler_b.append_undefined_content(FileNameCsvConvert.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+        error_handler_b.append_undefined_content(FileNameCsvConvert.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         assert error_handler_b.list_error == [error_amazon, error_amazon]
         error_handler_a.extend(error_handler_b)
         assert error_handler_a.list_error == [error_waon, error_amazon, error_amazon]

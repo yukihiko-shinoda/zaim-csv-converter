@@ -1,22 +1,10 @@
 """This module implements row model of GOLD POINT CARD+ CSV."""
-from __future__ import annotations
 from datetime import datetime
-from typing import TYPE_CHECKING, Type
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.input_row import InputStoreRowData, InputRowFactory, InputStoreRow
-from zaimcsvconverter.models import Store
-
-if TYPE_CHECKING:
-    from zaimcsvconverter.account import Account
-    from zaimcsvconverter.zaim_row import ZaimPaymentRow
-
-
-class GoldPointCardPlusRowFactory(InputRowFactory):
-    """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
-    def create(self, account: 'Account', row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
-        return GoldPointCardPlusRow(account, row_data)
+from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
+from zaimcsvconverter.models import Store, AccountId
 
 
 @dataclass
@@ -47,41 +35,15 @@ class GoldPointCardPlusRowData(InputStoreRowData):
 
 class GoldPointCardPlusRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
-    def __init__(self, account: 'Account', row_data: GoldPointCardPlusRowData):
-        super().__init__(account, row_data)
-        self._used_amount: int = int(row_data.used_amount)
+    def __init__(self, account_id: AccountId, row_data: GoldPointCardPlusRowData):
+        super().__init__(account_id, row_data)
+        self.used_amount: int = int(row_data.used_amount)
 
     def is_row_to_skip(self, store: Store) -> bool:
         return CONFIG.gold_point_card_plus.skip_amazon_row and store.is_amazon
 
-    def zaim_row_class_to_convert(self, store: Store) -> Type['ZaimPaymentRow']:
-        from zaimcsvconverter.zaim_row import ZaimPaymentRow
-        return ZaimPaymentRow
 
-    @property
-    def zaim_income_cash_flow_target(self) -> str:
-        raise ValueError('Income row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
-
-    @property
-    def zaim_income_ammount_income(self) -> int:
-        raise ValueError('Income row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
-
-    @property
-    def zaim_payment_cash_flow_source(self) -> str:
-        return CONFIG.gold_point_card_plus.account_name
-
-    @property
-    def zaim_payment_amount_payment(self) -> int:
-        return self._used_amount
-
-    @property
-    def zaim_transfer_cash_flow_source(self) -> str:
-        raise ValueError('Transfer row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
-
-    @property
-    def zaim_transfer_cash_flow_target(self) -> str:
-        raise ValueError('Transfer row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
-
-    @property
-    def zaim_transfer_amount_transfer(self) -> int:
-        raise ValueError('Transfer row for GOLD POINT CARD+ is not defined. Please confirm CSV file.')
+class GoldPointCardPlusRowFactory(InputRowFactory):
+    """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
+    def create(self, account_id: AccountId, row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
+        return GoldPointCardPlusRow(account_id, row_data)

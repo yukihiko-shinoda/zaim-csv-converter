@@ -3,13 +3,9 @@ from datetime import datetime
 
 import pytest
 
-from tests.testlibraries.database import ItemFactory
-from tests.conftest import database_session_with_records
-from tests.instance_fixture import InstanceFixture
-from zaimcsvconverter.account import Account
+from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData, AmazonRow, AmazonRowFactory
-from zaimcsvconverter.models import ItemRowData, Store, Item
-from zaimcsvconverter.zaim_row import ZaimPaymentRow
+from zaimcsvconverter.models import Store, Item, AccountId
 
 
 class TestAmazonRowData:
@@ -64,45 +60,22 @@ class TestAmazonRowData:
         assert row_data.item_name == item_name
 
 
-@pytest.fixture
-def database_session_item():
-    """This fixture prepares database session and records."""
-    def fixture_records():
-        ItemFactory(
-            account=Account.AMAZON,
-            row_data=ItemRowData('Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '大型出費', '家電'),
-        )
-    yield from database_session_with_records(fixture_records)
-
-
 class TestAmazonRow:
     """Tests for MufgTransferIncomeRow."""
     # pylint: disable=unused-argument
     @staticmethod
     def test_init(yaml_config_load, database_session_item):
         """Arguments should set into properties."""
-        expected_amount = 4980
         store_name = 'Amazon Japan G.K.'
         item_name = 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト'
-        mufg_row = AmazonRow(Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON)
-        assert mufg_row.price == 4980
-        assert mufg_row.number == 1
-        assert mufg_row.zaim_date == datetime(2018, 10, 23, 0, 0, 0)
-        assert isinstance(mufg_row.zaim_store, Store)
-        assert mufg_row.zaim_store.name_zaim == store_name
-        assert isinstance(mufg_row.zaim_item, Item)
-        assert mufg_row.zaim_item.name == item_name
-        assert mufg_row.zaim_payment_cash_flow_source == 'ヨドバシゴールドポイントカード・プラス'
-        assert mufg_row.zaim_payment_note == ''
-        assert mufg_row.zaim_payment_amount_payment == expected_amount
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_zaim_row_class_to_convert(yaml_config_load, database_session_item):
-        """MufgTransferIncomeRow should convert to suitable ZaimRow by transfer target."""
-        mufg_row = AmazonRow(Account.AMAZON, InstanceFixture.ROW_DATA_AMAZON)
-        validated_input_row = mufg_row.validate()
-        assert validated_input_row.zaim_row_class_to_convert() == ZaimPaymentRow
+        amazon_row = AmazonRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+        assert amazon_row.price == 4980
+        assert amazon_row.number == 1
+        assert amazon_row.zaim_date == datetime(2018, 10, 23, 0, 0, 0)
+        assert isinstance(amazon_row.store, Store)
+        assert amazon_row.store.name_zaim == store_name
+        assert isinstance(amazon_row.item, Item)
+        assert amazon_row.item.name == item_name
 
 
 class TestAmazonRowFactory:
@@ -110,10 +83,10 @@ class TestAmazonRowFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize('argument, expected', [
-        (InstanceFixture.ROW_DATA_AMAZON, AmazonRow),
+        (InstanceResource.ROW_DATA_AMAZON_ECHO_DOT, AmazonRow),
     ])
     def test_create(argument, expected, yaml_config_load, database_session_item):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        gold_point_card_plus_row = AmazonRowFactory().create(Account.AMAZON, argument)
+        gold_point_card_plus_row = AmazonRowFactory().create(AccountId.AMAZON, argument)
         assert isinstance(gold_point_card_plus_row, expected)
