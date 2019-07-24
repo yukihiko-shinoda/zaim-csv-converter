@@ -4,13 +4,12 @@ from pathlib import Path
 from typing import List
 
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.directory_csv import DirectoryCsv
 from zaimcsvconverter.models import ConvertTableRecordMixin
 
 
 class ConvertTableImporter:
     """This class implements importing process for convert table CSV."""
-    def __init__(self, directory_csv_convert: Path = DirectoryCsv.CONVERT.value):
+    def __init__(self, directory_csv_convert):
         self.directory_csv_convert = directory_csv_convert
 
     def execute(self) -> None:

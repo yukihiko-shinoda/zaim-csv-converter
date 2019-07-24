@@ -66,25 +66,15 @@ class TestWaonRow:
             WaonRow(AccountId.WAON, InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
 
 
-class TestWaonPaymentRow:
-    """Tests for WaonPaymentRow."""
-
-
-class TestWaonChargeRow:
-    """Tests for WaonChargeRow."""
-
-
-class TestWaonAutoChargeRow:
-    """Tests for WaonAutoChargeRow."""
-
-
 class TestWaonDownloadPointRow:
     """Tests for WaonDownloadPointRow."""
     # pylint: disable=unused-argument
     @staticmethod
-    def test_is_row_to_skip(database_session_basic_store_waon, waon_row):
+    def test_is_row_to_skip(database_session_basic_store_waon):
         """WaonDownloadPointRow should be row to skip."""
-        assert waon_row.is_row_to_skip
+        assert WaonRow(
+            AccountId.WAON, WaonRowData('2018/10/22', '板橋前野町', '0円', 'ポイントダウンロード', '-')
+        ).is_row_to_skip
 
 
 class TestWaonRowFactory:

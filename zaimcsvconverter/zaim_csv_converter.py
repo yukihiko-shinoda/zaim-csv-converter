@@ -1,5 +1,5 @@
 """This module implements converting steps from account CSV to Zaim CSV."""
-from zaimcsvconverter import CONFIG
+from zaimcsvconverter import CONFIG, DirectoryCsv, PATH_FILE_CONFIG
 from zaimcsvconverter.input_csv_converter_iterator import InputCsvConverterIterator
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 from zaimcsvconverter.models import initialize_database
@@ -10,7 +10,7 @@ class ZaimCsvConverter:
     @staticmethod
     def execute() -> None:
         """This method executes all CSV converters."""
-        CONFIG.load()
+        CONFIG.load(PATH_FILE_CONFIG)
         initialize_database()
-        ConvertTableImporter().execute()
-        InputCsvConverterIterator().execute()
+        ConvertTableImporter(DirectoryCsv.CONVERT.value).execute()
+        InputCsvConverterIterator(DirectoryCsv.INPUT.value, DirectoryCsv.OUTPUT.value).execute()

@@ -3,7 +3,7 @@ import csv
 from pathlib import Path
 
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.directory_csv import DirectoryCsv
+from zaimcsvconverter import DirectoryCsv
 from zaimcsvconverter.error_handler import ErrorHandler
 from zaimcsvconverter.exceptions import InvalidRowError
 from zaimcsvconverter.zaim_row import ZaimRow

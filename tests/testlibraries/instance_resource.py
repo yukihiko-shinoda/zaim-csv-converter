@@ -15,6 +15,7 @@ class InstanceResource:
     PATH_TESTS = Path(__file__).parent.parent
     PATH_PROJECT_HOME_DIRECTORY = PATH_TESTS.parent
     PATH_TEST_RESOURCES = PATH_TESTS / 'testresources'
+    PATH_FILE_CONFIG_FOR_TEST = PATH_TEST_RESOURCES / 'config.yml.dist'
     ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI = WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-')
     ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO = WaonRowData('2018/8/30', '板橋前野町', '1,489円', '支払', '-')
     ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND = WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', 'クレジットカード')

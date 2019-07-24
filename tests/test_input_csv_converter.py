@@ -11,7 +11,6 @@ from fixturefilehandler import TargetFilePathVacator
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.csv_file_path_builder import CsvFilePathBuilder
 from tests.testlibraries.zaim_row_data import ZaimRowData
-from zaimcsvconverter import CONFIG
 from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
 
@@ -34,7 +33,6 @@ def path_file_csv_input(request: FixtureRequest, suffix_file_name: str):
         base=InstanceResource.PATH_PROJECT_HOME_DIRECTORY
     )
     TargetFilePathVacator.setup(csv_file_path)
-    CONFIG.load()
     yield InstanceResource.PATH_TEST_RESOURCES / Path(__file__).stem / (request.node.name + suffix_file_name)
     TargetFilePathVacator.teardown(csv_file_path)
 

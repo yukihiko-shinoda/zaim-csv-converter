@@ -3,7 +3,6 @@ import csv
 from pathlib import Path
 from typing import List
 
-from zaimcsvconverter.directory_csv import DirectoryCsv
 from zaimcsvconverter.error_handler import ErrorHandler
 from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
@@ -12,11 +11,7 @@ class InputCsvConverterIterator:
     """This class implements iterating steps from input_csv_converter."""
     FILE_NAME_ERROR = 'error.csv'
 
-    def __init__(
-            self,
-            directory_csv_input: Path = DirectoryCsv.INPUT.value,
-            directory_csv_output: Path = DirectoryCsv.OUTPUT.value,
-    ):
+    def __init__(self, directory_csv_input: Path, directory_csv_output: Path):
         self.directory_csv_input = directory_csv_input
         self.directory_csv_output = directory_csv_output
 

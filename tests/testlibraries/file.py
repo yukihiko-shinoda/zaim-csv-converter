@@ -24,3 +24,10 @@ class FilePathUtility:
         """This method creates path to test resource directory."""
         path_as_same_as_file_name = cls.create_path_as_same_as_file_name(argument)
         return InstanceResource.PATH_TEST_RESOURCES / path_as_same_as_file_name.relative_to(InstanceResource.PATH_TESTS)
+
+    @classmethod
+    def get_config_file_path(cls, request) -> Path:
+        """This method build file path if file name is presented by parametrize."""
+        if hasattr(request, 'param'):
+            return cls.create_path_to_resource_directory(request.function) / request.param
+        return InstanceResource.PATH_FILE_CONFIG_FOR_TEST

@@ -60,7 +60,8 @@ def create_relative_deploy_file_path(
 class TestZaimCsvConverter:
     """Tests for ZaimCsvConverter."""
     # pylint: disable=too-many-arguments,too-many-locals,unused-argument
-    def test_success(self, yaml_config_load, directory_csv_convert_table, directory_csv_input, directory_csv_output,
+    @staticmethod
+    def test_success(yaml_config_file, directory_csv_convert_table, directory_csv_input, directory_csv_output,
                      database_session):
         """Input CSV files should be converted into Zaim format CSV file."""
         ZaimCsvConverter.execute()
@@ -162,7 +163,8 @@ class TestZaimCsvConverter:
         ])
 
     # pylint: disable=unused-argument
-    def test_fail(self, yaml_config_load, directory_csv_convert_table, directory_csv_input, directory_csv_output,
+    @staticmethod
+    def test_fail(yaml_config_file, directory_csv_convert_table, directory_csv_input, directory_csv_output,
                   database_session):
         """
         Correct input CSV files should be converted into Zaim format CSV file.
@@ -189,9 +191,11 @@ class TestZaimCsvConverter:
 
 @dataclass
 class ZaimCsvFileChecker:
+    """This class helps to check Zaim CSV file."""
     directory_csv_output: RelativeDeployFilePath
 
     def assert_file(self, file_name: str, list_expected: List[ZaimRowData]):
+        """This method checks Zaim CSV file."""
         list_zaim_row_data = self.read_output_csv(file_name)
         assert len(list_zaim_row_data) == len(list_expected)
         for zaim_row_data, expected in zip(list_zaim_row_data, list_expected):

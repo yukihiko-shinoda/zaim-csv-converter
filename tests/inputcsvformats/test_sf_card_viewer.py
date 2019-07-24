@@ -60,32 +60,25 @@ class TestSFCardViewerRow:
         assert sf_card_viewer_row.store.name_zaim == '東京地下鉄株式会社　南北線後楽園駅'
 
 
-class TestSFCardViewerTransportationRow:
-    """Tests for SFCardViewerTransportationRow."""
-
-
 class TestSFCardViewerSalesGoodsRow:
     """Tests for SFCardViewerSalesGoodsRow."""
     # pylint: disable=unused-argument
     @staticmethod
-    def test_is_row_to_skip_skip(
-            yaml_config_skip_sales_goods_row, database_session_stores_sf_card_viewer, sf_card_viewer_row
+    @pytest.mark.parametrize(
+        'yaml_config_load, expected', [
+            ('config_skip_sales_goods_row.yml.dist', True),
+            ('config_not_skip_sales_goods_row.yml.dist', False),
+        ], indirect=['yaml_config_load']
+    )
+    def test_is_row_to_skip(
+            yaml_config_load, database_session_stores_sf_card_viewer, expected
     ):
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
-        assert sf_card_viewer_row.is_row_to_skip
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    def test_is_row_to_skip_not_skip(
-            yaml_config_not_skip_sales_goods_row, database_session_stores_sf_card_viewer, sf_card_viewer_row
-    ):
-        """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
+        sf_card_viewer_row = SFCardViewerRow(
+            AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, CONFIG.pasmo
+        )
         validated_row = sf_card_viewer_row.validate()
-        assert not sf_card_viewer_row.is_row_to_skip(validated_row.store)
-
-
-class TestSFCardViewerAutoChargeRow:
-    """Tests for SFCardViewerTransportationRow."""
+        assert sf_card_viewer_row.is_row_to_skip(validated_row.store) == expected
 
 
 class TestSFCardViewerExitByWindowRow:

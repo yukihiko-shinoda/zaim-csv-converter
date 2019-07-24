@@ -1,4 +1,5 @@
 """Tests for Config."""
+from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import Config
 
 
@@ -6,7 +7,7 @@ class TestConfig:
     """Tests for Config."""
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config):
+    def test_init():
         """Constructor should leave to load yaml file."""
         config = Config()
         assert config.waon is None
@@ -17,10 +18,10 @@ class TestConfig:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_load(yaml_config):
+    def test_load():
         """Arguments should load yaml file."""
         config = Config()
-        config.load()
+        config.load(InstanceResource.PATH_FILE_CONFIG_FOR_TEST)
         assert config.waon.account_name == 'WAON'
         assert config.waon.auto_charge_source == 'イオン銀行'
         assert config.gold_point_card_plus.account_name == 'ヨドバシゴールドポイントカード・プラス'

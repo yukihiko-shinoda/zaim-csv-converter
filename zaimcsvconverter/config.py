@@ -1,12 +1,7 @@
 """This module implements configuration."""
 from __future__ import annotations
-
-from pathlib import Path
-
 from dataclasses import dataclass, field
-
 from dataclasses_json import DataClassJsonMixin
-from yamldataclassconfig import create_file_path_field
 from yamldataclassconfig.config import YamlDataClassConfig
 
 
@@ -74,4 +69,3 @@ class Config(YamlDataClassConfig):
         default=None,
         metadata={'dataclasses_json': {'mm_field': AmazonConfig}}
     )
-    FILE_PATH: Path = create_file_path_field(Path(__file__).parent.parent / 'config.yml')
