@@ -1,8 +1,6 @@
 """Tests for zaim_csv_converter.py"""
-import csv
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional
 
 import pytest
 from _pytest.fixtures import FixtureRequest  # type: ignore
@@ -11,9 +9,12 @@ from fixturefilehandler.file_paths import RelativeDeployFilePath
 
 from tests.testlibraries.file import FilePathUtility
 from tests.testlibraries.instance_resource import InstanceResource
-from tests.testlibraries.zaim_row_data import ZaimRowData
+from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, ZaimCsvFileChecker
+from tests.testlibraries.row_data import ZaimRowData
+
+from tests.testlibraries.row_data import InvalidRowErrorRowData
+from zaimcsvconverter.exceptions import InvalidInputCsvError
 from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
-from zaimcsvconverter.zaim_row import ZaimRow
 
 
 @pytest.fixture
@@ -150,7 +151,7 @@ class TestZaimCsvConverter:
         ])
         checker.assert_file('pasmo201901.csv', [
             ZaimRowData(
-                '2019-01-27', 'payment', '', '', 'PASMO', '', '', '  →  ',
+                '2019-01-27', 'payment', '交通', '電車', 'PASMO', '', '', '',
                 '', '', '0', '195', '0', '', '', ''
             ),
         ])
@@ -168,11 +169,11 @@ class TestZaimCsvConverter:
                   database_session):
         """
         Correct input CSV files should be converted into Zaim format CSV file.
-        Incorrect input CSV files should be reported on error.csv.
+        Incorrect input CSV files should be reported on error_undefined_content.csv.
         """
-        with pytest.raises(ValueError) as error:
+        with pytest.raises(InvalidInputCsvError) as error:
             ZaimCsvConverter.execute()
-        assert str(error.value) == 'The value of "Charge kind" has not been defined in this code. Charge kind =クレジットカード'
+        assert str(error.value) == 'Some invalid input CSV file exists. Please check error_invalid_row.csv.'
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file('waon201808.csv', [
             ZaimRowData(
@@ -187,26 +188,10 @@ class TestZaimCsvConverter:
                 'Amazon Japan G.K.', '', '0', '4980', '0', '', '', ''
             ),
         ])
-
-
-@dataclass
-class ZaimCsvFileChecker:
-    """This class helps to check Zaim CSV file."""
-    directory_csv_output: RelativeDeployFilePath
-
-    def assert_file(self, file_name: str, list_expected: List[ZaimRowData]):
-        """This method checks Zaim CSV file."""
-        list_zaim_row_data = self.read_output_csv(file_name)
-        assert len(list_zaim_row_data) == len(list_expected)
-        for zaim_row_data, expected in zip(list_zaim_row_data, list_expected):
-            assert zaim_row_data == expected
-
-    def read_output_csv(self, file_name: str):
-        """This method reads Zaim format CSV files and returns as list of Zaim row data instance."""
-        list_zaim_row_data = []
-        with (self.directory_csv_output.target / file_name).open('r', encoding='UTF-8', newline='\n') as file:
-            csv_reader = csv.reader(file)
-            assert csv_reader.__next__() == ZaimRow.HEADER
-            for list_row_account in csv_reader:
-                list_zaim_row_data.append(ZaimRowData(*list_row_account))
-        return list_zaim_row_data
+        checker = ErrorCsvFileChecker(directory_csv_output)
+        checker.assert_file('error_invalid_row.csv', [
+            InvalidRowErrorRowData(
+                'waon201808.csv', '1',
+                'The value of "Charge kind" has not been defined in this code. Charge kind = クレジットカード'
+            ),
+        ])

@@ -1,10 +1,11 @@
 """This module implements row model of SF Card Viewer CSV."""
+from __future__ import annotations
 from datetime import datetime
 from enum import Enum
 from typing import Callable
 from dataclasses import dataclass
 
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory, ValidatedInputStoreRow
+from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.models import Store, StoreRowData, AccountId
 
@@ -12,6 +13,14 @@ from zaimcsvconverter.models import Store, StoreRowData, AccountId
 @dataclass
 class SFCardViewerRowData(InputStoreRowData):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
+    class Note(Enum):
+        """This class implements constant of note in SF Card Viewer CSV."""
+        EMPTY = ''
+        SALES_GOODS = '物販'
+        AUTO_CHARGE = 'ｵｰﾄﾁｬｰｼﾞ'
+        EXIT_BY_WINDOW = '窓出'
+        BUS_TRAM = 'ﾊﾞｽ/路面等'
+
     _used_date: str
     is_commuter_pass_enter: str
     railway_company_name_enter: str
@@ -19,9 +28,9 @@ class SFCardViewerRowData(InputStoreRowData):
     is_commuter_pass_exit: str
     railway_company_name_exit: str
     _station_name_exit: str
-    used_amount: str
+    _used_amount: str
     balance: str
-    note: str
+    _note: str
 
     @property
     def date(self) -> datetime:
@@ -31,73 +40,103 @@ class SFCardViewerRowData(InputStoreRowData):
     def store_name(self) -> str:
         return self._station_name_exit
 
+    @property
+    def used_amount(self) -> int:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return int(self._used_amount)
+
+    @property
+    def note(self) -> SFCardViewerRowData.Note:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return SFCardViewerRowData.Note(self._note)
+
+    def validate(self, account_id: AccountId) -> bool:
+        self.stock_error(
+            lambda: self.date,
+            f'Invalid used date. Used date = {self._used_date}'
+        )
+        # This comment prevents pylint duplicate-code.
+        self.stock_error(
+            lambda: self.used_amount,
+            f'Invalid used amount. Used amount = {self._used_amount}'
+        )
+        self.stock_error(
+            lambda: self.note,
+            f'Invalid note. Note = {self._note}'
+        )
+        return super().validate(account_id)
+
 
 # pylint: disable=too-many-instance-attributes
 class SFCardViewerRow(InputStoreRow):
     """This class implements row model of SF Card Viewer CSV."""
-    class Note(Enum):
-        """This class implements constant of note in SF Card Viewer CSV."""
-        EMPTY = ''
-        SALES_GOODS = '物販'
-        AUTO_CHARGE = 'ｵｰﾄﾁｬｰｼﾞ'
-        EXIT_BY_WINDOW = '窓出'
-        BUS_TRAM = 'ﾊﾞｽ/路面等'
-
     def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
         super().__init__(account_id, row_data)
-        self.railway_company_name_enter: str = row_data.railway_company_name_enter
-        self.station_name_enter: str = row_data.station_name_enter
-        self.railway_company_name_exit: str = row_data.railway_company_name_exit
-        self.used_amount: int = int(row_data.used_amount)
+        self.used_amount: int = row_data.used_amount
+        self.note = row_data.note
+        if self.note == SFCardViewerRowData.Note.BUS_TRAM:
+            self.store: Store = Store(account_id, StoreRowData('', '', '交通', '電車'))
         self._account_config: SFCardViewerConfig = account_config
-        self.note = SFCardViewerRow.Note(row_data.note)
-        if self.note == SFCardViewerRow.Note.BUS_TRAM:
-            self._zaim_store: Store = Store(account_id, StoreRowData('', '', '交通', '電車'))
 
-    def validate(self) -> ValidatedInputStoreRow:
-        if self.note is None:
-            raise ValueError(
-                f'The value of "Note" has not been defined in this code. Note = {self.data.note}'
-            )
-        return super().validate()
-
-    def is_row_to_skip(self, store: Store) -> bool:
-        return self.note == SFCardViewerRow.Note.SALES_GOODS and self._account_config.skip_sales_goods_row or \
-               self.note == SFCardViewerRow.Note.EXIT_BY_WINDOW and \
-               self.used_amount == 0 and \
-               self.railway_company_name_enter == self.railway_company_name_exit and \
-               self.station_name_enter == store.name
+    @property
+    def is_row_to_skip(self) -> bool:
+        return self.is_sales_goods and self._account_config.skip_sales_goods_row
 
     @property
     def is_transportation(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.note == SFCardViewerRow.Note.EMPTY
+        return self.note == SFCardViewerRowData.Note.EMPTY
 
     @property
     def is_sales_goods(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.note == SFCardViewerRow.Note.SALES_GOODS
+        return self.note == SFCardViewerRowData.Note.SALES_GOODS
 
     @property
     def is_auto_charge(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.note == SFCardViewerRow.Note.AUTO_CHARGE
+        return self.note == SFCardViewerRowData.Note.AUTO_CHARGE
 
     @property
     def is_exit_by_window(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.note == SFCardViewerRow.Note.EXIT_BY_WINDOW
+        return self.note == SFCardViewerRowData.Note.EXIT_BY_WINDOW
 
     @property
     def is_bus_tram(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.note == SFCardViewerRow.Note.BUS_TRAM
+        return self.note == SFCardViewerRowData.Note.BUS_TRAM
 
 
-class SFCardViewerRowFactory(InputRowFactory):
+class SFCardViewerEnterRow(SFCardViewerRow):
+    """This class implements enter station row model of SF Card Viewer CSV."""
+    def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+        super().__init__(account_id, row_data, account_config)
+        self.railway_company_name_enter: str = row_data.railway_company_name_enter
+        self.station_name_enter: str = row_data.station_name_enter
+
+
+class SFCardViewerEnterExitRow(SFCardViewerEnterRow):
+    """This class implements enter and exit station row model of SF Card Viewer CSV."""
+    def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+        super().__init__(account_id, row_data, account_config)
+        self.railway_company_name_exit: str = row_data.railway_company_name_exit
+
+    @property
+    def is_row_to_skip(self) -> bool:
+        return self.is_exit_by_window and self.used_amount == 0 and \
+               self.railway_company_name_enter == self.railway_company_name_exit and \
+               self.station_name_enter == self.store.name
+
+
+class SFCardViewerRowFactory(InputRowFactory[SFCardViewerRowData, SFCardViewerRow]):
     """This class implements factory to create WAON CSV row instance."""
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config
 
-    def create(self, account_id: AccountId, row_data: SFCardViewerRowData) -> SFCardViewerRow:
-        return SFCardViewerRow(account_id, row_data, self._account_config())
+    def create(self, account_id: AccountId, input_row_data: SFCardViewerRowData) -> SFCardViewerRow:
+        if input_row_data.note in (SFCardViewerRowData.Note.EMPTY, SFCardViewerRowData.Note.EXIT_BY_WINDOW):
+            return SFCardViewerEnterExitRow(account_id, input_row_data, self._account_config())
+        if input_row_data.note == SFCardViewerRowData.Note.AUTO_CHARGE:
+            return SFCardViewerEnterRow(account_id, input_row_data, self._account_config())
+        return SFCardViewerRow(account_id, input_row_data, self._account_config())

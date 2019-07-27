@@ -4,6 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.mypy_cache" />
+      <excludePattern pattern=".pytest_cache" />
     </content>
     <orderEntry type="jdk" jdkName="Pipenv (zaim-csv-converter)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

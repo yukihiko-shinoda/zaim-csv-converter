@@ -2,7 +2,7 @@
 from abc import abstractmethod
 from typing import TypeVar, Generic, Type
 
-from zaimcsvconverter.inputcsvformats import InputRow, ValidatedInputRow
+from zaimcsvconverter.inputcsvformats import InputRow
 from zaimcsvconverter.zaim_row import ZaimRow, ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
 
 TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)
@@ -10,8 +10,8 @@ TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)
 
 class ZaimRowConverter(Generic[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim row."""
-    def __init__(self, validated_input_row: ValidatedInputRow[TypeVarInputRow]):
-        self.validated_input_row: ValidatedInputRow[TypeVarInputRow] = validated_input_row
+    def __init__(self, input_row: TypeVarInputRow):
+        self.input_row: TypeVarInputRow = input_row
 
     @abstractmethod
     def convert(self) -> ZaimRow:
@@ -21,11 +21,7 @@ class ZaimRowConverter(Generic[TypeVarInputRow]):
 class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim income row."""
     def convert(self) -> ZaimIncomeRow:
-        return ZaimIncomeRow(
-            self.validated_input_row,
-            self._cash_flow_target,
-            self._amount_income,
-        )
+        return ZaimIncomeRow(self.input_row, self._cash_flow_target, self._amount_income)
 
     @property
     @abstractmethod
@@ -41,12 +37,7 @@ class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow]):
 class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim payment row."""
     def convert(self) -> ZaimPaymentRow:
-        return ZaimPaymentRow(
-            self.validated_input_row,
-            self._cash_flow_source,
-            self._note,
-            self._amount_payment
-        )
+        return ZaimPaymentRow(self.input_row, self._cash_flow_source, self._note, self._amount_payment)
 
     @property
     @abstractmethod
@@ -66,12 +57,7 @@ class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow]):
 class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim transfer row."""
     def convert(self) -> ZaimTransferRow:
-        return ZaimTransferRow(
-            self.validated_input_row,
-            self._cash_flow_source,
-            self._cash_flow_target,
-            self._amount_transfer
-        )
+        return ZaimTransferRow(self.input_row, self._cash_flow_source, self._cash_flow_target, self._amount_transfer)
 
     @property
     @abstractmethod
@@ -89,7 +75,7 @@ class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow]):
         """This property returns amount transfer."""
 
 
-class ZaimRowConverterSelector:
+class ZaimRowConverterSelector(Generic[TypeVarInputRow]):
     """This class implements select steps from input row to Zaim row converter."""
-    def select(self, validated_input_row: ValidatedInputRow) -> Type[ZaimRowConverter]:
+    def select(self, input_row: TypeVarInputRow) -> Type[ZaimRowConverter]:
         """This method selects Zaim row converter."""

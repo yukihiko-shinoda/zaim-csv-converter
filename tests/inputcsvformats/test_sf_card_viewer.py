@@ -5,7 +5,8 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, SFCardViewerRow
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, \
+    SFCardViewerRow, SFCardViewerEnterExitRow
 from zaimcsvconverter.models import Store, AccountId
 
 
@@ -37,9 +38,9 @@ class TestSFCardViewerRowData:
         assert sf_card_viewer_row_data.station_name_enter == station_name_enter
         assert sf_card_viewer_row_data.is_commuter_pass_exit == is_commuter_pass_exit
         assert sf_card_viewer_row_data.railway_company_name_exit == railway_company_name_exit
-        assert sf_card_viewer_row_data.used_amount == used_amount
+        assert sf_card_viewer_row_data.used_amount == 195
         assert sf_card_viewer_row_data.balance == balance
-        assert sf_card_viewer_row_data.note == note
+        assert sf_card_viewer_row_data.note == SFCardViewerRowData.Note.EMPTY
         assert sf_card_viewer_row_data.date == datetime(2018, 11, 13, 0, 0)
         assert sf_card_viewer_row_data.store_name == station_name_exit
 
@@ -77,8 +78,7 @@ class TestSFCardViewerSalesGoodsRow:
         sf_card_viewer_row = SFCardViewerRow(
             AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, CONFIG.pasmo
         )
-        validated_row = sf_card_viewer_row.validate()
-        assert sf_card_viewer_row.is_row_to_skip(validated_row.store) == expected
+        assert sf_card_viewer_row.is_row_to_skip == expected
 
 
 class TestSFCardViewerExitByWindowRow:
@@ -98,13 +98,12 @@ class TestSFCardViewerExitByWindowRow:
             sf_card_viewer_row_data, expected, yaml_config_load, database_session_stores_sf_card_viewer
     ):
         """Method should return true when entered station is as same as exit station and used amount is 0."""
-        sf_card_viewer_row = SFCardViewerRow(
+        sf_card_viewer_row = SFCardViewerEnterExitRow(
             AccountId.PASMO,
             sf_card_viewer_row_data,
             CONFIG.pasmo
         )
-        validated_row = sf_card_viewer_row.validate()
-        assert sf_card_viewer_row.is_row_to_skip(validated_row.store) == expected
+        assert sf_card_viewer_row.is_row_to_skip == expected
 
 
 class TestSFCardViewerRowFactory:

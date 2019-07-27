@@ -2,7 +2,6 @@
 from typing import Type
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import ValidatedInputRow
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow
 from zaimcsvconverter.rowconverters import ZaimPaymentRowConverter, ZaimRowConverterSelector, ZaimRowConverter
 
@@ -16,10 +15,10 @@ class GoldPointCardPlusZaimPaymentRowConverter(ZaimPaymentRowConverter[GoldPoint
     @property
     def _amount_payment(self) -> int:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return self.validated_input_row.input_row.used_amount
+        return self.input_row.used_amount
 
 
-class GoldPointCardPlusZaimRowConverterSelector(ZaimRowConverterSelector):
+class GoldPointCardPlusZaimRowConverterSelector(ZaimRowConverterSelector[GoldPointCardPlusRow]):
     """This class implements select steps from GOLD POINT CARD + Viewer input row to Zaim row converter."""
-    def select(self, validated_input_row: ValidatedInputRow) -> Type[ZaimRowConverter]:
+    def select(self, input_row: GoldPointCardPlusRow) -> Type[ZaimRowConverter]:
         return GoldPointCardPlusZaimPaymentRowConverter

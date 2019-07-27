@@ -30,6 +30,12 @@ inputcsvformat 配下に新規対応口座の入力 CSV モデル module を作�
 入力 CSV の行が品目単位の場合は、変換用テーブルの CSV から品目を検索するための
 入力 CSV の行のいずれかの列データを返すプロパティ item_name を実装します。
 
+その他の抽象メソッド、プロパティは以下の内容を実装してください。
+
+メソッド、プロパティ名|実装内容
+---|---
+validate|モデル内のプロパティを検証し、異常があれば `InvalidRowError` を生成してプロパティ `list_error` に追加して `True` を返してください。 異常がなければ `False` を返してください。
+
 ### 2-2. 入力 CSV の行のモデルクラスの実装
 
 入力 CSV の行のモデルクラスを作成します。
@@ -42,7 +48,7 @@ __init__() で必ず super().__init__() を呼び出してください。
 store, item に検索結果のモデルがセットされます。
 検索に失敗した場合、store, item は None となり、
 変換処理がこれを検知して、この行のお店、品目がデータベースに未登録であると判定し、
-error.csv に書き出します。
+error_undefined_content.csv に書き出します。
 
 なお、InputItemRow を継承した場合は store プロパティをオーバーライトして
 Store モデルを返すように実装してください。(amazon.py を参考にしてください。)
@@ -51,8 +57,8 @@ Store モデルを返すように実装してください。(amazon.py を参考
 
 メソッド、プロパティ名|実装内容
 ---|---
+validate|モデル内のプロパティを検証し、異常があれば `InvalidRowError` を生成してプロパティ `list_error` に追加して `True` を返してください。 異常がなければ `False` を返してください。
 is_row_to_skip|この行を処理する必要がない場合、Falseを返すように実装してください。実装しない場合は常にskipせず処理されます。
-validate|モデル内のプロパティを検証し、異常があれば `InvalidRowError` を生成して raise してください。異常がなければ、検証済みのパラメーターを ValidatedInputRow のコンストラクターに渡して、生成した ValidatedInputRow 返してください。 
 
 ## 3. 入力 CSV の行モデルを Zaim 形式 CSV の行モデルに変換する処理を追加する開発
 
@@ -67,6 +73,7 @@ rowconverters 配下に新規対応口座の CSV 行モデル変換 module を�
 同じ CSV フォーマットの異なる口座の設定を DI できるようにするため
 (inputcsvformats/sf_card_viewer.py を参考にしてください。)
 - 手順2-2.で実装した InputRow モデルの各プロパティの実装が if だらけにならないようにするため
+- 行の種類によって不要な列を処理から省くため
 
 InputRowFactory を継承した Factory クラスを作成し、
 手順2-1.で作成した dataclass を引数に、手順2-2.で作成したモデルクラスを返す

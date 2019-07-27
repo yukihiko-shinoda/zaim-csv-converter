@@ -2,7 +2,7 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from tests.testlibraries.zaim_row_data import ZaimRowData
+from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowFactory, GoldPointCardPlusRow
 from zaimcsvconverter.models import AccountId
 from zaimcsvconverter.zaim_row import ZaimPaymentRow
@@ -41,8 +41,7 @@ class TestGoldPointCardPlusZaimPaymentRowConverter:
     ):
         """Arguments should set into properties."""
         row = GoldPointCardPlusRow(AccountId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
-        validated_input_row = row.validate()
-        zaim_row = GoldPointCardPlusZaimPaymentRowConverter(validated_input_row).convert()
+        zaim_row = GoldPointCardPlusZaimPaymentRowConverter(row).convert()
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -67,7 +66,5 @@ class TestGoldPointCardPlusZaimRowConverterSelector:
     )
     def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        validated_input_row = GoldPointCardPlusRowFactory().create(
-            AccountId.GOLD_POINT_CARD_PLUS, input_row_data
-        ).validate()
-        assert GoldPointCardPlusZaimRowConverterSelector().select(validated_input_row) == expected
+        input_row = GoldPointCardPlusRowFactory().create(AccountId.GOLD_POINT_CARD_PLUS, input_row_data)
+        assert GoldPointCardPlusZaimRowConverterSelector().select(input_row) == expected

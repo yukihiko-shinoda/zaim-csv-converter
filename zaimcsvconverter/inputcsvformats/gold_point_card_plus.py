@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
-from zaimcsvconverter.models import Store, AccountId
+from zaimcsvconverter.models import AccountId
 
 
 @dataclass
@@ -16,7 +16,7 @@ class GoldPointCardPlusRowData(InputStoreRowData):
     payment_kind: str
     number_of_division: str
     scheduled_payment_month: str
-    used_amount: str
+    _used_amount: str
     unknown_1: str
     unknown_2: str
     unknown_3: str
@@ -32,18 +32,35 @@ class GoldPointCardPlusRowData(InputStoreRowData):
     def store_name(self) -> str:
         return self._used_store
 
+    @property
+    def used_amount(self) -> int:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return int(self._used_amount)
+
+    def validate(self, account_id: AccountId) -> bool:
+        self.stock_error(
+            lambda: self.date,
+            f'Invalid used date. Used date = {self._used_date}'
+        )
+        self.stock_error(
+            lambda: self.used_amount,
+            f'Invalid used amount. Used amount = {self._used_amount}'
+        )
+        return super().validate(account_id)
+
 
 class GoldPointCardPlusRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
     def __init__(self, account_id: AccountId, row_data: GoldPointCardPlusRowData):
         super().__init__(account_id, row_data)
-        self.used_amount: int = int(row_data.used_amount)
+        self.used_amount: int = row_data.used_amount
 
-    def is_row_to_skip(self, store: Store) -> bool:
-        return CONFIG.gold_point_card_plus.skip_amazon_row and store.is_amazon
+    @property
+    def is_row_to_skip(self) -> bool:
+        return CONFIG.gold_point_card_plus.skip_amazon_row and self.store.is_amazon
 
 
-class GoldPointCardPlusRowFactory(InputRowFactory):
+class GoldPointCardPlusRowFactory(InputRowFactory[GoldPointCardPlusRowData, GoldPointCardPlusRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
-    def create(self, account_id: AccountId, row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
-        return GoldPointCardPlusRow(account_id, row_data)
+    def create(self, account_id: AccountId, input_row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
+        return GoldPointCardPlusRow(account_id, input_row_data)

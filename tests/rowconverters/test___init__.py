@@ -83,7 +83,7 @@ class TestZaimRowConverterSelector:
     )
     def test_select_factory(yaml_config_load, database_session_with_schema, account: Account, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        validated_input_row = account.create_input_row_instance(input_row_data).validate()
-        factory_class = account.value.zaim_row_converter_selector.select(validated_input_row)
+        input_row = account.create_input_row_instance(input_row_data)
+        factory_class = account.value.zaim_row_converter_selector.select(input_row)
         # noinspection PyTypeChecker
         assert issubclass(factory_class, expected)

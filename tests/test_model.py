@@ -1,5 +1,6 @@
 """Tests for model."""
 import pytest
+from sqlalchemy.orm.exc import NoResultFound
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
@@ -41,5 +42,6 @@ class TestModel:
     @staticmethod
     def test_try_to_find_failure(database_session_with_schema):
         """Method should raise KeyError when store name is not exist in database."""
-        store = Store.try_to_find(Account.WAON.value.id, '上尾')
-        assert store is None
+        with pytest.raises(NoResultFound) as error:
+            Store.try_to_find(Account.WAON.value.id, '上尾')
+        assert str(error) == '<ExceptionInfo NoResultFound tblen=4>'

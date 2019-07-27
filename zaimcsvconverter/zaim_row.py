@@ -5,7 +5,7 @@ from typing import List, Union, Optional
 from datetime import datetime
 
 from zaimcsvconverter.models import Store, Item
-from zaimcsvconverter.inputcsvformats import ValidatedInputRow, ValidatedInputItemRow
+from zaimcsvconverter.inputcsvformats import InputRow, InputStoreRow, InputItemRow
 
 
 # pylint: disable=too-many-instance-attributes
@@ -44,16 +44,15 @@ class ZaimRow:
     AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY = ''
     SETTING_AGGREGATE_EMPTY = ''
 
+    def __init__(self, input_row: InputRow):
+        self._date: datetime = input_row.zaim_date
+        self._store: Store \
+            = input_row.store if isinstance(input_row, InputStoreRow) or isinstance(input_row, InputItemRow) else None
+        self._item: Optional[Item] = input_row.item if isinstance(input_row, InputItemRow) else None
+
     @property
     def _date_string(self) -> str:
         return self._date.strftime("%Y-%m-%d")
-
-    def __init__(self, validated_input_row: ValidatedInputRow):
-        input_row = validated_input_row.input_row
-        self._date: datetime = input_row.zaim_date
-        self._store: Store = validated_input_row.store
-        self._item: Optional[Item] = \
-            validated_input_row.item if isinstance(validated_input_row, ValidatedInputItemRow) else None
 
     @abstractmethod
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
@@ -64,10 +63,10 @@ class ZaimIncomeRow(ZaimRow):
     """This class implements income row model of Zaim CSV."""
     METHOD: str = 'income'
 
-    def __init__(self, validated_input_row: ValidatedInputRow, cash_flow_target: str, amount_income: int):
+    def __init__(self, input_row: InputRow, cash_flow_target: str, amount_income: int):
         self._cash_flow_target = cash_flow_target
         self._amount_income = amount_income
-        super().__init__(validated_input_row)
+        super().__init__(input_row)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
         return [
@@ -94,11 +93,11 @@ class ZaimPaymentRow(ZaimRow):
     """This class implements payment row model of Zaim CSV."""
     METHOD: str = 'payment'
 
-    def __init__(self, validated_input_row: ValidatedInputRow, cash_flow_source: str, note: str, amount_payment: int):
+    def __init__(self, input_row: InputRow, cash_flow_source: str, note: str, amount_payment: int):
         self._cash_flow_source = cash_flow_source
         self._note = note
         self._amount_payment = amount_payment
-        super().__init__(validated_input_row)
+        super().__init__(input_row)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
         return [
@@ -125,17 +124,11 @@ class ZaimTransferRow(ZaimRow):
     """This class implements transfer row model of Zaim CSV."""
     METHOD: str = 'transfer'
 
-    def __init__(
-            self,
-            validated_input_row: ValidatedInputRow,
-            cash_flow_source: str,
-            cash_flow_target: str,
-            amount_transfer: int
-    ):
+    def __init__(self, input_row: InputRow, cash_flow_source: str, cash_flow_target: str, amount_transfer: int):
         self._cash_flow_source: str = cash_flow_source
         self._cash_flow_target: str = cash_flow_target
         self._amount_transfer: int = amount_transfer
-        super().__init__(validated_input_row)
+        super().__init__(input_row)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
         return [

@@ -42,8 +42,8 @@ class TestAmazonRowData:
                                  url_order_summary, url_receipt, url_item)
         assert row_data.order_id == order_id
         assert row_data.note == note
-        assert row_data.price == price
-        assert row_data.number == number
+        assert row_data.price == 4980
+        assert row_data.number == 1
         assert row_data.subtotal_price_item == subtotal_price_item
         assert row_data.total_order == total_order
         assert row_data.destination == destination

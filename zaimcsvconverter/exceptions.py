@@ -10,3 +10,19 @@ class Error(Exception):
 
 class InvalidRowError(Error):
     """Target row is invalid."""
+
+
+class UndefinedContentError(InvalidRowError):
+    """Store or item is undefined."""
+
+
+class InvalidHeaderError(InvalidRowError):
+    """Header row is invalid."""
+
+
+class InvalidInputCsvError(Error):
+    """
+    Target input CSV is invalid.
+    This error is only for processing control and display to standard error.
+    Not for write error CSV.
+    """

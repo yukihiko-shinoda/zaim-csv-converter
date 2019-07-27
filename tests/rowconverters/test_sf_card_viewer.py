@@ -2,9 +2,10 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from tests.testlibraries.zaim_row_data import ZaimRowData
+from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, SFCardViewerRow
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, \
+    SFCardViewerRow, SFCardViewerEnterExitRow
 from zaimcsvconverter.models import AccountId
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterSelector, \
@@ -19,15 +20,14 @@ class TestSFCardViewerZaimPaymentRowConverter:
         """Arguments should set into properties."""
         expected_amount = 195
         config_account_name = 'PASMO'
-        sf_card_viewer_row = SFCardViewerRow(
+        sf_card_viewer_row = SFCardViewerEnterExitRow(
             AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
         )
-        validated_input_row = sf_card_viewer_row.validate()
 
         class ConcreteSFCardViewerZaimPaymentRowConverter(SFCardViewerZaimPaymentRowConverter):
             # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             account_config = CONFIG.pasmo
-        zaim_row = ConcreteSFCardViewerZaimPaymentRowConverter(validated_input_row).convert()
+        zaim_row = ConcreteSFCardViewerZaimPaymentRowConverter(sf_card_viewer_row).convert()
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -51,12 +51,11 @@ class TestSFCardViewerZaimTransferRowConverter:
         sf_card_viewer_row = SFCardViewerRow(
             AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION, CONFIG.pasmo
         )
-        validated_input_row = sf_card_viewer_row.validate()
 
         class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
             # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             account_config = CONFIG.pasmo
-        zaim_row = ConcreteSFCardViewerZaimTransferRowConverter(validated_input_row).convert()
+        zaim_row = ConcreteSFCardViewerZaimTransferRowConverter(sf_card_viewer_row).convert()
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -97,9 +96,7 @@ class TestSFCardViewerZaimRowConverterSelector:
     )
     def test(yaml_config_load, database_session_with_schema, input_row_data: SFCardViewerRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        validated_input_row = SFCardViewerRowFactory(
-            lambda: CONFIG.pasmo
-        ).create(AccountId.PASMO, input_row_data).validate()
-        factory = SFCardViewerZaimRowConverterSelector(lambda: CONFIG.pasmo).select(validated_input_row)
+        input_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(AccountId.PASMO, input_row_data)
+        factory = SFCardViewerZaimRowConverterSelector(lambda: CONFIG.pasmo).select(input_row)
         # noinspection PyTypeChecker
         assert issubclass(factory, expected)

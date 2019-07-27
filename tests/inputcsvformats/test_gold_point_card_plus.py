@@ -39,7 +39,7 @@ class TestGoldPointCardPlusRowData:
         assert gold_point_card_plus_row_data.payment_kind == payment_kind
         assert gold_point_card_plus_row_data.number_of_division == number_of_division
         assert gold_point_card_plus_row_data.scheduled_payment_month == scheduled_payment_month
-        assert gold_point_card_plus_row_data.used_amount == used_amount
+        assert gold_point_card_plus_row_data.used_amount == 11402
         assert gold_point_card_plus_row_data.unknown_1 == unknown_1
         assert gold_point_card_plus_row_data.unknown_2 == unknown_2
         assert gold_point_card_plus_row_data.unknown_3 == unknown_3
@@ -82,13 +82,12 @@ class TestGoldPointCardPlusRow:
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
         row = GoldPointCardPlusRow(AccountId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
-        validated_row = row.validate()
         assert row.zaim_date == expected_date
         assert isinstance(row.store, Store)
         # pylint: disable=protected-access
         assert row.store.name == gold_point_card_plus_row_data._used_store
         assert row.store.name_zaim == expected_store_name_zaim
-        assert row.is_row_to_skip(validated_row.store) == expected_is_row_to_skip
+        assert row.is_row_to_skip == expected_is_row_to_skip
 
 
 class TestGoldPointCardPlusRowFactory:

@@ -2,7 +2,7 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from tests.testlibraries.zaim_row_data import ZaimRowData
+from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory, WaonRow
 from zaimcsvconverter.models import AccountId
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow, ZaimIncomeRow
@@ -24,8 +24,7 @@ class TestWaonZaimIncomeRowConverter:
              yaml_config_load, database_session_basic_store_waon):
         """Arguments should set into properties."""
         waon_row = WaonRow(AccountId.WAON, waon_row_data)
-        validated_input_row = waon_row.validate()
-        zaim_row = WaonZaimIncomeRowConverter(validated_input_row).convert()
+        zaim_row = WaonZaimIncomeRowConverter(waon_row).convert()
         assert isinstance(zaim_row, ZaimIncomeRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -53,8 +52,7 @@ class TestWaonZaimPaymentRowConverter:
              yaml_config_load, database_session_basic_store_waon):
         """Arguments should set into properties."""
         waon_row = WaonRow(AccountId.WAON, waon_row_data)
-        validated_input_row = waon_row.validate()
-        zaim_row = WaonZaimPaymentRowConverter(validated_input_row).convert()
+        zaim_row = WaonZaimPaymentRowConverter(waon_row).convert()
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -82,8 +80,7 @@ class TestWaonZaimTransferRowConverter:
              yaml_config_load, database_session_basic_store_waon):
         """Arguments should set into properties."""
         waon_row = WaonRow(AccountId.WAON, waon_row_data)
-        validated_input_row = waon_row.validate()
-        zaim_row = WaonZaimTransferRowConverter(validated_input_row).convert()
+        zaim_row = WaonZaimTransferRowConverter(waon_row).convert()
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -116,5 +113,5 @@ class TestWaonZaimRowFactoryConverter:
     )
     def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data: WaonRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        validated_input_row = WaonRowFactory().create(AccountId.WAON, input_row_data).validate()
-        assert WaonZaimRowConverterSelector().select(validated_input_row) == expected
+        input_row = WaonRowFactory().create(AccountId.WAON, input_row_data)
+        assert WaonZaimRowConverterSelector().select(input_row) == expected

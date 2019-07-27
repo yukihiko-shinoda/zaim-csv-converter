@@ -3,10 +3,10 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from tests.testlibraries.zaim_row_data import ZaimRowData
+from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
-from zaimcsvconverter.inputcsvformats.mufg import MufgRow
+from zaimcsvconverter.inputcsvformats.mufg import MufgIncomeRow
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRow
 from zaimcsvconverter.models import AccountId
@@ -22,9 +22,8 @@ class TestZaimIncomeRow:
     @staticmethod
     def test_all(yaml_config_load, database_session_stores_item):
         """Argument should set into properties."""
-        mufg_row = MufgRow(AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
-        validated_input_row = mufg_row.validate()
-        zaim_low = MufgZaimIncomeRowConverter(validated_input_row).convert()
+        mufg_row = MufgIncomeRow(AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
+        zaim_low = MufgZaimIncomeRowConverter(mufg_row).convert()
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == '2018-08-20'
@@ -71,8 +70,7 @@ class TestZaimPaymentRow:
                  expected_note, expected_store_name, expected_amount_payment):
         """Argument should set into properties."""
         input_row = input_row_factory.create(account_id, input_row_data)
-        validated_input_row = input_row.validate()
-        zaim_low = zaim_row_converter_selector.select(validated_input_row)(validated_input_row).convert()
+        zaim_low = zaim_row_converter_selector.select(input_row)(input_row).convert()
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
@@ -102,8 +100,7 @@ class TestZaimTransferRow:
         waon_auto_charge_row = WaonRow(
             AccountId.WAON, InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO
         )
-        validated_input_row = waon_auto_charge_row.validate()
-        zaim_low = WaonZaimTransferRowConverter(validated_input_row).convert()
+        zaim_low = WaonZaimTransferRowConverter(waon_auto_charge_row).convert()
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == '2018-11-11'

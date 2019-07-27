@@ -29,12 +29,12 @@ class TestMufgRowData:
         mufg_row_data = MufgRowData(date, summary, summary_content, payed_amount, deposit_amount, balance, note,
                                     is_uncapitalized, cash_flow_kind)
         assert mufg_row_data.summary == summary
-        assert mufg_row_data.payed_amount == payed_amount
-        assert mufg_row_data.deposit_amount == deposit_amount
+        assert mufg_row_data.payed_amount == 3628
+        assert mufg_row_data.deposit_amount is None
         assert mufg_row_data.balance == balance
         assert mufg_row_data.note == note
         assert mufg_row_data.is_uncapitalized == is_uncapitalized
-        assert mufg_row_data.cash_flow_kind == cash_flow_kind
+        assert mufg_row_data.cash_flow_kind == MufgRowData.CashFlowKind.TRANSFER_PAYMENT
         assert mufg_row_data.date == datetime(2018, 11, 28, 0, 0)
         assert mufg_row_data.store_name == summary_content
 

@@ -2,35 +2,16 @@
 from __future__ import annotations
 from datetime import datetime
 from enum import Enum
-import re
-from typing import Optional
 from dataclasses import dataclass
 
-from zaimcsvconverter.exceptions import InvalidRowError
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory, ValidatedInputStoreRow
-from zaimcsvconverter.models import Store, AccountId
+from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
+from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.utility import Utility
 
 
 @dataclass
 class WaonRowData(InputStoreRowData):
     """This class implements data class for wrapping list of WAON CSV row model."""
-    _date: str
-    _used_store: str
-    used_amount: str
-    use_kind: str
-    charge_kind: str
-
-    @property
-    def date(self) -> datetime:
-        return datetime.strptime(self._date, "%Y/%m/%d")
-
-    @property
-    def store_name(self) -> str:
-        return self._used_store
-
-
-class WaonRow(InputStoreRow):
-    """This class implements row model of WAON CSV."""
     class UseKind(Enum):
         """This class implements constant of user kind in WAON CSV."""
         PAYMENT = '支払'
@@ -42,70 +23,125 @@ class WaonRow(InputStoreRow):
         """This class implements constant of charge kind in WAON CSV."""
         BANK_ACCOUNT = '銀行口座'
         POINT = 'ポイント'
+        NULL = '-'
 
+    _date: str
+    _used_store: str
+    _used_amount: str
+    _use_kind: str
+    _charge_kind: str
+
+    @property
+    def date(self) -> datetime:
+        return datetime.strptime(self._date, "%Y/%m/%d")
+
+    @property
+    def store_name(self) -> str:
+        return self._used_store
+
+    @property
+    def used_amount(self) -> int:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return Utility.convert_yen_string_to_int(self._used_amount)
+
+    @property
+    def use_kind(self) -> WaonRowData.UseKind:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.UseKind(self._use_kind)
+
+    @property
+    def charge_kind(self) -> WaonRowData.ChargeKind:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.ChargeKind(self._charge_kind)
+
+    def validate(self, account_id: AccountId) -> bool:
+        self.stock_error(
+            lambda: self.date,
+            f'Invalid date. Date = {self._date}'
+        )
+        self.stock_error(
+            lambda: self.used_amount,
+            f'Invalid used amount. Used amount = {self._used_amount}'
+        )
+        self.stock_error(
+            lambda: self.use_kind,
+            f'Invalid used amount. Use kind = {self._use_kind}'
+        )
+        self.stock_error(
+            lambda: self.charge_kind,
+            f'The value of "Charge kind" has not been defined in this code. Charge kind = {self._charge_kind}'
+        )
+        return super().validate(account_id)
+
+
+class WaonRow(InputStoreRow):
+    """This class implements row model of WAON CSV."""
     def __init__(self, account_id: AccountId, row_data: WaonRowData):
         super().__init__(account_id, row_data)
-        matches = re.search(r'([\d,]+)円', row_data.used_amount)
-        if matches is None:
-            raise ValueError(f'Invalid used amount. Used amount = {row_data.used_amount}')
-        self.used_amount: int = int(matches.group(1).replace(',', ''))
-        self.use_kind: Optional[WaonRow.UseKind] = WaonRow.UseKind(row_data.use_kind)
-        self.charge_kind: Optional[WaonRow.ChargeKind] = self._convert_charge_kind_to_enum(row_data.charge_kind)
+        self.used_amount: int = row_data.used_amount
+        self.use_kind: WaonRowData.UseKind = row_data.use_kind
 
-    @staticmethod
-    def _convert_charge_kind_to_enum(charge_kind_string) -> Optional[WaonRow.ChargeKind]:
-        if charge_kind_string == '-':
-            return None
-        try:
-            return WaonRow.ChargeKind(charge_kind_string)
-        except ValueError as error:
-            raise ValueError(
-                'The value of "Charge kind" has not been defined in this code. Charge kind =' + charge_kind_string
-            ) from error
-
-    def validate(self) -> ValidatedInputStoreRow:
-        if self.use_kind is None:
-            raise InvalidRowError(
-                f'The value of "Use kind" has not been defined in this code. Use kind = {self.data.use_kind}'
-            )
-        return super().validate()
-
-    def is_row_to_skip(self, store: Store) -> bool:
+    @property
+    def is_row_to_skip(self) -> bool:
         """This property returns whether this row should be skipped or not."""
         return self.is_download_point
 
     @property
     def is_payment(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.use_kind == WaonRow.UseKind.PAYMENT
+        return self.use_kind == WaonRowData.UseKind.PAYMENT
 
     @property
     def is_charge(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.use_kind == WaonRow.UseKind.CHARGE
-
-    @property
-    def is_charge_by_point(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.is_charge and self.charge_kind == WaonRow.ChargeKind.POINT
-
-    @property
-    def is_charge_by_bank_account(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.is_charge and self.charge_kind == WaonRow.ChargeKind.BANK_ACCOUNT
+        return self.use_kind == WaonRowData.UseKind.CHARGE
 
     @property
     def is_auto_charge(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.use_kind == WaonRow.UseKind.AUTO_CHARGE
+        return self.use_kind == WaonRowData.UseKind.AUTO_CHARGE
 
     @property
     def is_download_point(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self.use_kind == WaonRow.UseKind.DOWNLOAD_POINT
+        return self.use_kind == WaonRowData.UseKind.DOWNLOAD_POINT
 
 
-class WaonRowFactory(InputRowFactory):
+class WaonChargeRow(WaonRow):
+    """This class implements charge row model of WAON CSV."""
+    def __init__(self, account_id: AccountId, row_data: WaonRowData):
+        super().__init__(account_id, row_data)
+        self._charge_kind: WaonRowData.ChargeKind = row_data.charge_kind
+
+    @property
+    def charge_kind(self):
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        if self._charge_kind == WaonRowData.ChargeKind.NULL:
+            raise ValueError(f'Charge kind on charge row is not allowed "{WaonRowData.ChargeKind.NULL.value}".')
+        return self._charge_kind
+
+    @property
+    def validate(self) -> bool:
+        self.stock_error(
+            lambda: self.charge_kind,
+            f'Charge kind in charge row is required. Charge kind = {self._charge_kind}'
+        )
+        return super().validate
+
+    @property
+    def is_charge_by_point(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.POINT
+
+    @property
+    def is_charge_by_bank_account(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.BANK_ACCOUNT
+
+
+class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
     """This class implements factory to create WAON CSV row instance."""
-    def create(self, account_id: AccountId, row_data: WaonRowData) -> WaonRow:
-        return WaonRow(account_id, row_data)
+    def create(self, account_id: AccountId, input_row_data: WaonRowData) -> WaonRow:
+        if input_row_data.use_kind in (WaonRowData.UseKind.CHARGE, WaonRowData.UseKind.AUTO_CHARGE):
+            return WaonChargeRow(account_id, input_row_data)
+        return WaonRow(account_id, input_row_data)

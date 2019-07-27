@@ -89,17 +89,14 @@ class ConvertTableRecordMixin:
         return value if value != '' else None
 
     @classmethod
-    def try_to_find(cls: Type[ConvertTableRecordMixin], account_id: AccountId, name: str) -> Optional[TypeVarBase]:
+    def try_to_find(cls: Type[ConvertTableRecordMixin], account_id: AccountId, name: str) -> TypeVarBase:
         """This method select Store model from database. If record is not exist, raise NoResultFound."""
         try:
             return cls.find(account_id, name)
         except NoResultFound:
             pass
         # ↓ To support Shift JIS
-        try:
-            return cls.find(account_id, name.replace("−", "ー"))
-        except NoResultFound:
-            return None
+        return cls.find(account_id, name.replace("−", "ー"))
 
     @classmethod
     def find(cls: Type[ConvertTableRecordMixin], account_id: AccountId, name: str) -> TypeVarBase:

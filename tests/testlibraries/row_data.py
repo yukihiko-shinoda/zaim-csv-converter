@@ -1,4 +1,4 @@
-"""This module implements data class for wrapping list of Zaim CSV row model."""
+"""This module implements data class for wrapping list of CSV row model."""
 from dataclasses import dataclass
 
 
@@ -21,3 +21,11 @@ class ZaimRowData:
     balance_adjustment: str
     amount_before_currency_conversion: str
     setting_aggregate: str
+
+
+@dataclass
+class InvalidRowErrorRowData:
+    """This class implements data class for wrapping list of invalid row error CSV row model."""
+    input_file_name: str
+    index: str
+    error: str

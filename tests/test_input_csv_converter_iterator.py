@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import pytest
 
 from tests.testlibraries.file import FilePathUtility
+from zaimcsvconverter.exceptions import InvalidInputCsvError
 from zaimcsvconverter.input_csv_converter_iterator import InputCsvConverterIterator
 
 
@@ -43,14 +44,15 @@ class TestInputCsvConverterIterator:
         Same content should be unified.
         """
         input_csv_converter_iterator = InputCsvConverterIterator(directory_csv_input, tmp_path)
-        with pytest.raises(KeyError):
+        with pytest.raises(InvalidInputCsvError):
             input_csv_converter_iterator.execute()
         files = sorted(tmp_path.rglob('*[!.gitkeep]'))
-        assert len(files) == 3
-        assert files[0].name == 'error.csv'
-        assert files[1].name == 'test_amazon.csv'
-        assert files[2].name == 'test_waon.csv'
-        with files[0].open('r', encoding='UTF-8', newline='\n') as file_error:
+        assert len(files) == 4
+        assert files[0].name == 'error_invalid_row.csv'
+        assert files[1].name == 'error_undefined_content.csv'
+        assert files[2].name == 'test_amazon.csv'
+        assert files[3].name == 'test_waon.csv'
+        with files[1].open('r', encoding='UTF-8', newline='\n') as file_error:
             reader_error = csv.reader(file_error)
             error_row_data = ErrorRowDataForTest(*(reader_error.__next__()))
             assert error_row_data.convert_table == 'amazon.csv'

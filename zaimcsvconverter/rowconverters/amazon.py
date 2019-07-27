@@ -2,7 +2,6 @@
 from typing import Type
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import ValidatedInputRow
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRow
 from zaimcsvconverter.rowconverters import ZaimPaymentRowConverter, ZaimRowConverterSelector, ZaimRowConverter
 
@@ -16,11 +15,10 @@ class AmazonZaimPaymentRowConverter(ZaimPaymentRowConverter[AmazonRow]):
     @property
     def _amount_payment(self) -> int:
         # Reason: Pylint's bug. pylint: disable=no-member
-        input_row = self.validated_input_row.input_row
-        return input_row.price * input_row.number
+        return self.input_row.price * self.input_row.number
 
 
-class AmazonZaimRowConverterSelector(ZaimRowConverterSelector):
+class AmazonZaimRowConverterSelector(ZaimRowConverterSelector[AmazonRow]):
     """This class implements select steps from Amazon input row to Zaim row converter."""
-    def select(self, validated_input_row: ValidatedInputRow) -> Type[ZaimRowConverter]:
+    def select(self, input_row: AmazonRow) -> Type[ZaimRowConverter]:
         return AmazonZaimPaymentRowConverter

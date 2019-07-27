@@ -50,9 +50,22 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     # pylint: disable=unsubscriptable-object
     input_row_data_class: Type[TypeVarInputRowData]
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
-    zaim_row_converter_selector: ZaimRowConverterSelector
+    zaim_row_converter_selector: ZaimRowConverterSelector[TypeVarInputRow]
     encode: str = 'UTF-8'
     csv_header: Optional[List[str]] = None
+
+    def create_convert_table_row_instance(
+            self, list_convert_table_row_standard_type_value: List[Any]
+    ) -> ConvertTableRecordMixin:
+        """This method creates convert table row model instance by list data of convert table row."""
+        convert_table_type = self.convert_table_type.value
+        return convert_table_type.model(
+            self.id, convert_table_type.row_data(*list_convert_table_row_standard_type_value)
+        )
+
+    def create_input_row_instance(self, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
+        """This method creates input row instance by input row data instance."""
+        return self.input_row_factory.create(self.id, input_row_data)
 
 
 class Account(Enum):
@@ -146,15 +159,12 @@ class Account(Enum):
             self, list_convert_table_row_standard_type_value: List[Any]
     ) -> ConvertTableRecordMixin:
         """This method creates convert table row model instance by list data of convert table row."""
-        convert_table_type = self.value.convert_table_type.value
-        return convert_table_type.model(
-            self.value.id, convert_table_type.row_data(*list_convert_table_row_standard_type_value)
-        )
+        return self.value.create_convert_table_row_instance(list_convert_table_row_standard_type_value)
 
-    def create_input_row_data_instance(self, list_input_row_standard_type_value: List[Any]) -> InputRowData:
+    def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> InputRowData:
         """This method creates input row data instance by list data of input row."""
         return self.value.input_row_data_class(*list_input_row_standard_type_value)
 
     def create_input_row_instance(self, input_row_data: InputRowData) -> InputRow:
         """This method creates input row instance by input row data instance."""
-        return self.value.input_row_factory.create(self.value.id, input_row_data)
+        return self.value.create_input_row_instance(input_row_data)

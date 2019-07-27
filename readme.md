@@ -111,12 +111,16 @@ pipenv run start
 代表的な例として:
 
 ```bash
-KeyError: 'Undefined store name in convert table CSV exists. Please check error.csv.'
+InvalidInputCsvError: 'Some invalid input CSV file exists. Please check error_invalid_row.csv and error_undefined_content.csv.'
 ```
 
-上記のエラーが表示された場合は、 csvoutput/error.csv に
-変換用テーブルのCSVに未定義のお店の名前、品目名の一覧が出力されますので、
-変換テーブルのCSVに変換の定義を追加してから、再度実行します。
+上記のエラーが表示された場合は、
+csvoutput/error_invalid_row.csv にエラーの一覧が、
+csvoutput/error_undefined_content.csv に
+変換用テーブルのCSVに未定義のお店の名前、品目名の一覧が出力されます。
+csvoutput/error_invalid_row.csv と入力CSVの内容を確認して、入力CSVに修正を行います。
+csvoutput/error_undefined_content.csv が出力された場合は、
+変換テーブルのCSVに変換の定義を追加します。
 
 ### 4. Zaimにインポートします
 

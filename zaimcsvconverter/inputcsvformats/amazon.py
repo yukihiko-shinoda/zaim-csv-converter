@@ -1,12 +1,11 @@
 """This module implements row model of Amazon.co.jp CSV."""
 
 from datetime import datetime
-from typing import Optional
 from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats import InputItemRowData, InputItemRow, InputRowFactory
-from zaimcsvconverter.models import Store, Item, StoreRowData, AccountId
+from zaimcsvconverter.models import Store, StoreRowData, AccountId
 
 
 @dataclass
@@ -16,8 +15,8 @@ class AmazonRowData(InputItemRowData):
     order_id: str
     _item_name: str
     note: str
-    price: str
-    number: str
+    _price: str
+    _number: str
     subtotal_price_item: str
     total_order: str
     destination: str
@@ -39,6 +38,31 @@ class AmazonRowData(InputItemRowData):
     def item_name(self) -> str:
         return self._item_name
 
+    @property
+    def price(self) -> int:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return int(self._price)
+
+    @property
+    def number(self) -> int:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return int(self._number)
+
+    def validate(self, account_id: AccountId) -> bool:
+        self.stock_error(
+            lambda: self.date,
+            f'Invalid ordered date. Ordered date = {self._ordered_date}'
+        )
+        self.stock_error(
+            lambda: self.price,
+            f'Invalid price. Price = {self._price}'
+        )
+        self.stock_error(
+            lambda: self.number,
+            f'Invalid number. Number = {self._number}'
+        )
+        return super().validate(account_id)
+
 
 # pylint: disable=too-many-instance-attributes
 class AmazonRow(InputItemRow):
@@ -46,16 +70,15 @@ class AmazonRow(InputItemRow):
     def __init__(self, account_id: AccountId, row_data: AmazonRowData):
         super().__init__(account_id, row_data)
         self._store: Store = Store(account_id, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
-        self._item: Optional[Item] = self.try_to_find_item(row_data.item_name)
-        self.price: int = int(row_data.price)
-        self.number: int = int(row_data.number)
+        self.price: int = row_data.price
+        self.number: int = row_data.number
 
     @property
     def store(self) -> Store:
         return self._store
 
 
-class AmazonRowFactory(InputRowFactory):
+class AmazonRowFactory(InputRowFactory[AmazonRowData, AmazonRow]):
     """This class implements factory to create Amazon.co.jp CSV row instance."""
-    def create(self, account_id: AccountId, row_data: AmazonRowData) -> AmazonRow:
-        return AmazonRow(account_id, row_data)
+    def create(self, account_id: AccountId, input_row_data: AmazonRowData) -> AmazonRow:
+        return AmazonRow(account_id, input_row_data)

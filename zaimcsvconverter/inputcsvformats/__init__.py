@@ -1,16 +1,22 @@
 """This module implements row model of CSV."""
 from __future__ import annotations
-
 from abc import abstractmethod
+from dataclasses import field, dataclass
 from datetime import datetime
-from typing import Optional, TypeVar, Generic
+from typing import Optional, TypeVar, Generic, List, Callable, Any
 
-from zaimcsvconverter.exceptions import InvalidRowError
+from zaimcsvconverter.error_collector import MultipleErrorCollector, SingleErrorCollector
+from zaimcsvconverter.exceptions import InvalidRowError, UndefinedContentError
 from zaimcsvconverter.models import AccountId, Store, Item
 
 
-class InputRowData:
+# @see https://github.com/python/mypy/issues/5374
+@dataclass
+class InputRowData:  # type: ignore
     """This class is abstract class of input CSV row data."""
+    list_error: List[InvalidRowError] = field(default_factory=list, init=False)
+    undefined_content_error: Optional[UndefinedContentError] = field(default=None, init=False)
+
     @property
     @abstractmethod
     def date(self) -> datetime:
@@ -26,9 +32,32 @@ class InputRowData:
     def item_name(self) -> str:
         """This property returns store name."""
 
+    @abstractmethod
+    def validate(self, account_id: AccountId) -> bool:
+        """This method validates data."""
+        return bool(self.list_error) or self.undefined_content_error is not None
 
-class InputStoreRowData(InputRowData):
+    def stock_error(self, method: Callable[[], Any], message: str) -> Any:
+        """This method stocks error"""
+        with MultipleErrorCollector(InvalidRowError, message, self.list_error):
+            return method()
+
+    def stock_undefined_content_error(self, method: Callable[[], Any], message: str) -> Any:
+        """This method stocks undefined content error."""
+        error_collector = SingleErrorCollector(UndefinedContentError, message)
+        # noinspection PyUnusedLocal
+        return_value = None
+        with error_collector:
+            return_value = method()
+        self.undefined_content_error = error_collector.error
+        return return_value
+
+
+# @see https://github.com/python/mypy/issues/5374
+@dataclass
+class InputStoreRowData(InputRowData):  # type: ignore
     """This class is abstract class of input CSV row data."""
+    _store: Optional[Store] = field(default=None, init=False)
     # @see https://github.com/PyCQA/pylint/issues/179
     @property
     @abstractmethod
@@ -39,9 +68,25 @@ class InputStoreRowData(InputRowData):
     def item_name(self) -> str:
         return ''
 
+    def find_store(self, account_id: AccountId) -> Store:
+        """This method finds store data from database if has not find."""
+        if self._store is None:
+            self._store = Store.try_to_find(account_id, self.store_name)
+        return self._store
 
-class InputItemRowData(InputRowData):
+    def validate(self, account_id: AccountId) -> bool:
+        self.stock_undefined_content_error(
+            lambda: self.find_store(account_id),
+            f'Store name has not been defined in convert table CSV. Store name = {self.store_name}'
+        )
+        return super().validate(account_id)
+
+
+# @see https://github.com/python/mypy/issues/5374
+@dataclass
+class InputItemRowData(InputRowData):  # type: ignore
     """This class is abstract class of input CSV row data."""
+    _item: Optional[Store] = field(default=None, init=False)
     @property
     def store_name(self) -> str:
         return ''
@@ -51,6 +96,21 @@ class InputItemRowData(InputRowData):
     @abstractmethod
     def item_name(self) -> str:
         """This property returns store name."""
+
+    def find_item(self, account_id: AccountId) -> Item:
+        """This method select store from database and return it as Store model."""
+        item = self._item
+        if item is None:
+            item = Item.try_to_find(account_id, self.item_name)
+            self._item = item
+        return item
+
+    def validate(self, account_id: AccountId) -> bool:
+        self.stock_undefined_content_error(
+            lambda: self.find_item(account_id),
+            f'Item name has not been defined in convert table CSV. Item name = {self.item_name}'
+        )
+        return super().validate(account_id)
 
 
 TypeVarInputRowData = TypeVar('TypeVarInputRowData', bound=InputRowData)
@@ -59,16 +119,25 @@ TypeVarInputRowData = TypeVar('TypeVarInputRowData', bound=InputRowData)
 class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
     def __init__(self, account_id: AccountId, input_row_data: TypeVarInputRowData):
+        self.list_error: List[InvalidRowError] = []
         self._account_id = account_id
         self.data = input_row_data
         self.zaim_date = input_row_data.date
 
-    @abstractmethod
-    def validate(self) -> ValidatedInputRow:
-        """This property returns whether this row is valid or not."""
+    # Reason: Parent method. pylint: disable=no-self-use
+    @property
+    def validate(self) -> bool:
+        """This method validates data."""
+        return bool(self.list_error)
 
-    # pylint: disable=unused-argument,no-self-use
-    def is_row_to_skip(self, store: Store) -> bool:
+    def stock_error(self, method: Callable[[], Any], message: str) -> Any:
+        """This method stocks error"""
+        with MultipleErrorCollector(InvalidRowError, message, self.list_error):
+            return method()
+
+    # Reason: Parent method. pylint: disable=no-self-use
+    @property
+    def is_row_to_skip(self) -> bool:
         """This property returns whether this row should be skipped or not."""
         return False
 
@@ -77,45 +146,19 @@ class InputStoreRow(InputRow):
     """This class implements store row model of CSV."""
     def __init__(self, account_id: AccountId, input_store_row_data: InputStoreRowData):
         super().__init__(account_id, input_store_row_data)
-        self.store = self.try_to_find_store(input_store_row_data.store_name)
-
-    def validate(self) -> ValidatedInputStoreRow:
-        """This property returns whether this row is valid or not."""
-        if self.store is None:
-            raise InvalidRowError(
-                'Store name has not been defined in convert table CSV.'
-                f'Store name = {self.data.store_name}'
-            )
-        return ValidatedInputStoreRow(self, self.store)
-
-    def try_to_find_store(self, store_name) -> Optional[Store]:
-        """This method select store from database and return it as Store model."""
-        return Store.try_to_find(self._account_id, store_name)
+        self.store = input_store_row_data.find_store(account_id)
 
 
 class InputItemRow(InputRow):
     """This class implements store row model of CSV."""
     def __init__(self, account_id: AccountId, input_item_row_data: InputItemRowData):
         super().__init__(account_id, input_item_row_data)
-        self.item = self.try_to_find_item(input_item_row_data.item_name)
-
-    def validate(self) -> ValidatedInputItemRow:
-        """This property returns whether this row is valid or not."""
-        if self.store is None or self.item is None:
-            raise InvalidRowError(
-                'Store name has not been defined in convert table CSV.'
-                f'Store name = {self.data.store_name}'
-            )
-        return ValidatedInputItemRow(self, self.store, self.item)
+        self.item = input_item_row_data.find_item(account_id)
 
     @property
     @abstractmethod
     def store(self) -> Store:
         """This property returns store in Zaim row."""
-
-    def try_to_find_item(self, item_name) -> Optional[Item]:
-        """This method select store from database and return it as Store model."""
-        return Item.try_to_find(self._account_id, item_name)
 
 
 TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)
@@ -124,36 +167,5 @@ TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)
 class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
     """This class implements factory to create input CSV row instance."""
     @abstractmethod
-    def create(self, account_id: AccountId, row_data: TypeVarInputRowData) -> TypeVarInputRow:
+    def create(self, account_id: AccountId, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
         """This method creates input row by input CSV row data."""
-
-
-class ValidatedInputRow(Generic[TypeVarInputRow]):
-    """This class implements validated row model of CSV."""
-    def __init__(self, input_row: TypeVarInputRow, store: Store):
-        self.input_row = input_row
-        self.store = store
-
-    @property
-    @abstractmethod
-    def is_row_to_skip(self) -> bool:
-        """This property returns whether this row should be skipped or not."""
-
-
-class ValidatedInputStoreRow(ValidatedInputRow):
-    """This class implements validated store row model of CSV."""
-    @property
-    def is_row_to_skip(self) -> bool:
-        """This property returns whether this row should be skipped or not."""
-        return self.input_row.is_row_to_skip(self.store)
-
-
-class ValidatedInputItemRow(ValidatedInputRow):
-    """This class implements validated item row model of CSV."""
-    def __init__(self, input_row: InputRow, store: Store, item: Item):
-        self.item = item
-        super().__init__(input_row, store)
-
-    @property
-    def is_row_to_skip(self) -> bool:
-        return False
