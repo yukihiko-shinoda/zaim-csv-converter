@@ -7,12 +7,12 @@ from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, \
     SFCardViewerRow, SFCardViewerEnterExitRow
 from zaimcsvconverter.models import AccountId
-from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow
-from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterSelector, \
+from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow, ZaimRowFactory
+from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory, \
     SFCardViewerZaimPaymentRowConverter, SFCardViewerZaimTransferRowConverter
 
 
-class TestSFCardViewerZaimPaymentRowConverter:
+class TestSFCardViewerZaimPaymentRowFactory:
     """Tests for SFCardViewerZaimPaymentRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -27,19 +27,20 @@ class TestSFCardViewerZaimPaymentRowConverter:
         class ConcreteSFCardViewerZaimPaymentRowConverter(SFCardViewerZaimPaymentRowConverter):
             # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             account_config = CONFIG.pasmo
-        zaim_row = ConcreteSFCardViewerZaimPaymentRowConverter(sf_card_viewer_row).convert()
+        # Reason: Pylint's bug. pylint: disable=no-member
+        zaim_row = ZaimRowFactory.create(ConcreteSFCardViewerZaimPaymentRowConverter(sf_card_viewer_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == '2018-11-13'
         assert zaim_row_data.store_name == '東京地下鉄株式会社　南北線後楽園駅'
-        assert zaim_row_data.item_name is None
+        assert zaim_row_data.item_name == ''
         assert zaim_row_data.cash_flow_source == config_account_name
         assert zaim_row_data.note == 'メトロ 六本木一丁目 → メトロ 後楽園'
         assert zaim_row_data.amount_payment == expected_amount
 
 
-class TestSFCardViewerZaimTransferRowConverter:
+class TestSFCardViewerZaimTransferRowFactory:
     """Tests for SFCardViewerZaimTransferRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -55,7 +56,7 @@ class TestSFCardViewerZaimTransferRowConverter:
         class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
             # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             account_config = CONFIG.pasmo
-        zaim_row = ConcreteSFCardViewerZaimTransferRowConverter(sf_card_viewer_row).convert()
+        zaim_row = ZaimRowFactory.create(ConcreteSFCardViewerZaimTransferRowConverter(sf_card_viewer_row))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -67,8 +68,8 @@ class TestSFCardViewerZaimTransferRowConverter:
         assert zaim_row_data.amount_transfer == expected_amount
 
 
-class TestSFCardViewerZaimRowConverterSelector:
-    """Tests for SFCardViewerZaimRowConverterSelector."""
+class TestSFCardViewerZaimRowConverterFactory:
+    """Tests for SFCardViewerZaimRowConverterFactory."""
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
@@ -97,6 +98,6 @@ class TestSFCardViewerZaimRowConverterSelector:
     def test(yaml_config_load, database_session_with_schema, input_row_data: SFCardViewerRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(AccountId.PASMO, input_row_data)
-        factory = SFCardViewerZaimRowConverterSelector(lambda: CONFIG.pasmo).select(input_row)
+        factory = SFCardViewerZaimRowConverterFactory(lambda: CONFIG.pasmo).create(input_row)
         # noinspection PyTypeChecker
-        assert issubclass(factory, expected)
+        assert isinstance(factory, expected)

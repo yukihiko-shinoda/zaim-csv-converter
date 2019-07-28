@@ -30,11 +30,11 @@ class InstanceResource:
     ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC = GoldPointCardPlusRowData(
         '2018/7/3', '東京電力  電気料金等', 'ご本人', '1回払い', '', '18/8', '11402', '11402', '', '', '', '', ''
     )
-    ROW_DATA_MUFG_INCOME_CARD = MufgRowData('2018/10/1', 'カ－ド', '', '', '10000', '3000000', '', '', '入金')
+    ROW_DATA_MUFG_INCOME_CARD = MufgRowData('2018/10/1', 'カ−ド', '', '', '10000', '3000000', '', '', '入金')
     ROW_DATA_MUFG_INCOME_NOT_CARD = MufgRowData(
         '2018/10/1', '振込９', 'フリコミモト－アカウント', '', '10000', '3000000', '', '', '入金'
     )
-    ROW_DATA_MUFG_PAYMENT = MufgRowData('2018/11/5', 'カ－ド', '', '9000', '', '4000000', '', '', '支払い')
+    ROW_DATA_MUFG_PAYMENT = MufgRowData('2018/11/5', 'カ−ド', '', '9000', '', '4000000', '', '', '支払い')
     ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT = MufgRowData(
         '2018/8/20', '利息', 'スーパーフツウ', '', '20', '2000000', '', '', '振替入金'
     )

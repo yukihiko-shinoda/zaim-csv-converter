@@ -117,8 +117,8 @@ class TestZaimCsvConverter:
         ])
         checker.assert_file('mufg201810.csv', [
             ZaimRowData(
-                '2018-10-01', 'income', '', '-', '', '三菱UFJ銀行', '', '',
-                '', '', '10000', '0', '0', '', '', ''
+                '2018-10-01', 'transfer', '-', '-', 'お財布', '三菱UFJ銀行', '', '',
+                '', '', '0', '0', '10000', '', '', ''
             ),
             ZaimRowData(
                 '2018-10-01', 'income', '臨時収入', '-', '', '三菱UFJ銀行', '', '',

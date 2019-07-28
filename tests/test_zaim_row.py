@@ -6,14 +6,15 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
-from zaimcsvconverter.inputcsvformats.mufg import MufgIncomeRow
+from zaimcsvconverter.inputcsvformats.mufg import MufgIncomeFromOthersRow
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRow
 from zaimcsvconverter.models import AccountId
-from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterSelector
-from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterSelector
+from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimIncomeRowConverter
 from zaimcsvconverter.rowconverters.waon import WaonZaimTransferRowConverter
+from zaimcsvconverter.zaim_row import ZaimRowFactory
 
 
 class TestZaimIncomeRow:
@@ -22,8 +23,10 @@ class TestZaimIncomeRow:
     @staticmethod
     def test_all(yaml_config_load, database_session_stores_item):
         """Argument should set into properties."""
-        mufg_row = MufgIncomeRow(AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
-        zaim_low = MufgZaimIncomeRowConverter(mufg_row).convert()
+        mufg_row = MufgIncomeFromOthersRow(AccountId.MUFG,
+                                           InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
+        # Reason: Pylint's bug. pylint: disable=no-member
+        zaim_low = ZaimRowFactory.create(MufgZaimIncomeRowConverter(mufg_row))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == '2018-08-20'
@@ -56,10 +59,10 @@ class TestZaimPaymentRow:
         ), [
             (SFCardViewerRowFactory(lambda: CONFIG.pasmo), AccountId.PASMO,
              InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
-             SFCardViewerZaimRowConverterSelector(lambda: CONFIG.pasmo), '2018-11-13', '交通', '電車', 'PASMO', None,
+             SFCardViewerZaimRowConverterFactory(lambda: CONFIG.pasmo), '2018-11-13', '交通', '電車', 'PASMO', '',
              'メトロ 六本木一丁目 → メトロ 後楽園', '東京地下鉄株式会社　南北線後楽園駅', 195),
             (AmazonRowFactory(), AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT,
-             AmazonZaimRowConverterSelector(), '2018-10-23', '大型出費', '家電', 'ヨドバシゴールドポイントカード・プラス',
+             AmazonZaimRowConverterFactory(), '2018-10-23', '大型出費', '家電', 'ヨドバシゴールドポイントカード・プラス',
              'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '',
              'Amazon Japan G.K.', 4980),
         ]
@@ -70,7 +73,7 @@ class TestZaimPaymentRow:
                  expected_note, expected_store_name, expected_amount_payment):
         """Argument should set into properties."""
         input_row = input_row_factory.create(account_id, input_row_data)
-        zaim_low = zaim_row_converter_selector.select(input_row)(input_row).convert()
+        zaim_low = ZaimRowFactory.create(zaim_row_converter_selector.create(input_row))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
@@ -100,7 +103,7 @@ class TestZaimTransferRow:
         waon_auto_charge_row = WaonRow(
             AccountId.WAON, InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO
         )
-        zaim_low = WaonZaimTransferRowConverter(waon_auto_charge_row).convert()
+        zaim_low = ZaimRowFactory.create(WaonZaimTransferRowConverter(waon_auto_charge_row))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == '2018-11-11'

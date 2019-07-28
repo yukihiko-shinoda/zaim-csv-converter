@@ -5,12 +5,12 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowFactory, GoldPointCardPlusRow
 from zaimcsvconverter.models import AccountId
-from zaimcsvconverter.zaim_row import ZaimPaymentRow
+from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimPaymentRowConverter, \
-    GoldPointCardPlusZaimRowConverterSelector
+    GoldPointCardPlusZaimRowConverterFactory
 
 
-class TestGoldPointCardPlusZaimPaymentRowConverter:
+class TestGoldPointCardPlusZaimPaymentRowFactory:
     """Tests for GoldPointCardPlusZaimPaymentRowConverter."""
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
@@ -41,19 +41,20 @@ class TestGoldPointCardPlusZaimPaymentRowConverter:
     ):
         """Arguments should set into properties."""
         row = GoldPointCardPlusRow(AccountId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
-        zaim_row = GoldPointCardPlusZaimPaymentRowConverter(row).convert()
+        # Reason: Pylint's bug. pylint: disable=no-member
+        zaim_row = ZaimRowFactory.create(GoldPointCardPlusZaimPaymentRowConverter(row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
         assert zaim_row_data.store_name == expected_store_name_zaim
-        assert zaim_row_data.item_name is None
+        assert zaim_row_data.item_name == ''
         assert zaim_row_data.cash_flow_source == 'ヨドバシゴールドポイントカード・プラス'
         assert zaim_row_data.amount_payment == expected_use_amount
 
 
-class TestGoldPointCardPlusZaimRowConverterSelector:
-    """Tests for GoldPointCardPlusZaimRowConverterSelector."""
+class TestGoldPointCardPlusZaimRowConverterFactory:
+    """Tests for GoldPointCardPlusZaimRowConverterFactory."""
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
@@ -67,4 +68,4 @@ class TestGoldPointCardPlusZaimRowConverterSelector:
     def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = GoldPointCardPlusRowFactory().create(AccountId.GOLD_POINT_CARD_PLUS, input_row_data)
-        assert GoldPointCardPlusZaimRowConverterSelector().select(input_row) == expected
+        assert type(GoldPointCardPlusZaimRowConverterFactory().create(input_row)) == expected

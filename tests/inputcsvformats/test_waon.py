@@ -56,7 +56,7 @@ class TestWaonRow:
         :param WaonRowData waon_row_data:
         """
         waon_row = WaonRow(AccountId.WAON, waon_row_data)
-        assert waon_row.zaim_date == expected_date
+        assert waon_row.date == expected_date
         assert isinstance(waon_row.store, Store)
         assert waon_row.store.name_zaim == expected_store_name_zaim
 

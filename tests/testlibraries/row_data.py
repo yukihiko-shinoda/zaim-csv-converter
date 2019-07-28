@@ -1,26 +1,27 @@
 """This module implements data class for wrapping list of CSV row model."""
 from dataclasses import dataclass
+from typing import Optional, Union
 
 
 @dataclass
 class ZaimRowData:
     """This class implements data class for wrapping list of Zaim CSV row model."""
-    date: str
-    method: str
-    category_large: str
-    category_small: str
-    cash_flow_source: str
-    cash_flow_target: str
-    item_name: str
-    note: str
-    store_name: str
-    currency: str
-    amount_income: str
-    amount_payment: str
-    amount_transfer: str
-    balance_adjustment: str
-    amount_before_currency_conversion: str
-    setting_aggregate: str
+    date: Optional[Union[str, int]]
+    method: Optional[Union[str, int]]
+    category_large: Optional[Union[str, int]]
+    category_small: Optional[Union[str, int]]
+    cash_flow_source: Optional[Union[str, int]]
+    cash_flow_target: Optional[Union[str, int]]
+    item_name: Optional[Union[str, int]]
+    note: Optional[Union[str, int]]
+    store_name: Optional[Union[str, int]]
+    currency: Optional[Union[str, int]]
+    amount_income: Optional[Union[str, int]]
+    amount_payment: Optional[Union[str, int]]
+    amount_transfer: Optional[Union[str, int]]
+    balance_adjustment: Optional[Union[str, int]]
+    amount_before_currency_conversion: Optional[Union[str, int]]
+    setting_aggregate: Optional[Union[str, int]]
 
 
 @dataclass

@@ -71,7 +71,7 @@ class TestAmazonRow:
         amazon_row = AmazonRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         assert amazon_row.price == 4980
         assert amazon_row.number == 1
-        assert amazon_row.zaim_date == datetime(2018, 10, 23, 0, 0, 0)
+        assert amazon_row.date == datetime(2018, 10, 23, 0, 0, 0)
         assert isinstance(amazon_row.store, Store)
         assert amazon_row.store.name_zaim == store_name
         assert isinstance(amazon_row.item, Item)

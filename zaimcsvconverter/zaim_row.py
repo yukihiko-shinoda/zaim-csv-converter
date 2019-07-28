@@ -4,51 +4,17 @@ from typing import List, Union, Optional
 
 from datetime import datetime
 
-from zaimcsvconverter.models import Store, Item
-from zaimcsvconverter.inputcsvformats import InputRow, InputStoreRow, InputItemRow
-
 
 # pylint: disable=too-many-instance-attributes
+from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
+from zaimcsvconverter.rowconverters import ZaimRowConverter, ZaimIncomeRowConverter, ZaimPaymentRowConverter, \
+    ZaimTransferRowConverter
+
+
 class ZaimRow:
     """This class implements abstract row model of Zaim CSV."""
-    HEADER = [
-        '日付',
-        '方法',
-        'カテゴリ',
-        'カテゴリの内訳',
-        '支払元',
-        '入金先',
-        '品目',
-        'メモ',
-        'お店',
-        '通貨',
-        '収入',
-        '支出',
-        '振替',
-        '残高調整',
-        '通貨変換前の金額',
-        '集計の設定'
-    ]
-    CATEGORY_LARGE_EMPTY = '-'
-    CATEGORY_SMALL_EMPTY = '-'
-    CASH_FLOW_SOURCE_EMPTY = ''
-    CASH_FLOW_TARGET_EMPTY = ''
-    AMOUNT_INCOME_EMPTY = 0
-    AMOUNT_PAYMENT_EMPTY = 0
-    AMOUNT_TRANSFER_EMPTY = 0
-    STORE_NAME_EMPTY = ''
-    ITEM_NAME_EMPTY = ''
-    NOTE_EMPTY = ''
-    CURRENCY_EMPTY = ''
-    BALANCE_ADJUSTMENT_EMPTY = ''
-    AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY = ''
-    SETTING_AGGREGATE_EMPTY = ''
-
-    def __init__(self, input_row: InputRow):
-        self._date: datetime = input_row.zaim_date
-        self._store: Store \
-            = input_row.store if isinstance(input_row, InputStoreRow) or isinstance(input_row, InputItemRow) else None
-        self._item: Optional[Item] = input_row.item if isinstance(input_row, InputItemRow) else None
+    def __init__(self, zaim_row_converter: ZaimRowConverter):
+        self._date: datetime = zaim_row_converter.input_row.date
 
     @property
     def _date_string(self) -> str:
@@ -63,29 +29,31 @@ class ZaimIncomeRow(ZaimRow):
     """This class implements income row model of Zaim CSV."""
     METHOD: str = 'income'
 
-    def __init__(self, input_row: InputRow, cash_flow_target: str, amount_income: int):
-        self._cash_flow_target = cash_flow_target
-        self._amount_income = amount_income
-        super().__init__(input_row)
+    def __init__(self, zaim_row_converter: ZaimIncomeRowConverter):
+        self._category = zaim_row_converter.category
+        self._cash_flow_target = zaim_row_converter.cash_flow_target
+        self._store_name = zaim_row_converter.store_name
+        self._amount_income = zaim_row_converter.amount_income
+        super().__init__(zaim_row_converter)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
         return [
             self._date_string,
             self.METHOD,
-            self._store.category_income,
-            self.CATEGORY_SMALL_EMPTY,
-            self.CASH_FLOW_SOURCE_EMPTY,
+            self._category,
+            ZaimCsvFormat.CATEGORY_SMALL_EMPTY,
+            ZaimCsvFormat.CASH_FLOW_SOURCE_EMPTY,
             self._cash_flow_target,
-            self.ITEM_NAME_EMPTY,
-            self.NOTE_EMPTY,
-            self._store.name_zaim,
-            self.CURRENCY_EMPTY,
+            ZaimCsvFormat.ITEM_NAME_EMPTY,
+            ZaimCsvFormat.NOTE_EMPTY,
+            self._store_name,
+            ZaimCsvFormat.CURRENCY_EMPTY,
             self._amount_income,
-            self.AMOUNT_PAYMENT_EMPTY,
-            self.AMOUNT_TRANSFER_EMPTY,
-            self.BALANCE_ADJUSTMENT_EMPTY,
-            self.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
-            self.SETTING_AGGREGATE_EMPTY
+            ZaimCsvFormat.AMOUNT_PAYMENT_EMPTY,
+            ZaimCsvFormat.AMOUNT_TRANSFER_EMPTY,
+            ZaimCsvFormat.BALANCE_ADJUSTMENT_EMPTY,
+            ZaimCsvFormat.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
+            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY
         ]
 
 
@@ -93,30 +61,34 @@ class ZaimPaymentRow(ZaimRow):
     """This class implements payment row model of Zaim CSV."""
     METHOD: str = 'payment'
 
-    def __init__(self, input_row: InputRow, cash_flow_source: str, note: str, amount_payment: int):
-        self._cash_flow_source = cash_flow_source
-        self._note = note
-        self._amount_payment = amount_payment
-        super().__init__(input_row)
+    def __init__(self, zaim_row_converter: ZaimPaymentRowConverter):
+        self._category_large = zaim_row_converter.category_large
+        self._category_small = zaim_row_converter.category_small
+        self._cash_flow_source = zaim_row_converter.cash_flow_source
+        self._item_name = zaim_row_converter.item_name
+        self._note = zaim_row_converter.note
+        self._store_name = zaim_row_converter.store_name
+        self._amount_payment = zaim_row_converter.amount_payment
+        super().__init__(zaim_row_converter)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
         return [
             self._date_string,
             self.METHOD,
-            self._item.category_payment_large if self._item is not None else self._store.category_payment_large,
-            self._item.category_payment_small if self._item is not None else self._store.category_payment_small,
+            self._category_large,
+            self._category_small,
             self._cash_flow_source,
-            self.CASH_FLOW_TARGET_EMPTY,
-            self._item.name if self._item is not None else None,
+            ZaimCsvFormat.CASH_FLOW_TARGET_EMPTY,
+            self._item_name,
             self._note,
-            self._store.name_zaim,
-            self.CURRENCY_EMPTY,
-            self.AMOUNT_INCOME_EMPTY,
+            self._store_name,
+            ZaimCsvFormat.CURRENCY_EMPTY,
+            ZaimCsvFormat.AMOUNT_INCOME_EMPTY,
             self._amount_payment,
-            self.AMOUNT_TRANSFER_EMPTY,
-            self.BALANCE_ADJUSTMENT_EMPTY,
-            self.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
-            self.SETTING_AGGREGATE_EMPTY
+            ZaimCsvFormat.AMOUNT_TRANSFER_EMPTY,
+            ZaimCsvFormat.BALANCE_ADJUSTMENT_EMPTY,
+            ZaimCsvFormat.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
+            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY
         ]
 
 
@@ -124,28 +96,55 @@ class ZaimTransferRow(ZaimRow):
     """This class implements transfer row model of Zaim CSV."""
     METHOD: str = 'transfer'
 
-    def __init__(self, input_row: InputRow, cash_flow_source: str, cash_flow_target: str, amount_transfer: int):
-        self._cash_flow_source: str = cash_flow_source
-        self._cash_flow_target: str = cash_flow_target
-        self._amount_transfer: int = amount_transfer
-        super().__init__(input_row)
+    def __init__(self, zaim_row_converter: ZaimTransferRowConverter):
+        self._cash_flow_source: str = zaim_row_converter.cash_flow_source
+        self._cash_flow_target: str = zaim_row_converter.cash_flow_target
+        self._amount_transfer: int = zaim_row_converter.amount_transfer
+        super().__init__(zaim_row_converter)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
         return [
             self._date_string,
             self.METHOD,
-            self.CATEGORY_LARGE_EMPTY,
-            self.CATEGORY_SMALL_EMPTY,
+            ZaimCsvFormat.CATEGORY_LARGE_EMPTY,
+            ZaimCsvFormat.CATEGORY_SMALL_EMPTY,
             self._cash_flow_source,
             self._cash_flow_target,
-            self.ITEM_NAME_EMPTY,
-            self.NOTE_EMPTY,
-            self.STORE_NAME_EMPTY,
-            self.CURRENCY_EMPTY,
-            self.AMOUNT_INCOME_EMPTY,
-            self.AMOUNT_PAYMENT_EMPTY,
+            ZaimCsvFormat.ITEM_NAME_EMPTY,
+            ZaimCsvFormat.NOTE_EMPTY,
+            ZaimCsvFormat.STORE_NAME_EMPTY,
+            ZaimCsvFormat.CURRENCY_EMPTY,
+            ZaimCsvFormat.AMOUNT_INCOME_EMPTY,
+            ZaimCsvFormat.AMOUNT_PAYMENT_EMPTY,
             self._amount_transfer,
-            self.BALANCE_ADJUSTMENT_EMPTY,
-            self.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
-            self.SETTING_AGGREGATE_EMPTY
+            ZaimCsvFormat.BALANCE_ADJUSTMENT_EMPTY,
+            ZaimCsvFormat.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
+            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY
         ]
+
+
+class ZaimRowFactory:
+    """
+    This class implements factory to create zaim format CSV row instance.
+    Why factory class is independent from input row data class is
+    because we can't achieve 100% coverage without this factory.
+    When model instance on post process depend on pre process,
+    In nature, best practice to generate model instance on post process is
+    to implement create method into each model on pre process.
+    Then, pre process will depend on post process.
+    And when add type hint to argument of __init__ method on model on post process,
+    circular dependency occurs.
+    To resolve it, we need to use TYPE_CHECKING,
+    however, pytest-cov detect import line only for TYPE_CHECKING as uncovered row.
+    @see https://github.com/python/mypy/issues/6101
+    """
+    @staticmethod
+    def create(zaim_row_converter: ZaimRowConverter) -> ZaimRow:
+        """This method creates Zaim row."""
+        if isinstance(zaim_row_converter, ZaimIncomeRowConverter):
+            return ZaimIncomeRow(zaim_row_converter)
+        if isinstance(zaim_row_converter, ZaimPaymentRowConverter):
+            return ZaimPaymentRow(zaim_row_converter)
+        if isinstance(zaim_row_converter, ZaimTransferRowConverter):
+            return ZaimTransferRow(zaim_row_converter)
+        raise ValueError()

@@ -114,7 +114,7 @@ _amount_transfer|この行が振替の行の場合、出力 CSV に「振替」�
 
 ## 3-5. 、ConverterSelector クラスの実装
 
-`ZaimRowConverterSelector` クラスを継承し、`create()` メソッドを実装します。
+`ZaimRowConverterFactory` クラスを継承し、`create()` メソッドを実装します。
 引数の `ValidatedInputRow` に対して、どの `ZaimRowConverter` クラスを利用するかを選択します。
 (rowconverters/waon.py, rowconverters/mufg.py, rowconverters/sf_card_viewer.py を参考にしてください。)
 

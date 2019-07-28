@@ -1,6 +1,6 @@
 """This module implements row model of CSV."""
 from __future__ import annotations
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from dataclasses import field, dataclass
 from datetime import datetime
 from typing import Optional, TypeVar, Generic, List, Callable, Any
@@ -53,16 +53,16 @@ class InputRowData:  # type: ignore
         return return_value
 
 
+# Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
 @dataclass
-class InputStoreRowData(InputRowData):  # type: ignore
+class InputStoreRowData(InputRowData, ABC):  # type: ignore
     """This class is abstract class of input CSV row data."""
     _store: Optional[Store] = field(default=None, init=False)
-    # @see https://github.com/PyCQA/pylint/issues/179
     @property
-    @abstractmethod
-    def store_name(self) -> str:
-        """This property returns store name."""
+    def is_empty_store_name(self) -> bool:
+        """This property returns whether store name is empty or not."""
+        return str.strip(self.store_name) == ''
 
     @property
     def item_name(self) -> str:
@@ -82,20 +82,15 @@ class InputStoreRowData(InputRowData):  # type: ignore
         return super().validate(account_id)
 
 
+# Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
 @dataclass
-class InputItemRowData(InputRowData):  # type: ignore
+class InputItemRowData(InputRowData, ABC):  # type: ignore
     """This class is abstract class of input CSV row data."""
     _item: Optional[Store] = field(default=None, init=False)
     @property
     def store_name(self) -> str:
         return ''
-
-    # @see https://github.com/PyCQA/pylint/issues/179
-    @property
-    @abstractmethod
-    def item_name(self) -> str:
-        """This property returns store name."""
 
     def find_item(self, account_id: AccountId) -> Item:
         """This method select store from database and return it as Store model."""
@@ -121,8 +116,7 @@ class InputRow(Generic[TypeVarInputRowData]):
     def __init__(self, account_id: AccountId, input_row_data: TypeVarInputRowData):
         self.list_error: List[InvalidRowError] = []
         self._account_id = account_id
-        self.data = input_row_data
-        self.zaim_date = input_row_data.date
+        self.date = input_row_data.date
 
     # Reason: Parent method. pylint: disable=no-self-use
     @property
@@ -165,7 +159,20 @@ TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)
 
 
 class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
-    """This class implements factory to create input CSV row instance."""
+    """
+    This class implements factory to create input CSV row instance.
+    Why factory class is independent from input row data class is
+    because we can't achieve 100% coverage without this factory.
+    When model instance on post process depend on pre process,
+    In nature, best practice to generate model instance on post process is
+    to implement create method into each model on pre process.
+    Then, pre process will depend on post process.
+    And when add type hint to argument of __init__ method on model on post process,
+    circular dependency occurs.
+    To resolve it, we need to use TYPE_CHECKING,
+    however, pytest-cov detect import line only for TYPE_CHECKING as uncovered row.
+    @see https://github.com/python/mypy/issues/6101
+    """
     @abstractmethod
     def create(self, account_id: AccountId, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
         """This method creates input row by input CSV row data."""

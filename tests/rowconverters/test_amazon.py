@@ -5,11 +5,11 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory, AmazonRow
 from zaimcsvconverter.models import AccountId
-from zaimcsvconverter.zaim_row import ZaimPaymentRow
-from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter, AmazonZaimRowConverterSelector
+from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
+from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter, AmazonZaimRowConverterFactory
 
 
-class TestAmazonZaimPaymentRowConverter:
+class TestAmazonZaimPaymentRowFactory:
     """ Tests for AmazonZaimPaymentRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -20,7 +20,8 @@ class TestAmazonZaimPaymentRowConverter:
         store_name = 'Amazon Japan G.K.'
         item_name = 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト'
         amazon_row = AmazonRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
-        zaim_row = AmazonZaimPaymentRowConverter(amazon_row).convert()
+        # Reason: Pylint's bug. pylint: disable=no-member
+        zaim_row = ZaimRowFactory.create(AmazonZaimPaymentRowConverter(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -32,8 +33,8 @@ class TestAmazonZaimPaymentRowConverter:
         assert zaim_row_data.amount_payment == expected_amount
 
 
-class TestAmazonZaimRowConverterSelector:
-    """Tests for AmazonZaimRowConverterSelector."""
+class TestAmazonZaimRowConverterFactory:
+    """Tests for AmazonZaimRowConverterFactory."""
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
@@ -47,4 +48,4 @@ class TestAmazonZaimRowConverterSelector:
     def test(yaml_config_load, database_session_with_schema, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = AmazonRowFactory().create(AccountId.AMAZON, input_row_data)
-        assert AmazonZaimRowConverterSelector().select(input_row) == expected
+        assert type(AmazonZaimRowConverterFactory().create(input_row)) == expected

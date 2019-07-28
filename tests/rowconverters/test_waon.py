@@ -5,12 +5,12 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory, WaonRow
 from zaimcsvconverter.models import AccountId
-from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow, ZaimIncomeRow
-from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterSelector, WaonZaimPaymentRowConverter, \
+from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow, ZaimIncomeRow, ZaimRowFactory
+from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory, WaonZaimPaymentRowConverter, \
     WaonZaimIncomeRowConverter, WaonZaimTransferRowConverter
 
 
-class TestWaonZaimIncomeRowConverter:
+class TestWaonZaimIncomeRowFactory:
     """Tests for WaonZaimIncomeRowConverter."""
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
@@ -24,7 +24,8 @@ class TestWaonZaimIncomeRowConverter:
              yaml_config_load, database_session_basic_store_waon):
         """Arguments should set into properties."""
         waon_row = WaonRow(AccountId.WAON, waon_row_data)
-        zaim_row = WaonZaimIncomeRowConverter(waon_row).convert()
+        # Reason: Pylint's bug. pylint: disable=no-member
+        zaim_row = ZaimRowFactory.create(WaonZaimIncomeRowConverter(waon_row))
         assert isinstance(zaim_row, ZaimIncomeRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -35,7 +36,7 @@ class TestWaonZaimIncomeRowConverter:
         assert zaim_row_data.amount_income == expected_amount_income
 
 
-class TestWaonZaimPaymentRowConverter:
+class TestWaonZaimPaymentRowFactory:
     """Tests for WaonZaimPaymentRowConverter."""
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
@@ -52,18 +53,19 @@ class TestWaonZaimPaymentRowConverter:
              yaml_config_load, database_session_basic_store_waon):
         """Arguments should set into properties."""
         waon_row = WaonRow(AccountId.WAON, waon_row_data)
-        zaim_row = WaonZaimPaymentRowConverter(waon_row).convert()
+        # Reason: Pylint's bug. pylint: disable=no-member
+        zaim_row = ZaimRowFactory.create(WaonZaimPaymentRowConverter(waon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
         assert zaim_row_data.store_name == expected_store
-        assert zaim_row_data.item_name is None
+        assert zaim_row_data.item_name == ''
         assert zaim_row_data.cash_flow_source == 'WAON'
         assert zaim_row_data.amount_payment == expected_amount_payment
 
 
-class TestWaonZaimTransferRowConverter:
+class TestWaonZaimTransferRowFactory:
     """Tests for WaonZaimTransferRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -80,7 +82,7 @@ class TestWaonZaimTransferRowConverter:
              yaml_config_load, database_session_basic_store_waon):
         """Arguments should set into properties."""
         waon_row = WaonRow(AccountId.WAON, waon_row_data)
-        zaim_row = WaonZaimTransferRowConverter(waon_row).convert()
+        zaim_row = ZaimRowFactory.create(WaonZaimTransferRowConverter(waon_row))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -90,7 +92,7 @@ class TestWaonZaimTransferRowConverter:
         assert zaim_row_data.amount_transfer == expected_amount_payment
 
 
-class TestWaonZaimRowFactoryConverter:
+class TestWaonZaimRowFactoryFacotry:
     """Tests for WaonZaimRowConverterConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -114,4 +116,4 @@ class TestWaonZaimRowFactoryConverter:
     def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data: WaonRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = WaonRowFactory().create(AccountId.WAON, input_row_data)
-        assert WaonZaimRowConverterSelector().select(input_row) == expected
+        assert type(WaonZaimRowConverterFactory().create(input_row)) == expected

@@ -7,7 +7,7 @@ from typing import Type, List, Generic, TypeVar
 from fixturefilehandler.file_paths import RelativeDeployFilePath
 
 from tests.testlibraries.row_data import InvalidRowErrorRowData, ZaimRowData
-from zaimcsvconverter.zaim_row import ZaimRow
+from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
 
 TypeVarOutputRowData = TypeVar('TypeVarOutputRowData')
 
@@ -50,7 +50,7 @@ class ZaimCsvFileChecker(OutputCsvFileChecker):
     output_row_data_class: Type[ZaimRowData] = field(default=ZaimRowData, init=False)
 
     def assert_header_and_skip(self, csv_reader) -> None:
-        assert csv_reader.__next__() == ZaimRow.HEADER
+        assert csv_reader.__next__() == ZaimCsvFormat.HEADER
 
 
 @dataclass

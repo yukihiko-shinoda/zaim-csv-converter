@@ -1,24 +1,29 @@
 """This module implements convert steps from MUFG input row to Zaim row."""
-from abc import abstractmethod
-from typing import Type, TypeVar
+from abc import abstractmethod, ABC
+from typing import TypeVar
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.mufg import MufgRow, MufgPaymentRow, MufgIncomeRow
-from zaimcsvconverter.rowconverters import ZaimIncomeRowConverter, ZaimPaymentRowConverter, ZaimTransferRowConverter, \
-    ZaimRowConverterSelector, ZaimRowConverter
-
+from zaimcsvconverter.inputcsvformats.mufg import MufgStoreRow, MufgPaymentRow, MufgIncomeRow, MufgRow, \
+    MufgPaymentToOthersRow, MufgIncomeFromOthersRow
+from zaimcsvconverter.rowconverters import ZaimPaymentRowStoreConverter, ZaimTransferRowConverter, \
+    ZaimRowConverterFactory, ZaimRowConverter, ZaimIncomeRowStoreConverter
 
 TypeVarMufgRow = TypeVar('TypeVarMufgRow', bound=MufgRow)
+TypeVarMufgIncomeRow = TypeVar('TypeVarMufgIncomeRow', bound=MufgIncomeRow)
+TypeVarMufgPaymentRow = TypeVar('TypeVarMufgPaymentRow', bound=MufgPaymentRow)
 
 
-class MufgZaimIncomeRowConverter(ZaimIncomeRowConverter[MufgIncomeRow]):
+# Reason: Pylint's bug. pylint: disable=unsubscriptable-object
+class MufgZaimIncomeRowConverter(ZaimIncomeRowStoreConverter[MufgIncomeFromOthersRow]):
     """This class implements convert steps from MUFG input row to Zaim income row."""
     @property
-    def _cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.mufg.account_name
 
     @property
-    def _amount_income(self) -> int:
+    def amount_income(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         input_row = self.input_row
         if input_row.deposit_amount is None:
@@ -26,14 +31,17 @@ class MufgZaimIncomeRowConverter(ZaimIncomeRowConverter[MufgIncomeRow]):
         return input_row.deposit_amount
 
 
-class MufgZaimPaymentRowConverter(ZaimPaymentRowConverter[MufgPaymentRow]):
+# Reason: Pylint's bug. pylint: disable=unsubscriptable-object
+class MufgZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[MufgPaymentToOthersRow]):
     """This class implements convert steps from MUFG input row to Zaim payment row."""
     @property
-    def _cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.mufg.account_name
 
     @property
-    def _amount_payment(self) -> int:
+    def amount_payment(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         amount = self.input_row.payed_amount
         if amount is None:
@@ -41,50 +49,45 @@ class MufgZaimPaymentRowConverter(ZaimPaymentRowConverter[MufgPaymentRow]):
         return amount
 
 
-class MufgZaimTransferRowConverter(ZaimTransferRowConverter[TypeVarMufgRow]):
+# Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
+class MufgZaimTransferRowConverter(ZaimTransferRowConverter[TypeVarMufgRow], ABC):
     """This class implements convert steps from MUFG input row to Zaim transfer row."""
-    # @see https://github.com/PyCQA/pylint/issues/179
-    @property
-    @abstractmethod
-    def _cash_flow_source(self) -> str:
-        """This property returns cash flow source."""
-
-    @property
-    @abstractmethod
-    def _amount_transfer(self) -> int:
-        """This property returns amount of transfer."""
 
 
-class MufgAbstractIncomeZaimTransferRowConverter(MufgZaimTransferRowConverter[MufgIncomeRow]):
+class MufgAbstractIncomeZaimTransferRowConverter(MufgZaimTransferRowConverter[TypeVarMufgIncomeRow]):
     """This class implements convert steps from MUFG income input row to Zaim transfer row."""
     @property
     @abstractmethod
-    def _cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> str:
         """This property returns cash flow source."""
 
     @property
-    def _cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.mufg.account_name
 
     @property
-    def _amount_transfer(self) -> int:
+    def amount_transfer(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.deposit_amount
 
 
-class MufgAbstractPaymentZaimTransferRowConverter(MufgZaimTransferRowConverter[MufgPaymentRow]):
+class MufgAbstractPaymentZaimTransferRowConverter(MufgZaimTransferRowConverter[TypeVarMufgPaymentRow]):
     """This class implements convert steps from MUFG payment input row [MufgPaymentRow]to Zaim transfer row."""
     @property
-    def _cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.mufg.account_name
 
     @property
     @abstractmethod
-    def _cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> str:
         """This property returns cash flow target."""
 
     @property
-    def _amount_transfer(self) -> int:
+    def amount_transfer(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.payed_amount
 
@@ -92,48 +95,56 @@ class MufgAbstractPaymentZaimTransferRowConverter(MufgZaimTransferRowConverter[M
 class MufgIncomeZaimTransferRowConverter(MufgAbstractIncomeZaimTransferRowConverter):
     """This class implements convert steps from MUFG income input row to Zaim transfer row."""
     @property
-    def _cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> str:
         return CONFIG.mufg.transfer_account_name
 
 
 class MufgPaymentZaimTransferRowConverter(MufgAbstractPaymentZaimTransferRowConverter):
     """This class implements convert steps from MUFG payment input row to Zaim transfer row."""
     @property
-    def _cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> str:
         return CONFIG.mufg.transfer_account_name
 
 
-class MufgTransferIncomeZaimTransferRowConverter(MufgAbstractIncomeZaimTransferRowConverter):
+class MufgTransferIncomeZaimTransferRowConverter(MufgAbstractIncomeZaimTransferRowConverter[MufgIncomeFromOthersRow]):
     """This class implements convert steps from MUFG transfer income input row to Zaim transfer row."""
     @property
-    def _cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> str:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.transfer_target
 
 
-class MufgTransferPaymentZaimTransferRowConverter(MufgAbstractPaymentZaimTransferRowConverter):
+class MufgTransferPaymentZaimTransferRowConverter(MufgAbstractPaymentZaimTransferRowConverter[MufgPaymentToOthersRow]):
     """This class implements convert steps from MUFG transfer payment input row to Zaim transfer row."""
     @property
-    def _cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> str:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.transfer_target
 
 
-class MufgZaimRowConverterSelector(ZaimRowConverterSelector[MufgRow]):
+class MufgZaimRowConverterFactory(ZaimRowConverterFactory[MufgRow]):
     """This class implements select steps from MUFG input row to Zaim row converter."""
-    def select(self, input_row: MufgRow) -> Type[ZaimRowConverter]:
+    def create(self, input_row: MufgRow) -> ZaimRowConverter:
         if input_row.is_payment:
-            return MufgPaymentZaimTransferRowConverter
-        if input_row.is_income and input_row.is_by_card:
-            return MufgIncomeZaimTransferRowConverter
-        if input_row.is_income or input_row.is_transfer_income and input_row.store.transfer_target is None:
-            return MufgZaimIncomeRowConverter
-        if input_row.is_transfer_income:
-            return MufgTransferIncomeZaimTransferRowConverter
-        if input_row.is_transfer_payment and input_row.store.transfer_target is None:
-            return MufgZaimPaymentRowConverter
+            return MufgPaymentZaimTransferRowConverter(input_row)
+        if input_row.is_income_from_other_own_account:
+            return MufgIncomeZaimTransferRowConverter(input_row)
+        if isinstance(input_row, MufgIncomeFromOthersRow) and input_row.is_transfer_income_from_other_own_account:
+            return MufgTransferIncomeZaimTransferRowConverter(input_row)
+        if input_row.is_income or input_row.is_transfer_income:
+            return MufgZaimIncomeRowConverter(input_row)
+        if isinstance(input_row, MufgPaymentToOthersRow) and input_row.is_transfer_payment_to_other_own_account:
+            return MufgTransferPaymentZaimTransferRowConverter(input_row)
         if input_row.is_transfer_payment:
-            return MufgTransferPaymentZaimTransferRowConverter
-        raise ValueError('Unsupported row. '
-                         f'class = {type(input_row)}, is_by_card = {input_row.is_by_card}, '
-                         f'store.transfer_target = {input_row.store.transfer_target}')
+            return MufgZaimPaymentRowConverter(input_row)
+        raise ValueError(self.build_message(input_row))
+
+    @staticmethod
+    def build_message(input_row: MufgRow) -> str:
+        """This method builds error message."""
+        message = ('Unsupported row. '
+                   f'class = {type(input_row)}, '
+                   f'is_income_from_other_own_account = {input_row.is_income_from_other_own_account}')
+        if isinstance(input_row, MufgStoreRow):
+            message = f'{message}, store.transfer_target = {input_row.store.transfer_target}'
+        return message

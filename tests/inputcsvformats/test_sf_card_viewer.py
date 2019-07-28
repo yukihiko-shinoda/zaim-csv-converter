@@ -56,7 +56,7 @@ class TestSFCardViewerRow:
         sf_card_viewer_row = SFCardViewerRow(
             AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
         )
-        assert sf_card_viewer_row.zaim_date == datetime(2018, 11, 13, 0, 0, 0)
+        assert sf_card_viewer_row.date == datetime(2018, 11, 13, 0, 0, 0)
         assert isinstance(sf_card_viewer_row.store, Store)
         assert sf_card_viewer_row.store.name_zaim == '東京地下鉄株式会社　南北線後楽園駅'
 

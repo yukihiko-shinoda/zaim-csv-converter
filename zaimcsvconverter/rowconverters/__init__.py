@@ -1,11 +1,13 @@
 """This module implements convert steps from input row to Zaim row."""
-from abc import abstractmethod
-from typing import TypeVar, Generic, Type
+from abc import abstractmethod, ABC
+from typing import TypeVar, Generic, Optional
 
-from zaimcsvconverter.inputcsvformats import InputRow
-from zaimcsvconverter.zaim_row import ZaimRow, ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
+from zaimcsvconverter.inputcsvformats import InputRow, InputStoreRow, InputItemRow
+from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
 
 TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)
+TypeVarInputStoreRow = TypeVar('TypeVarInputStoreRow', bound=InputStoreRow)
+TypeVarInputItemRow = TypeVar('TypeVarInputItemRow', bound=InputItemRow)
 
 
 class ZaimRowConverter(Generic[TypeVarInputRow]):
@@ -13,69 +15,159 @@ class ZaimRowConverter(Generic[TypeVarInputRow]):
     def __init__(self, input_row: TypeVarInputRow):
         self.input_row: TypeVarInputRow = input_row
 
-    @abstractmethod
-    def convert(self) -> ZaimRow:
-        """This method converts input row into zaim row."""
-
 
 class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim income row."""
-    def convert(self) -> ZaimIncomeRow:
-        return ZaimIncomeRow(self.input_row, self._cash_flow_target, self._amount_income)
+    @property
+    @abstractmethod
+    def category(self) -> str:
+        """This property returns category on Zaim income row."""
 
     @property
     @abstractmethod
-    def _cash_flow_target(self) -> str:
+    def store_name(self) -> str:
+        """This property returns store name."""
+
+    @property
+    @abstractmethod
+    def cash_flow_target(self) -> str:
         """This property returns income cash flow target."""
 
     @property
     @abstractmethod
-    def _amount_income(self) -> int:
+    def amount_income(self) -> int:
         """This property returns income amount income."""
+
+
+# Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
+class ZaimIncomeRowStoreConverter(ZaimIncomeRowConverter[TypeVarInputStoreRow], ABC):
+    """This class implements convert steps from input store row to Zaim income row."""
+    @property
+    def category(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.store.category_income
+
+    @property
+    def store_name(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.store.name_zaim
 
 
 class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim payment row."""
-    def convert(self) -> ZaimPaymentRow:
-        return ZaimPaymentRow(self.input_row, self._cash_flow_source, self._note, self._amount_payment)
+    @property
+    @abstractmethod
+    def category_large(self) -> Optional[str]:
+        """This property returns large category on Zaim payment row."""
 
     @property
     @abstractmethod
-    def _cash_flow_source(self) -> str:
+    def category_small(self) -> Optional[str]:
+        """This property returns small category on Zaim payment row."""
+
+    @property
+    @abstractmethod
+    def item_name(self) -> str:
+        """This property returns item name."""
+
+    @property
+    @abstractmethod
+    def store_name(self) -> str:
+        """This property returns store name."""
+
+    @property
+    @abstractmethod
+    def cash_flow_source(self) -> str:
         """This property returns cash flow source."""
 
     @property
-    def _note(self) -> str:
-        return ZaimRow.NOTE_EMPTY
+    def note(self) -> str:
+        """This property returns note."""
+        return ZaimCsvFormat.NOTE_EMPTY
 
     @property
     @abstractmethod
-    def _amount_payment(self) -> int:
+    def amount_payment(self) -> int:
         """This property returns amount payment."""
+
+
+class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow], ABC):
+    """This class implements convert steps from input store row to Zaim payment row."""
+    @property
+    def category_large(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.store.category_payment_large
+
+    @property
+    def category_small(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.store.category_payment_small
+
+    @property
+    def item_name(self) -> str:
+        return ZaimCsvFormat.ITEM_NAME_EMPTY
+
+    @property
+    def store_name(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.store.name_zaim
+
+
+class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow], ABC):
+    """This class implements convert steps from input item row to Zaim payment row."""
+    @property
+    def category_large(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.item.category_payment_large
+
+    @property
+    def category_small(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.item.category_payment_small
+
+    @property
+    def item_name(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.item.name
+
+    @property
+    def store_name(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.store.name_zaim
 
 
 class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim transfer row."""
-    def convert(self) -> ZaimTransferRow:
-        return ZaimTransferRow(self.input_row, self._cash_flow_source, self._cash_flow_target, self._amount_transfer)
-
     @property
     @abstractmethod
-    def _cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> str:
         """This property returns cash flow source."""
 
     @property
     @abstractmethod
-    def _cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> str:
         """This property returns cash flow target."""
 
     @property
     @abstractmethod
-    def _amount_transfer(self) -> int:
+    def amount_transfer(self) -> int:
         """This property returns amount transfer."""
 
 
-class ZaimRowConverterSelector(Generic[TypeVarInputRow]):
-    """This class implements select steps from input row to Zaim row converter."""
-    def select(self, input_row: TypeVarInputRow) -> Type[ZaimRowConverter]:
+class ZaimRowConverterFactory(Generic[TypeVarInputRow]):
+    """
+    This class implements factory of Zaim row converter.
+    Why factory class is independent from input row data class is
+    because we can't achieve 100% coverage without this factory.
+    When model instance on post process depend on pre process,
+    In nature, best practice to generate model instance on post process is
+    to implement create method into each model on pre process.
+    Then, pre process will depend on post process.
+    And when add type hint to argument of __init__ method on model on post process,
+    circular dependency occurs.
+    To resolve it, we need to use TYPE_CHECKING,
+    however, pytest-cov detect import line only for TYPE_CHECKING as uncovered row.
+    @see https://github.com/python/mypy/issues/6101
+    """
+    def create(self, input_row: TypeVarInputRow) -> ZaimRowConverter:
         """This method selects Zaim row converter."""

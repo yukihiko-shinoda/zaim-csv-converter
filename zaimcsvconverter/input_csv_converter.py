@@ -4,7 +4,7 @@ from pathlib import Path
 
 from zaimcsvconverter import DirectoryCsv
 from zaimcsvconverter.input_csv import InputCsv
-from zaimcsvconverter.zaim_row import ZaimRow
+from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
 
 
 class InputCsvConverter:
@@ -17,5 +17,5 @@ class InputCsvConverter:
         """This method executes CSV convert steps."""
         with self.path_to_output.open('w', encoding='UTF-8', newline='\n') as file_zaim:
             writer_zaim = csv.writer(file_zaim)
-            writer_zaim.writerow(ZaimRow.HEADER)
+            writer_zaim.writerow(ZaimCsvFormat.HEADER)
             self.input_csv.covert_to_zaim(writer_zaim)

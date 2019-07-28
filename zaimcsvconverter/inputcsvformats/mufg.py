@@ -1,11 +1,13 @@
 """This module implements row model of MUFG bank CSV."""
 from __future__ import annotations
+
+from abc import ABC
 from datetime import datetime
 from enum import Enum
 from typing import Optional
 from dataclasses import dataclass
 
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
+from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputRowFactory, InputRow, InputStoreRow
 from zaimcsvconverter.models import AccountId
 from zaimcsvconverter.utility import Utility
 
@@ -15,7 +17,8 @@ class MufgRowData(InputStoreRowData):
     """This class implements data class for wrapping list of MUFG bunk CSV row model."""
     class Summary(Enum):
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        CARD = 'カ－ド'
+        CARD = 'カ−ド'
+        CARD_CONVENIENCE_STORE_ATM = 'カ−ドＣ１'
 
     class CashFlowKind(Enum):
         """This class implements constant of cash flow kind in MUFG CSV."""
@@ -78,13 +81,12 @@ class MufgRowData(InputStoreRowData):
         return super().validate(account_id)
 
 
-# pylint: disable=too-many-instance-attributes
-class MufgRow(InputStoreRow):
+class MufgRow(InputRow):
     """This class implements row model of MUFG bank CSV."""
-    def __init__(self, account_id: AccountId, row_data: MufgRowData):
-        super().__init__(account_id, row_data)
-        self.cash_flow_kind: MufgRowData.CashFlowKind = row_data.cash_flow_kind
-        self._summary: str = row_data.summary
+    def __init__(self, account_id: AccountId, input_row_data: MufgRowData):
+        super().__init__(account_id, input_row_data)
+        self.cash_flow_kind: MufgRowData.CashFlowKind = input_row_data.cash_flow_kind
+        self._summary: str = input_row_data.summary
 
     @property
     def is_income(self) -> bool:
@@ -109,11 +111,17 @@ class MufgRow(InputStoreRow):
     @property
     def is_by_card(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return self._summary == MufgRowData.Summary.CARD.value
+        return self._summary == MufgRowData.Summary.CARD.value or \
+               self._summary == MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value
+
+    @property
+    def is_income_from_other_own_account(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.is_income and self.is_by_card
 
 
-class MufgIncomeRow(MufgRow):
-    """This class implements row model of MUFG bank CSV."""
+class MufgIncomeRow(MufgRow, ABC):
+    """This class implements income row model of MUFG bank CSV."""
     def __init__(self, account_id: AccountId, row_data: MufgRowData):
         super().__init__(account_id, row_data)
         self._deposit_amount: Optional[int] = row_data.deposit_amount
@@ -134,7 +142,7 @@ class MufgIncomeRow(MufgRow):
         return super().validate
 
 
-class MufgPaymentRow(MufgRow):
+class MufgPaymentRow(MufgRow, ABC):
     """This class implements payment row model of MUFG bank CSV."""
     def __init__(self, account_id: AccountId, row_data: MufgRowData):
         super().__init__(account_id, row_data)
@@ -156,13 +164,49 @@ class MufgPaymentRow(MufgRow):
         return super().validate
 
 
+class MufgIncomeFromSelfRow(MufgIncomeRow):
+    """This class implements income from self row model of MUFG bank CSV."""
+
+
+class MufgPaymentToSelfRow(MufgPaymentRow):
+    """This class implements payment from self row model of MUFG bank CSV."""
+
+
+# pylint: disable=too-many-instance-attributes
+class MufgStoreRow(MufgRow, InputStoreRow):
+    """This class implements row model of MUFG bank CSV."""
+    @property
+    def is_transfer_income_from_other_own_account(self) -> bool:
+        """This method returns whether this row is transfer income from other own account or not."""
+        return self.is_transfer_income and self.store.transfer_target is not None
+
+    @property
+    def is_transfer_payment_to_other_own_account(self) -> bool:
+        """This method returns whether this row is transfer payment to other own account or not."""
+        return self.is_transfer_payment and self.store.transfer_target is not None
+
+
+# pylint: disable=too-many-ancestors
+class MufgIncomeFromOthersRow(MufgStoreRow, MufgIncomeRow):
+    """This class implements row model of MUFG bank CSV."""
+
+
+# pylint: disable=too-many-ancestors
+class MufgPaymentToOthersRow(MufgStoreRow, MufgPaymentRow):
+    """This class implements payment row model of MUFG bank CSV."""
+
+
 class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
     """This class implements factory to create MUFG CSV row instance."""
     def create(self, account_id: AccountId, input_row_data: MufgRowData) -> MufgRow:
+        if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.INCOME:
+            return MufgIncomeFromSelfRow(account_id, input_row_data)
+        if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.PAYMENT:
+            return MufgPaymentToSelfRow(account_id, input_row_data)
         if input_row_data.cash_flow_kind in (
                 MufgRowData.CashFlowKind.PAYMENT, MufgRowData.CashFlowKind.TRANSFER_PAYMENT
         ):
-            return MufgPaymentRow(account_id, input_row_data)
+            return MufgPaymentToOthersRow(account_id, input_row_data)
         if input_row_data.cash_flow_kind in (MufgRowData.CashFlowKind.INCOME, MufgRowData.CashFlowKind.TRANSFER_INCOME):
-            return MufgIncomeRow(account_id, input_row_data)
+            return MufgIncomeFromOthersRow(account_id, input_row_data)
         raise ValueError(f'Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}')

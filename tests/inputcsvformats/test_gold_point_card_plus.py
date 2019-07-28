@@ -82,7 +82,7 @@ class TestGoldPointCardPlusRow:
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
         row = GoldPointCardPlusRow(AccountId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
-        assert row.zaim_date == expected_date
+        assert row.date == expected_date
         assert isinstance(row.store, Store)
         # pylint: disable=protected-access
         assert row.store.name == gold_point_card_plus_row_data._used_store

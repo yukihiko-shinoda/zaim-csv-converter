@@ -1,24 +1,25 @@
 """This module implements convert steps from Amazon input row to Zaim row."""
-from typing import Type
-
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRow
-from zaimcsvconverter.rowconverters import ZaimPaymentRowConverter, ZaimRowConverterSelector, ZaimRowConverter
+from zaimcsvconverter.rowconverters import ZaimRowConverterFactory, ZaimRowConverter, ZaimPaymentRowItemConverter
 
 
-class AmazonZaimPaymentRowConverter(ZaimPaymentRowConverter[AmazonRow]):
+# Reason: Pylint's bug. pylint: disable=unsubscriptable-object
+class AmazonZaimPaymentRowConverter(ZaimPaymentRowItemConverter[AmazonRow]):
     """This class implements convert steps from Amazon input row to Zaim payment row."""
     @property
-    def _cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.amazon.payment_account_name
 
     @property
-    def _amount_payment(self) -> int:
+    def amount_payment(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.price * self.input_row.number
 
 
-class AmazonZaimRowConverterSelector(ZaimRowConverterSelector[AmazonRow]):
+class AmazonZaimRowConverterFactory(ZaimRowConverterFactory[AmazonRow]):
     """This class implements select steps from Amazon input row to Zaim row converter."""
-    def select(self, input_row: AmazonRow) -> Type[ZaimRowConverter]:
-        return AmazonZaimPaymentRowConverter
+    def create(self, input_row: AmazonRow) -> ZaimRowConverter:
+        return AmazonZaimPaymentRowConverter(input_row)

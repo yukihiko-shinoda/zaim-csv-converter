@@ -8,6 +8,7 @@ from zaimcsvconverter.error_collector import SingleErrorCollector
 from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import InvalidHeaderError, InvalidInputCsvError, InvalidRowError
 from zaimcsvconverter.inputcsvformats import InputRowData, InputRow
+from zaimcsvconverter.zaim_row import ZaimRowFactory
 
 
 class InputCsv:
@@ -62,8 +63,8 @@ class InputCsv:
             return
         if input_row.is_row_to_skip:
             return
-        converter = self._account.value.zaim_row_converter_selector.select(input_row)
-        zaim_row = converter(input_row).convert()
+        converter = self._account.value.zaim_row_converter_selector.create(input_row)
+        zaim_row = ZaimRowFactory.create(converter)
         list_row_zaim = zaim_row.convert_to_list()
         writer_zaim.writerow(list_row_zaim)
 

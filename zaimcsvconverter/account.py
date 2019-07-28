@@ -16,12 +16,12 @@ from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
 from zaimcsvconverter.models import AccountId, ConvertTableType, ConvertTableRecordMixin
-from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterSelector
-from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterSelector
-from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterSelector
-from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterSelector
-from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterSelector
-from zaimcsvconverter.rowconverters import ZaimRowConverterSelector
+from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
+from zaimcsvconverter.rowconverters import ZaimRowConverterFactory
 
 
 class FileNameCsvConvert(Enum):
@@ -50,7 +50,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     # pylint: disable=unsubscriptable-object
     input_row_data_class: Type[TypeVarInputRowData]
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
-    zaim_row_converter_selector: ZaimRowConverterSelector[TypeVarInputRow]
+    zaim_row_converter_selector: ZaimRowConverterFactory[TypeVarInputRow]
     encode: str = 'UTF-8'
     csv_header: Optional[List[str]] = None
 
@@ -77,7 +77,7 @@ class Account(Enum):
         ConvertTableType.STORE,
         WaonRowData,
         WaonRowFactory(),
-        WaonZaimRowConverterSelector(),
+        WaonZaimRowConverterFactory(),
         'UTF-8',
         ['取引年月日', '利用店舗', '利用金額（税込）', '利用区分', 'チャージ区分']
     )
@@ -88,7 +88,7 @@ class Account(Enum):
         ConvertTableType.STORE,
         GoldPointCardPlusRowData,
         GoldPointCardPlusRowFactory(),
-        GoldPointCardPlusZaimRowConverterSelector(),
+        GoldPointCardPlusZaimRowConverterFactory(),
         'shift_jis_2004'
     )
     MUFG = AccountContext(
@@ -98,7 +98,7 @@ class Account(Enum):
         ConvertTableType.STORE,
         MufgRowData,
         MufgRowFactory(),
-        MufgZaimRowConverterSelector(),
+        MufgZaimRowConverterFactory(),
         'shift_jis_2004',
         ['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分']
     )
@@ -110,7 +110,7 @@ class Account(Enum):
         SFCardViewerRowData,
         # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
         SFCardViewerRowFactory(lambda: CONFIG.pasmo),
-        SFCardViewerZaimRowConverterSelector(lambda: CONFIG.pasmo),
+        SFCardViewerZaimRowConverterFactory(lambda: CONFIG.pasmo),
         'shift_jis_2004',
         ['利用年月日', '定期', '鉄道会社名', '入場駅/事業者名', '定期', '鉄道会社名', '出場駅/降車場所', '利用額(円)', '残額(円)', 'メモ']
     )
@@ -121,7 +121,7 @@ class Account(Enum):
         ConvertTableType.ITEM,
         AmazonRowData,
         AmazonRowFactory(),
-        AmazonZaimRowConverterSelector(),
+        AmazonZaimRowConverterFactory(),
         'utf-8-sig',
         [
             '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',

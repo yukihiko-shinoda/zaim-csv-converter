@@ -2,7 +2,7 @@
 from zaimcsvconverter.account import AccountContext, FileNameCsvConvert
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
 from zaimcsvconverter.models import AccountId, ConvertTableType
-from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterSelector
+from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
 
 
 class TestAccount:
@@ -20,7 +20,7 @@ class TestAccount:
         convert_table_type = ConvertTableType.STORE
         input_row_data_class = WaonRowData
         input_row_factory = WaonRowFactory()
-        zaim_row_factory_selector = WaonZaimRowConverterSelector()
+        zaim_row_factory_selector = WaonZaimRowConverterFactory()
         account_dependency = AccountContext(
             identity, file_name_csv_convert, regex_csv_file_name, convert_table_type, input_row_data_class,
             input_row_factory, zaim_row_factory_selector
