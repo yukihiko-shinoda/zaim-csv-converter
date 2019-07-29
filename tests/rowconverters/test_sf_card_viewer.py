@@ -9,11 +9,12 @@ from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFacto
 from zaimcsvconverter.models import AccountId
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow, ZaimRowFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory, \
-    SFCardViewerZaimPaymentRowConverter, SFCardViewerZaimTransferRowConverter
+    SFCardViewerZaimPaymentOnStationRowConverter, SFCardViewerZaimTransferRowConverter, \
+    SFCardViewerZaimPaymentOnSomewhereRowConverter
 
 
 class TestSFCardViewerZaimPaymentRowFactory:
-    """Tests for SFCardViewerZaimPaymentRowConverter."""
+    """Tests for SFCardViewerZaimPaymentOnStationRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod
     def test(yaml_config_load, database_session_stores_sf_card_viewer):
@@ -24,11 +25,11 @@ class TestSFCardViewerZaimPaymentRowFactory:
             AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
         )
 
-        class ConcreteSFCardViewerZaimPaymentRowConverter(SFCardViewerZaimPaymentRowConverter):
+        class ConcreteSFCardViewerZaimPaymentOnStationRowConverter(SFCardViewerZaimPaymentOnStationRowConverter):
             # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             account_config = CONFIG.pasmo
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(ConcreteSFCardViewerZaimPaymentRowConverter(sf_card_viewer_row))
+        zaim_row = ZaimRowFactory.create(ConcreteSFCardViewerZaimPaymentOnStationRowConverter(sf_card_viewer_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -78,10 +79,10 @@ class TestSFCardViewerZaimRowConverterFactory:
             # Case when SF Card Viewer transportation
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_KOHRAKUEN_STATION],
              InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
-             SFCardViewerZaimPaymentRowConverter),
+             SFCardViewerZaimPaymentOnStationRowConverter),
             # Case when SF Card Viewer sales goods
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY],
-             InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, SFCardViewerZaimPaymentRowConverter),
+             InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, SFCardViewerZaimPaymentOnSomewhereRowConverter),
             # Case when SF Card Viewer auto charge
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY],
              InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION,
@@ -89,10 +90,10 @@ class TestSFCardViewerZaimRowConverterFactory:
             # Case when SF Card Viewer exit by window
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_KITASENJU_STATION],
              InstanceResource.ROW_DATA_SF_CARD_VIEWER_EXIT_BY_WINDOW_KITASENJU_STATION,
-             SFCardViewerZaimPaymentRowConverter),
+             SFCardViewerZaimPaymentOnStationRowConverter),
             # Case when SF Card Viewer bus tram
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY],
-             InstanceResource.ROW_DATA_SF_CARD_VIEWER_BUS_TRAM, SFCardViewerZaimPaymentRowConverter),
+             InstanceResource.ROW_DATA_SF_CARD_VIEWER_BUS_TRAM, SFCardViewerZaimPaymentOnSomewhereRowConverter),
         ], indirect=['database_session_with_schema']
     )
     def test_success(yaml_config_load, database_session_with_schema, input_row_data: SFCardViewerRowData, expected):

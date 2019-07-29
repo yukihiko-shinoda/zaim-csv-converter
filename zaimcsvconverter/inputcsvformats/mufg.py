@@ -60,11 +60,13 @@ class MufgRowData(InputStoreRowData):
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.CashFlowKind(self._cash_flow_kind)
 
-    def validate(self, account_id: AccountId) -> bool:
+    @property
+    def validate(self) -> bool:
         self.stock_error(
             lambda: self.date,
             f'Invalid date. Date = {self._date}'
         )
+        # This comment prevents pylint duplicate-code.
         self.stock_error(
             lambda: self.payed_amount,
             f'Invalid payed amount. Payed amount = {self._payed_amount}'
@@ -78,7 +80,7 @@ class MufgRowData(InputStoreRowData):
             'The value of "Cash flow kind" has not been defined in this code. '
             f'Cash flow kind = {self._cash_flow_kind}'
         )
-        return super().validate(account_id)
+        return super().validate
 
 
 class MufgRow(InputRow):

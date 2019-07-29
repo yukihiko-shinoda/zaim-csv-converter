@@ -24,16 +24,7 @@ class InputRowData:  # type: ignore
 
     @property
     @abstractmethod
-    def store_name(self) -> str:
-        """This property returns store name."""
-
-    @property
-    @abstractmethod
-    def item_name(self) -> str:
-        """This property returns store name."""
-
-    @abstractmethod
-    def validate(self, account_id: AccountId) -> bool:
+    def validate(self) -> bool:
         """This method validates data."""
         return bool(self.list_error) or self.undefined_content_error is not None
 
@@ -42,70 +33,34 @@ class InputRowData:  # type: ignore
         with MultipleErrorCollector(InvalidRowError, message, self.list_error):
             return method()
 
-    def stock_undefined_content_error(self, method: Callable[[], Any], message: str) -> Any:
-        """This method stocks undefined content error."""
-        error_collector = SingleErrorCollector(UndefinedContentError, message)
-        # noinspection PyUnusedLocal
-        return_value = None
-        with error_collector:
-            return_value = method()
-        self.undefined_content_error = error_collector.error
-        return return_value
-
 
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
 @dataclass
 class InputStoreRowData(InputRowData, ABC):  # type: ignore
-    """This class is abstract class of input CSV row data."""
+    """This class is abstract class of input CSV row data including column to find store (nullable OK)."""
     _store: Optional[Store] = field(default=None, init=False)
+    @property
+    @abstractmethod
+    def store_name(self) -> str:
+        """This property returns store name."""
+
     @property
     def is_empty_store_name(self) -> bool:
         """This property returns whether store name is empty or not."""
         return str.strip(self.store_name) == ''
-
-    @property
-    def item_name(self) -> str:
-        return ''
-
-    def find_store(self, account_id: AccountId) -> Store:
-        """This method finds store data from database if has not find."""
-        if self._store is None:
-            self._store = Store.try_to_find(account_id, self.store_name)
-        return self._store
-
-    def validate(self, account_id: AccountId) -> bool:
-        self.stock_undefined_content_error(
-            lambda: self.find_store(account_id),
-            f'Store name has not been defined in convert table CSV. Store name = {self.store_name}'
-        )
-        return super().validate(account_id)
 
 
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
 @dataclass
 class InputItemRowData(InputRowData, ABC):  # type: ignore
-    """This class is abstract class of input CSV row data."""
+    """This class is abstract class of input CSV row data including column to find item (nullable OK)."""
     _item: Optional[Store] = field(default=None, init=False)
     @property
-    def store_name(self) -> str:
-        return ''
-
-    def find_item(self, account_id: AccountId) -> Item:
-        """This method select store from database and return it as Store model."""
-        item = self._item
-        if item is None:
-            item = Item.try_to_find(account_id, self.item_name)
-            self._item = item
-        return item
-
-    def validate(self, account_id: AccountId) -> bool:
-        self.stock_undefined_content_error(
-            lambda: self.find_item(account_id),
-            f'Item name has not been defined in convert table CSV. Item name = {self.item_name}'
-        )
-        return super().validate(account_id)
+    @abstractmethod
+    def item_name(self) -> str:
+        """This property returns item name."""
 
 
 TypeVarInputRowData = TypeVar('TypeVarInputRowData', bound=InputRowData)
@@ -115,8 +70,8 @@ class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
     def __init__(self, account_id: AccountId, input_row_data: TypeVarInputRowData):
         self.list_error: List[InvalidRowError] = []
-        self._account_id = account_id
-        self.date = input_row_data.date
+        self._account_id: AccountId = account_id
+        self.date: datetime = input_row_data.date
 
     # Reason: Parent method. pylint: disable=no-self-use
     @property
@@ -137,22 +92,93 @@ class InputRow(Generic[TypeVarInputRowData]):
 
 
 class InputStoreRow(InputRow):
-    """This class implements store row model of CSV."""
+    """This class implements row model of CSV including store name data (disallow empty)."""
     def __init__(self, account_id: AccountId, input_store_row_data: InputStoreRowData):
         super().__init__(account_id, input_store_row_data)
-        self.store = input_store_row_data.find_store(account_id)
+        self.store_name: str = input_store_row_data.store_name
+        self._store: Optional[Store] = None
+        self.undefined_content_error: Optional[UndefinedContentError] = None
+
+    @property
+    def store(self) -> Store:
+        """This method finds store data from database if has not find."""
+        if self._store is None:
+            self._store = Store.try_to_find(self._account_id, self.store_name)
+        return self._store
+
+    @property
+    def validate(self) -> bool:
+        self.stock_undefined_content_error(
+            lambda: self.store,
+            f'Store name has not been defined in convert table CSV. Store name = {self.store_name}'
+        )
+        return super().validate or self.undefined_content_error is not None
+
+    def stock_undefined_content_error(self, method: Callable[[], Any], message: str) -> Any:
+        """This method stocks undefined content error."""
+        error_collector = SingleErrorCollector(UndefinedContentError, message)
+        # noinspection PyUnusedLocal
+        return_value = None
+        with error_collector:
+            return_value = method()
+        self.undefined_content_error = error_collector.error
+        return return_value
+
+    def get_report_undefined_content_error(self, file_name_csv_convert) -> List[str]:
+        """This method returns report of undefined content error."""
+        return [
+            file_name_csv_convert.value,
+            self.store_name,
+            '',
+        ]
 
 
 class InputItemRow(InputRow):
-    """This class implements store row model of CSV."""
+    """This class implements row model of CSV including item name data (disallow empty)."""
     def __init__(self, account_id: AccountId, input_item_row_data: InputItemRowData):
         super().__init__(account_id, input_item_row_data)
-        self.item = input_item_row_data.find_item(account_id)
+        self.store_name: str = ''
+        self.item_name: str = input_item_row_data.item_name
+        self._item: Optional[Item] = None
+        self.undefined_content_error: Optional[UndefinedContentError] = None
 
     @property
     @abstractmethod
     def store(self) -> Store:
         """This property returns store in Zaim row."""
+
+    @property
+    def item(self) -> Item:
+        """This method finds store data from database if has not find."""
+        if self._item is None:
+            self._item = Item.try_to_find(self._account_id, self.item_name)
+        return self._item
+
+    @property
+    def validate(self) -> bool:
+        self.stock_undefined_content_error(
+            lambda: self.item,
+            f'Item name has not been defined in convert table CSV. Item name = {self.item_name}'
+        )
+        return super().validate or self.undefined_content_error is not None
+
+    def stock_undefined_content_error(self, method: Callable[[], Any], message: str) -> Any:
+        """This method stocks undefined content error."""
+        error_collector = SingleErrorCollector(UndefinedContentError, message)
+        # noinspection PyUnusedLocal
+        return_value = None
+        with error_collector:
+            return_value = method()
+        self.undefined_content_error = error_collector.error
+        return return_value
+
+    def get_report_undefined_content_error(self, file_name_csv_convert) -> List[str]:
+        """This method returns report of undefined content error."""
+        return [
+            file_name_csv_convert.value,
+            self.store_name,
+            self.item_name,
+        ]
 
 
 TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)

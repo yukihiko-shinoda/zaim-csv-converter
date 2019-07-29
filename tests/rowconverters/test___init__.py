@@ -4,8 +4,8 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter
-from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimPaymentRowConverter, \
-    SFCardViewerZaimTransferRowConverter
+from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimPaymentOnStationRowConverter, \
+    SFCardViewerZaimTransferRowConverter, SFCardViewerZaimPaymentOnSomewhereRowConverter
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimPaymentRowConverter
 from zaimcsvconverter.rowconverters.mufg import MufgZaimIncomeRowConverter, MufgZaimPaymentRowConverter, \
     MufgIncomeZaimTransferRowConverter, MufgPaymentZaimTransferRowConverter, \
@@ -61,10 +61,10 @@ class TestZaimRowConverterFactory:
             # Case when SF Card Viewer transportation
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_KOHRAKUEN_STATION], Account.PASMO,
              InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
-             SFCardViewerZaimPaymentRowConverter),
+             SFCardViewerZaimPaymentOnStationRowConverter),
             # Case when SF Card Viewer sales goods
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY], Account.PASMO,
-             InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, SFCardViewerZaimPaymentRowConverter),
+             InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, SFCardViewerZaimPaymentOnSomewhereRowConverter),
             # Case when SF Card Viewer auto charge
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY], Account.PASMO,
              InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION,
@@ -72,10 +72,10 @@ class TestZaimRowConverterFactory:
             # Case when SF Card Viewer exit by window
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_KITASENJU_STATION], Account.PASMO,
              InstanceResource.ROW_DATA_SF_CARD_VIEWER_EXIT_BY_WINDOW_KITASENJU_STATION,
-             SFCardViewerZaimPaymentRowConverter),
+             SFCardViewerZaimPaymentOnStationRowConverter),
             # Case when SF Card Viewer bus tram
             ([InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY], Account.PASMO,
-             InstanceResource.ROW_DATA_SF_CARD_VIEWER_BUS_TRAM, SFCardViewerZaimPaymentRowConverter),
+             InstanceResource.ROW_DATA_SF_CARD_VIEWER_BUS_TRAM, SFCardViewerZaimPaymentOnSomewhereRowConverter),
             # Case when Amazon payment
             ([InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT], Account.AMAZON,
              InstanceResource.ROW_DATA_AMAZON_ECHO_DOT, AmazonZaimPaymentRowConverter),

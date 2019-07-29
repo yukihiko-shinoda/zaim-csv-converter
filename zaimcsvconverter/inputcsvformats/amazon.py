@@ -48,7 +48,8 @@ class AmazonRowData(InputItemRowData):
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return int(self._number)
 
-    def validate(self, account_id: AccountId) -> bool:
+    @property
+    def validate(self) -> bool:
         self.stock_error(
             lambda: self.date,
             f'Invalid ordered date. Ordered date = {self._ordered_date}'
@@ -61,7 +62,7 @@ class AmazonRowData(InputItemRowData):
             lambda: self.number,
             f'Invalid number. Number = {self._number}'
         )
-        return super().validate(account_id)
+        return super().validate
 
 
 # pylint: disable=too-many-instance-attributes

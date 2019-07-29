@@ -134,7 +134,7 @@ with warnings.catch_warnings():
 
         @property
         def is_amazon(self) -> bool:
-            """This property returns wheter this store is Amazon.co.jp or not."""
+            """This property returns whether this store is Amazon.co.jp or not."""
             return self.name in {'Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ', 'ＡＭＡＺＯＮ．ＣＯ．ＪＰ'}
 
     class Item(Base, ConvertTableRecordMixin):

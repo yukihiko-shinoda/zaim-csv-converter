@@ -5,9 +5,9 @@ from enum import Enum
 from typing import Callable
 from dataclasses import dataclass
 
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
+from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory, InputRow
 from zaimcsvconverter.config import SFCardViewerConfig
-from zaimcsvconverter.models import Store, StoreRowData, AccountId
+from zaimcsvconverter.models import AccountId
 
 
 @dataclass
@@ -38,7 +38,7 @@ class SFCardViewerRowData(InputStoreRowData):
 
     @property
     def store_name(self) -> str:
-        return self._station_name_exit
+        return self.station_name_enter if self.is_auto_charge else self._station_name_exit
 
     @property
     def used_amount(self) -> int:
@@ -50,7 +50,8 @@ class SFCardViewerRowData(InputStoreRowData):
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return SFCardViewerRowData.Note(self._note)
 
-    def validate(self, account_id: AccountId) -> bool:
+    @property
+    def validate(self) -> bool:
         self.stock_error(
             lambda: self.date,
             f'Invalid used date. Used date = {self._used_date}'
@@ -64,18 +65,21 @@ class SFCardViewerRowData(InputStoreRowData):
             lambda: self.note,
             f'Invalid note. Note = {self._note}'
         )
-        return super().validate(account_id)
+        return super().validate
+
+    @property
+    def is_auto_charge(self) -> bool:
+        """This property returns whether this row is auto charge or not."""
+        return self.note == SFCardViewerRowData.Note.AUTO_CHARGE
 
 
 # pylint: disable=too-many-instance-attributes
-class SFCardViewerRow(InputStoreRow):
+class SFCardViewerRow(InputRow):
     """This class implements row model of SF Card Viewer CSV."""
     def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
         super().__init__(account_id, row_data)
         self.used_amount: int = row_data.used_amount
         self.note = row_data.note
-        if self.note == SFCardViewerRowData.Note.BUS_TRAM:
-            self.store: Store = Store(account_id, StoreRowData('', '', '交通', '電車'))
         self._account_config: SFCardViewerConfig = account_config
 
     @property
@@ -108,7 +112,7 @@ class SFCardViewerRow(InputStoreRow):
         return self.note == SFCardViewerRowData.Note.BUS_TRAM
 
 
-class SFCardViewerEnterRow(SFCardViewerRow):
+class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow):
     """This class implements enter station row model of SF Card Viewer CSV."""
     def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
         super().__init__(account_id, row_data, account_config)

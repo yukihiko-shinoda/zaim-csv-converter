@@ -37,7 +37,8 @@ class GoldPointCardPlusRowData(InputStoreRowData):
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return int(self._used_amount)
 
-    def validate(self, account_id: AccountId) -> bool:
+    @property
+    def validate(self) -> bool:
         self.stock_error(
             lambda: self.date,
             f'Invalid used date. Used date = {self._used_date}'
@@ -46,7 +47,7 @@ class GoldPointCardPlusRowData(InputStoreRowData):
             lambda: self.used_amount,
             f'Invalid used amount. Used amount = {self._used_amount}'
         )
-        return super().validate(account_id)
+        return super().validate
 
 
 class GoldPointCardPlusRow(InputStoreRow):

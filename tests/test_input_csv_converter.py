@@ -5,54 +5,27 @@ import csv
 from pathlib import Path
 
 import pytest
-from _pytest.fixtures import FixtureRequest  # type: ignore
-from fixturefilehandler import TargetFilePathVacator
 
 from tests.testlibraries.instance_resource import InstanceResource
-from tests.testlibraries.csv_file_path_builder import CsvFilePathBuilder
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.exceptions import InvalidInputCsvError
 from zaimcsvconverter.input_csv_converter import InputCsvConverter
-
-
-@pytest.fixture
-def path_file_csv_input_waon(request: FixtureRequest):
-    """This fixture prepares csv file for WAON."""
-    yield from path_file_csv_input(request, '_waon.csv')
-
-
-@pytest.fixture
-def path_file_csv_input_amazon(request: FixtureRequest):
-    """This fixture prepares csv file for Amazon."""
-    yield from path_file_csv_input(request, '_amazon.csv')
-
-
-def path_file_csv_input(request: FixtureRequest, suffix_file_name: str):
-    """This fixture prepare CSV output directory."""
-    csv_file_path = CsvFilePathBuilder(
-        target=request.node.name + suffix_file_name,
-        base=InstanceResource.PATH_PROJECT_HOME_DIRECTORY
-    )
-    TargetFilePathVacator.setup(csv_file_path)
-    yield InstanceResource.PATH_TEST_RESOURCES / Path(__file__).stem / (request.node.name + suffix_file_name)
-    TargetFilePathVacator.teardown(csv_file_path)
 
 
 class TestInputCsvConverterForStore:
     """Tests for AccountCsvConverter for store based CSV."""
     # pylint: disable=unused-argument
     @staticmethod
-    def test_success(path_file_csv_input_waon, yaml_config_load, database_session_basic_store_waon):
+    @pytest.mark.parametrize('path_file_csv_input', ('waon',), indirect=['path_file_csv_input'])
+    def test_success(yaml_config_load, database_session_basic_store_waon, path_file_csv_input: Path, tmp_path):
         """
         The row to skip should be skipped.
         First line should be header.
         """
-        input_csv_converter = InputCsvConverter(path_file_csv_input_waon)
+        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []
         input_csv_converter.execute()
-        with (
-                InstanceResource.PATH_PROJECT_HOME_DIRECTORY / 'csvoutput' / path_file_csv_input_waon.name
-        ).open('r', encoding='UTF-8', newline='\n') as file_zaim:
+        with (tmp_path / path_file_csv_input.name).open('r', encoding='UTF-8', newline='\n') as file_zaim:
             # noinspection PyUnusedLocal
             assert sum(1 for row in file_zaim) == 2
             file_zaim.seek(0)
@@ -78,21 +51,28 @@ class TestInputCsvConverterForStore:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_stop_iteration(path_file_csv_input_waon, yaml_config_load, database_session_basic_store_waon):
+    @pytest.mark.parametrize('path_file_csv_input', ('waon',), indirect=['path_file_csv_input'])
+    def test_stop_iteration(yaml_config_load, database_session_basic_store_waon, path_file_csv_input: Path, tmp_path):
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
-        input_csv_converter = InputCsvConverter(path_file_csv_input_waon)
+        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_key_error(path_file_csv_input_waon, yaml_config_load, database_session_basic_store_waon):
+    @pytest.mark.parametrize(
+        'database_session_with_schema',
+        [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
+        indirect=['database_session_with_schema']
+    )
+    @pytest.mark.parametrize('path_file_csv_input', ('waon',), indirect=['path_file_csv_input'])
+    def test_key_error(yaml_config_load, database_session_with_schema, path_file_csv_input: Path, tmp_path):
         """
         Method should raise error when store isn't be find on database.
         Undefined store is listed up on property.
         """
-        input_csv_converter = InputCsvConverter(path_file_csv_input_waon)
+        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
@@ -105,12 +85,13 @@ class TestInputCsvConverterForItem:
     """Tests for AcountCsvConverter for item based CSV."""
     # pylint: disable=unused-argument
     @staticmethod
-    def test_key_error(path_file_csv_input_amazon, yaml_config_load, database_session_basic_store_waon):
+    @pytest.mark.parametrize('path_file_csv_input', ('amazon',), indirect=['path_file_csv_input'])
+    def test_key_error(yaml_config_load, database_session_with_schema, path_file_csv_input: Path, tmp_path):
         """
         Method should raise error when store isn't be find on database.
         Undefined item is listed up on property.
         """
-        input_csv_converter = InputCsvConverter(path_file_csv_input_amazon)
+        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()

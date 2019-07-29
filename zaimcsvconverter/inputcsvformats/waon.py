@@ -54,7 +54,8 @@ class WaonRowData(InputStoreRowData):
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.ChargeKind(self._charge_kind)
 
-    def validate(self, account_id: AccountId) -> bool:
+    @property
+    def validate(self) -> bool:
         self.stock_error(
             lambda: self.date,
             f'Invalid date. Date = {self._date}'
@@ -71,7 +72,7 @@ class WaonRowData(InputStoreRowData):
             lambda: self.charge_kind,
             f'The value of "Charge kind" has not been defined in this code. Charge kind = {self._charge_kind}'
         )
-        return super().validate(account_id)
+        return super().validate
 
 
 class WaonRow(InputStoreRow):

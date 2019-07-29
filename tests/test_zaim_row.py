@@ -174,7 +174,8 @@ class TestZaimRowFactory:
             def item_name(self) -> str:
                 return ''
 
-            def validate(self, account_id: AccountId) -> bool:
+            @property
+            def validate(self) -> bool:
                 return False
 
         with pytest.raises(ValueError) as error:

@@ -31,3 +31,14 @@ class FilePathUtility:
         if hasattr(request, 'param'):
             return cls.create_path_to_resource_directory(request.function) / request.param
         return InstanceResource.PATH_FILE_CONFIG_FOR_TEST
+
+    @classmethod
+    def get_input_csv_file_path(cls, request) -> Path:
+        """This method build file path if file name is presented by parametrize."""
+        suffix = getattr(request, 'param', None)
+        if suffix is None:
+            suffix = ''
+        else:
+            suffix = f'_{suffix}'
+        file_name = f'{request.function.__name__}{suffix}.csv'
+        return cls.create_path_to_resource_directory(request.function) / file_name

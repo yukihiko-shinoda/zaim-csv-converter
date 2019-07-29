@@ -47,7 +47,7 @@ class TestInputCsvConverterIterator:
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter_iterator.execute()
         files = sorted(tmp_path.rglob('*[!.gitkeep]'))
-        assert len(files) == 4
+        assert len(files) == 4, f'files = {files}'
         assert files[0].name == 'error_invalid_row.csv'
         assert files[1].name == 'error_undefined_content.csv'
         assert files[2].name == 'test_amazon.csv'

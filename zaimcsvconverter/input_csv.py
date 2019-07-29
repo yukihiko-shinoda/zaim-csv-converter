@@ -7,12 +7,12 @@ from zaimcsvconverter.account import Account
 from zaimcsvconverter.error_collector import SingleErrorCollector
 from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import InvalidHeaderError, InvalidInputCsvError, InvalidRowError
-from zaimcsvconverter.inputcsvformats import InputRowData, InputRow
+from zaimcsvconverter.inputcsvformats import InputRowData, InputRow, InputStoreRow, InputItemRow
 
 
 class InputCsv:
     """This class implements model of input CSV."""
-    def __init__(self, path_to_file):
+    def __init__(self, path_to_file: Path):
         self.path_to_file: Path = path_to_file
         self._account = Account.create_by_path_csv_input(path_to_file)
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()
@@ -35,8 +35,8 @@ class InputCsv:
                 self._process_row(index, list_input_row_standard_type_value, writer_zaim)
         if self.is_invalid:
             raise InvalidInputCsvError(
-                f'Undefined store name in convert table CSV exists in {self.path_to_file.name}.'
-                + 'Please check property AccountCsvConverter.list_undefined_store.'
+                f'Undefined store name in convert table CSV exists in {self.path_to_file.name}. '
+                'Please check property AccountCsvConverter.list_undefined_store.'
             )
 
     def _skip_header(self, reader_input):
@@ -53,7 +53,7 @@ class InputCsv:
 
     def _process_row(self, index: int, list_input_row_standard_type_value: List[str], writer_zaim) -> None:
         input_row_data = self._account.create_input_row_data_instance(list_input_row_standard_type_value)
-        if input_row_data.validate(self._account.value.id):
+        if input_row_data.validate:
             self._stock_row_data_error(index, input_row_data)
             return
         input_row = self._account.create_input_row_instance(input_row_data)
@@ -67,9 +67,9 @@ class InputCsv:
 
     def _stock_row_data_error(self, index, input_row_data: InputRowData):
         self.dictionary_invalid_row[index] = input_row_data.list_error
-        if input_row_data.undefined_content_error is None:
-            return
-        self.undefined_content_error_handler.append(self._account.value.file_name_csv_convert, input_row_data)
 
     def _stock_row_error(self, index, input_row: InputRow):
         self.dictionary_invalid_row[index] = input_row.list_error
+        if not isinstance(input_row, (InputStoreRow, InputItemRow)) or input_row.undefined_content_error is None:
+            return
+        self.undefined_content_error_handler.append(self._account.value.file_name_csv_convert, input_row)

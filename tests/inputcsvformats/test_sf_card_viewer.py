@@ -6,7 +6,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, \
-    SFCardViewerRow, SFCardViewerEnterExitRow
+    SFCardViewerRow, SFCardViewerEnterExitRow, SFCardViewerEnterRow
 from zaimcsvconverter.models import Store, AccountId
 
 
@@ -53,7 +53,7 @@ class TestSFCardViewerRow:
         """
         Arguments should set into properties.
         """
-        sf_card_viewer_row = SFCardViewerRow(
+        sf_card_viewer_row = SFCardViewerEnterRow(
             AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
         )
         assert sf_card_viewer_row.date == datetime(2018, 11, 13, 0, 0, 0)

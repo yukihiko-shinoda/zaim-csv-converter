@@ -32,7 +32,7 @@ class TestWaonRowData:
     # pylint: disable=unused-argument
     def test_validate(database_session_with_schema):
         """Validate method should collect errors."""
-        assert InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND.validate(AccountId.WAON)
+        assert InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND.validate
         assert str(
             # Reason: Pylint has not support dataclasses. pylint: disable=unsubscriptable-object
             InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND.list_error[0]

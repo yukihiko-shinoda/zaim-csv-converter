@@ -113,3 +113,9 @@ def yaml_config_load(request):
     """This fixture prepares YAML config file and loads it."""
     CONFIG.load(FilePathUtility.get_config_file_path(request))
     yield
+
+
+@pytest.fixture
+def path_file_csv_input(request):
+    """This fixture prepare CSV output directory."""
+    yield FilePathUtility.get_input_csv_file_path(request)
