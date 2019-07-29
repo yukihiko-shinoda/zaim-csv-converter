@@ -13,7 +13,7 @@ class AmazonZaimPaymentRowConverter(ZaimPaymentRowItemConverter[AmazonRow]):
         return CONFIG.amazon.payment_account_name
 
     @property
-    def amount_payment(self) -> int:
+    def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.price * self.input_row.number

@@ -191,6 +191,12 @@ class TestZaimCsvConverter:
         checker = ErrorCsvFileChecker(directory_csv_output)
         checker.assert_file('error_invalid_row.csv', [
             InvalidRowErrorRowData(
+                'mufg201810.csv', '',
+                ('mufg201810.csv does not include header row.Please confirm AccountConfig.csv_header. '
+                 'AccountConfig.csv_header = '
+                 "['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分']")
+            ),
+            InvalidRowErrorRowData(
                 'waon201808.csv', '1',
                 'The value of "Charge kind" has not been defined in this code. Charge kind = クレジットカード'
             ),

@@ -48,4 +48,4 @@ class TestAmazonZaimRowConverterFactory:
     def test(yaml_config_load, database_session_with_schema, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = AmazonRowFactory().create(AccountId.AMAZON, input_row_data)
-        assert type(AmazonZaimRowConverterFactory().create(input_row)) == expected
+        assert isinstance(AmazonZaimRowConverterFactory().create(input_row), expected)

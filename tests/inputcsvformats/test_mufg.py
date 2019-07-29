@@ -4,7 +4,8 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory, MufgStoreRow, MufgRow
+from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory, MufgStoreRow, MufgRow, \
+    MufgIncomeFromSelfRow, MufgPaymentToSelfRow
 from zaimcsvconverter.models import Store, AccountId
 
 
@@ -61,6 +62,34 @@ class TestMufgPaymentRow:
         assert mufg_row.date == datetime(2018, 11, 5, 0, 0, 0)
         assert isinstance(mufg_row.store, Store)
         assert mufg_row.store.name_zaim is None
+
+
+class TestMufgIncomeFromSelfRow:
+    """Tests for MufgIncomeFromSelfRow."""
+    @staticmethod
+    def test_deposit_amount_fail():
+        """Property should raise ValueError when value is None."""
+        with pytest.raises(ValueError) as error:
+            # pylint: disable=expression-not-assigned
+            # noinspection PyStatementEffect
+            MufgIncomeFromSelfRow(
+                AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_PAYMENT
+            ).deposit_amount
+        assert str(error.value) == 'Deposit amount on income row is not allowed empty.'
+
+
+class TestMufgPaymentToSelfRow:
+    """Tests for MufgPaymentToSelfRow."""
+    @staticmethod
+    def test_payed_amount_fail():
+        """Property should raise ValueError when value is None."""
+        with pytest.raises(ValueError) as error:
+            # pylint: disable=expression-not-assigned
+            # noinspection PyStatementEffect
+            MufgPaymentToSelfRow(
+                AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_INCOME_CARD
+            ).payed_amount
+        assert str(error.value) == 'Payed amount on payment row is not allowed empty.'
 
 
 class TestMufgTransferIncomeRow:

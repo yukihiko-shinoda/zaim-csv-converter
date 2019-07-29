@@ -10,7 +10,7 @@ TypeVarInputStoreRow = TypeVar('TypeVarInputStoreRow', bound=InputStoreRow)
 TypeVarInputItemRow = TypeVar('TypeVarInputItemRow', bound=InputItemRow)
 
 
-class ZaimRowConverter(Generic[TypeVarInputRow]):
+class ZaimRowConverter(Generic[TypeVarInputRow], ABC):
     """This class implements convert steps from input row to Zaim row."""
     def __init__(self, input_row: TypeVarInputRow):
         self.input_row: TypeVarInputRow = input_row
@@ -35,7 +35,7 @@ class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow]):
 
     @property
     @abstractmethod
-    def amount_income(self) -> int:
+    def amount(self) -> int:
         """This property returns income amount income."""
 
 
@@ -87,7 +87,7 @@ class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow]):
 
     @property
     @abstractmethod
-    def amount_payment(self) -> int:
+    def amount(self) -> int:
         """This property returns amount payment."""
 
 
@@ -150,7 +150,7 @@ class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow]):
 
     @property
     @abstractmethod
-    def amount_transfer(self) -> int:
+    def amount(self) -> int:
         """This property returns amount transfer."""
 
 

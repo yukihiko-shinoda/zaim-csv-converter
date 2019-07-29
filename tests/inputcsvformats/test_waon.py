@@ -4,7 +4,7 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory, WaonRow
+from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory, WaonRow, WaonChargeRow
 from zaimcsvconverter.models import Store, AccountId
 
 
@@ -60,16 +60,33 @@ class TestWaonRow:
         assert isinstance(waon_row.store, Store)
         assert waon_row.store.name_zaim == expected_store_name_zaim
 
-
-class TestWaonDownloadPointRow:
-    """Tests for WaonDownloadPointRow."""
     # pylint: disable=unused-argument
     @staticmethod
     def test_is_row_to_skip(database_session_basic_store_waon):
-        """WaonDownloadPointRow should be row to skip."""
+        """WaonRow which express download point should be row to skip."""
         assert WaonRow(
             AccountId.WAON, WaonRowData('2018/10/22', '板橋前野町', '0円', 'ポイントダウンロード', '-')
         ).is_row_to_skip
+
+
+class TestWaonChargeRow:
+    """Tests for WaonChargeRow."""
+    # pylint: disable=unused-argument
+    @staticmethod
+    @pytest.mark.parametrize(
+        'database_session_with_schema',
+        [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
+        indirect=['database_session_with_schema']
+    )
+    def test_charge_kind_fail(yaml_config_load, database_session_with_schema):
+        """Property should raise ValueError when charge kind is null on WAON charge row."""
+        with pytest.raises(ValueError) as error:
+            # pylint: disable=expression-not-assigned
+            # noinspection PyStatementEffect
+            WaonChargeRow(
+                AccountId.WAON, InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO
+            ).charge_kind
+        assert str(error.value) == 'Charge kind on charge row is not allowed "-".'
 
 
 class TestWaonRowFactory:

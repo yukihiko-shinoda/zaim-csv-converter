@@ -173,7 +173,7 @@ class MufgPaymentToSelfRow(MufgPaymentRow):
 
 
 # pylint: disable=too-many-instance-attributes
-class MufgStoreRow(MufgRow, InputStoreRow):
+class MufgStoreRow(MufgRow, InputStoreRow, ABC):
     """This class implements row model of MUFG bank CSV."""
     @property
     def is_transfer_income_from_other_own_account(self) -> bool:
@@ -192,8 +192,11 @@ class MufgIncomeFromOthersRow(MufgStoreRow, MufgIncomeRow):
 
 
 # pylint: disable=too-many-ancestors
-class MufgPaymentToOthersRow(MufgStoreRow, MufgPaymentRow):
-    """This class implements payment row model of MUFG bank CSV."""
+class MufgPaymentToSomeoneRow(MufgStoreRow, MufgPaymentRow):
+    """
+    This class implements payment row model of MUFG bank CSV.
+    It may to others, also may to self.
+    """
 
 
 class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
@@ -206,7 +209,10 @@ class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
         if input_row_data.cash_flow_kind in (
                 MufgRowData.CashFlowKind.PAYMENT, MufgRowData.CashFlowKind.TRANSFER_PAYMENT
         ):
-            return MufgPaymentToOthersRow(account_id, input_row_data)
+            return MufgPaymentToSomeoneRow(account_id, input_row_data)
         if input_row_data.cash_flow_kind in (MufgRowData.CashFlowKind.INCOME, MufgRowData.CashFlowKind.TRANSFER_INCOME):
             return MufgIncomeFromOthersRow(account_id, input_row_data)
-        raise ValueError(f'Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}')
+        raise ValueError(
+            f'Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}'
+        )  # pragma: no cover
+        # Reason: This line is insurance for future development so process must be not able to reach

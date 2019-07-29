@@ -13,7 +13,7 @@ class GoldPointCardPlusZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[Gold
         return CONFIG.gold_point_card_plus.account_name
 
     @property
-    def amount_payment(self) -> int:
+    def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.used_amount

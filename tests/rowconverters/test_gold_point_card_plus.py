@@ -68,4 +68,4 @@ class TestGoldPointCardPlusZaimRowConverterFactory:
     def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = GoldPointCardPlusRowFactory().create(AccountId.GOLD_POINT_CARD_PLUS, input_row_data)
-        assert type(GoldPointCardPlusZaimRowConverterFactory().create(input_row)) == expected
+        assert isinstance(GoldPointCardPlusZaimRowConverterFactory().create(input_row), expected)

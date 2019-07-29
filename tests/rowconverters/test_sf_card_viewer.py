@@ -95,7 +95,7 @@ class TestSFCardViewerZaimRowConverterFactory:
              InstanceResource.ROW_DATA_SF_CARD_VIEWER_BUS_TRAM, SFCardViewerZaimPaymentRowConverter),
         ], indirect=['database_session_with_schema']
     )
-    def test(yaml_config_load, database_session_with_schema, input_row_data: SFCardViewerRowData, expected):
+    def test_success(yaml_config_load, database_session_with_schema, input_row_data: SFCardViewerRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(AccountId.PASMO, input_row_data)
         factory = SFCardViewerZaimRowConverterFactory(lambda: CONFIG.pasmo).create(input_row)

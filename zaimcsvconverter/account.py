@@ -22,6 +22,7 @@ from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlu
 from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
 from zaimcsvconverter.rowconverters import ZaimRowConverterFactory
+from zaimcsvconverter.zaim_row import ZaimRow, ZaimRowFactory
 
 
 class FileNameCsvConvert(Enum):
@@ -63,9 +64,18 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
             self.id, convert_table_type.row_data(*list_convert_table_row_standard_type_value)
         )
 
+    def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> InputRowData:
+        """This method creates input row data instance by list data of input row."""
+        return self.input_row_data_class(*list_input_row_standard_type_value)  # type: ignore
+
     def create_input_row_instance(self, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
         """This method creates input row instance by input row data instance."""
         return self.input_row_factory.create(self.id, input_row_data)
+
+    def convert_input_row_to_zaim_row(self, input_row: TypeVarInputRow) -> ZaimRow:
+        """This method converts imput row into zaim row."""
+        converter = self.zaim_row_converter_selector.create(input_row)
+        return ZaimRowFactory.create(converter)
 
 
 class Account(Enum):
@@ -163,8 +173,12 @@ class Account(Enum):
 
     def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> InputRowData:
         """This method creates input row data instance by list data of input row."""
-        return self.value.input_row_data_class(*list_input_row_standard_type_value)
+        return self.value.create_input_row_data_instance(list_input_row_standard_type_value)
 
     def create_input_row_instance(self, input_row_data: InputRowData) -> InputRow:
         """This method creates input row instance by input row data instance."""
         return self.value.create_input_row_instance(input_row_data)
+
+    def convert_input_row_to_zaim_row(self, input_row: InputRow) -> ZaimRow:
+        """This method converts input row into zaim row."""
+        return self.value.convert_input_row_to_zaim_row(input_row)

@@ -1,20 +1,24 @@
 """Tests for zaim_row.py."""
+from datetime import datetime
 
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
 from zaimcsvconverter.inputcsvformats.mufg import MufgIncomeFromOthersRow
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
-from zaimcsvconverter.inputcsvformats.waon import WaonRow
+from zaimcsvconverter.inputcsvformats.waon import WaonRow, WaonChargeRow
 from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.rowconverters import ZaimRowConverter
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimIncomeRowConverter
-from zaimcsvconverter.rowconverters.waon import WaonZaimTransferRowConverter
-from zaimcsvconverter.zaim_row import ZaimRowFactory
+from zaimcsvconverter.rowconverters.waon import WaonZaimTransferRowConverter, WaonZaimIncomeRowConverter, \
+    WaonZaimPaymentRowConverter
+from zaimcsvconverter.zaim_row import ZaimRowFactory, ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
 
 
 class TestZaimIncomeRow:
@@ -122,3 +126,57 @@ class TestZaimTransferRow:
         assert zaim_row_data.balance_adjustment == ''
         assert zaim_row_data.amount_before_currency_conversion == ''
         assert zaim_row_data.setting_aggregate == ''
+
+
+class TestZaimRowFactory:
+    """Tests for ZaimRowFactory."""
+    # pylint: disable=unused-argument,too-many-arguments
+    @staticmethod
+    @pytest.mark.parametrize(
+        'database_session_with_schema, zaim_row_converter_class, input_row, waon_row_data, expected', [
+            ([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO], WaonZaimIncomeRowConverter, WaonChargeRow,
+             InstanceResource.ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO, ZaimIncomeRow),
+            ([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO], WaonZaimPaymentRowConverter, WaonRow,
+             InstanceResource.ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO, ZaimPaymentRow),
+            ([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO], WaonZaimTransferRowConverter, WaonRow,
+             InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO, ZaimTransferRow),
+        ], indirect=['database_session_with_schema']
+    )
+    def test_success(yaml_config_load, database_session_with_schema, zaim_row_converter_class, input_row, waon_row_data,
+                     expected):
+        """Factory should create appropriate type of Zaim row."""
+        assert isinstance(
+            ZaimRowFactory.create(zaim_row_converter_class(input_row(AccountId.WAON, waon_row_data))), expected
+        )
+
+    @staticmethod
+    def test_fail():
+        """Factory should raise ValueError when input row is undefined type."""
+        class UndefinedZaimRowConverter(ZaimRowConverter):
+            # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+            pass
+
+        class UndefinedInputRow(InputRow):
+            # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+            pass
+
+        class UndefinedInputRowData(InputRowData):
+            # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+            @property
+            def date(self) -> datetime:
+                return datetime.now()
+
+            @property
+            def store_name(self) -> str:
+                return ''
+
+            @property
+            def item_name(self) -> str:
+                return ''
+
+            def validate(self, account_id: AccountId) -> bool:
+                return False
+
+        with pytest.raises(ValueError) as error:
+            ZaimRowFactory.create(UndefinedZaimRowConverter(UndefinedInputRow(AccountId.WAON, UndefinedInputRowData())))
+        assert str(error.value) == 'Undefined Zaim row converter. Zaim row converter = UndefinedZaimRowConverter'

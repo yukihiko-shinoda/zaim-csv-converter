@@ -33,7 +33,7 @@ class ZaimIncomeRow(ZaimRow):
         self._category = zaim_row_converter.category
         self._cash_flow_target = zaim_row_converter.cash_flow_target
         self._store_name = zaim_row_converter.store_name
-        self._amount_income = zaim_row_converter.amount_income
+        self._amount_income = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
@@ -68,7 +68,7 @@ class ZaimPaymentRow(ZaimRow):
         self._item_name = zaim_row_converter.item_name
         self._note = zaim_row_converter.note
         self._store_name = zaim_row_converter.store_name
-        self._amount_payment = zaim_row_converter.amount_payment
+        self._amount_payment = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
@@ -99,7 +99,7 @@ class ZaimTransferRow(ZaimRow):
     def __init__(self, zaim_row_converter: ZaimTransferRowConverter):
         self._cash_flow_source: str = zaim_row_converter.cash_flow_source
         self._cash_flow_target: str = zaim_row_converter.cash_flow_target
-        self._amount_transfer: int = zaim_row_converter.amount_transfer
+        self._amount_transfer: int = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:
@@ -147,4 +147,4 @@ class ZaimRowFactory:
             return ZaimPaymentRow(zaim_row_converter)
         if isinstance(zaim_row_converter, ZaimTransferRowConverter):
             return ZaimTransferRow(zaim_row_converter)
-        raise ValueError()
+        raise ValueError(f'Undefined Zaim row converter. Zaim row converter = {zaim_row_converter.__class__.__name__}')

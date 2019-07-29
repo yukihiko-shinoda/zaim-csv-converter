@@ -92,7 +92,7 @@ class TestWaonZaimTransferRowFactory:
         assert zaim_row_data.amount_transfer == expected_amount_payment
 
 
-class TestWaonZaimRowFactoryFacotry:
+class TestWaonZaimRowFactoryFactory:
     """Tests for WaonZaimRowConverterConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -113,7 +113,21 @@ class TestWaonZaimRowFactoryFacotry:
              InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO, WaonZaimTransferRowConverter),
         ], indirect=['database_session_with_schema']
     )
-    def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data: WaonRowData, expected):
+    def test_success(yaml_config_load, database_session_with_schema, input_row_data: WaonRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = WaonRowFactory().create(AccountId.WAON, input_row_data)
-        assert type(WaonZaimRowConverterFactory().create(input_row)) == expected
+        assert isinstance(WaonZaimRowConverterFactory().create(input_row), expected)
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        'database_session_with_schema',
+        [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
+        indirect=['database_session_with_schema']
+    )
+    def test_fail(yaml_config_load, database_session_with_schema):
+        """Create method should raise ValueError when input row is undefined type."""
+        input_row = WaonRowFactory().create(AccountId.WAON,
+                                            InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO)
+        with pytest.raises(ValueError) as error:
+            WaonZaimRowConverterFactory().create(input_row)
+        assert str(error.value) == 'Unsupported row. Input row = WaonRow, UseKind.DOWNLOAD_POINT'

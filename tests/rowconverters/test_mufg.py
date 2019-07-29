@@ -4,7 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowFactory, MufgRowData, MufgIncomeRow, MufgPaymentRow, \
-    MufgIncomeFromOthersRow, MufgPaymentToOthersRow
+    MufgIncomeFromOthersRow, MufgPaymentToSomeoneRow
 from zaimcsvconverter.models import AccountId
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow, ZaimIncomeRow, ZaimRowFactory
 from zaimcsvconverter.rowconverters.mufg import MufgIncomeZaimTransferRowConverter, MufgZaimIncomeRowConverter, \
@@ -53,8 +53,8 @@ class TestMufgZaimPaymentRowFactory:
         expected_amount = 3628
         config_account_name = '三菱UFJ銀行'
         store_name = '東京都水道局　経理部管理課'
-        mufg_row = MufgPaymentToOthersRow(AccountId.MUFG,
-                                          InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS)
+        mufg_row = MufgPaymentToSomeoneRow(AccountId.MUFG,
+                                           InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(MufgZaimPaymentRowConverter(mufg_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
@@ -141,7 +141,7 @@ class TestMufgZaimTransferRowFactory:
         expected_amount = 3628
         config_account_name = '三菱UFJ銀行'
         # Reason: Pylint's bug. pylint: disable=no-member
-        mufg_row = MufgPaymentToOthersRow(
+        mufg_row = MufgPaymentToSomeoneRow(
             AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS
         )
         zaim_row = ZaimRowFactory.create(MufgTransferPaymentZaimTransferRowConverter(mufg_row))
@@ -187,7 +187,7 @@ class TestMufgZaimRowConverterFactory:
              MufgTransferPaymentZaimTransferRowConverter),
         ], indirect=['database_session_with_schema']
     )
-    def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data: MufgRowData, expected):
+    def test_success(yaml_config_load, database_session_with_schema, input_row_data: MufgRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = MufgRowFactory().create(AccountId.MUFG, input_row_data)
-        assert type(MufgZaimRowConverterFactory().create(input_row)) == expected
+        assert isinstance(MufgZaimRowConverterFactory().create(input_row), expected)

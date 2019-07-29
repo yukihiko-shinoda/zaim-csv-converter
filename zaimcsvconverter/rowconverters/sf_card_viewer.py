@@ -27,7 +27,7 @@ class SFCardViewerZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[SFCardVie
                 f' → {self.input_row.railway_company_name_exit} {self.input_row.store.name}')
 
     @property
-    def amount_payment(self) -> int:
+    def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.used_amount
@@ -45,7 +45,7 @@ class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewer
         return self.account_config.account_name
 
     @property
-    def amount_transfer(self) -> int:
+    def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=no-member
         return -1 * self.input_row.used_amount
 
@@ -69,4 +69,5 @@ class SFCardViewerZaimRowConverterFactory(ZaimRowConverterFactory[SFCardViewerRo
                 # Reason: Raw code is simple enough. pylint: disable=missing-docstring
                 account_config = self._account_config()
             return ConcreteSFCardViewerZaimTransferRowConverter(input_row)
-        raise ValueError(f'Unsupported row. class = {type(input_row)}')
+        raise ValueError(f'Unsupported row. class = {type(input_row)}')  # pragma: no cover
+        # Reason: This line is insurance for future development so process must be not able to reach
