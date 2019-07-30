@@ -5,13 +5,13 @@ name = "pypi"
 
 [packages]
 inflector = "==2.0.12"
-sqlalchemy = "==1.3.4"
-numpy = "==1.16.4"
+sqlalchemy = "==1.3.6"
+numpy = "==1.17.0"
 # To read yaml file as config
 yamldataclassconfig = "==1.3.0"
 
 [dev-packages]
-factory_boy = "==2.12.0"
+factory_boy = "*"
 flake8 = "*"
 mypy = "*"
 pylint = "*"
