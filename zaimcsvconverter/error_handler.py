@@ -45,4 +45,5 @@ class UndefinedContentErrorHandler:
 
     def uniquify(self) -> None:
         """This method uniquify error list."""
-        self.list_error = numpy.unique(self.list_error, axis=0).tolist()
+        # noinspection PyTypeChecker
+        self.list_error = numpy.unique(numpy.array(self.list_error), axis=0).tolist()

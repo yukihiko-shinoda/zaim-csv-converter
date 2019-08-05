@@ -12,6 +12,10 @@ class InvalidRowError(Error):
     """Target row is invalid."""
 
 
+class SkipRow(Error):
+    """Target row is invalid."""
+
+
 class UndefinedContentError(InvalidRowError):
     """Store or item is undefined."""
 

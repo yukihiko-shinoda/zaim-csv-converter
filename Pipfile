@@ -4,11 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-inflector = "==2.0.12"
-sqlalchemy = "==1.3.6"
-numpy = "==1.17.0"
+# To generate table name by model class name
+inflector = "*"
+# To uniquify undefined content errors
+numpy = "*"
+# To manage stores and items by database (now using SQLite)
+sqlalchemy = "*"
 # To read yaml file as config
-yamldataclassconfig = "==1.3.0"
+yamldataclassconfig = "*"
 
 [dev-packages]
 factory_boy = "*"
@@ -24,7 +27,7 @@ fixturefilehandler = "*"
 python_version = "3.7"
 
 [pipenv]
-# dataclasses-json 0.2.7 depends on marshmallow 3.0.0rc6
+# dataclasses-json 0.2.13 depends on marshmallow 3.0.0rc6
 allow_prereleases = true
 
 [scripts]

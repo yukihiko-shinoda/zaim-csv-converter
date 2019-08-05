@@ -6,8 +6,8 @@ from typing import Dict, Optional, List
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.error_collector import SingleErrorCollector
 from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
-from zaimcsvconverter.exceptions import InvalidHeaderError, InvalidInputCsvError, InvalidRowError
-from zaimcsvconverter.inputcsvformats import InputRowData, InputRow, InputStoreRow, InputItemRow
+from zaimcsvconverter.exceptions import InvalidHeaderError, InvalidInputCsvError, InvalidRowError, SkipRow
+from zaimcsvconverter.row_processor import RowProcessor
 
 
 class InputCsv:
@@ -52,24 +52,16 @@ class InputCsv:
             raise InvalidInputCsvError(error_message) from error_collector.error
 
     def _process_row(self, index: int, list_input_row_standard_type_value: List[str], writer_zaim) -> None:
-        input_row_data = self._account.create_input_row_data_instance(list_input_row_standard_type_value)
-        if input_row_data.validate:
-            self._stock_row_data_error(index, input_row_data)
+        row_processor = RowProcessor(self._account)
+        try:
+            zaim_row = row_processor.execute(list_input_row_standard_type_value)
+        except InvalidRowError:
+            self._stock_error(index, row_processor)
             return
-        input_row = self._account.create_input_row_instance(input_row_data)
-        if input_row.validate:
-            self._stock_row_error(index, input_row)
+        except SkipRow:
             return
-        if input_row.is_row_to_skip:
-            return
-        zaim_row = self._account.convert_input_row_to_zaim_row(input_row)
         writer_zaim.writerow(zaim_row.convert_to_list())
 
-    def _stock_row_data_error(self, index, input_row_data: InputRowData):
-        self.dictionary_invalid_row[index] = input_row_data.list_error
-
-    def _stock_row_error(self, index, input_row: InputRow):
-        self.dictionary_invalid_row[index] = input_row.list_error
-        if not isinstance(input_row, (InputStoreRow, InputItemRow)) or input_row.undefined_content_error is None:
-            return
-        self.undefined_content_error_handler.append(self._account.value.file_name_csv_convert, input_row)
+    def _stock_error(self, index: int, row_processor: RowProcessor):
+        self.dictionary_invalid_row[index] = row_processor.list_error
+        self.undefined_content_error_handler.extend(row_processor.undefined_content_error_handler)
