@@ -21,7 +21,7 @@ class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFC
     @property
     def category_small(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return '電車' if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
+        return 'バス' if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
 
     @property
     def item_name(self) -> str:

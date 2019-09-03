@@ -151,7 +151,7 @@ class TestZaimCsvConverter:
         ])
         checker.assert_file('pasmo201901.csv', [
             ZaimRowData(
-                '2019-01-27', 'payment', '交通', '電車', 'PASMO', '', '', '',
+                '2019-01-27', 'payment', '交通', 'バス', 'PASMO', '', '', '',
                 '', '', '0', '195', '0', '', '', ''
             ),
         ])

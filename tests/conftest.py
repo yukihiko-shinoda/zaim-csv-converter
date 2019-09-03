@@ -95,7 +95,7 @@ def database_session_item():
 
 YAML_CONFIG_FILE_PATH = YamlConfigFilePathBuilder(
     path_target_directory=InstanceResource.PATH_PROJECT_HOME_DIRECTORY,
-    path_test_directory=Path('tests/testresources')
+    path_test_directory=InstanceResource.PATH_TEST_RESOURCES
 )
 YamlConfigFileDeployer = DeployerFactory.create(YAML_CONFIG_FILE_PATH)
 

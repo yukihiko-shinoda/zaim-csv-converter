@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 # To generate table name by model class name
 inflector = "*"
+# dataclasses-json 0.3.1 is bug version
+dataclasses-json = "==0.3.0"
 # To uniquify undefined content errors
 numpy = "*"
 # To manage stores and items by database (now using SQLite)
