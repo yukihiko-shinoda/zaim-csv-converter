@@ -6,8 +6,6 @@ name = "pypi"
 [packages]
 # To generate table name by model class name
 inflector = "*"
-# dataclasses-json 0.3.1 is bug version
-dataclasses-json = "==0.3.0"
 # To uniquify undefined content errors
 numpy = "*"
 # To manage stores and items by database (now using SQLite)
@@ -27,10 +25,6 @@ fixturefilehandler = "*"
 
 [requires]
 python_version = "3.7"
-
-[pipenv]
-# dataclasses-json 0.2.13 depends on marshmallow 3.0.0rc6
-allow_prereleases = true
 
 [scripts]
 start = "python convert.py"

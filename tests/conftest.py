@@ -1,6 +1,4 @@
 """This module implements config for pytest."""
-from pathlib import Path
-
 import pytest
 from fixturefilehandler.factories import DeployerFactory
 from fixturefilehandler.file_paths import YamlConfigFilePathBuilder
