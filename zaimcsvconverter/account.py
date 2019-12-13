@@ -11,12 +11,17 @@ from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats import InputRowData, InputRow, TypeVarInputRowData, TypeVarInputRow, \
     InputRowFactory
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData, AmazonRowFactory
+from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowData, Amazon201911RowFactory
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowData, GoldPointCardPlusRowFactory
+from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPointCardPlus201912RowData, \
+    GoldPointCardPlus201912RowFactory
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
 from zaimcsvconverter.models import AccountId, ConvertTableType, ConvertTableRecordMixin
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.amazon201911 import Amazon201911ZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
@@ -42,6 +47,7 @@ class FileNameCsvConvert(Enum):
 @dataclass
 class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     """This class implements recipe for converting steps for WAON CSV."""
+    # Reason: "id" is suitable word and "identity" will cause confuse. pylint: disable=invalid-name
     id: AccountId
     file_name_csv_convert: FileNameCsvConvert
     regex_csv_file_name: str
@@ -101,6 +107,17 @@ class Account(Enum):
         GoldPointCardPlusZaimRowConverterFactory(),
         'shift_jis_2004'
     )
+    GOLD_POINT_CARD_PLUS_201912 = AccountContext(
+        AccountId.GOLD_POINT_CARD_PLUS,
+        FileNameCsvConvert.GOLD_POINT_CARD_PLUS,
+        r'.*gold_point_card_plus_201912.*\.csv',
+        ConvertTableType.STORE,
+        GoldPointCardPlus201912RowData,
+        GoldPointCardPlus201912RowFactory(),
+        GoldPointCardPlus201912ZaimRowConverterFactory(),
+        'shift_jis_2004',
+        [r'.*　様', r'\d{4}-\d{4}-\d{4}-\d\*\*\*', 'ゴールドポイントカードプラス']
+    )
     MUFG = AccountContext(
         AccountId.MUFG,
         FileNameCsvConvert.MUFG,
@@ -139,6 +156,21 @@ class Account(Enum):
             '注文概要URL', '領収書URL', '商品URL'
         ]
     )
+    AMAZON_201911 = AccountContext(
+        AccountId.AMAZON,
+        FileNameCsvConvert.AMAZON,
+        r'.*amazon_201911.*\.csv',
+        ConvertTableType.ITEM,
+        Amazon201911RowData,
+        Amazon201911RowFactory(),
+        Amazon201911ZaimRowConverterFactory(),
+        'utf-8-sig',
+        [
+            '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
+            'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
+            '注文概要URL', '領収書URL', '商品URL'
+        ]
+    )
 
     @property
     def value(self) -> AccountContext:
@@ -160,10 +192,10 @@ class Account(Enum):
         """This function create correct setting instance by argument."""
         # noinspection PyUnusedLocal
         account: Account
-        for account in Account:
-            if re.search(account.value.regex_csv_file_name, path.name):
-                return account
-        raise ValueError("can't detect account type by csv file name. Please confirm csv file name.")
+        matches = [account for account in Account if re.search(account.value.regex_csv_file_name, path.name)]
+        if not matches:
+            raise ValueError("can't detect account type by csv file name. Please confirm csv file name.")
+        return max(matches, key=lambda matched_account: len(matched_account.value.regex_csv_file_name))
 
     def create_convert_table_row_instance(
             self, list_convert_table_row_standard_type_value: List[Any]

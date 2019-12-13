@@ -61,7 +61,7 @@ class TestAmazonRowData:
 
 
 class TestAmazonRow:
-    """Tests for MufgTransferIncomeRow."""
+    """Tests for AmazonRow."""
     # pylint: disable=unused-argument
     @staticmethod
     def test_init(yaml_config_load, database_session_item):

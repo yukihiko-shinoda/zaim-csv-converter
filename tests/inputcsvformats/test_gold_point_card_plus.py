@@ -11,6 +11,8 @@ from zaimcsvconverter.models import Store, AccountId
 
 class TestGoldPointCardPlusRowData:
     """Tests for GoldPointCardPlusRowData."""
+    # Reason: asserting properties can't be short no more.
+    # noinspection DuplicatedCode
     @staticmethod
     # pylint: disable=too-many-locals
     def test_init_and_property():

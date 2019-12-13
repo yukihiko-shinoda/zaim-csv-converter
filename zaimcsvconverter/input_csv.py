@@ -1,5 +1,6 @@
 """This module implements model of input CSV."""
 import csv
+import re
 from pathlib import Path
 from typing import Dict, Optional, List
 
@@ -45,8 +46,18 @@ class InputCsv:
                          f'AccountConfig.csv_header = {self._account.value.csv_header}')
         error_collector = SingleErrorCollector(InvalidHeaderError, error_message)
         with error_collector:
-            while reader_input.__next__() != self._account.value.csv_header:
-                pass
+            while True:
+                row = reader_input.__next__()
+                if len(row) != len(self._account.value.csv_header):
+                    continue
+                is_header = True
+                for column, header_column in zip(row, self._account.value.csv_header):
+                    pattern = re.compile(header_column, re.UNICODE)
+                    if column != header_column and not pattern.search(column):
+                        is_header = False
+                        break
+                if is_header:
+                    break
         if error_collector.error is not None:
             self.invalid_header_error = error_collector.error
             raise InvalidInputCsvError(error_message) from error_collector.error

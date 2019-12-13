@@ -13,7 +13,7 @@ from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowCon
     SFCardViewerZaimPaymentOnSomewhereRowConverter
 
 
-class TestSFCardViewerZaimPaymentRowFactory:
+class TestSFCardViewerZaimPaymentOnStationRowConverter:
     """Tests for SFCardViewerZaimPaymentOnStationRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -41,7 +41,7 @@ class TestSFCardViewerZaimPaymentRowFactory:
         assert zaim_row_data.amount_payment == expected_amount
 
 
-class TestSFCardViewerZaimTransferRowFactory:
+class TestSFCardViewerZaimTransferRowConverter:
     """Tests for SFCardViewerZaimTransferRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod

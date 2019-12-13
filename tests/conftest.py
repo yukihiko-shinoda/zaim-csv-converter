@@ -36,6 +36,8 @@ def database_session_stores_gold_point_card_plus():
     yield from DatabaseForTest.database_session_with_schema([
         InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC,
         InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP,
+        InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_DOWNLOADS,
+        InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AWS,
     ])
 
 
@@ -88,6 +90,7 @@ def database_session_item():
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema([
         InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT,
+        InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_AMAZON_POINT,
     ])
 
 

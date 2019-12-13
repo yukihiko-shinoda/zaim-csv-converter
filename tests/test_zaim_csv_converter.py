@@ -67,7 +67,8 @@ class TestZaimCsvConverter:
         """Input CSV files should be converted into Zaim format CSV file."""
         ZaimCsvConverter.execute()
         files = sorted(directory_csv_output.target.rglob('*[!.gitkeep]'))
-        assert len(files) == 11
+
+        assert len(files) == 13
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file('waon201807.csv', [
             ZaimRowData(
@@ -107,6 +108,16 @@ class TestZaimCsvConverter:
             ZaimRowData(
                 '2018-07-03', 'payment', '水道・光熱', '電気料金', 'ヨドバシゴールドポイントカード・プラス', '', '', '',
                 '東京電力エナジーパートナー株式会社', '', '0', '11402', '0', '', '', ''
+            ),
+        ])
+        checker.assert_file('gold_point_card_plus_201912_202007.csv', [
+            ZaimRowData(
+                '2020-07-03', 'payment', '水道・光熱', '電気料金', 'ヨドバシゴールドポイントカード・プラス', '', '', '',
+                '東京電力エナジーパートナー株式会社', '', '0', '11402', '0', '', '', ''
+            ),
+            ZaimRowData(
+                '2020-07-03', 'payment', '通信', 'インターネット関連費', 'ヨドバシゴールドポイントカード・プラス', '', '', '',
+                'Amazon Web Services Japan K.K.', '', '0', '66', '0', '', '', ''
             ),
         ])
         checker.assert_file('mufg201808.csv', [
@@ -160,6 +171,18 @@ class TestZaimCsvConverter:
                 '2018-10-23', 'payment', '大型出費', '家電', 'ヨドバシゴールドポイントカード・プラス', '',
                 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '',
                 'Amazon Japan G.K.', '', '0', '4980', '0', '', '', ''
+            ),
+        ])
+        checker.assert_file('amazon_201911_201911.csv', [
+            ZaimRowData(
+                '2019-11-09', 'payment', '教育・教養', '参考書', 'ヨドバシゴールドポイントカード・プラス', '',
+                '［第2版］Python機械学習プログラミング 達人データサイエンティストによる理論と実践 impress top gearシリーズ', '',
+                'Amazon Japan G.K.', '', '0', '4000', '0', '', '', ''
+            ),
+            ZaimRowData(
+                '2019-11-09', 'payment', '通信', 'その他', 'ヨドバシゴールドポイントカード・プラス', '',
+                '（Amazon ポイント）', '',
+                'Amazon Japan G.K.', '', '0', '-11', '0', '', '', ''
             ),
         ])
 

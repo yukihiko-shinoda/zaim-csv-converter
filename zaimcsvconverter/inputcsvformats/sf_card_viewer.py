@@ -13,6 +13,7 @@ from zaimcsvconverter.models import AccountId
 @dataclass
 class SFCardViewerRowData(InputStoreRowData):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
+    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     class Note(Enum):
         """This class implements constant of note in SF Card Viewer CSV."""
         EMPTY = ''

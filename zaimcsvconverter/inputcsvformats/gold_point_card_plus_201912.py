@@ -1,4 +1,4 @@
-"""This module implements row model of GOLD POINT CARD+ CSV."""
+"""This module implements row model of GOLD POINT CARD+ CSV version 201912."""
 from datetime import datetime
 from dataclasses import dataclass
 
@@ -8,22 +8,15 @@ from zaimcsvconverter.models import AccountId
 
 
 @dataclass
-class GoldPointCardPlusRowData(InputStoreRowData):
-    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
-    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
+class GoldPointCardPlus201912RowData(InputStoreRowData):
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV version 201912 row model."""
     _used_date: str
     _used_store: str
-    used_card: str
-    payment_kind: str
-    number_of_division: str
-    scheduled_payment_month: str
     _used_amount: str
-    unknown_1: str
-    unknown_2: str
-    unknown_3: str
-    unknown_4: str
-    unknown_5: str
-    unknown_6: str
+    _number_of_division: str
+    _current_time_of_division: str
+    _payed_amount: str
+    _others: str
 
     @property
     def date(self) -> datetime:
@@ -34,9 +27,9 @@ class GoldPointCardPlusRowData(InputStoreRowData):
         return self._used_store
 
     @property
-    def used_amount(self) -> int:
+    def payed_amount(self) -> int:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
-        return int(self._used_amount)
+        return int(self._payed_amount)
 
     @property
     def validate(self) -> bool:
@@ -45,24 +38,26 @@ class GoldPointCardPlusRowData(InputStoreRowData):
             f'Invalid used date. Used date = {self._used_date}'
         )
         self.stock_error(
-            lambda: self.used_amount,
+            lambda: self.payed_amount,
             f'Invalid used amount. Used amount = {self._used_amount}'
         )
         return super().validate
 
 
-class GoldPointCardPlusRow(InputStoreRow):
+class GoldPointCardPlus201912Row(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
-    def __init__(self, account_id: AccountId, row_data: GoldPointCardPlusRowData):
+    def __init__(self, account_id: AccountId, row_data: GoldPointCardPlus201912RowData):
         super().__init__(account_id, row_data)
-        self.used_amount: int = row_data.used_amount
+        self.payed_amount: int = row_data.payed_amount
 
     @property
     def is_row_to_skip(self) -> bool:
         return CONFIG.gold_point_card_plus.skip_amazon_row and self.store.is_amazon
 
 
-class GoldPointCardPlusRowFactory(InputRowFactory[GoldPointCardPlusRowData, GoldPointCardPlusRow]):
+class GoldPointCardPlus201912RowFactory(InputRowFactory[GoldPointCardPlus201912RowData, GoldPointCardPlus201912Row]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
-    def create(self, account_id: AccountId, input_row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
-        return GoldPointCardPlusRow(account_id, input_row_data)
+    def create(
+            self, account_id: AccountId, input_row_data: GoldPointCardPlus201912RowData
+    ) -> GoldPointCardPlus201912Row:
+        return GoldPointCardPlus201912Row(account_id, input_row_data)

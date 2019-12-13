@@ -3,7 +3,9 @@ from pathlib import Path
 
 from tests.testlibraries.database_for_test import FixtureRecord
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData
+from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPointCardPlus201912RowData
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData
@@ -21,6 +23,7 @@ class InstanceResource:
     ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND = WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', 'クレジットカード')
     ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO = WaonRowData('2018/10/22', '板橋前野町', '1,504円', 'チャージ', 'ポイント')
     ROW_DATA_WAON_CHARGE_BANK_ACCOUNT_ITABASHIMAENOCHO = WaonRowData('2018/10/22', '板橋前野町', '10,000円', 'チャージ', '銀行口座')
+    ROW_DATA_WAON_CHARGE_CASH_ITABASHIMAENOCHO = WaonRowData('2018/10/22', '板橋前野町', '10,000円', 'チャージ', '現金')
     ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO = WaonRowData('2018/11/11', '板橋前野町', '5,000円', 'オートチャージ', '銀行口座')
     ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO = WaonRowData('2018/10/22', '板橋前野町', '0円', 'ポイントダウンロード', '-')
     ROW_DATA_WAON_UNSUPPORTED_USE_KIND = WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '10000円', '入金', '-')
@@ -29,6 +32,15 @@ class InstanceResource:
     )
     ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC = GoldPointCardPlusRowData(
         '2018/7/3', '東京電力  電気料金等', 'ご本人', '1回払い', '', '18/8', '11402', '11402', '', '', '', '', ''
+    )
+    ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS = GoldPointCardPlus201912RowData(
+        '2019/11/09', 'Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ', '1969', '１', '１', '1969', ''
+    )
+    ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AWS = GoldPointCardPlus201912RowData(
+        '2019/11/03', 'AMAZON WEB SERVICES (AWS.AMAZON.CO)', '66', '１', '１', '66', '0.60　USD　110.712　11 03'
+    )
+    ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC = GoldPointCardPlus201912RowData(
+        '2019/11/05', '東京電力  電気料金等', '11905', '１', '１', '11905', ''
     )
     ROW_DATA_MUFG_INCOME_CARD = MufgRowData('2018/10/1', 'カ−ド', '', '', '10000', '3000000', '', '', '入金')
     ROW_DATA_MUFG_INCOME_NOT_CARD = MufgRowData(
@@ -71,9 +83,32 @@ class InstanceResource:
         '販売： Amazon Japan G.K.  コンディション： 新品', '4980', '1', '6276', '6390', 'ローソン桜塚',
         '2018年10月23日に発送済み', 'テストアカウント', '5952', '2018/10/23', '5952', 'Visa（下4けたが1234）',
         'https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=123-4567890-1234567',
-        'https://www.amazon.co.jp/gp/css/summary/print.html/'
-        + 'ref=oh_aui_ajax_dpi?ie=UTF8&orderID=123-4567890-1234567',
+        'https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi'
+        '?ie=UTF8&orderID=123-4567890-1234567',
         'https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1')
+    ROW_DATA_AMAZON_201911_ECHO_DOT = Amazon201911RowData(
+        '2019/11/09', '234-5678901-2345678', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト',
+        '販売： Amazon Japan G.K.  コンディション： 新品', '4980', '1', '6276', '6390', 'ローソン桜塚',
+        '2019年11月9日に発送済み', 'テストアカウント', '5952', '2019/11/09', '5952', 'Visa（下4けたが1234）',
+        'https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=234-5678901-2345678',
+        'https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi'
+        '?ie=UTF8&orderID=234-5678901-2345678',
+        'https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1')
+    ROW_DATA_AMAZON_201911_AMAZON_POINT = Amazon201911RowData(
+        '2019/11/09', '234-5678901-2345678', '（Amazon ポイント）', '※カード外支払→請求額に反映', '', '', '', '-11', '',
+        'デジタル注文: 2019/11/9', 'テストアカウント', '', '', '', 'Visa ****1234',
+        'https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=docs_ya_os_i'
+        '?ie=UTF8&orderID=234-5678901-2345678',
+        'https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00'
+        '?ie=UTF8&orderID=234-5678901-2345678&print=1',
+        '')
+    ROW_DATA_AMAZON_201911_HUMMING_FINE = Amazon201911RowData(
+        '2019/11/09', '234-5678901-2345678', '【大容量】ハミングファイン 柔軟剤 リフレッシュグリーンの香り 詰め替え 1200ml',
+        '販売： Amazon Japan G.K.  コンディション： 新品', '609', '1', '', '', 'ローソン桜塚',
+        '2019年11月10日に発送済み', 'テストアカウント', '', '2019/11/09', '', 'Visa ****1234',
+        'https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=234-5678901-2345678',
+        'https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi?ie=UTF8&orderID=234-5678901-2345678',
+        'https://www.amazon.co.jp/gp/product/B07146XVB5/ref=od_aui_detailpages00?ie=UTF8&psc=1')
     FIXTURE_RECORD_STORE_WAON_MAKUHARISHINTOSHIN = FixtureRecord(
         AccountId.WAON, StoreRowData('幕張新都心', 'イオンモール　幕張新都心')
     )
@@ -88,6 +123,14 @@ class InstanceResource:
     )
     FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP = FixtureRecord(
         AccountId.GOLD_POINT_CARD_PLUS, StoreRowData('ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'Amazon Japan G.K.')
+    )
+    FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_DOWNLOADS = FixtureRecord(
+        AccountId.GOLD_POINT_CARD_PLUS, StoreRowData('Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ', 'Amazon Japan G.K.')
+    )
+    FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AWS = FixtureRecord(
+        AccountId.GOLD_POINT_CARD_PLUS, StoreRowData(
+            'AMAZON WEB SERVICES (AWS.AMAZON.CO)', 'Amazon Web Services Japan K.K.'
+        )
     )
     FIXTURE_RECORD_STORE_MUFG_TOBU_CARD = FixtureRecord(
         AccountId.MUFG, StoreRowData('カ）トウブカ－ドビ', '', '', '', '', '東武カード')
@@ -124,4 +167,7 @@ class InstanceResource:
     )
     FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT = FixtureRecord(
         AccountId.AMAZON, ItemRowData('Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '大型出費', '家電')
+    )
+    FIXTURE_RECORD_ITEM_AMAZON_AMAZON_POINT = FixtureRecord(
+        AccountId.AMAZON, ItemRowData('（Amazon ポイント）', '通信', 'その他')
     )

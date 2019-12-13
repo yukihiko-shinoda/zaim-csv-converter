@@ -10,7 +10,7 @@ from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory, Wao
     WaonZaimIncomeRowConverter, WaonZaimTransferRowConverter
 
 
-class TestWaonZaimIncomeRowFactory:
+class TestWaonZaimIncomeRowConverter:
     """Tests for WaonZaimIncomeRowConverter."""
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
@@ -36,7 +36,7 @@ class TestWaonZaimIncomeRowFactory:
         assert zaim_row_data.amount_income == expected_amount_income
 
 
-class TestWaonZaimPaymentRowFactory:
+class TestWaonZaimPaymentRowConverter:
     """Tests for WaonZaimPaymentRowConverter."""
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
@@ -65,7 +65,7 @@ class TestWaonZaimPaymentRowFactory:
         assert zaim_row_data.amount_payment == expected_amount_payment
 
 
-class TestWaonZaimTransferRowFactory:
+class TestWaonZaimTransferRowConverter:
     """Tests for WaonZaimTransferRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -92,7 +92,7 @@ class TestWaonZaimTransferRowFactory:
         assert zaim_row_data.amount_transfer == expected_amount_payment
 
 
-class TestWaonZaimRowFactoryFactory:
+class TestWaonZaimRowConverterConverter:
     """Tests for WaonZaimRowConverterConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -105,12 +105,15 @@ class TestWaonZaimRowFactoryFactory:
             # Case when WAON charge from point
             ([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
              InstanceResource.ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO, WaonZaimIncomeRowConverter),
-            # Case when WAON charge from bank account
-            ([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
-             InstanceResource.ROW_DATA_WAON_CHARGE_BANK_ACCOUNT_ITABASHIMAENOCHO, WaonZaimTransferRowConverter),
             # Case when WAON auto charge
             ([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
              InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO, WaonZaimTransferRowConverter),
+            # Case when WAON charge by bank account
+            ([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
+             InstanceResource.ROW_DATA_WAON_CHARGE_BANK_ACCOUNT_ITABASHIMAENOCHO, WaonZaimTransferRowConverter),
+            # Case when WAON charge by cash
+            ([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
+             InstanceResource.ROW_DATA_WAON_CHARGE_CASH_ITABASHIMAENOCHO, WaonZaimTransferRowConverter),
         ], indirect=['database_session_with_schema']
     )
     def test_success(yaml_config_load, database_session_with_schema, input_row_data: WaonRowData, expected):

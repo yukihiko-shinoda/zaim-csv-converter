@@ -15,6 +15,7 @@ from zaimcsvconverter.utility import Utility
 @dataclass
 class MufgRowData(InputStoreRowData):
     """This class implements data class for wrapping list of MUFG bunk CSV row model."""
+    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     class Summary(Enum):
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         CARD = 'カ−ド'

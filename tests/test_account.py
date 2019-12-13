@@ -12,9 +12,12 @@ class FilePathConvertTable(Enum):
     WAON = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\waon.csv')
     GOLD_POINT_CARD_PLUS = Path(
         'c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\gold_point_card_plus.csv')
+    GOLD_POINT_CARD_PLUS_201912 = Path(
+        'c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\gold_point_card_plus.csv')
     MUFG = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\mufg.csv')
     PASMO = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\sf_card_viewer.csv')
     AMAZON = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\amazon.csv')
+    AMAZON_201911 = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\amazon.csv')
 
     @property
     def value(self) -> Path:
@@ -27,9 +30,12 @@ class FilePathInput(Enum):
     WAON = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\waon201804.csv')
     GOLD_POINT_CARD_PLUS = Path(
         'c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\gold_point_card_plus201804.csv')
+    GOLD_POINT_CARD_PLUS_201912 = Path(
+        'c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\gold_point_card_plus_201912_202004.csv')
     MUFG = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\mufg201804.csv')
     PASMO = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\pasmo201804.csv')
     AMAZON = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\amazon201804.csv')
+    AMAZON_201911 = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\amazon_201911_201804.csv')
 
     @property
     def value(self) -> Path:

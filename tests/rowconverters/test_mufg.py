@@ -12,7 +12,7 @@ from zaimcsvconverter.rowconverters.mufg import MufgIncomeZaimTransferRowConvert
     MufgZaimPaymentRowConverter, MufgTransferPaymentZaimTransferRowConverter
 
 
-class TestMufgZaimIncomeRowFactory:
+class TestMufgZaimIncomeRowConverter:
     """Tests for MufgZaimIncomeRowConverter."""
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
@@ -44,7 +44,7 @@ class TestMufgZaimIncomeRowFactory:
         assert zaim_row_data.amount_income == expected_amount
 
 
-class TestMufgZaimPaymentRowFactory:
+class TestMufgZaimPaymentRowConverter:
     """Tests for MufgZaimPaymentRowConverter."""
     # pylint: disable=unused-argument
     @staticmethod
@@ -68,7 +68,7 @@ class TestMufgZaimPaymentRowFactory:
         assert zaim_row_data.amount_payment == expected_amount
 
 
-class TestMufgZaimTransferRowFactory:
+class TestMufgZaimTransferRowConverter:
     """Tests for MufgZaimTransferRowConverter."""
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod

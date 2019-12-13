@@ -58,7 +58,9 @@ class WaonZaimRowConverterFactory(ZaimRowConverterFactory[WaonRow]):
             return WaonZaimIncomeRowConverter(input_row)
         if input_row.is_payment:
             return WaonZaimPaymentRowConverter(input_row)
-        if isinstance(input_row, WaonChargeRow) and (input_row.is_auto_charge or input_row.is_charge_by_bank_account):
+        if isinstance(input_row, WaonChargeRow) and (
+                input_row.is_auto_charge or input_row.is_charge_by_bank_account or input_row.is_charge_by_cash
+        ):
             return WaonZaimTransferRowConverter(input_row)
         raise ValueError(self.build_message(input_row))
 

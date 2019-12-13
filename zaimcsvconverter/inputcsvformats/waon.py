@@ -23,6 +23,7 @@ class WaonRowData(InputStoreRowData):
         """This class implements constant of charge kind in WAON CSV."""
         BANK_ACCOUNT = '銀行口座'
         POINT = 'ポイント'
+        CASH = '現金'
         NULL = '-'
 
     _date: str
@@ -133,6 +134,11 @@ class WaonChargeRow(WaonRow):
     def is_charge_by_point(self) -> bool:
         # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.POINT
+
+    @property
+    def is_charge_by_cash(self) -> bool:
+        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
+        return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.CASH
 
     @property
     def is_charge_by_bank_account(self) -> bool:

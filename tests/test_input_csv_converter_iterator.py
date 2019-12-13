@@ -1,20 +1,12 @@
 """Tests for input_csv_converter_iterator.py."""
 import csv
-from dataclasses import dataclass
 
 import pytest
 
+from tests.testlibraries.error_row_data_for_test import ErrorRowDataForTest
 from tests.testlibraries.file import FilePathUtility
 from zaimcsvconverter.exceptions import InvalidInputCsvError
 from zaimcsvconverter.input_csv_converter_iterator import InputCsvConverterIterator
-
-
-@dataclass
-class ErrorRowDataForTest:
-    """This class implements data class for wrapping list of error CSV row model."""
-    convert_table: str
-    store_name: str
-    item_name: str
 
 
 @pytest.fixture

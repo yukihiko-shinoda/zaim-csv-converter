@@ -6,6 +6,7 @@ from typing import Optional, Union
 @dataclass
 class ZaimRowData:
     """This class implements data class for wrapping list of Zaim CSV row model."""
+    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     date: Optional[Union[str, int]]
     method: Optional[Union[str, int]]
     category_large: Optional[Union[str, int]]

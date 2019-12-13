@@ -11,6 +11,7 @@ from zaimcsvconverter.models import Store, StoreRowData, AccountId
 @dataclass
 class AmazonRowData(InputItemRowData):
     """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
+    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     _ordered_date: str
     order_id: str
     _item_name: str
