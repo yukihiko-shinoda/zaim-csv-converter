@@ -116,7 +116,7 @@ class Account(Enum):
         GoldPointCardPlus201912RowFactory(),
         GoldPointCardPlus201912ZaimRowConverterFactory(),
         'shift_jis_2004',
-        [r'.*　様', r'\d{4}-\d{4}-\d{4}-\d\*\*\*', 'ゴールドポイントカードプラス']
+        [r'.*　様', r'[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}', 'ゴールドポイントカードプラス']
     )
     MUFG = AccountContext(
         AccountId.MUFG,
