@@ -88,5 +88,5 @@ class TestGoldPointCardPlus201912RowFactory:
     def test_create(argument, expected, database_session_stores_gold_point_card_plus):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        gold_point_card_plus_row = GoldPointCardPlus201912RowFactory().create(AccountId.MUFG, argument)
+        gold_point_card_plus_row = GoldPointCardPlus201912RowFactory().create(AccountId.GOLD_POINT_CARD_PLUS, argument)
         assert isinstance(gold_point_card_plus_row, expected)

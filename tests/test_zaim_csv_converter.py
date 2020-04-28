@@ -1,4 +1,5 @@
 """Tests for zaim_csv_converter.py"""
+import csv
 from pathlib import Path
 from typing import Optional
 
@@ -65,10 +66,19 @@ class TestZaimCsvConverter:
     def test_success(yaml_config_file, directory_csv_convert_table, directory_csv_input, directory_csv_output,
                      database_session):
         """Input CSV files should be converted into Zaim format CSV file."""
-        ZaimCsvConverter.execute()
+        try:
+            ZaimCsvConverter.execute()
+        except InvalidInputCsvError as error:
+            with (directory_csv_output.target / 'error_invalid_row.csv').open(
+                    'r', encoding='UTF-8', newline='\n'
+            ) as file:
+                csv_reader = csv.reader(file)
+                for list_row_data in csv_reader:
+                    print(list_row_data)
+            raise error
         files = sorted(directory_csv_output.target.rglob('*[!.gitkeep]'))
 
-        assert len(files) == 13
+        assert len(files) == 14
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file('waon201807.csv', [
             ZaimRowData(
@@ -185,6 +195,12 @@ class TestZaimCsvConverter:
                 'Amazon Japan G.K.', '', '0', '-11', '0', '', '', ''
             ),
         ])
+        checker.assert_file('view_card202005.csv', [
+            ZaimRowData(
+                '2020-03-31', 'payment', '通信', 'その他', 'ビューカード', '',
+                '', '', 'ビューカード　ビューカードセンター', '', '0', '524', '0', '', '', ''
+            ),
+        ])
 
     # pylint: disable=unused-argument
     @staticmethod
@@ -215,8 +231,8 @@ class TestZaimCsvConverter:
         checker.assert_file('error_invalid_row.csv', [
             InvalidRowErrorRowData(
                 'mufg201810.csv', '',
-                ('mufg201810.csv does not include header row.Please confirm AccountConfig.csv_header. '
-                 'AccountConfig.csv_header = '
+                ('mufg201810.csv does not include header row.Please confirm AccountConfig.header. '
+                 'AccountConfig.header = '
                  "['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分']")
             ),
             InvalidRowErrorRowData(

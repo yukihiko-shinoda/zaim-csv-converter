@@ -15,9 +15,7 @@ Zaim で口座連携をするために
 - PASMO
 - Amazon.co.jp
 
-※↓対応口座追加のための開発手順をまとめました、プルリクエストをお待ちしています。
-
-[zaim-csv-converter の対応口座追加開発手順](extension.md)
+※ [対応口座追加のための開発手順](docs/CONTRIBUTING.md)をまとめました、プルリクエストをお待ちしています。
 
 ## 動作確認環境
 
@@ -31,7 +29,7 @@ Zaim で口座連携をするために
 
 ### 1. プロジェクトをダウンロードします
 
-```bash
+```console
 git clone https://github.com/yukihiko-shinoda/zaim-csv-converter.git
 ```
 
@@ -63,13 +61,11 @@ Amazon.co.jp|amazon.csv|品目単位
 
 ※ 文字コードは UTF-8 で準備してください。
 
-
 ### 4. Python プロジェクト実行用の仮想環境を作成します
 
-```bash
+```console
 pipenv install
 ```
-
 
 ## 利用方法
 
@@ -88,16 +84,16 @@ WAON|waon
 ヨドバシゴールドポイントカード・プラス 2019 年 11 月以前の形式|gold_point_card_plus
 ヨドバシゴールドポイントカード・プラス 2019 年 12 月以降の形式|gold_point_card_plus_201912
 三菱 UFJ 銀行|mufg
-PASMO|sf_card_viewer
+PASMO|pasmo
+Suica|suica
 Amazon.co.jp 2019 年 11 月以前の形式|amazon
 Amazon.co.jp 2019 年 12 月以降の形式|amazon_201911
 
 変換対象CSVの準備方法の詳細は[変換対象 CSV の準備方法](#変換対象-CSV-の準備方法)を参照してください。
 
-
 ### 2. 実行します
 
-```bash
+```console
 pipenv run start
 ```
 
@@ -112,7 +108,7 @@ pipenv run start
 
 代表的な例として:
 
-```bash
+```console
 InvalidInputCsvError: 'Some invalid input CSV file exists. Please check error_invalid_row.csv and error_undefined_content.csv.'
 ```
 
@@ -130,18 +126,16 @@ csvoutput/error_undefined_content.csv が出力された場合は、
 
 ||||
 ---|---|---
-gold_point_card_plus_201912_201912.csv|35|Invalid used date. Used date = 
+gold_point_card_plus_201912_201912.csv|35|Invalid used date. Used date =
 
 該当の行が合計の行である場合、このエラーは無視して次の手順に進んでください。
 GOLD POINT CARD+ では以前まで正規化された CSV が提供されていましたが、
-2019 年 11 月のアップデートで非正規形の
-いわゆる[神エクセル](https://www.atmarkit.co.jp/ait/articles/1612/26/news032.html)
-になってしまったため、
+2019 年のアップデートで非正規形のいわゆる[神エクセル](https://www.atmarkit.co.jp/ait/articles/1612/26/news032.html)になってしまったため、
 CSV 出力機能だけは以前の仕様に戻せないかサポート窓口に問い合わせを行っています。
 
 ### 4. Zaim にインポートします
 
-ブラウザーで WEB 版の Zaim: https://zaim.net/ にログインし、
+ブラウザーで [WEB 版の Zaim](https://zaim.net/) にログインし、
 画面右上の
 
 [設定] -> [ファイル入出力] -> [Zaim の出力ファイルをアップロード]
@@ -202,109 +196,108 @@ WD HDD 内蔵ハードディスク 3.5インチ 8TB WD Red NAS用 WD80EFZX 5400r
 パナソニック エネループ 急速充電器セット 単4形充電池 2本付き スタンダードモデル K-KJ23MCC02,日用雑貨,消耗品
 ```
 
-
 ## 変換対象 CSV の準備方法
 
 ### WAON
 
-1.
-www.waon.com にログインします。
+1\.
 
-https://www.waon.com/wmUseHistoryInq/init.do
+[www.waon.com](https://www.waon.com/wmUseHistoryInq/init.do) にログインします。
 
-2.
+2\.
+
 ログイン後のページ下部、◯月分利用履歴の明細から
 該当月の HTML テーブルを Google スプレッドシートにコピーします。
 ※ 10 件ずつしか表示されていないので、[次の10件→]が表示されなくなるまで
 　[次の10件→]でページをめくり、全件コピーします。
 
-Chrome の場合は Table Capture という拡張機能を使います。
+Chrome の場合は [Table Capture](https://chrome.google.com/webstore/detail/table-capture/iebpjdmgckacbodjpijphcplhebcmeop) という拡張機能を使います。
 
-https://chrome.google.com/webstore/detail/table-capture/iebpjdmgckacbodjpijphcplhebcmeop
+3\.
 
-3.
 該当月のスプレッドシートを開いた状態で [ファイル] -> [形式を指定してダウンロード] -> [カンマ区切りの値(.csv、現在のシート)]
-
 
 ### GOLD POINT CARD+
 
-1.
-GOLD POINT CARD+ にログインします。
+1\.
 
-https://secure.goldpoint.co.jp/gpm/authentication/index.html
+[GOLD POINT CARD+](https://secure.goldpoint.co.jp/gpm/authentication/index.html) にログインします。
 
-2.
+2\.
+
 [メンバーメニュー] -> [クレジットカードサービス] -> [ご利用明細照会] をクリック
 
-3.
+3\.
+
 画面下部で [お支払い月] を選択し、[照会] ボタンをクリック
 
-4.
-[CSV 形式で保存する] ボタンをクリック
+4\.
 
+[CSV 形式で保存する] ボタンをクリック
 
 ### 三菱 UFJ 銀行
 
-1.
-三菱 UFJ ダイレクトにログインします。
+1\.
 
-https://entry11.bk.mufg.jp/ibg/dfw/APLIN/loginib/login?_TRANID=AA000_001
+[三菱 UFJ ダイレクト](https://entry11.bk.mufg.jp/ibg/dfw/APLIN/loginib/login?_TRANID=AA000_001)にログインします。
 
-2.
+2\.
+
 [入出金明細をみる] をクリック
 
-3.
+3\.
+
 [照会期間] を選択し [照会] ボタンをクリック
 
-4.
-[明細をダウンロード] ボタンをクリック
+4\.
 
+[明細をダウンロード] ボタンをクリック
 
 ### PASMO
 
-1.
+1\.
+
 Windows コンピューターと「NFC ポート/パソリ」を準備し、 SFCard Viewer 2 をインストールします。
 
-↓ Windows コンピューターと「NFC ポート/パソリ」の要件はこちらを確認します。
-
-https://www.sony.co.jp/Products/felica/consumer/download/sfcardviewer2.html
+Windows コンピューターと「NFC ポート/パソリ」の要件は[こちら](https://www.sony.co.jp/Products/felica/consumer/download/sfcardviewer2.html)を確認します。
 
 ※作者は、Windows コンピューターは Windows 10 Home 64ビット(x64) を使っています。
 
-※作者は、「NFC ポート/パソリ」は RC-S380/S を使っています。
+※作者は、「NFC ポート/パソリ」は [RC-S380/S](https://www.amazon.co.jp/%E3%82%BD%E3%83%8B%E3%83%BC-NFC%E9%80%9A%E4%BF%A1%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC-PaSoRi-RC-S380-S/dp/B00VR1WARC) を使っています。
 
-https://www.amazon.co.jp/%E3%82%BD%E3%83%8B%E3%83%BC-NFC%E9%80%9A%E4%BF%A1%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC-PaSoRi-RC-S380-S/dp/B00VR1WARC
+2\.
 
-2.
 SFCard Viewer 2 を起動し、「NFC ポート/パソリ」に PASMO をタッチします。
 
-3.
+3\.
+
 [メニュー] -> [フィアルに保存]をクリック
 
 ※ PASMO には 20 件までしか履歴が残らないので、
 　 定期的に CSV を取得し続ける必要があります。
-　
 
 ### Amazon
 
-1.
-Chrome 拡張の「マゾン注文履歴フィルタ」をインストールします。
+1\.
 
-https://chrome.google.com/webstore/detail/%E3%82%A2%E3%83%9E%E3%82%BE%E3%83%B3%E6%B3%A8%E6%96%87%E5%B1%A5%E6%AD%B4%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF/jaikhcpoplnhinlglnkmihfdlbamhgig
+Chrome 拡張の[アマゾン注文履歴フィルタ](https://chrome.google.com/webstore/detail/%E3%82%A2%E3%83%9E%E3%82%BE%E3%83%B3%E6%B3%A8%E6%96%87%E5%B1%A5%E6%AD%B4%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF/jaikhcpoplnhinlglnkmihfdlbamhgig)をインストールします。
 
-2.
-Amazon.co.jp にログインします。
+2\.
 
-https://www.amazon.co.jp/
+[Amazon.co.jp](https://www.amazon.co.jp/) にログインします。
 
-3.
+3\.
+
 [アカウント&リスト] -> [注文履歴] をクリック
 
-4.
+4\.
+
 [対象月選択] を選択し、[領収書印刷用画面] ボタンをクリック
 
-5.
+5\.
+
 ログイン画面が表示されるのでログインします。
 
-6.
+6\.
+
 [注文履歴CSV(参考用)ダウンロード] ボタンをクリックします。

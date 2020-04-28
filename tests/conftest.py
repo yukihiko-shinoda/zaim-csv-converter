@@ -66,6 +66,14 @@ def database_session_stores_sf_card_viewer():
 
 
 @pytest.fixture
+def database_session_stores_view_card():
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema([
+        InstanceResource.FIXTURE_RECORD_STORE_VIEW_CARD_VIEW_CARD,
+    ])
+
+
+@pytest.fixture
 def database_session_store_item():
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema([

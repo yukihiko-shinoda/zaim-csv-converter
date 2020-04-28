@@ -23,6 +23,7 @@ class AccountId(Enum):
     MUFG = 3
     PASMO = 4
     AMAZON = 5
+    VIEW_CARD = 6
 
     @property
     def value(self) -> int:
@@ -156,7 +157,7 @@ def initialize_database() -> None:
 class ClassConvertTable:
     """This class implements association of classes about convert table."""
     model: Type[ConvertTableRecordMixin]
-    row_data: Type[ConvertTableRowData]
+    row_data: Type[TypeVarConvertTableRowData]
 
 
 class ConvertTableType(Enum):

@@ -5,9 +5,12 @@ import re
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Type, List, Any, Generic, Optional
+from typing import Type, List, Any, Generic
 
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.datasources.csv import CsvFactory
+from zaimcsvconverter.datasources.csv_with_header import CsvWithHeaderFactory
+from zaimcsvconverter.datasources.view_card_csv import ViewCardCsvFactory
 from zaimcsvconverter.inputcsvformats import InputRowData, InputRow, TypeVarInputRowData, TypeVarInputRow, \
     InputRowFactory
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData, AmazonRowFactory
@@ -17,6 +20,7 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPoi
     GoldPointCardPlus201912RowFactory
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
+from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
 from zaimcsvconverter.models import AccountId, ConvertTableType, ConvertTableRecordMixin
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
@@ -26,6 +30,7 @@ from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowCon
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.rowconverters import ZaimRowConverterFactory
 from zaimcsvconverter.zaim_row import ZaimRow, ZaimRowFactory
 
@@ -37,6 +42,7 @@ class FileNameCsvConvert(Enum):
     MUFG = 'mufg.csv'
     PASMO = 'sf_card_viewer.csv'
     AMAZON = 'amazon.csv'
+    VIEW_CARD = 'view_card.csv'
 
     @property
     def value(self) -> str:
@@ -51,15 +57,11 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     id: AccountId
     file_name_csv_convert: FileNameCsvConvert
     regex_csv_file_name: str
-    # @see https://github.com/PyCQA/pylint/issues/2416
-    # pylint: disable=unsubscriptable-object
+    csv_factory: CsvFactory
     convert_table_type: ConvertTableType
-    # pylint: disable=unsubscriptable-object
     input_row_data_class: Type[TypeVarInputRowData]
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
     zaim_row_converter_selector: ZaimRowConverterFactory[TypeVarInputRow]
-    encode: str = 'UTF-8'
-    csv_header: Optional[List[str]] = None
 
     def create_convert_table_row_instance(
             self, list_convert_table_row_standard_type_value: List[Any]
@@ -72,6 +74,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
 
     def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> InputRowData:
         """This method creates input row data instance by list data of input row."""
+        # noinspection PyArgumentList
         return self.input_row_data_class(*list_input_row_standard_type_value)  # type: ignore
 
     def create_input_row_instance(self, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
@@ -90,86 +93,102 @@ class Account(Enum):
         AccountId.WAON,
         FileNameCsvConvert.WAON,
         r'.*waon.*\.csv',
+        CsvWithHeaderFactory(['取引年月日', '利用店舗', '利用金額（税込）', '利用区分', 'チャージ区分']),
         ConvertTableType.STORE,
         WaonRowData,
         WaonRowFactory(),
         WaonZaimRowConverterFactory(),
-        'UTF-8',
-        ['取引年月日', '利用店舗', '利用金額（税込）', '利用区分', 'チャージ区分']
     )
     GOLD_POINT_CARD_PLUS = AccountContext(
         AccountId.GOLD_POINT_CARD_PLUS,
         FileNameCsvConvert.GOLD_POINT_CARD_PLUS,
         r'.*gold_point_card_plus.*\.csv',
+        CsvFactory('shift_jis_2004'),
         ConvertTableType.STORE,
         GoldPointCardPlusRowData,
         GoldPointCardPlusRowFactory(),
         GoldPointCardPlusZaimRowConverterFactory(),
-        'shift_jis_2004'
     )
     GOLD_POINT_CARD_PLUS_201912 = AccountContext(
         AccountId.GOLD_POINT_CARD_PLUS,
         FileNameCsvConvert.GOLD_POINT_CARD_PLUS,
         r'.*gold_point_card_plus_201912.*\.csv',
+        CsvWithHeaderFactory(
+            [r'.*　様', r'[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}', 'ゴールドポイントカードプラス'], 'shift_jis_2004'
+        ),
         ConvertTableType.STORE,
         GoldPointCardPlus201912RowData,
         GoldPointCardPlus201912RowFactory(),
         GoldPointCardPlus201912ZaimRowConverterFactory(),
-        'shift_jis_2004',
-        [r'.*　様', r'[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}', 'ゴールドポイントカードプラス']
     )
     MUFG = AccountContext(
         AccountId.MUFG,
         FileNameCsvConvert.MUFG,
         r'.*mufg.*\.csv',
+        CsvWithHeaderFactory(
+            ['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分'], 'shift_jis_2004'
+        ),
         ConvertTableType.STORE,
         MufgRowData,
         MufgRowFactory(),
         MufgZaimRowConverterFactory(),
-        'shift_jis_2004',
-        ['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分']
     )
     PASMO = AccountContext(
         AccountId.PASMO,
         FileNameCsvConvert.PASMO,
         r'.*pasmo.*\.csv',
+        CsvWithHeaderFactory(
+            ['利用年月日', '定期', '鉄道会社名', '入場駅/事業者名', '定期', '鉄道会社名', '出場駅/降車場所', '利用額(円)', '残額(円)', 'メモ'], 'shift_jis_2004'
+        ),
         ConvertTableType.STORE,
         SFCardViewerRowData,
         # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
         SFCardViewerRowFactory(lambda: CONFIG.pasmo),
         SFCardViewerZaimRowConverterFactory(lambda: CONFIG.pasmo),
-        'shift_jis_2004',
-        ['利用年月日', '定期', '鉄道会社名', '入場駅/事業者名', '定期', '鉄道会社名', '出場駅/降車場所', '利用額(円)', '残額(円)', 'メモ']
     )
     AMAZON = AccountContext(
         AccountId.AMAZON,
         FileNameCsvConvert.AMAZON,
         r'.*amazon.*\.csv',
+        CsvWithHeaderFactory(
+            [
+                '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
+                'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
+                '注文概要URL', '領収書URL', '商品URL'
+            ],
+            'utf-8-sig'
+        ),
         ConvertTableType.ITEM,
         AmazonRowData,
         AmazonRowFactory(),
         AmazonZaimRowConverterFactory(),
-        'utf-8-sig',
-        [
-            '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
-            'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
-            '注文概要URL', '領収書URL', '商品URL'
-        ]
     )
     AMAZON_201911 = AccountContext(
         AccountId.AMAZON,
         FileNameCsvConvert.AMAZON,
         r'.*amazon_201911.*\.csv',
+        CsvWithHeaderFactory(
+            [
+                '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
+                'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
+                '注文概要URL', '領収書URL', '商品URL'
+            ],
+            'utf-8-sig'
+        ),
         ConvertTableType.ITEM,
         Amazon201911RowData,
         Amazon201911RowFactory(),
         Amazon201911ZaimRowConverterFactory(),
-        'utf-8-sig',
-        [
-            '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
-            'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
-            '注文概要URL', '領収書URL', '商品URL'
-        ]
+    )
+    VIEW_CARD = AccountContext(
+        AccountId.VIEW_CARD,
+        FileNameCsvConvert.VIEW_CARD,
+        r'.*view_card.*\.csv',
+        ViewCardCsvFactory(),
+        ConvertTableType.STORE,
+        ViewCardRowData,
+        ViewCardRowFactory(),
+        ViewCardZaimRowConverterFactory(),
     )
 
     @property

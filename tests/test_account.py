@@ -18,6 +18,7 @@ class FilePathConvertTable(Enum):
     PASMO = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\sf_card_viewer.csv')
     AMAZON = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\amazon.csv')
     AMAZON_201911 = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\amazon.csv')
+    VIEW_CARD = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable\\view_card.csv')
 
     @property
     def value(self) -> Path:
@@ -36,6 +37,7 @@ class FilePathInput(Enum):
     PASMO = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\pasmo201804.csv')
     AMAZON = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\amazon201804.csv')
     AMAZON_201911 = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\amazon_201911_201804.csv')
+    VIEW_CARD = Path('c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\view_card_201804.csv')
 
     @property
     def value(self) -> Path:

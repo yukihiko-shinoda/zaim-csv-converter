@@ -1,22 +1,24 @@
-# zaim-csv-converter の対応口座追加開発手順
+# 開発者向けドキュメント
 
-## 1. ユーザー設定の開発
+## zaim-csv-converter の対応口座追加開発手順
+
+### 1. ユーザー設定の開発
 
 config.yml によるユーザー設定を利用する場合、以下の開発を行います。
 
-### 1-1. 設定 dataclass の実装
+#### 1-1. 設定 dataclass の実装
 
 config.py に `DataClassJsonMixin` を継承し、 config.yml で設定できる項目を property として定義した dataclass を作成します。
 
-### 1-2. 設定項目の type hint の実装
+#### 1-2. 設定項目の type hint の実装
 
 config.py の Config クラスに新規対応口座の `DataClassJsonMixin` インスタンスの type hint のための property を追加します。
 
-## 2. 入力 CSV ファイルのフォーマットに依存する処理を追加する開発
+### 2. 入力 CSV ファイルのフォーマットに依存する処理を追加する開発
 
 inputcsvformat 配下に新規対応口座の入力 CSV モデル module を作成します。
 
-### 2-1. 入力 CSV の行の各列のプロパティを定義した dataclass の実装
+#### 2-1. 入力 CSV の行の各列のプロパティを定義した dataclass の実装
 
 入力 CSV の行の各列のプロパティを定義した dataclass を作成します。
 入力 CSV の行がお店単位の場合は `InputStoreRowData` を継承、
@@ -36,7 +38,7 @@ inputcsvformat 配下に新規対応口座の入力 CSV モデル module を作�
 ---|---
 validate|モデル内のプロパティを検証し、異常があれば `InvalidRowError` を生成してプロパティ `list_error` に追加して `True` を返してください。 異常がなければ `False` を返してください。
 
-### 2-2. 入力 CSV の行のモデルクラスの実装
+#### 2-2. 入力 CSV の行のモデルクラスの実装
 
 入力 CSV の行のモデルクラスを作成します。
 入力 CSV の行がお店単位の場合は InputStoreRow を継承、
@@ -60,11 +62,11 @@ Store モデルを返すように実装してください。(amazon.py を参考
 validate|モデル内のプロパティを検証し、異常があれば `InvalidRowError` を生成してプロパティ `list_error` に追加して `True` を返してください。 異常がなければ `False` を返してください。
 is_row_to_skip|この行を処理する必要がない場合、Falseを返すように実装してください。実装しない場合は常にskipせず処理されます。
 
-## 3. 入力 CSV の行モデルを Zaim 形式 CSV の行モデルに変換する処理を追加する開発
+### 3. 入力 CSV の行モデルを Zaim 形式 CSV の行モデルに変換する処理を追加する開発
 
 rowconverters 配下に新規対応口座の CSV 行モデル変換 module を作成します。
 
-### 3-1. 入力 CSV の行モデルクラスを生成する Factory クラスの実装
+#### 3-1. 入力 CSV の行モデルクラスを生成する Factory クラスの実装
 
 処理の中では InputRow を直接生成せず、 Factory クラスを経由して生成するようにしています。
 これは以下の理由のためです:
@@ -79,10 +81,10 @@ InputRowFactory を継承した Factory クラスを作成し、
 手順2-1.で作成した dataclass を引数に、手順2-2.で作成したモデルクラスを返す
 create メソッドを実装してください。
 
-### 3-2. 入力 CSV の行モデルクラスをZaim形式CSVの行モデルクラス変換する Converter クラスの実装
+#### 3-2. 入力 CSV の行モデルクラスをZaim形式CSVの行モデルクラス変換する Converter クラスの実装
 
 InputRow モデルを ZaimRow モデルに変換するための Converter クラスと、
-手順 3-5. で後述する ConverterSelector クラスで、
+手順 3-5. で後述する ZaimRowConverterFactory クラスで、
 入力 CSV の行モデルクラスインスタンスを作り分けることにより、
 Strategy パターンを実装できます。
 
@@ -112,13 +114,13 @@ _cash_flow_source|この行が振替の行の場合、出力 CSV に「支払元
 _cash_flow_target|この行が振替の行の場合、出力 CSV に「入金先」として記載すべき文字列を返してください。
 _amount_transfer|この行が振替の行の場合、出力 CSV に「振替」として記載すべき数値を返してください。
 
-## 3-5. 、ConverterSelector クラスの実装
+### 3-5. ZaimRowConverterFactory クラスの実装
 
 `ZaimRowConverterFactory` クラスを継承し、`create()` メソッドを実装します。
 引数の `ValidatedInputRow` に対して、どの `ZaimRowConverter` クラスを利用するかを選択します。
 (rowconverters/waon.py, rowconverters/mufg.py, rowconverters/sf_card_viewer.py を参考にしてください。)
 
-## 4. 口座に依存する属性を定義
+### 4. 口座に依存する属性を定義
 
 account.py の Account Enum クラスに新規対応口座用の AccountContext インスタンス定数を追加します。
 AccountContext の各プロパティは以下のように定義します。
@@ -135,8 +137,16 @@ zaim_row_converter_selector|手順3.で実装した `ZaimRowConverter` を指定
 encode|入力 CSV のエンコードが UTF-8 以外の場合、定義します。
 csv_header|入力 CSV にヘッダーが含まれる場合、定義します。定義すると、読み取り処理がヘッダーの行までを自動的に読み飛ばします。
 
-## 5. ユニットテストの実行
+### 5. ユニットテストの実行
 
 ```bash
 pipenv run test
 ```
+
+## ユビキタス言語
+
+言葉|内容
+---|---
+row|CSV の行を表します。
+record|CSV の設計者が意図していると思われる、 1 レコード分のデータを表します。神 CSV に対応するため、必ずしも CSV 1 行と対応するとは限らないものとして設計します。
+record data|record を一旦、文字列型のままオブジェクト化するための dataclass です。validate メソッドを実装し、プロパティが正しい型に変換できるか検証します。

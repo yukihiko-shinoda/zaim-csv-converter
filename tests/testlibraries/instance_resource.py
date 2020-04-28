@@ -8,6 +8,7 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardP
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPointCardPlus201912RowData
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 from zaimcsvconverter.models import AccountId, StoreRowData, ItemRowData
 
@@ -109,6 +110,12 @@ class InstanceResource:
         'https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=234-5678901-2345678',
         'https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi?ie=UTF8&orderID=234-5678901-2345678',
         'https://www.amazon.co.jp/gp/product/B07146XVB5/ref=od_aui_detailpages00?ie=UTF8&psc=1')
+    ROW_DATA_VIEW_CARD_ITABASHI_STATION_AUTO_CHARGE = ViewCardRowData(
+        '2020/03/21', '板橋駅　オートチャージ', '3000', '', '3000', '１回払', '', '3000', '', '', ''
+    )
+    ROW_DATA_VIEW_CARD_ANNUAL_FEE = ViewCardRowData(
+        '2020/03/31', 'カード年会費', '524', '', '524', '１回払', '', '524', '', '', ''
+    )
     FIXTURE_RECORD_STORE_WAON_MAKUHARISHINTOSHIN = FixtureRecord(
         AccountId.WAON, StoreRowData('幕張新都心', 'イオンモール　幕張新都心')
     )
@@ -170,4 +177,7 @@ class InstanceResource:
     )
     FIXTURE_RECORD_ITEM_AMAZON_AMAZON_POINT = FixtureRecord(
         AccountId.AMAZON, ItemRowData('（Amazon ポイント）', '通信', 'その他')
+    )
+    FIXTURE_RECORD_STORE_VIEW_CARD_VIEW_CARD = FixtureRecord(
+        AccountId.VIEW_CARD, StoreRowData('カード年会費', 'ビューカード　ビューカードセンター', '通信', 'その他')
     )

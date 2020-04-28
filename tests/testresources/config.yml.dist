@@ -14,3 +14,6 @@ pasmo:
 amazon:
   store_name_zaim: 'Amazon Japan G.K.'
   payment_account_name: 'ヨドバシゴールドポイントカード・プラス'
+view_card:
+  account_name: 'ビューカード'
+  skip_suica_row: true

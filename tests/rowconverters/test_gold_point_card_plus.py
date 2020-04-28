@@ -19,16 +19,16 @@ class TestGoldPointCardPlusZaimPaymentRowConverter:
     @pytest.mark.parametrize(
         (
             'gold_point_card_plus_row_data, expected_date, '
-            'expected_store_name_zaim, expected_use_amount, expected_is_row_to_skip'
+            'expected_store_name_zaim, expected_use_amount'
         ),
         [
             (
                 InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC,
-                '2018-07-03', '東京電力エナジーパートナー株式会社', 11402, False
+                '2018-07-03', '東京電力エナジーパートナー株式会社', 11402
             ),
             (
                 InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP,
-                '2018-07-04', 'Amazon Japan G.K.', 3456, True
+                '2018-07-04', 'Amazon Japan G.K.', 3456
             ),
         ]
     )
@@ -37,7 +37,6 @@ class TestGoldPointCardPlusZaimPaymentRowConverter:
             expected_date,
             expected_store_name_zaim,
             expected_use_amount,
-            expected_is_row_to_skip,
             yaml_config_load,
             database_session_stores_gold_point_card_plus
     ):

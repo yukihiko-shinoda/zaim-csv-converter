@@ -5,8 +5,9 @@ from dataclasses import field, dataclass
 from datetime import datetime
 from typing import Optional, TypeVar, Generic, List, Callable, Any
 
-from zaimcsvconverter.error_collector import MultipleErrorCollector, SingleErrorCollector
-from zaimcsvconverter.exceptions import InvalidRowError, UndefinedContentError
+from errorcollector.error_collector import MultipleErrorCollector, SingleErrorCollector
+from godslayer.exceptions import InvalidRecordError
+from zaimcsvconverter.exceptions import UndefinedContentError
 from zaimcsvconverter.models import AccountId, Store, Item
 
 
@@ -14,7 +15,7 @@ from zaimcsvconverter.models import AccountId, Store, Item
 @dataclass
 class InputRowData:  # type: ignore
     """This class is abstract class of input CSV row data."""
-    list_error: List[InvalidRowError] = field(default_factory=list, init=False)
+    list_error: List[InvalidRecordError] = field(default_factory=list, init=False)
     undefined_content_error: Optional[UndefinedContentError] = field(default=None, init=False)
 
     @property
@@ -30,7 +31,7 @@ class InputRowData:  # type: ignore
 
     def stock_error(self, method: Callable[[], Any], message: str) -> Any:
         """This method stocks error"""
-        with MultipleErrorCollector(InvalidRowError, message, self.list_error):
+        with MultipleErrorCollector(InvalidRecordError, message, self.list_error):
             return method()
 
 
@@ -40,6 +41,7 @@ class InputRowData:  # type: ignore
 class InputStoreRowData(InputRowData, ABC):  # type: ignore
     """This class is abstract class of input CSV row data including column to find store (nullable OK)."""
     _store: Optional[Store] = field(default=None, init=False)
+
     @property
     @abstractmethod
     def store_name(self) -> str:
@@ -57,6 +59,7 @@ class InputStoreRowData(InputRowData, ABC):  # type: ignore
 class InputItemRowData(InputRowData, ABC):  # type: ignore
     """This class is abstract class of input CSV row data including column to find item (nullable OK)."""
     _item: Optional[Store] = field(default=None, init=False)
+
     @property
     @abstractmethod
     def item_name(self) -> str:
@@ -69,7 +72,7 @@ TypeVarInputRowData = TypeVar('TypeVarInputRowData', bound=InputRowData)
 class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
     def __init__(self, account_id: AccountId, input_row_data: TypeVarInputRowData):
-        self.list_error: List[InvalidRowError] = []
+        self.list_error: List[InvalidRecordError] = []
         self._account_id: AccountId = account_id
         self.date: datetime = input_row_data.date
 
@@ -81,7 +84,7 @@ class InputRow(Generic[TypeVarInputRowData]):
 
     def stock_error(self, method: Callable[[], Any], message: str) -> Any:
         """This method stocks error"""
-        with MultipleErrorCollector(InvalidRowError, message, self.list_error):
+        with MultipleErrorCollector(InvalidRecordError, message, self.list_error):
             return method()
 
     # Reason: Parent method. pylint: disable=no-self-use

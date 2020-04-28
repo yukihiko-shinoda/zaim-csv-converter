@@ -47,6 +47,13 @@ class AmazonConfig(DataClassJsonMixin):
 
 
 @dataclass
+class ViewCardConfig(DataClassJsonMixin):
+    """This class implements configuration for View Card."""
+    account_name: str
+    skip_suica_row: bool
+
+
+@dataclass
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
     waon: WaonConfig = field(  # type: ignore
@@ -68,4 +75,8 @@ class Config(YamlDataClassConfig):
     amazon: AmazonConfig = field(  # type: ignore
         default=None,
         metadata={'dataclasses_json': {'mm_field': AmazonConfig}}
+    )
+    view_card: ViewCardConfig = field(  # type: ignore
+        default=None,
+        metadata={'dataclasses_json': {'mm_field': ViewCardConfig}}
     )

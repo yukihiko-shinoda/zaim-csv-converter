@@ -1,0 +1,101 @@
+"""Tests for ViewCardRow."""
+from datetime import datetime
+
+import pytest
+
+from sqlalchemy.orm.exc import NoResultFound
+from tests.testlibraries.instance_resource import InstanceResource
+from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRow, ViewCardRowFactory
+from zaimcsvconverter.models import Store, AccountId
+
+
+class TestViewCardRowData:
+    """Tests for ViewCardRowData."""
+    # Reason: asserting properties can't be short no more.
+    # noinspection DuplicatedCode
+    @staticmethod
+    # pylint: disable=too-many-locals
+    def test_init_and_property():
+        """
+        Property date should return datetime object.
+        Property store_date should return used_store.
+        """
+        used_date = '2020/03/31'
+        used_place = 'カード年会費'
+        used_amount = '524'
+        refund_amount = ''
+        billing_amount = '524'
+        number_of_division = '1回払'
+        current_time_of_division = ''
+        billing_amount_current_time = '524'
+        local_currency_amount = ''
+        currency_abbreviation = ''
+        exchange_rate = ''
+        view_card_row_data = ViewCardRowData(
+            used_date, used_place, used_amount, refund_amount, billing_amount, number_of_division,
+            current_time_of_division, billing_amount_current_time, local_currency_amount, currency_abbreviation,
+            exchange_rate)
+        assert view_card_row_data.date == datetime(2020, 3, 31, 0, 0)
+        assert view_card_row_data.store_name == used_place
+        assert view_card_row_data.billing_amount_current_time == 524
+
+
+class TestViewCardRow:
+    """Tests for ViewCardRow."""
+    # pylint: disable=protected-access,too-many-arguments,unused-argument
+    @staticmethod
+    @pytest.mark.parametrize(
+        (
+            'view_card_row_data, expected_date, expected_store_name_zaim, expected_is_row_to_skip'
+        ),
+        [
+            (
+                InstanceResource.ROW_DATA_VIEW_CARD_ITABASHI_STATION_AUTO_CHARGE,
+                datetime(2020, 3, 21, 0, 0, 0), None, True
+            ),
+            (
+                InstanceResource.ROW_DATA_VIEW_CARD_ANNUAL_FEE,
+                datetime(2020, 3, 31, 0, 0, 0), 'ビューカード　ビューカードセンター', False
+            ),
+        ]
+    )
+    def test_init(
+            yaml_config_load,
+            database_session_stores_view_card,
+            view_card_row_data,
+            expected_date,
+            expected_store_name_zaim,
+            expected_is_row_to_skip
+    ):
+        """
+        Arguments should set into properties.
+        :type view_card_row_data: ViewCardRowData
+        """
+        # noinspection PyTypeChecker
+        row = ViewCardRow(AccountId.VIEW_CARD, view_card_row_data)
+        assert row.date == expected_date
+        # pylint: disable=protected-access
+        if expected_store_name_zaim is None:
+            with pytest.raises(NoResultFound):
+                # noinspection PyUnusedLocal
+                store_name = row.store
+        else:
+            assert isinstance(row.store, Store)
+            # noinspection PyUnresolvedReferences
+            assert row.store.name == view_card_row_data._used_place
+            assert row.store.name_zaim == expected_store_name_zaim
+        assert row.is_row_to_skip == expected_is_row_to_skip
+
+
+class TestViewCardRowFactory:
+    """Tests for GoldPointCardPlusRowFactory."""
+    # pylint: disable=unused-argument
+    @staticmethod
+    @pytest.mark.parametrize('argument, expected', [
+        (InstanceResource.ROW_DATA_VIEW_CARD_ANNUAL_FEE, ViewCardRow),
+    ])
+    def test_create(argument, expected, database_session_stores_view_card):
+        """Method should return Store model when note is defined."""
+        # pylint: disable=protected-access
+        view_card_row = ViewCardRowFactory().create(AccountId.VIEW_CARD, argument)
+        assert isinstance(view_card_row, expected)

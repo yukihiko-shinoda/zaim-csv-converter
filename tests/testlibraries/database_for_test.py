@@ -38,7 +38,9 @@ class FixtureRecord:
         """This method defines factory_boy fixture records by using properties."""
         if self.account_id is AccountId.AMAZON:
             ItemFactory(account_id=self.account_id, row_data=self.row_data)
-        elif self.account_id in (AccountId.WAON, AccountId.GOLD_POINT_CARD_PLUS, AccountId.MUFG, AccountId.PASMO):
+        elif self.account_id in (
+            AccountId.WAON, AccountId.GOLD_POINT_CARD_PLUS, AccountId.MUFG, AccountId.PASMO, AccountId.VIEW_CARD
+        ):
             StoreFactory(account_id=self.account_id, row_data=self.row_data)
         else:
             raise ValueError(f'self.account_id is not supported on this class. self.account_id = {self.account_id}')

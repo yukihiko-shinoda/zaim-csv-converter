@@ -1,4 +1,5 @@
 """This module implements exceptions for this package."""
+from godslayer.exceptions import InvalidRecordError
 
 
 class Error(Exception):
@@ -8,20 +9,12 @@ class Error(Exception):
     """
 
 
-class InvalidRowError(Error):
-    """Target row is invalid."""
-
-
 class SkipRow(Error):
     """Target row is invalid."""
 
 
-class UndefinedContentError(InvalidRowError):
+class UndefinedContentError(InvalidRecordError):
     """Store or item is undefined."""
-
-
-class InvalidHeaderError(InvalidRowError):
-    """Header row is invalid."""
 
 
 class InvalidInputCsvError(Error):
