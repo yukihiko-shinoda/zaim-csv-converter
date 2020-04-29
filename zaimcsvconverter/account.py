@@ -43,6 +43,7 @@ class FileNameCsvConvert(Enum):
     PASMO = 'sf_card_viewer.csv'
     AMAZON = 'amazon.csv'
     VIEW_CARD = 'view_card.csv'
+    SUICA = 'sf_card_viewer.csv'
 
     @property
     def value(self) -> str:
@@ -53,6 +54,17 @@ class FileNameCsvConvert(Enum):
 @dataclass
 class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     """This class implements recipe for converting steps for WAON CSV."""
+    CSV_FACTORY_SF_CARD_VIEWER = CsvWithHeaderFactory(
+        ['利用年月日', '定期', '鉄道会社名', '入場駅/事業者名', '定期', '鉄道会社名', '出場駅/降車場所', '利用額(円)', '残額(円)', 'メモ'], 'shift_jis_2004'
+    )
+    CSV_FACTORY_AMAZON = CsvWithHeaderFactory(
+        [
+            '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
+            'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
+            '注文概要URL', '領収書URL', '商品URL'
+        ],
+        'utf-8-sig'
+    )
     # Reason: "id" is suitable word and "identity" will cause confuse. pylint: disable=invalid-name
     id: AccountId
     file_name_csv_convert: FileNameCsvConvert
@@ -137,9 +149,7 @@ class Account(Enum):
         AccountId.PASMO,
         FileNameCsvConvert.PASMO,
         r'.*pasmo.*\.csv',
-        CsvWithHeaderFactory(
-            ['利用年月日', '定期', '鉄道会社名', '入場駅/事業者名', '定期', '鉄道会社名', '出場駅/降車場所', '利用額(円)', '残額(円)', 'メモ'], 'shift_jis_2004'
-        ),
+        AccountContext.CSV_FACTORY_SF_CARD_VIEWER,
         ConvertTableType.STORE,
         SFCardViewerRowData,
         # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
@@ -150,14 +160,7 @@ class Account(Enum):
         AccountId.AMAZON,
         FileNameCsvConvert.AMAZON,
         r'.*amazon.*\.csv',
-        CsvWithHeaderFactory(
-            [
-                '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
-                'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
-                '注文概要URL', '領収書URL', '商品URL'
-            ],
-            'utf-8-sig'
-        ),
+        AccountContext.CSV_FACTORY_AMAZON,
         ConvertTableType.ITEM,
         AmazonRowData,
         AmazonRowFactory(),
@@ -167,14 +170,7 @@ class Account(Enum):
         AccountId.AMAZON,
         FileNameCsvConvert.AMAZON,
         r'.*amazon_201911.*\.csv',
-        CsvWithHeaderFactory(
-            [
-                '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
-                'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
-                '注文概要URL', '領収書URL', '商品URL'
-            ],
-            'utf-8-sig'
-        ),
+        AccountContext.CSV_FACTORY_AMAZON,
         ConvertTableType.ITEM,
         Amazon201911RowData,
         Amazon201911RowFactory(),
@@ -189,6 +185,17 @@ class Account(Enum):
         ViewCardRowData,
         ViewCardRowFactory(),
         ViewCardZaimRowConverterFactory(),
+    )
+    SUICA = AccountContext(
+        AccountId.SUICA,
+        FileNameCsvConvert.SUICA,
+        r'.*suica.*\.csv',
+        AccountContext.CSV_FACTORY_SF_CARD_VIEWER,
+        ConvertTableType.STORE,
+        SFCardViewerRowData,
+        # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
+        SFCardViewerRowFactory(lambda: CONFIG.suica),
+        SFCardViewerZaimRowConverterFactory(lambda: CONFIG.suica),
     )
 
     @property

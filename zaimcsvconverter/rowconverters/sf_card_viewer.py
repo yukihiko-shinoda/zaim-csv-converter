@@ -45,6 +45,7 @@ class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFC
 class SFCardViewerZaimPaymentOnStationRowConverter(ZaimPaymentRowStoreConverter[SFCardViewerEnterExitRow]):
     """This class implements convert steps from SFCard Viewer enter row to Zaim payment row."""
     account_config: SFCardViewerConfig
+
     @property
     def cash_flow_source(self) -> str:
         # Reason: Pylint's bug. pylint: disable=missing-docstring
@@ -67,6 +68,7 @@ class SFCardViewerZaimPaymentOnStationRowConverter(ZaimPaymentRowStoreConverter[
 class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewerEnterRow]):
     """This class implements convert steps from SFCard Viewer enter row to Zaim transfer row."""
     account_config: SFCardViewerConfig
+
     @property
     def cash_flow_source(self) -> str:
         return self.account_config.auto_charge_source

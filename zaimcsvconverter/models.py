@@ -24,6 +24,7 @@ class AccountId(Enum):
     PASMO = 4
     AMAZON = 5
     VIEW_CARD = 6
+    SUICA = 7
 
     @property
     def value(self) -> int:

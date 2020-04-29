@@ -18,7 +18,7 @@ pasmo:
   account_name: 'PASMO'
   # ↓ オートチャージ時に入金元となる口座の、Zaim上で登録している口座名を設定します。
   auto_charge_source: ''
-  # ↓ 物販の履歴を省くかどうかを設定します。SFCard Viewere2から出力されるCSVの物販情報には品目名もお店の名前も含まれません。
+  # ↓ 物販の履歴を省くかどうかを設定します。SFCard Viewer2から出力されるCSVの物販情報には品目名もお店の名前も含まれません。
   # ↓ 物販の情報をCSVから入力すると、後で分析を行うときに使途が不明になる可能性があります。
   # ↓ 物販のみ、レシートからの手動登録を行う場合、2重登録を防ぐため true にします。
   skip_sales_goods_row: true
@@ -27,3 +27,17 @@ amazon:
   store_name_zaim: 'Amazon Japan G.K.'
   # ↓ Amazonからの引き落とし先となる口座の、Zaim上で登録している口座名を設定します。
   payment_account_name: ''
+view_card:
+  # ↓ Zaim上でビューカード用として登録している口座名を設定します。
+  account_name: 'ビューカード'
+  # ↓ Suicaからの引き落としの履歴を省くかどうかを設定します。SuicaのCSVをインポートする場合、2重登録を防ぐため true にします。
+  skip_suica_row: true
+suica:
+  # ↓ Zaim上でSuica用として登録している口座名を設定します。
+  account_name: 'Suica'
+  # ↓ オートチャージ時に入金元となる口座の、Zaim上で登録している口座名を設定します。
+  auto_charge_source: 'ビューカード'
+  # ↓ 物販の履歴を省くかどうかを設定します。SFCard Viewer2から出力されるCSVの物販情報には品目名もお店の名前も含まれません。
+  # ↓ 物販の情報をCSVから入力すると、後で分析を行うときに使途が不明になる可能性があります。
+  # ↓ 物販のみ、レシートからの手動登録を行う場合、2重登録を防ぐため true にします。
+  skip_sales_goods_row: true

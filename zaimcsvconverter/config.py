@@ -54,6 +54,11 @@ class ViewCardConfig(DataClassJsonMixin):
 
 
 @dataclass
+class SuicaConfig(SFCardViewerConfig):
+    """This class implements configuration for PASMO."""
+
+
+@dataclass
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
     waon: WaonConfig = field(  # type: ignore
@@ -79,4 +84,8 @@ class Config(YamlDataClassConfig):
     view_card: ViewCardConfig = field(  # type: ignore
         default=None,
         metadata={'dataclasses_json': {'mm_field': ViewCardConfig}}
+    )
+    suica: PasmoConfig = field(  # type: ignore
+        default=None,
+        metadata={'dataclasses_json': {'mm_field': SuicaConfig}}
     )

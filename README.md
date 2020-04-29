@@ -14,6 +14,8 @@ Zaim で口座連携をするために
 - 三菱 UFJ 銀行
 - PASMO
 - Amazon.co.jp
+- ビューカード
+- Suica
 
 ※ [対応口座追加のための開発手順](docs/CONTRIBUTING.md)をまとめました、プルリクエストをお待ちしています。
 
@@ -56,8 +58,9 @@ CSV の作成方法は[変換用テーブルの CSV のつくり方](#変換用�
 WAON|waon.csv|お店単位
 ヨドバシゴールドポイントカード・プラス|gold_point_card_plus.csv|お店単位
 三菱 UFJ 銀行|mufg.csv|お店単位
-PASMO|sf_card_viewer.csv|お店単位
+Suica,PASMO|sf_card_viewer.csv|お店単位
 Amazon.co.jp|amazon.csv|品目単位
+ビューカード|view_card.csv|お店単位
 
 ※ 文字コードは UTF-8 で準備してください。
 
@@ -85,9 +88,10 @@ WAON|waon
 ヨドバシゴールドポイントカード・プラス 2019 年 12 月以降の形式|gold_point_card_plus_201912
 三菱 UFJ 銀行|mufg
 PASMO|pasmo
-Suica|suica
 Amazon.co.jp 2019 年 11 月以前の形式|amazon
 Amazon.co.jp 2019 年 12 月以降の形式|amazon_201911
+ビューカード|view_card
+Suica|suica
 
 変換対象CSVの準備方法の詳細は[変換対象 CSV の準備方法](#変換対象-CSV-の準備方法)を参照してください。
 
@@ -120,16 +124,16 @@ csvoutput/error_invalid_row.csv と入力 CSV の内容を確認して、入力 
 csvoutput/error_undefined_content.csv が出力された場合は、
 変換テーブルの CSV に変換の定義を追加します。
 
-#### GOLD POINT CARD+ の暫定対応
+#### ヨドバシゴールドポイントカード・プラス の暫定対応
 
-2019-12-13 現在、 GOLD POINT CARD+ ではエラーが表示されます。
+2019-12-13 現在、 ヨドバシゴールドポイントカード・プラス ではエラーが表示されます。
 
 ||||
 ---|---|---
 gold_point_card_plus_201912_201912.csv|35|Invalid used date. Used date =
 
 該当の行が合計の行である場合、このエラーは無視して次の手順に進んでください。
-GOLD POINT CARD+ では以前まで正規化された CSV が提供されていましたが、
+ヨドバシゴールドポイントカード・プラス では以前まで正規化された CSV が提供されていましたが、
 2019 年のアップデートで非正規形のいわゆる[神エクセル](https://www.atmarkit.co.jp/ait/articles/1612/26/news032.html)になってしまったため、
 CSV 出力機能だけは以前の仕様に戻せないかサポート窓口に問い合わせを行っています。
 
@@ -217,7 +221,7 @@ Chrome の場合は [Table Capture](https://chrome.google.com/webstore/detail/ta
 
 該当月のスプレッドシートを開いた状態で [ファイル] -> [形式を指定してダウンロード] -> [カンマ区切りの値(.csv、現在のシート)]
 
-### GOLD POINT CARD+
+### ヨドバシゴールドポイントカード・プラス
 
 1\.
 
@@ -253,7 +257,7 @@ Chrome の場合は [Table Capture](https://chrome.google.com/webstore/detail/ta
 
 [明細をダウンロード] ボタンをクリック
 
-### PASMO
+### Suica, PASMO
 
 1\.
 
@@ -267,13 +271,13 @@ Windows コンピューターと「NFC ポート/パソリ」の要件は[こち
 
 2\.
 
-SFCard Viewer 2 を起動し、「NFC ポート/パソリ」に PASMO をタッチします。
+SFCard Viewer 2 を起動し、「NFC ポート/パソリ」に Suica, PASMO をタッチします。
 
 3\.
 
 [メニュー] -> [フィアルに保存]をクリック
 
-※ PASMO には 20 件までしか履歴が残らないので、
+※ Suica, PASMO には 20 件までしか履歴が残らないので、
 　 定期的に CSV を取得し続ける必要があります。
 
 ### Amazon
@@ -301,3 +305,21 @@ Chrome 拡張の[アマゾン注文履歴フィルタ](https://chrome.google.com
 6\.
 
 [注文履歴CSV(参考用)ダウンロード] ボタンをクリックします。
+
+### ビューカード
+
+1\.
+
+[ビューカード](https://www.jreast.co.jp/card/index.html/) にログインします。
+
+2.\
+
+[ご利用明細照会 (お支払方法の変更)] をクリック
+
+3.\
+
+明細を取得する月のボタンをクリックします。
+
+4.\
+
+[明細 CSV ダウンロード] ボタンをクリック
