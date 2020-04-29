@@ -23,6 +23,6 @@ class ViewCardCsvReader(CsvWithHeaderReader):
         if self.header:
             self._skip_header(reader_input)
         row = reader_input.__next__()
-        if not bool(re.search(r'^\*{4}-\*{4}-\*{4}-[1-4]{4}\s.*$', row[0])):
+        if not bool(re.search(r'^\*{4}-\*{4}-\*{4}-[0-9]{4}\s.*$', row[0])):
             raise InvalidHeaderError('The column of card number and user name not found.')
         yield from super(CsvWithHeaderReader, self)._process_csv(reader_input)

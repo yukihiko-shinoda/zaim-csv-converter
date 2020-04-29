@@ -2,6 +2,8 @@
 from datetime import datetime
 from dataclasses import dataclass
 
+from sqlalchemy.orm.exc import NoResultFound
+
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
 from zaimcsvconverter.models import FileCsvConvertId
@@ -52,7 +54,11 @@ class GoldPointCardPlus201912Row(InputStoreRow):
 
     @property
     def is_row_to_skip(self) -> bool:
-        return CONFIG.gold_point_card_plus.skip_amazon_row and self.store.is_amazon
+        try:
+            store = self.store
+        except NoResultFound:
+            return False
+        return CONFIG.gold_point_card_plus.skip_amazon_row and store.is_amazon
 
 
 class GoldPointCardPlus201912RowFactory(InputRowFactory[GoldPointCardPlus201912RowData, GoldPointCardPlus201912Row]):
