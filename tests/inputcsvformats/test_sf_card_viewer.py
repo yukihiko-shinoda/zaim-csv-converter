@@ -7,7 +7,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory, SFCardViewerRowData, \
     SFCardViewerRow, SFCardViewerEnterExitRow, SFCardViewerEnterRow
-from zaimcsvconverter.models import Store, AccountId
+from zaimcsvconverter.models import Store, FileCsvConvertId
 
 
 class TestSFCardViewerRowData:
@@ -54,7 +54,9 @@ class TestSFCardViewerRow:
         Arguments should set into properties.
         """
         sf_card_viewer_row = SFCardViewerEnterRow(
-            AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
+            FileCsvConvertId.SF_CARD_VIEWER,
+            InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
+            CONFIG.pasmo
         )
         assert sf_card_viewer_row.date == datetime(2018, 11, 13, 0, 0, 0)
         assert isinstance(sf_card_viewer_row.store, Store)
@@ -76,7 +78,7 @@ class TestSFCardViewerSalesGoodsRow:
     ):
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
         sf_card_viewer_row = SFCardViewerRow(
-            AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, CONFIG.pasmo
+            FileCsvConvertId.SF_CARD_VIEWER, InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, CONFIG.pasmo
         )
         assert sf_card_viewer_row.is_row_to_skip == expected
 
@@ -99,7 +101,7 @@ class TestSFCardViewerExitByWindowRow:
     ):
         """Method should return true when entered station is as same as exit station and used amount is 0."""
         sf_card_viewer_row = SFCardViewerEnterExitRow(
-            AccountId.PASMO,
+            FileCsvConvertId.SF_CARD_VIEWER,
             sf_card_viewer_row_data,
             CONFIG.pasmo
         )
@@ -130,7 +132,9 @@ class TestSFCardViewerRowFactory:
                             expected_is_exit_by_window, expected_is_bus_tram):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(AccountId.PASMO, argument)
+        sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
+            FileCsvConvertId.SF_CARD_VIEWER, argument
+        )
         assert isinstance(sf_card_viewer_row, SFCardViewerRow)
         assert sf_card_viewer_row.is_transportation == expected_is_transportation
         assert sf_card_viewer_row.is_sales_goods == expected_is_sales_goods
@@ -144,5 +148,5 @@ class TestSFCardViewerRowFactory:
         with pytest.raises(ValueError):
             # pylint: disable=protected-access
             SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
-                AccountId.PASMO, InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE
+                FileCsvConvertId.SF_CARD_VIEWER, InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE
             )

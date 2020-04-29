@@ -6,7 +6,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowFactory, \
     Amazon201911RowData, Amazon201911DiscountRow, Amazon201911PaymentRow
-from zaimcsvconverter.models import Store, Item, AccountId
+from zaimcsvconverter.models import Store, Item, FileCsvConvertId
 
 
 class TestAmazon201911RowData:
@@ -71,7 +71,9 @@ class TestAmazon201911DiscountRow:
         """Arguments should set into properties."""
         store_name = 'Amazon Japan G.K.'
         item_name = '（Amazon ポイント）'
-        amazon_row = Amazon201911DiscountRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT)
+        amazon_row = Amazon201911DiscountRow(
+            FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT
+        )
         assert amazon_row.date == datetime(2019, 11, 9, 0, 0, 0)
         assert isinstance(amazon_row.store, Store)
         assert amazon_row.store.name_zaim == store_name
@@ -85,7 +87,7 @@ class TestAmazon201911DiscountRow:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
             Amazon201911DiscountRow(
-                AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_HUMMING_FINE
+                FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_HUMMING_FINE
             ).total_order
         assert str(error.value) == 'Total order on discount row is not allowed empty.'
 
@@ -100,7 +102,7 @@ class TestAmazon201911PaymentRow:
         """Arguments should set into properties."""
         store_name = 'Amazon Japan G.K.'
         item_name = 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト'
-        amazon_row = Amazon201911PaymentRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
+        amazon_row = Amazon201911PaymentRow(FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
         assert amazon_row.price == 4980
         assert amazon_row.number == 1
         assert amazon_row.date == datetime(2019, 11, 9, 0, 0, 0)
@@ -116,7 +118,7 @@ class TestAmazon201911PaymentRow:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
             Amazon201911PaymentRow(
-                AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT
+                FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT
             ).price
         assert str(error.value) == 'Price on payment row is not allowed empty.'
 
@@ -127,7 +129,7 @@ class TestAmazon201911PaymentRow:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
             Amazon201911PaymentRow(
-                AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT
+                FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT
             ).number
         assert str(error.value) == 'Number on payment row is not allowed empty.'
 
@@ -143,5 +145,5 @@ class TestAmazon201911RowFactory:
     def test_create(argument: Amazon201911RowData, expected, yaml_config_load, database_session_item):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        gold_point_card_plus_row = Amazon201911RowFactory().create(AccountId.AMAZON, argument)
+        gold_point_card_plus_row = Amazon201911RowFactory().create(FileCsvConvertId.AMAZON, argument)
         assert isinstance(gold_point_card_plus_row, expected)

@@ -3,10 +3,8 @@ from abc import abstractmethod
 from contextlib import ContextDecorator
 from typing import List, TypeVar, Type, Optional, Generic
 
-from zaimcsvconverter.exceptions import Error
 
-
-TypeVarError = TypeVar('TypeVarError', bound=Error)
+TypeVarError = TypeVar('TypeVarError', bound=Exception)
 
 
 class ErrorCollector(ContextDecorator, Generic[TypeVarError]):

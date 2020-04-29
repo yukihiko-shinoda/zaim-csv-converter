@@ -28,8 +28,8 @@ python_version = "3.8"
 
 [scripts]
 start = "python convert.py"
-test = "cd tests && pytest"
-coverage = "cd tests && pytest --verbose --cov=zaimcsvconverter --cov-report=term-missing"
+test = "pytest tests"
+coverage = "pytest --verbose --cov=errorcollector --cov=godslayer --cov=zaimcsvconverter --cov-report=term-missing tests"
 flake8 = "flake8 --max-line-length=120 --statistics --show-source --radon-show-closures ."
 cc = "radon cc --show-complexity --min B ."
 mi = "radon mi --show ."

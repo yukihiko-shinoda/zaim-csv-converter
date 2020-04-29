@@ -4,7 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory, AmazonRow
-from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter, AmazonZaimRowConverterFactory
 
@@ -19,7 +19,7 @@ class TestAmazonZaimPaymentRowConverter:
         config_account_name = 'ヨドバシゴールドポイントカード・プラス'
         store_name = 'Amazon Japan G.K.'
         item_name = 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト'
-        amazon_row = AmazonRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+        amazon_row = AmazonRow(FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(AmazonZaimPaymentRowConverter(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
@@ -47,5 +47,5 @@ class TestAmazonZaimRowConverterFactory:
     )
     def test(yaml_config_load, database_session_with_schema, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = AmazonRowFactory().create(AccountId.AMAZON, input_row_data)
+        input_row = AmazonRowFactory().create(FileCsvConvertId.AMAZON, input_row_data)
         assert isinstance(AmazonZaimRowConverterFactory().create(input_row), expected)

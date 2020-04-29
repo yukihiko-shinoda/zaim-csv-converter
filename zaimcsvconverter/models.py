@@ -4,7 +4,7 @@ from __future__ import annotations
 import warnings
 from abc import abstractmethod
 from enum import Enum
-from typing import List, Type, TypeVar, Optional
+from typing import List, Type, TypeVar, Optional, Generic
 
 from dataclasses import dataclass
 from inflector import Inflector
@@ -16,13 +16,14 @@ from zaimcsvconverter import Session
 from zaimcsvconverter.session_manager import SessionManager
 
 
-class AccountId(Enum):
-    """This class implements account id on database."""
+class FileCsvConvertId(Enum):
+    """This class implements file for CSV convert id on database."""
     WAON = 1
     GOLD_POINT_CARD_PLUS = 2
     MUFG = 3
-    PASMO = 4
+    SF_CARD_VIEWER = 4
     AMAZON = 5
+    VIEW_CARD = 6
 
     @property
     def value(self) -> int:
@@ -72,16 +73,16 @@ class ConvertTableRecordMixin:
         return Inflector().pluralize(self.__name__.lower())
 
     id: Column = Column(Integer, primary_key=True)
-    account_id: Column = Column(Integer)
+    file_csv_convert_id: Column = Column(Integer)
     name: Column = Column(String(255))
     category_payment_large: Column = Column(String(255))
     category_payment_small: Column = Column(String(255))
 
-    __table_args__ = (UniqueConstraint('account_id', 'name', name='_name_on_each_account_uc'),)
+    __table_args__ = (UniqueConstraint('file_csv_convert_id', 'name', name='_name_on_each_account_uc'),)
 
     @abstractmethod
-    def __init__(self, account_id: AccountId, row_data: TypeVarConvertTableRowData):
-        self.account_id: int = account_id.value
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: TypeVarConvertTableRowData):
+        self.file_csv_convert_id: int = file_csv_convert_id.value
         self.name: str = row_data.name
 
     @staticmethod
@@ -89,21 +90,22 @@ class ConvertTableRecordMixin:
         return value if value != '' else None
 
     @classmethod
-    def try_to_find(cls: Type[ConvertTableRecordMixin], account_id: AccountId, name: str) -> TypeVarBase:
+    def try_to_find(
+            cls: Type[ConvertTableRecordMixin], file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
         """This method select Store model from database. If record is not exist, raise NoResultFound."""
         try:
-            return cls.find(account_id, name)
+            return cls.find(file_csv_convert_id, name)
         except NoResultFound:
             pass
         # ↓ To support Shift JIS
-        return cls.find(account_id, name.replace("−", "ー"))
+        return cls.find(file_csv_convert_id, name.replace("−", "ー"))
 
     @classmethod
-    def find(cls: Type[ConvertTableRecordMixin], account_id: AccountId, name: str) -> TypeVarBase:
+    def find(cls: Type[ConvertTableRecordMixin], file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
         """This method select Store model from database."""
         with SessionManager() as session:
             return session.query(cls).filter(
-                cls.account_id == account_id.value,
+                cls.file_csv_convert_id == file_csv_convert_id.value,
                 cls.name == name
             ).one()
 
@@ -124,8 +126,8 @@ with warnings.catch_warnings():
         category_income: Column = Column(String(255))
         transfer_target: Column = Column(String(255))
 
-        def __init__(self, account_id: AccountId, row_data: StoreRowData):
-            ConvertTableRecordMixin.__init__(self, account_id, row_data)
+        def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: StoreRowData):
+            ConvertTableRecordMixin.__init__(self, file_csv_convert_id, row_data)
             self.name_zaim: Optional[str] = self._get_str_or_none(row_data.name_zaim)
             self.category_payment_large: Optional[str] = self._get_str_or_none(row_data.category_payment_large)
             self.category_payment_small: Optional[str] = self._get_str_or_none(row_data.category_payment_small)
@@ -140,8 +142,8 @@ with warnings.catch_warnings():
     class Item(Base, ConvertTableRecordMixin):
         """This class implements Store model to convert from account CSV to Zaim CSV."""
 
-        def __init__(self, account_id: AccountId, row_data: ItemRowData):
-            ConvertTableRecordMixin.__init__(self, account_id, row_data)
+        def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: ItemRowData):
+            ConvertTableRecordMixin.__init__(self, file_csv_convert_id, row_data)
             self.category_payment_large: Optional[str] = self._get_str_or_none(row_data.category_payment_large)
             self.category_payment_small: Optional[str] = self._get_str_or_none(row_data.category_payment_small)
 
@@ -153,10 +155,10 @@ def initialize_database() -> None:
 
 
 @dataclass
-class ClassConvertTable:
+class ClassConvertTable(Generic[TypeVarConvertTableRowData]):
     """This class implements association of classes about convert table."""
     model: Type[ConvertTableRecordMixin]
-    row_data: Type[ConvertTableRowData]
+    row_data: Type[TypeVarConvertTableRowData]
 
 
 class ConvertTableType(Enum):

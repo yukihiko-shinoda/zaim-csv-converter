@@ -6,7 +6,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData, \
     GoldPointCardPlusRowFactory
-from zaimcsvconverter.models import Store, AccountId
+from zaimcsvconverter.models import Store, FileCsvConvertId
 
 
 class TestGoldPointCardPlusRowData:
@@ -83,7 +83,7 @@ class TestGoldPointCardPlusRow:
         Arguments should set into properties.
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
-        row = GoldPointCardPlusRow(AccountId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
+        row = GoldPointCardPlusRow(FileCsvConvertId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
         assert row.date == expected_date
         assert isinstance(row.store, Store)
         # pylint: disable=protected-access
@@ -102,5 +102,5 @@ class TestGoldPointCardPlusRowFactory:
     def test_create(argument, expected, database_session_stores_gold_point_card_plus):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(AccountId.MUFG, argument)
+        gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(FileCsvConvertId.MUFG, argument)
         assert isinstance(gold_point_card_plus_row, expected)

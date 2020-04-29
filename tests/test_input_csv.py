@@ -4,13 +4,15 @@ from pathlib import Path
 
 import pytest
 
+from godslayer.exceptions import InvalidRecordError
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.exceptions import InvalidInputCsvError, InvalidRowError
-from zaimcsvconverter.input_csv import InputCsv
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.exceptions import InvalidInputCsvError
+from zaimcsvconverter.input_csv import InputData
 
 
 class TestInputCsv:
-    """Tests for InputCsv."""
+    """Tests for InputData."""
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
@@ -27,15 +29,17 @@ class TestInputCsv:
           when there are row having store name which there are no data in convert table.
         Undefined content error handler should be empty.
         """
-        input_csv = InputCsv(path_file_csv_input)
+        account = Account.create_by_path_csv_input(path_file_csv_input)
+        csv_reader = account.value.csv_factory.create(path_file_csv_input)
+        input_data = InputData(csv_reader, account)
         with (tmp_path / 'test.csv').open('w', encoding='UTF-8', newline='\n') as file_zaim:
             writer_zaim = csv.writer(file_zaim)
             with pytest.raises(InvalidInputCsvError) as error:
-                input_csv.covert_to_zaim(writer_zaim)
+                input_data.export_as_zaim_csv(writer_zaim)
         assert str(error.value) == ('Undefined store name in convert table CSV exists in test_waon.csv. '
                                     'Please check property AccountCsvConverter.list_undefined_store.')
-        assert input_csv.is_invalid
-        invalid_row_error = input_csv.dictionary_invalid_row[0][0]
-        assert isinstance(invalid_row_error, InvalidRowError)
+        assert input_data.data_source.is_invalid
+        invalid_row_error = input_data.data_source.dictionary_invalid_record[0][0]
+        assert isinstance(invalid_row_error, InvalidRecordError)
         assert str(invalid_row_error) == 'Charge kind in charge row is required. Charge kind = ChargeKind.NULL'
-        assert not input_csv.undefined_content_error_handler.is_presented
+        assert not input_data.undefined_content_error_handler.is_presented

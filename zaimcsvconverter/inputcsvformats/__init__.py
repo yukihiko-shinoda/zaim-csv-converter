@@ -5,16 +5,17 @@ from dataclasses import field, dataclass
 from datetime import datetime
 from typing import Optional, TypeVar, Generic, List, Callable, Any
 
-from zaimcsvconverter.error_collector import MultipleErrorCollector, SingleErrorCollector
-from zaimcsvconverter.exceptions import InvalidRowError, UndefinedContentError
-from zaimcsvconverter.models import AccountId, Store, Item
+from errorcollector.error_collector import MultipleErrorCollector, SingleErrorCollector
+from godslayer.exceptions import InvalidRecordError
+from zaimcsvconverter.exceptions import UndefinedContentError
+from zaimcsvconverter.models import Store, Item, FileCsvConvertId
 
 
 # @see https://github.com/python/mypy/issues/5374
 @dataclass
 class InputRowData:  # type: ignore
     """This class is abstract class of input CSV row data."""
-    list_error: List[InvalidRowError] = field(default_factory=list, init=False)
+    list_error: List[InvalidRecordError] = field(default_factory=list, init=False)
     undefined_content_error: Optional[UndefinedContentError] = field(default=None, init=False)
 
     @property
@@ -30,7 +31,7 @@ class InputRowData:  # type: ignore
 
     def stock_error(self, method: Callable[[], Any], message: str) -> Any:
         """This method stocks error"""
-        with MultipleErrorCollector(InvalidRowError, message, self.list_error):
+        with MultipleErrorCollector(InvalidRecordError, message, self.list_error):
             return method()
 
 
@@ -40,6 +41,7 @@ class InputRowData:  # type: ignore
 class InputStoreRowData(InputRowData, ABC):  # type: ignore
     """This class is abstract class of input CSV row data including column to find store (nullable OK)."""
     _store: Optional[Store] = field(default=None, init=False)
+
     @property
     @abstractmethod
     def store_name(self) -> str:
@@ -57,6 +59,7 @@ class InputStoreRowData(InputRowData, ABC):  # type: ignore
 class InputItemRowData(InputRowData, ABC):  # type: ignore
     """This class is abstract class of input CSV row data including column to find item (nullable OK)."""
     _item: Optional[Store] = field(default=None, init=False)
+
     @property
     @abstractmethod
     def item_name(self) -> str:
@@ -68,9 +71,9 @@ TypeVarInputRowData = TypeVar('TypeVarInputRowData', bound=InputRowData)
 
 class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
-    def __init__(self, account_id: AccountId, input_row_data: TypeVarInputRowData):
-        self.list_error: List[InvalidRowError] = []
-        self._account_id: AccountId = account_id
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, input_row_data: TypeVarInputRowData):
+        self.list_error: List[InvalidRecordError] = []
+        self._file_csv_convert_id: FileCsvConvertId = file_csv_convert_id
         self.date: datetime = input_row_data.date
 
     # Reason: Parent method. pylint: disable=no-self-use
@@ -81,7 +84,7 @@ class InputRow(Generic[TypeVarInputRowData]):
 
     def stock_error(self, method: Callable[[], Any], message: str) -> Any:
         """This method stocks error"""
-        with MultipleErrorCollector(InvalidRowError, message, self.list_error):
+        with MultipleErrorCollector(InvalidRecordError, message, self.list_error):
             return method()
 
     # Reason: Parent method. pylint: disable=no-self-use
@@ -93,8 +96,8 @@ class InputRow(Generic[TypeVarInputRowData]):
 
 class InputStoreRow(InputRow):
     """This class implements row model of CSV including store name data (disallow empty)."""
-    def __init__(self, account_id: AccountId, input_store_row_data: InputStoreRowData):
-        super().__init__(account_id, input_store_row_data)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, input_store_row_data: InputStoreRowData):
+        super().__init__(file_csv_convert_id, input_store_row_data)
         self.store_name: str = input_store_row_data.store_name
         self._store: Optional[Store] = None
         self.undefined_content_error: Optional[UndefinedContentError] = None
@@ -103,7 +106,7 @@ class InputStoreRow(InputRow):
     def store(self) -> Store:
         """This method finds store data from database if has not find."""
         if self._store is None:
-            self._store = Store.try_to_find(self._account_id, self.store_name)
+            self._store = Store.try_to_find(self._file_csv_convert_id, self.store_name)
         return self._store
 
     @property
@@ -124,10 +127,10 @@ class InputStoreRow(InputRow):
         self.undefined_content_error = error_collector.error
         return return_value
 
-    def get_report_undefined_content_error(self, file_name_csv_convert) -> List[str]:
+    def get_report_undefined_content_error(self, file_csv_convert) -> List[str]:
         """This method returns report of undefined content error."""
         return [
-            file_name_csv_convert.value,
+            file_csv_convert.value.name,
             self.store_name,
             '',
         ]
@@ -135,8 +138,8 @@ class InputStoreRow(InputRow):
 
 class InputItemRow(InputRow):
     """This class implements row model of CSV including item name data (disallow empty)."""
-    def __init__(self, account_id: AccountId, input_item_row_data: InputItemRowData):
-        super().__init__(account_id, input_item_row_data)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, input_item_row_data: InputItemRowData):
+        super().__init__(file_csv_convert_id, input_item_row_data)
         self.store_name: str = ''
         self.item_name: str = input_item_row_data.item_name
         self._item: Optional[Item] = None
@@ -151,7 +154,7 @@ class InputItemRow(InputRow):
     def item(self) -> Item:
         """This method finds store data from database if has not find."""
         if self._item is None:
-            self._item = Item.try_to_find(self._account_id, self.item_name)
+            self._item = Item.try_to_find(self._file_csv_convert_id, self.item_name)
         return self._item
 
     @property
@@ -172,10 +175,10 @@ class InputItemRow(InputRow):
         self.undefined_content_error = error_collector.error
         return return_value
 
-    def get_report_undefined_content_error(self, file_name_csv_convert) -> List[str]:
+    def get_report_undefined_content_error(self, file_csv_convert) -> List[str]:
         """This method returns report of undefined content error."""
         return [
-            file_name_csv_convert.value,
+            file_csv_convert.value.name,
             self.store_name,
             self.item_name,
         ]
@@ -200,5 +203,5 @@ class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
     @see https://github.com/python/mypy/issues/6101
     """
     @abstractmethod
-    def create(self, account_id: AccountId, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
+    def create(self, file_csv_convert_id: FileCsvConvertId, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
         """This method creates input row by input CSV row data."""

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats import InputItemRowData, InputItemRow, InputRowFactory
-from zaimcsvconverter.models import Store, StoreRowData, AccountId
+from zaimcsvconverter.models import Store, StoreRowData, FileCsvConvertId
 
 
 @dataclass
@@ -69,9 +69,9 @@ class AmazonRowData(InputItemRowData):
 # pylint: disable=too-many-instance-attributes
 class AmazonRow(InputItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
-    def __init__(self, account_id: AccountId, row_data: AmazonRowData):
-        super().__init__(account_id, row_data)
-        self._store: Store = Store(account_id, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: AmazonRowData):
+        super().__init__(file_csv_convert_id, row_data)
+        self._store: Store = Store(file_csv_convert_id, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
         self.price: int = row_data.price
         self.number: int = row_data.number
 
@@ -82,5 +82,5 @@ class AmazonRow(InputItemRow):
 
 class AmazonRowFactory(InputRowFactory[AmazonRowData, AmazonRow]):
     """This class implements factory to create Amazon.co.jp CSV row instance."""
-    def create(self, account_id: AccountId, input_row_data: AmazonRowData) -> AmazonRow:
-        return AmazonRow(account_id, input_row_data)
+    def create(self, file_csv_convert_id: FileCsvConvertId, input_row_data: AmazonRowData) -> AmazonRow:
+        return AmazonRow(file_csv_convert_id, input_row_data)

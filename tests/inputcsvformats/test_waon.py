@@ -5,7 +5,7 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory, WaonRow, WaonChargeRow
-from zaimcsvconverter.models import Store, AccountId
+from zaimcsvconverter.models import Store, FileCsvConvertId
 
 
 class TestWaonRowData:
@@ -55,7 +55,7 @@ class TestWaonRow:
         Arguments should set into properties.
         :param WaonRowData waon_row_data:
         """
-        waon_row = WaonRow(AccountId.WAON, waon_row_data)
+        waon_row = WaonRow(FileCsvConvertId.WAON, waon_row_data)
         assert waon_row.date == expected_date
         assert isinstance(waon_row.store, Store)
         assert waon_row.store.name_zaim == expected_store_name_zaim
@@ -65,7 +65,7 @@ class TestWaonRow:
     def test_is_row_to_skip(database_session_basic_store_waon):
         """WaonRow which express download point should be row to skip."""
         assert WaonRow(
-            AccountId.WAON, WaonRowData('2018/10/22', '板橋前野町', '0円', 'ポイントダウンロード', '-')
+            FileCsvConvertId.WAON, WaonRowData('2018/10/22', '板橋前野町', '0円', 'ポイントダウンロード', '-')
         ).is_row_to_skip
 
 
@@ -84,7 +84,7 @@ class TestWaonChargeRow:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
             WaonChargeRow(
-                AccountId.WAON, InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO
+                FileCsvConvertId.WAON, InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO
             ).charge_kind
         assert str(error.value) == 'Charge kind on charge row is not allowed "-".'
 
@@ -106,7 +106,7 @@ class TestWaonRowFactory:
                     expected_is_auto_charge, expected_is_download_point):
         """Method should return Store model when use kind is defined."""
         # pylint: disable=protected-access
-        waon_row = WaonRowFactory().create(AccountId.WAON, argument)
+        waon_row = WaonRowFactory().create(FileCsvConvertId.WAON, argument)
         assert isinstance(waon_row, WaonRow)
         assert waon_row.is_payment == expected_is_payment
         assert waon_row.is_charge == expected_is_charge

@@ -1,8 +1,8 @@
 """This module implements iterating steps from input_csv_converter."""
 from pathlib import Path
-from typing import List
+from typing import Generator
 
-from zaimcsvconverter.invalid_input_csv_handler import InvalidInputCsvHandler
+from zaimcsvconverter.error_totalizer import ErrorTotalizer
 from zaimcsvconverter.exceptions import InvalidInputCsvError
 from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
@@ -16,18 +16,17 @@ class InputCsvConverterIterator:
 
     def execute(self) -> None:
         """This method executes all CSV converters."""
-        invalid_input_csv_handler = InvalidInputCsvHandler()
-        for csv_converter in self._initialize_list_csv_converter():
+        error_aggregator = ErrorTotalizer()
+        for csv_converter in self._list_csv_converter:
             try:
                 csv_converter.execute()
             except InvalidInputCsvError:
-                invalid_input_csv_handler.append(csv_converter.input_csv)
-        if invalid_input_csv_handler.is_presented:
-            invalid_input_csv_handler.export_to_csv(self.directory_csv_output)
-            raise InvalidInputCsvError(invalid_input_csv_handler.message)
+                error_aggregator.append(csv_converter.input_csv)
+        if error_aggregator.is_presented:
+            error_aggregator.export_to_csv(self.directory_csv_output)
+            raise InvalidInputCsvError(error_aggregator.message)
 
-    def _initialize_list_csv_converter(self):
-        list_csv_converter: List[InputCsvConverter] = []
-        for path_csv_file in self.directory_csv_input.glob('*.csv'):
-            list_csv_converter.append(InputCsvConverter(path_csv_file, self.directory_csv_output))
-        return list_csv_converter
+    @property
+    def _list_csv_converter(self) -> Generator[InputCsvConverter, None, None]:
+        return (InputCsvConverter(path_csv_file, self.directory_csv_output)
+                for path_csv_file in self.directory_csv_input.glob('*.csv'))

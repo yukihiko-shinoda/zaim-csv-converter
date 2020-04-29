@@ -8,8 +8,9 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardP
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPointCardPlus201912RowData
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData
-from zaimcsvconverter.models import AccountId, StoreRowData, ItemRowData
+from zaimcsvconverter.models import StoreRowData, ItemRowData, FileCsvConvertId
 
 
 class InstanceResource:
@@ -109,65 +110,74 @@ class InstanceResource:
         'https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=234-5678901-2345678',
         'https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi?ie=UTF8&orderID=234-5678901-2345678',
         'https://www.amazon.co.jp/gp/product/B07146XVB5/ref=od_aui_detailpages00?ie=UTF8&psc=1')
+    ROW_DATA_VIEW_CARD_ITABASHI_STATION_AUTO_CHARGE = ViewCardRowData(
+        '2020/03/21', '板橋駅　オートチャージ', '3000', '', '3000', '１回払', '', '3000', '', '', ''
+    )
+    ROW_DATA_VIEW_CARD_ANNUAL_FEE = ViewCardRowData(
+        '2020/03/31', 'カード年会費', '524', '', '524', '１回払', '', '524', '', '', ''
+    )
     FIXTURE_RECORD_STORE_WAON_MAKUHARISHINTOSHIN = FixtureRecord(
-        AccountId.WAON, StoreRowData('幕張新都心', 'イオンモール　幕張新都心')
+        FileCsvConvertId.WAON, StoreRowData('幕張新都心', 'イオンモール　幕張新都心')
     )
     FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO = FixtureRecord(
-        AccountId.WAON, StoreRowData('板橋前野町', 'イオンスタイル　板橋前野町')
+        FileCsvConvertId.WAON, StoreRowData('板橋前野町', 'イオンスタイル　板橋前野町')
     )
     FIXTURE_RECORD_STORE_WAON_FAMILY_MART_KABUTOCHOEITAIDORI = FixtureRecord(
-        AccountId.WAON, StoreRowData('ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店')
+        FileCsvConvertId.WAON, StoreRowData('ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店')
     )
     FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC = FixtureRecord(
-        AccountId.GOLD_POINT_CARD_PLUS, StoreRowData('東京電力  電気料金等', '東京電力エナジーパートナー株式会社')
+        FileCsvConvertId.GOLD_POINT_CARD_PLUS, StoreRowData('東京電力  電気料金等', '東京電力エナジーパートナー株式会社')
     )
     FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP = FixtureRecord(
-        AccountId.GOLD_POINT_CARD_PLUS, StoreRowData('ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'Amazon Japan G.K.')
+        FileCsvConvertId.GOLD_POINT_CARD_PLUS, StoreRowData('ＡＭＡＺＯＮ．ＣＯ．ＪＰ', 'Amazon Japan G.K.')
     )
     FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_DOWNLOADS = FixtureRecord(
-        AccountId.GOLD_POINT_CARD_PLUS, StoreRowData('Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ', 'Amazon Japan G.K.')
+        FileCsvConvertId.GOLD_POINT_CARD_PLUS, StoreRowData('Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ', 'Amazon Japan G.K.')
     )
     FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AWS = FixtureRecord(
-        AccountId.GOLD_POINT_CARD_PLUS, StoreRowData(
+        FileCsvConvertId.GOLD_POINT_CARD_PLUS, StoreRowData(
             'AMAZON WEB SERVICES (AWS.AMAZON.CO)', 'Amazon Web Services Japan K.K.'
         )
     )
     FIXTURE_RECORD_STORE_MUFG_TOBU_CARD = FixtureRecord(
-        AccountId.MUFG, StoreRowData('カ）トウブカ－ドビ', '', '', '', '', '東武カード')
+        FileCsvConvertId.MUFG, StoreRowData('カ）トウブカ－ドビ', '', '', '', '', '東武カード')
     )
     FIXTURE_RECORD_STORE_MUFG_EMPTY = FixtureRecord(
-        AccountId.MUFG, StoreRowData('', '', '', '', '', 'お財布')
+        FileCsvConvertId.MUFG, StoreRowData('', '', '', '', '', 'お財布')
     )
     FIXTURE_RECORD_STORE_MUFG_MUFG = FixtureRecord(
-        AccountId.MUFG, StoreRowData('スーパーフツウ', '三菱UFJ銀行', 'その他', 'その他', '臨時収入', '')
+        FileCsvConvertId.MUFG, StoreRowData('スーパーフツウ', '三菱UFJ銀行', 'その他', 'その他', '臨時収入', '')
     )
     FIXTURE_RECORD_STORE_MUFG_MUFG_TRUST_AND_BANK = FixtureRecord(
-        AccountId.MUFG, StoreRowData('リヨウギンコウ０２８８', '', '', '', '', 'お財布')
+        FileCsvConvertId.MUFG, StoreRowData('リヨウギンコウ０２８８', '', '', '', '', 'お財布')
     )
     FIXTURE_RECORD_STORE_MUFG_TOKYO_WATERWORKS = FixtureRecord(
-        AccountId.MUFG, StoreRowData('トウキヨウトスイドウ', '東京都水道局　経理部管理課', '水道・光熱', '水道料金', '立替金返済', '')
+        FileCsvConvertId.MUFG, StoreRowData('トウキヨウトスイドウ', '東京都水道局　経理部管理課', '水道・光熱', '水道料金', '立替金返済', '')
     )
     FIXTURE_RECORD_STORE_MUFG_GOLD_POINT_MARKETING = FixtureRecord(
-        AccountId.MUFG, StoreRowData('ＧＰマーケテイング', '', '', '', '', 'ゴールドポイントカード・プラス')
+        FileCsvConvertId.MUFG, StoreRowData('ＧＰマーケテイング', '', '', '', '', 'ゴールドポイントカード・プラス')
     )
     FIXTURE_RECORD_STORE_MUFG_OTHER_ACCOUNT = FixtureRecord(
-        AccountId.MUFG, StoreRowData('フリコミモト－アカウント', 'フリコミモト－アカウント', '', '', '臨時収入', '')
+        FileCsvConvertId.MUFG, StoreRowData('フリコミモト－アカウント', 'フリコミモト－アカウント', '', '', '臨時収入', '')
     )
     FIXTURE_RECORD_STORE_PASMO_KOHRAKUEN_STATION = FixtureRecord(
-        AccountId.PASMO, StoreRowData('後楽園', '東京地下鉄株式会社　南北線後楽園駅', '交通', '電車')
+        FileCsvConvertId.SF_CARD_VIEWER, StoreRowData('後楽園', '東京地下鉄株式会社　南北線後楽園駅', '交通', '電車')
     )
     FIXTURE_RECORD_STORE_PASMO_KITASENJU_STATION = FixtureRecord(
-        AccountId.PASMO, StoreRowData('北千住', '北千住', '交通', '電車')
+        FileCsvConvertId.SF_CARD_VIEWER, StoreRowData('北千住', '北千住', '交通', '電車')
     )
     FIXTURE_RECORD_STORE_PASMO_AKIHABARA_STATION = FixtureRecord(
-        AccountId.PASMO, StoreRowData('秋葉原', '秋葉原', '交通', '電車')
+        FileCsvConvertId.SF_CARD_VIEWER, StoreRowData('秋葉原', '秋葉原', '交通', '電車')
     )
     FIXTURE_RECORD_STORE_PASMO_EMPTY = FixtureRecord(
-        AccountId.PASMO, StoreRowData('', '', '', '')
+        FileCsvConvertId.SF_CARD_VIEWER, StoreRowData('', '', '', '')
     )
     FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT = FixtureRecord(
-        AccountId.AMAZON, ItemRowData('Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '大型出費', '家電')
+        FileCsvConvertId.AMAZON, ItemRowData('Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '大型出費', '家電')
     )
     FIXTURE_RECORD_ITEM_AMAZON_AMAZON_POINT = FixtureRecord(
-        AccountId.AMAZON, ItemRowData('（Amazon ポイント）', '通信', 'その他')
+        FileCsvConvertId.AMAZON, ItemRowData('（Amazon ポイント）', '通信', 'その他')
+    )
+    FIXTURE_RECORD_STORE_VIEW_CARD_VIEW_CARD = FixtureRecord(
+        FileCsvConvertId.VIEW_CARD, StoreRowData('カード年会費', 'ビューカード　ビューカードセンター', '通信', 'その他')
     )

@@ -9,7 +9,7 @@ import factory
 
 from tests.testlibraries.database_engine_manager import DatabaseEngineManager
 from zaimcsvconverter import Session
-from zaimcsvconverter.models import Store, Item, Base, AccountId, ConvertTableRowData
+from zaimcsvconverter.models import Store, Item, Base, ConvertTableRowData, FileCsvConvertId
 
 
 class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -31,17 +31,21 @@ class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):
 @dataclass
 class FixtureRecord:
     """This class implements properties and method to define factory_boy fixture records."""
-    account_id: AccountId
+    file_csv_convert_id: FileCsvConvertId
     row_data: ConvertTableRowData
 
     def define(self):
         """This method defines factory_boy fixture records by using properties."""
-        if self.account_id is AccountId.AMAZON:
-            ItemFactory(account_id=self.account_id, row_data=self.row_data)
-        elif self.account_id in (AccountId.WAON, AccountId.GOLD_POINT_CARD_PLUS, AccountId.MUFG, AccountId.PASMO):
-            StoreFactory(account_id=self.account_id, row_data=self.row_data)
+        if self.file_csv_convert_id is FileCsvConvertId.AMAZON:
+            ItemFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)
+        elif self.file_csv_convert_id in (
+                FileCsvConvertId.WAON, FileCsvConvertId.GOLD_POINT_CARD_PLUS, FileCsvConvertId.MUFG,
+                FileCsvConvertId.SF_CARD_VIEWER, FileCsvConvertId.VIEW_CARD
+        ):
+            StoreFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)
         else:
-            raise ValueError(f'self.account_id is not supported on this class. self.account_id = {self.account_id}')
+            raise ValueError(f'self.file_csv_convert_id is not supported on this class.'
+                             f' self.file_csv_convert_id = {self.file_csv_convert_id}')
 
 
 class DatabaseForTest:

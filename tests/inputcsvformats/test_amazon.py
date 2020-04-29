@@ -5,7 +5,7 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData, AmazonRow, AmazonRowFactory
-from zaimcsvconverter.models import Store, Item, AccountId
+from zaimcsvconverter.models import Store, Item, FileCsvConvertId
 
 
 class TestAmazonRowData:
@@ -68,7 +68,7 @@ class TestAmazonRow:
         """Arguments should set into properties."""
         store_name = 'Amazon Japan G.K.'
         item_name = 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト'
-        amazon_row = AmazonRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+        amazon_row = AmazonRow(FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         assert amazon_row.price == 4980
         assert amazon_row.number == 1
         assert amazon_row.date == datetime(2018, 10, 23, 0, 0, 0)
@@ -88,5 +88,5 @@ class TestAmazonRowFactory:
     def test_create(argument, expected, yaml_config_load, database_session_item):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        gold_point_card_plus_row = AmazonRowFactory().create(AccountId.AMAZON, argument)
+        gold_point_card_plus_row = AmazonRowFactory().create(FileCsvConvertId.AMAZON, argument)
         assert isinstance(gold_point_card_plus_row, expected)
