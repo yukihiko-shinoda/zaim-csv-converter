@@ -9,6 +9,10 @@ class Error(Exception):
     """
 
 
+class LogicError(Error):
+    """This Error indicates programing miss."""
+
+
 class SkipRow(Error):
     """Target row is invalid."""
 

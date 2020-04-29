@@ -3,12 +3,12 @@ import re
 from pathlib import Path
 from typing import Iterator, List, Generator
 
-from godslayer.csv_reader import CsvReader
 from godslayer.csv_with_header_reader import CsvWithHeaderReader
 from godslayer.exceptions import InvalidHeaderError
 
 
 class ViewCardCsvReader(CsvWithHeaderReader):
+    """This class implements analyzing process of VIEW CARD CSV."""
     def __init__(self, path_to_file: Path):
         super().__init__(
             path_to_file,
@@ -25,4 +25,4 @@ class ViewCardCsvReader(CsvWithHeaderReader):
         row = reader_input.__next__()
         if not bool(re.search(r'^\*{4}-\*{4}-\*{4}-[1-4]{4}\s.*$', row[0])):
             raise InvalidHeaderError('The column of card number and user name not found.')
-        yield from CsvReader._process_csv(self, reader_input)
+        yield from super(CsvWithHeaderReader, self)._process_csv(reader_input)

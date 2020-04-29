@@ -4,7 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowFactory, GoldPointCardPlusRow
-from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimPaymentRowConverter, \
     GoldPointCardPlusZaimRowConverterFactory
@@ -41,7 +41,7 @@ class TestGoldPointCardPlusZaimPaymentRowConverter:
             database_session_stores_gold_point_card_plus
     ):
         """Arguments should set into properties."""
-        row = GoldPointCardPlusRow(AccountId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
+        row = GoldPointCardPlusRow(FileCsvConvertId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(GoldPointCardPlusZaimPaymentRowConverter(row))
         assert isinstance(zaim_row, ZaimPaymentRow)
@@ -68,5 +68,5 @@ class TestGoldPointCardPlusZaimRowConverterFactory:
     )
     def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = GoldPointCardPlusRowFactory().create(AccountId.GOLD_POINT_CARD_PLUS, input_row_data)
+        input_row = GoldPointCardPlusRowFactory().create(FileCsvConvertId.GOLD_POINT_CARD_PLUS, input_row_data)
         assert isinstance(GoldPointCardPlusZaimRowConverterFactory().create(input_row), expected)

@@ -5,7 +5,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowFactory, MufgRowData, MufgIncomeRow, MufgPaymentRow, \
     MufgIncomeFromOthersRow, MufgPaymentToSomeoneRow
-from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.zaim_row import ZaimTransferRow, ZaimPaymentRow, ZaimIncomeRow, ZaimRowFactory
 from zaimcsvconverter.rowconverters.mufg import MufgIncomeZaimTransferRowConverter, MufgZaimIncomeRowConverter, \
     MufgPaymentZaimTransferRowConverter, MufgTransferIncomeZaimTransferRowConverter, MufgZaimRowConverterFactory, \
@@ -31,7 +31,7 @@ class TestMufgZaimIncomeRowConverter:
     def test(mufg_row_data: MufgRowData, expected_date, expected_store, config_transfer_account_name,
              expect_cash_flow_target, expected_amount, yaml_config_load, database_session_stores_mufg):
         """Arguments should set into properties."""
-        mufg_row = MufgIncomeFromOthersRow(AccountId.MUFG, mufg_row_data)
+        mufg_row = MufgIncomeFromOthersRow(FileCsvConvertId.MUFG, mufg_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(MufgZaimIncomeRowConverter(mufg_row))
         assert isinstance(zaim_row, ZaimIncomeRow)
@@ -53,7 +53,7 @@ class TestMufgZaimPaymentRowConverter:
         expected_amount = 3628
         config_account_name = '三菱UFJ銀行'
         store_name = '東京都水道局　経理部管理課'
-        mufg_row = MufgPaymentToSomeoneRow(AccountId.MUFG,
+        mufg_row = MufgPaymentToSomeoneRow(FileCsvConvertId.MUFG,
                                            InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(MufgZaimPaymentRowConverter(mufg_row))
@@ -81,7 +81,7 @@ class TestMufgZaimTransferRowConverter:
     def test_input_row(mufg_row_data, expected_date, config_transfer_account_name, config_account_name, expected_amount,
                        yaml_config_load, database_session_stores_mufg):
         """Arguments should set into properties."""
-        mufg_row = MufgIncomeRow(AccountId.MUFG, mufg_row_data)
+        mufg_row = MufgIncomeRow(FileCsvConvertId.MUFG, mufg_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(MufgIncomeZaimTransferRowConverter(mufg_row))
         assert isinstance(zaim_row, ZaimTransferRow)
@@ -102,7 +102,7 @@ class TestMufgZaimTransferRowConverter:
         config_account_name = '三菱UFJ銀行'
         config_transfer_account_name = 'お財布'
         # Reason: Pylint's bug. pylint: disable=no-member
-        mufg_row = MufgPaymentRow(AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_PAYMENT)
+        mufg_row = MufgPaymentRow(FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_PAYMENT)
         zaim_row = ZaimRowFactory.create(MufgPaymentZaimTransferRowConverter(mufg_row))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
@@ -121,7 +121,7 @@ class TestMufgZaimTransferRowConverter:
         expected_amount = 20
         transfer_target = '三菱UFJ銀行'
         # Reason: Pylint's bug. pylint: disable=no-member
-        mufg_row = MufgIncomeFromOthersRow(AccountId.MUFG,
+        mufg_row = MufgIncomeFromOthersRow(FileCsvConvertId.MUFG,
                                            InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
         zaim_row = ZaimRowFactory.create(MufgTransferIncomeZaimTransferRowConverter(mufg_row))
         assert isinstance(zaim_row, ZaimTransferRow)
@@ -142,7 +142,7 @@ class TestMufgZaimTransferRowConverter:
         config_account_name = '三菱UFJ銀行'
         # Reason: Pylint's bug. pylint: disable=no-member
         mufg_row = MufgPaymentToSomeoneRow(
-            AccountId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS
+            FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS
         )
         zaim_row = ZaimRowFactory.create(MufgTransferPaymentZaimTransferRowConverter(mufg_row))
         assert isinstance(zaim_row, ZaimTransferRow)
@@ -189,5 +189,5 @@ class TestMufgZaimRowConverterFactory:
     )
     def test_success(yaml_config_load, database_session_with_schema, input_row_data: MufgRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = MufgRowFactory().create(AccountId.MUFG, input_row_data)
+        input_row = MufgRowFactory().create(FileCsvConvertId.MUFG, input_row_data)
         assert isinstance(MufgZaimRowConverterFactory().create(input_row), expected)

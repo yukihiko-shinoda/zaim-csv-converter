@@ -1,4 +1,4 @@
-# zaim-csv-converter
+# 📥zaim-csv-converter📤
 
 各口座の WEB サイト等で出力できる CSV を
 Zaim のフォーマットに変換する Python 製のコンバーターです。

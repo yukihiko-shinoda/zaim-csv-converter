@@ -78,7 +78,7 @@ class TestZaimCsvConverter:
             raise error
         files = sorted(directory_csv_output.target.rglob('*[!.gitkeep]'))
 
-        assert len(files) == 14
+        assert len(files) == 15
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file('waon201807.csv', [
             ZaimRowData(
@@ -199,6 +199,20 @@ class TestZaimCsvConverter:
             ZaimRowData(
                 '2020-03-31', 'payment', '通信', 'その他', 'ビューカード', '',
                 '', '', 'ビューカード　ビューカードセンター', '', '0', '524', '0', '', '', ''
+            ),
+        ])
+        checker.assert_file('suica202003.csv', [
+            ZaimRowData(
+                '2020-03-21', 'payment', '交通', '電車', 'Suica', '',
+                '', 'JR東 越谷レイクタウン → JR東 板橋', '板橋', '', '0', '473', '0', '', '', ''
+            ),
+            ZaimRowData(
+                '2020-03-21', 'payment', '交通', '電車', 'Suica', '',
+                '', 'JR東 板橋 → JR東 越谷レイクタウン', '越谷レイクタウン', '', '0', '473', '0', '', '', ''
+            ),
+            ZaimRowData(
+                '2020-03-21', 'transfer', '-', '-', 'ビューカード', 'Suica',
+                '', '', '', '', '0', '0', '3000', '', '', ''
             ),
         ])
 

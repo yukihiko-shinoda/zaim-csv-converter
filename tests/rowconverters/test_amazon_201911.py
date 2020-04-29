@@ -5,7 +5,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowFactory, Amazon201911RowData, \
     Amazon201911PaymentRow, Amazon201911DiscountRow
-from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.rowconverters.amazon201911 import Amazon201911DiscountZaimPaymentRowConverter, \
     Amazon201911PaymentZaimPaymentRowConverter, Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
@@ -21,7 +21,9 @@ class TestAmazon201911DiscountZaimPaymentRowConverter:
         config_account_name = 'ヨドバシゴールドポイントカード・プラス'
         store_name = 'Amazon Japan G.K.'
         item_name = '（Amazon ポイント）'
-        amazon_row = Amazon201911DiscountRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT)
+        amazon_row = Amazon201911DiscountRow(
+            FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT
+        )
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(Amazon201911DiscountZaimPaymentRowConverter(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
@@ -45,7 +47,7 @@ class TestAmazon201911PaymentZaimPaymentRowConverter:
         config_account_name = 'ヨドバシゴールドポイントカード・プラス'
         store_name = 'Amazon Japan G.K.'
         item_name = 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト'
-        amazon_row = Amazon201911PaymentRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
+        amazon_row = Amazon201911PaymentRow(FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(Amazon201911PaymentZaimPaymentRowConverter(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
@@ -77,5 +79,5 @@ class TestAmazon201911ZaimRowConverterFactory:
     )
     def test(yaml_config_load, database_session_with_schema, input_row_data: Amazon201911RowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = Amazon201911RowFactory().create(AccountId.AMAZON, input_row_data)
+        input_row = Amazon201911RowFactory().create(FileCsvConvertId.AMAZON, input_row_data)
         assert isinstance(Amazon201911ZaimRowConverterFactory().create(input_row), expected)

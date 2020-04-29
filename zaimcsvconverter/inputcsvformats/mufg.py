@@ -8,7 +8,7 @@ from typing import Optional
 from dataclasses import dataclass
 
 from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputRowFactory, InputRow, InputStoreRow
-from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.utility import Utility
 
 
@@ -86,8 +86,8 @@ class MufgRowData(InputStoreRowData):
 
 class MufgRow(InputRow):
     """This class implements row model of MUFG bank CSV."""
-    def __init__(self, account_id: AccountId, input_row_data: MufgRowData):
-        super().__init__(account_id, input_row_data)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, input_row_data: MufgRowData):
+        super().__init__(file_csv_convert_id, input_row_data)
         self.cash_flow_kind: MufgRowData.CashFlowKind = input_row_data.cash_flow_kind
         self._summary: str = input_row_data.summary
 
@@ -125,8 +125,8 @@ class MufgRow(InputRow):
 
 class MufgIncomeRow(MufgRow, ABC):
     """This class implements income row model of MUFG bank CSV."""
-    def __init__(self, account_id: AccountId, row_data: MufgRowData):
-        super().__init__(account_id, row_data)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: MufgRowData):
+        super().__init__(file_csv_convert_id, row_data)
         self._deposit_amount: Optional[int] = row_data.deposit_amount
 
     @property
@@ -147,8 +147,8 @@ class MufgIncomeRow(MufgRow, ABC):
 
 class MufgPaymentRow(MufgRow, ABC):
     """This class implements payment row model of MUFG bank CSV."""
-    def __init__(self, account_id: AccountId, row_data: MufgRowData):
-        super().__init__(account_id, row_data)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: MufgRowData):
+        super().__init__(file_csv_convert_id, row_data)
         self._payed_amount: Optional[int] = row_data.payed_amount
 
     @property
@@ -204,17 +204,17 @@ class MufgPaymentToSomeoneRow(MufgStoreRow, MufgPaymentRow):
 
 class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
     """This class implements factory to create MUFG CSV row instance."""
-    def create(self, account_id: AccountId, input_row_data: MufgRowData) -> MufgRow:
+    def create(self, file_csv_convert_id: FileCsvConvertId, input_row_data: MufgRowData) -> MufgRow:
         if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.INCOME:
-            return MufgIncomeFromSelfRow(account_id, input_row_data)
+            return MufgIncomeFromSelfRow(file_csv_convert_id, input_row_data)
         if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.PAYMENT:
-            return MufgPaymentToSelfRow(account_id, input_row_data)
+            return MufgPaymentToSelfRow(file_csv_convert_id, input_row_data)
         if input_row_data.cash_flow_kind in (
                 MufgRowData.CashFlowKind.PAYMENT, MufgRowData.CashFlowKind.TRANSFER_PAYMENT
         ):
-            return MufgPaymentToSomeoneRow(account_id, input_row_data)
+            return MufgPaymentToSomeoneRow(file_csv_convert_id, input_row_data)
         if input_row_data.cash_flow_kind in (MufgRowData.CashFlowKind.INCOME, MufgRowData.CashFlowKind.TRANSFER_INCOME):
-            return MufgIncomeFromOthersRow(account_id, input_row_data)
+            return MufgIncomeFromOthersRow(file_csv_convert_id, input_row_data)
         raise ValueError(
             f'Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}'
         )  # pragma: no cover

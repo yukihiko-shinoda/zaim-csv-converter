@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy.orm.exc import NoResultFound
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRow, ViewCardRowFactory
-from zaimcsvconverter.models import Store, AccountId
+from zaimcsvconverter.models import Store, FileCsvConvertId
 
 
 class TestViewCardRowData:
@@ -72,13 +72,13 @@ class TestViewCardRow:
         :type view_card_row_data: ViewCardRowData
         """
         # noinspection PyTypeChecker
-        row = ViewCardRow(AccountId.VIEW_CARD, view_card_row_data)
+        row = ViewCardRow(FileCsvConvertId.VIEW_CARD, view_card_row_data)
         assert row.date == expected_date
         # pylint: disable=protected-access
         if expected_store_name_zaim is None:
             with pytest.raises(NoResultFound):
-                # noinspection PyUnusedLocal
-                store_name = row.store
+                # pylint: disable=unused-variable
+                store_name = row.store  # noqa
         else:
             assert isinstance(row.store, Store)
             # noinspection PyUnresolvedReferences
@@ -97,5 +97,5 @@ class TestViewCardRowFactory:
     def test_create(argument, expected, database_session_stores_view_card):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        view_card_row = ViewCardRowFactory().create(AccountId.VIEW_CARD, argument)
+        view_card_row = ViewCardRowFactory().create(FileCsvConvertId.VIEW_CARD, argument)
         assert isinstance(view_card_row, expected)

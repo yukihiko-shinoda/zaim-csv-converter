@@ -57,7 +57,7 @@ class TestConvertTableImporter:
         for store in stores:
             expected_store = expected_stores[index]
             assert store.id == expected_store[0]
-            assert store.account_id == expected_store[1]
+            assert store.file_csv_convert_id == expected_store[1]
             assert store.name == expected_store[2]
             assert store.name_zaim == expected_store[3]
             assert store.category_payment_large == expected_store[4]
@@ -75,7 +75,7 @@ class TestConvertTableImporter:
         for item in items:
             expected_item = expected_items[index]
             assert item.id == expected_item[0]
-            assert item.account_id == expected_item[1]
+            assert item.file_csv_convert_id == expected_item[1]
             assert item.name == expected_item[2]
             assert item.category_payment_large == expected_item[3]
             assert item.category_payment_small == expected_item[4]

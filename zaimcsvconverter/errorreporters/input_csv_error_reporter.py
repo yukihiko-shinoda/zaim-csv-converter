@@ -7,6 +7,7 @@ from zaimcsvconverter.errorreporters.csv_error_reporter import CsvErrorReporterF
 
 
 class InputCsvErrorReporter:
+    """This class implements error report process for input CSV."""
     def __init__(self, csv: AbstractCsv):
         self.csv = csv
 
@@ -19,9 +20,10 @@ class InputCsvErrorReporter:
 
 
 class DataSourceErrorReporterFactory:
+    """This class creates ImputCsvErrorReporter instance."""
     @staticmethod
     def create(data_source: DataSource):
+        """Creates InputCsvErrorReporter instance."""
         if isinstance(data_source, AbstractCsv):
             return InputCsvErrorReporter(data_source)
-        else:
-            raise TypeError()
+        raise TypeError()

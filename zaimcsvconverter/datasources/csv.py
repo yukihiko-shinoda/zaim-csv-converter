@@ -6,10 +6,11 @@ from typing import List, Generator, Any, TypeVar
 from godslayer.csv_reader import TypeVarCsvReader, CsvReader
 from godslayer.exceptions import InvalidRecordError
 from zaimcsvconverter.datasources.data_source import DataSource
-from zaimcsvconverter.exceptions import InvalidInputCsvError
+from zaimcsvconverter.exceptions import InvalidInputCsvError, LogicError
 
 
 class AbstractCsv(DataSource, ABC):
+    """This class implements abstract CSV Datasource"""
     def __init__(self, csv_reader: TypeVarCsvReader):
         super().__init__()
         self.csv_reader = csv_reader
@@ -22,6 +23,8 @@ class AbstractCsv(DataSource, ABC):
         return bool(self.dictionary_invalid_record)
 
     def mark_current_record_as_error(self, list_error: List[InvalidRecordError]):
+        if self.csv_reader.index is None:
+            raise LogicError("This method can't be called before iterate this instance.")
         self.dictionary_invalid_record[self.csv_reader.index] = list_error
 
     def raise_error_if_invalid(self) -> None:
@@ -36,6 +39,7 @@ TypeVarCsv = TypeVar('TypeVarCsv', bound=AbstractCsv)
 
 
 class Csv(AbstractCsv):
+    """This class implements CSV Datasource"""
     def __init__(self, path_to_file: Path, encode: str = 'UTF-8'):
         super().__init__(CsvReader(path_to_file, encode))
 
@@ -46,4 +50,5 @@ class CsvFactory:
         self.encode = encode
 
     def create(self, path_to_file: Path):
+        """Creates CSV instance."""
         return Csv(path_to_file, self.encode)

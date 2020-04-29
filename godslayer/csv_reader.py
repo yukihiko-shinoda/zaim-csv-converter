@@ -13,6 +13,7 @@ class CsvReader:
 
     def __iter__(self) -> Generator[List[str], None, None]:
         # noinspection LongLine
+        # pylint:disable=line-too-long
         """
         This method convert this csv into Zaim format CSV.
         @see https://stackoverflow.com/questions/14797930/python-custom-iterator-close-a-file-on-stopiteration/14798115#14798115 # noqa

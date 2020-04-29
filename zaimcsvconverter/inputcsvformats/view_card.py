@@ -5,12 +5,13 @@ from dataclasses import dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
-from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
 class ViewCardRowData(InputStoreRowData):
     """This class implements data class for wrapping list of VIEW CARD CSV row model."""
+    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     _used_date: str
     _used_place: str
     _used_amount: str
@@ -57,8 +58,8 @@ class ViewCardRowData(InputStoreRowData):
 
 class ViewCardRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
-    def __init__(self, account_id: AccountId, row_data: ViewCardRowData):
-        super().__init__(account_id, row_data)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: ViewCardRowData):
+        super().__init__(file_csv_convert_id, row_data)
         self.billing_amount_current_time: int = row_data.billing_amount_current_time
         self._is_suica: bool = row_data.is_suica
 
@@ -70,6 +71,6 @@ class ViewCardRow(InputStoreRow):
 class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
     def create(
-            self, account_id: AccountId, input_row_data: ViewCardRowData
+            self, file_csv_convert_id: FileCsvConvertId, input_row_data: ViewCardRowData
     ) -> ViewCardRow:
-        return ViewCardRow(account_id, input_row_data)
+        return ViewCardRow(file_csv_convert_id, input_row_data)

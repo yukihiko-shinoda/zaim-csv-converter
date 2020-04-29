@@ -6,7 +6,7 @@ from typing import List, Union
 
 import numpy
 
-from zaimcsvconverter.account import FileNameCsvConvert
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputStoreRow, InputItemRow
 
 
@@ -26,9 +26,9 @@ class UndefinedContentErrorHandler:
         for error_row in self.list_error:
             yield error_row
 
-    def append(self, file_name_csv_convert: FileNameCsvConvert, input_row: Union[InputStoreRow, InputItemRow]) -> None:
+    def append(self, file_csv_convert: FileCsvConvert, input_row: Union[InputStoreRow, InputItemRow]) -> None:
         """This method appends error list argument into error list property."""
-        self.list_error.append(input_row.get_report_undefined_content_error(file_name_csv_convert))
+        self.list_error.append(input_row.get_report_undefined_content_error(file_csv_convert))
 
     def extend(self, error_handler: UndefinedContentErrorHandler) -> None:
         """This method extends error list argument into error list property."""

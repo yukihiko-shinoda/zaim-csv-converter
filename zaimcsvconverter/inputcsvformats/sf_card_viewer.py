@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory, InputRow
 from zaimcsvconverter.config import SFCardViewerConfig
-from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
@@ -77,8 +77,9 @@ class SFCardViewerRowData(InputStoreRowData):
 # pylint: disable=too-many-instance-attributes
 class SFCardViewerRow(InputRow):
     """This class implements row model of SF Card Viewer CSV."""
-    def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
-        super().__init__(account_id, row_data)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId,
+                 row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+        super().__init__(file_csv_convert_id, row_data)
         self.used_amount: int = row_data.used_amount
         self.note = row_data.note
         self._account_config: SFCardViewerConfig = account_config
@@ -115,16 +116,18 @@ class SFCardViewerRow(InputRow):
 
 class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow):
     """This class implements enter station row model of SF Card Viewer CSV."""
-    def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
-        super().__init__(account_id, row_data, account_config)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId,
+                 row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+        super().__init__(file_csv_convert_id, row_data, account_config)
         self.railway_company_name_enter: str = row_data.railway_company_name_enter
         self.station_name_enter: str = row_data.station_name_enter
 
 
 class SFCardViewerEnterExitRow(SFCardViewerEnterRow):
     """This class implements enter and exit station row model of SF Card Viewer CSV."""
-    def __init__(self, account_id: AccountId, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
-        super().__init__(account_id, row_data, account_config)
+    def __init__(self, file_csv_convert_id: FileCsvConvertId,
+                 row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+        super().__init__(file_csv_convert_id, row_data, account_config)
         self.railway_company_name_exit: str = row_data.railway_company_name_exit
 
     @property
@@ -139,9 +142,9 @@ class SFCardViewerRowFactory(InputRowFactory[SFCardViewerRowData, SFCardViewerRo
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config
 
-    def create(self, account_id: AccountId, input_row_data: SFCardViewerRowData) -> SFCardViewerRow:
+    def create(self, file_csv_convert_id: FileCsvConvertId, input_row_data: SFCardViewerRowData) -> SFCardViewerRow:
         if input_row_data.note in (SFCardViewerRowData.Note.EMPTY, SFCardViewerRowData.Note.EXIT_BY_WINDOW):
-            return SFCardViewerEnterExitRow(account_id, input_row_data, self._account_config())
+            return SFCardViewerEnterExitRow(file_csv_convert_id, input_row_data, self._account_config())
         if input_row_data.note == SFCardViewerRowData.Note.AUTO_CHARGE:
-            return SFCardViewerEnterRow(account_id, input_row_data, self._account_config())
-        return SFCardViewerRow(account_id, input_row_data, self._account_config())
+            return SFCardViewerEnterRow(file_csv_convert_id, input_row_data, self._account_config())
+        return SFCardViewerRow(file_csv_convert_id, input_row_data, self._account_config())

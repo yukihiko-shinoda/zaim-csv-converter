@@ -1,10 +1,10 @@
 """Tests for error_handler.py."""
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.account import FileNameCsvConvert
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRow
 from zaimcsvconverter.inputcsvformats.waon import WaonRow
-from zaimcsvconverter.models import AccountId
+from zaimcsvconverter.models import FileCsvConvertId
 
 
 class TestErrorHandler:
@@ -22,16 +22,16 @@ class TestErrorHandler:
         error_waon = ['waon.csv', 'ファミリーマートかぶと町永代', '']
         error_handler_a = UndefinedContentErrorHandler()
         error_handler_a.append(
-            FileNameCsvConvert.WAON,
-            WaonRow(AccountId.WAON, InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI)
+            FileCsvConvert.WAON,
+            WaonRow(FileCsvConvertId.WAON, InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI)
         )
         assert error_handler_a.list_error == [error_waon]
         error_handler_b = UndefinedContentErrorHandler()
         error_handler_b.append(
-            FileNameCsvConvert.AMAZON, AmazonRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+            FileCsvConvert.AMAZON, AmazonRow(FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         )
         error_handler_b.append(
-            FileNameCsvConvert.AMAZON, AmazonRow(AccountId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+            FileCsvConvert.AMAZON, AmazonRow(FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         )
         assert error_handler_b.list_error == [error_amazon, error_amazon]
         error_handler_a.extend(error_handler_b)
