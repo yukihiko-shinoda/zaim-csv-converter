@@ -15,21 +15,19 @@ yamldataclassconfig = "*"
 
 [dev-packages]
 factory_boy = "*"
+fixturefilehandler = "*"
 flake8 = "*"
 mypy = "*"
 pylint = "*"
 pytest = "*"
 pytest-cov = "*"
 radon = "*"
-fixturefilehandler = "*"
-
-[requires]
-python_version = "3.8"
 
 [scripts]
 start = "python convert.py"
 test = "pytest tests"
 coverage = "pytest --verbose --cov=errorcollector --cov=godslayer --cov=zaimcsvconverter --cov-report=term-missing tests"
+coverage_xml = "pytest --cov-report xml --cov=errorcollector --cov=godslayer --cov=zaimcsvconverter --cov-report=term-missing tests"
 flake8 = "flake8 --max-line-length=120 --statistics --show-source --radon-show-closures ."
 cc = "radon cc --show-complexity --min B ."
 mi = "radon mi --show ."

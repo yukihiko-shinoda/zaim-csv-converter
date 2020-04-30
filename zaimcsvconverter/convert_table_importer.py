@@ -3,7 +3,6 @@ import csv
 from pathlib import Path
 from typing import List
 
-from zaimcsvconverter.account import Account
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.models import ConvertTableRecordMixin
 
