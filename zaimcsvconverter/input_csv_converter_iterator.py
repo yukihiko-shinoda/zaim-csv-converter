@@ -29,4 +29,4 @@ class InputCsvConverterIterator:
     @property
     def _list_csv_converter(self) -> Generator[InputCsvConverter, None, None]:
         return (InputCsvConverter(path_csv_file, self.directory_csv_output)
-                for path_csv_file in self.directory_csv_input.glob('*.csv'))
+                for path_csv_file in sorted(self.directory_csv_input.glob('*.csv')))

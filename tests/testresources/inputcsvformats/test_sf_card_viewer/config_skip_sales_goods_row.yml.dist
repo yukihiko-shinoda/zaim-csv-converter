@@ -18,3 +18,7 @@ amazon:
 view_card:
   account_name: 'ビューカード'
   skip_suica_row: true
+suica:
+  account_name: 'Suica'
+  auto_charge_source: 'ビューカード'
+  skip_sales_goods_row: true

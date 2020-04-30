@@ -44,4 +44,4 @@ class TestModel:
         """Method should raise KeyError when store name is not exist in database."""
         with pytest.raises(NoResultFound) as error:
             Store.try_to_find(Account.WAON.value.file_csv_convert.value.id, '上尾')
-        assert str(error) == '<ExceptionInfo NoResultFound tblen=4>'
+        assert str(error) == "<ExceptionInfo NoResultFound('No row was found for one()') tblen=4>"
