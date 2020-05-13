@@ -31,11 +31,11 @@
         },
         "godslayer": {
             "hashes": [
-                "sha256:17b88cef3615eb5e585241ea3beeb36665b40bc245ccce953452f3ee08656aad",
-                "sha256:94fd7a6797f97558b56e515b90dba4b694734353b2c3ed6ae707b2744b3bd6b6"
+                "sha256:c6e913e18737fb22134792290ce855426e4306f37590a5125901ee5e9e957693",
+                "sha256:d4d3cc93316468aefc544bb4a5789b0207ea26a9989976861def3cc235693029"
             ],
             "index": "pypi",
-            "version": "==1.0.1"
+            "version": "==1.0.2"
         },
         "inflector": {
             "hashes": [

@@ -1,5 +1,4 @@
 """Tests for Config."""
-from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import Config
 
 

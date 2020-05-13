@@ -4,7 +4,6 @@ from typing import List
 
 import pytest
 
-from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 from zaimcsvconverter.models import Store, Item
 
