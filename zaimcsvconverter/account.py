@@ -7,10 +7,9 @@ from enum import Enum
 from pathlib import Path
 from typing import Type, List, Generic
 
+from godslayer.god_slayer_factory import GodSlayerFactory
+
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.datasources.csv import CsvFactory
-from zaimcsvconverter.datasources.csv_with_header import CsvWithHeaderFactory
-from zaimcsvconverter.datasources.view_card_csv import ViewCardCsvFactory
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputRowData, InputRow, TypeVarInputRowData, TypeVarInputRow, \
     InputRowFactory
@@ -40,27 +39,27 @@ from zaimcsvconverter.zaim_row import ZaimRow, ZaimRowFactory
 class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     """This class implements recipe for converting steps for WAON CSV."""
     # pylint: disable=invalid-name
-    CSV_FACTORY_SF_CARD_VIEWER: CsvWithHeaderFactory = field(
-        default=CsvWithHeaderFactory(
-            ['利用年月日', '定期', '鉄道会社名', '入場駅/事業者名', '定期', '鉄道会社名', '出場駅/降車場所', '利用額(円)', '残額(円)', 'メモ'], 'shift_jis_2004'
+    GOD_SLAYER_FACTORY_SF_CARD_VIEWER: GodSlayerFactory = field(
+        default=GodSlayerFactory(
+            header=['利用年月日', '定期', '鉄道会社名', '入場駅/事業者名', '定期', '鉄道会社名', '出場駅/降車場所', '利用額(円)', '残額(円)', 'メモ'],
+            encoding='shift_jis_2004',
         ),
         init=False
     )
     # pylint: disable=invalid-name
-    CSV_FACTORY_AMAZON: CsvWithHeaderFactory = field(
-        default=CsvWithHeaderFactory(
-            [
-                '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計',
-                'お届け先', '状態', '請求先', '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類',
-                '注文概要URL', '領収書URL', '商品URL'
+    GOD_SLAYER_FACTORY_AMAZON: GodSlayerFactory = field(
+        default=GodSlayerFactory(
+            header=[
+                '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計', 'お届け先', '状態', '請求先',
+                '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類', '注文概要URL', '領収書URL', '商品URL'
             ],
-            'utf-8-sig'
+            encoding='utf-8-sig',
         ),
         init=False
     )
     file_csv_convert: FileCsvConvert
     regex_csv_file_name: str
-    csv_factory: CsvFactory
+    god_slayer_factory: GodSlayerFactory
     input_row_data_class: Type[TypeVarInputRowData]
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
     zaim_row_converter_selector: ZaimRowConverterFactory[TypeVarInputRow]
@@ -85,7 +84,7 @@ class Account(Enum):
     WAON = AccountContext(
         FileCsvConvert.WAON,
         r'.*waon.*\.csv',
-        CsvWithHeaderFactory(['取引年月日', '利用店舗', '利用金額（税込）', '利用区分', 'チャージ区分']),
+        GodSlayerFactory(header=['取引年月日', '利用店舗', '利用金額（税込）', '利用区分', 'チャージ区分']),
         WaonRowData,
         WaonRowFactory(),
         WaonZaimRowConverterFactory(),
@@ -93,7 +92,7 @@ class Account(Enum):
     GOLD_POINT_CARD_PLUS = AccountContext(
         FileCsvConvert.GOLD_POINT_CARD_PLUS,
         r'.*gold_point_card_plus.*\.csv',
-        CsvFactory('shift_jis_2004'),
+        GodSlayerFactory(encoding='shift_jis_2004'),
         GoldPointCardPlusRowData,
         GoldPointCardPlusRowFactory(),
         GoldPointCardPlusZaimRowConverterFactory(),
@@ -101,8 +100,10 @@ class Account(Enum):
     GOLD_POINT_CARD_PLUS_201912 = AccountContext(
         FileCsvConvert.GOLD_POINT_CARD_PLUS,
         r'.*gold_point_card_plus_201912.*\.csv',
-        CsvWithHeaderFactory(
-            [r'.*　様', r'[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}', 'ゴールドポイントカードプラス'], 'shift_jis_2004'
+        GodSlayerFactory(
+            header=[r'.*　様', r'[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}', 'ゴールドポイントカードプラス'],
+            footer=['^$', '^$', '^$', '^$', '^$', r'^\d*$', '^$'],
+            encoding='shift_jis_2004',
         ),
         GoldPointCardPlus201912RowData,
         GoldPointCardPlus201912RowFactory(),
@@ -111,8 +112,9 @@ class Account(Enum):
     MUFG = AccountContext(
         FileCsvConvert.MUFG,
         r'.*mufg.*\.csv',
-        CsvWithHeaderFactory(
-            ['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分'], 'shift_jis_2004'
+        GodSlayerFactory(
+            header=['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分'],
+            encoding='shift_jis_2004',
         ),
         MufgRowData,
         MufgRowFactory(),
@@ -121,7 +123,7 @@ class Account(Enum):
     PASMO = AccountContext(
         FileCsvConvert.SF_CARD_VIEWER,
         r'.*pasmo.*\.csv',
-        AccountContext.CSV_FACTORY_SF_CARD_VIEWER,
+        AccountContext.GOD_SLAYER_FACTORY_SF_CARD_VIEWER,
         SFCardViewerRowData,
         # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
         SFCardViewerRowFactory(lambda: CONFIG.pasmo),
@@ -130,7 +132,7 @@ class Account(Enum):
     AMAZON = AccountContext(
         FileCsvConvert.AMAZON,
         r'.*amazon.*\.csv',
-        AccountContext.CSV_FACTORY_AMAZON,
+        AccountContext.GOD_SLAYER_FACTORY_AMAZON,
         AmazonRowData,
         AmazonRowFactory(),
         AmazonZaimRowConverterFactory(),
@@ -138,7 +140,7 @@ class Account(Enum):
     AMAZON_201911 = AccountContext(
         FileCsvConvert.AMAZON,
         r'.*amazon_201911.*\.csv',
-        AccountContext.CSV_FACTORY_AMAZON,
+        AccountContext.GOD_SLAYER_FACTORY_AMAZON,
         Amazon201911RowData,
         Amazon201911RowFactory(),
         Amazon201911ZaimRowConverterFactory(),
@@ -146,7 +148,14 @@ class Account(Enum):
     VIEW_CARD = AccountContext(
         FileCsvConvert.VIEW_CARD,
         r'.*view_card.*\.csv',
-        ViewCardCsvFactory(),
+        GodSlayerFactory(
+            header=[
+                'ご利用年月日', 'ご利用箇所', 'ご利用額', '払戻額', 'ご請求額（うち手数料・利息）', '支払区分（回数）', '今回回数',
+                '今回ご請求額・弁済金（うち手数料・利息）', '現地通貨額', '通貨略称', '換算レート'
+            ],
+            partition=[r'^\*{4}-\*{4}-\*{4}-[0-9]{4}\s.*$'],
+            encoding='shift_jis_2004'
+        ),
         ViewCardRowData,
         ViewCardRowFactory(),
         ViewCardZaimRowConverterFactory(),
@@ -154,7 +163,7 @@ class Account(Enum):
     SUICA = AccountContext(
         FileCsvConvert.SF_CARD_VIEWER,
         r'.*suica.*\.csv',
-        AccountContext.CSV_FACTORY_SF_CARD_VIEWER,
+        AccountContext.GOD_SLAYER_FACTORY_SF_CARD_VIEWER,
         SFCardViewerRowData,
         # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
         SFCardViewerRowFactory(lambda: CONFIG.suica),
