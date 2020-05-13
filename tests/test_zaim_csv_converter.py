@@ -8,7 +8,6 @@ from _pytest.fixtures import FixtureRequest  # type: ignore
 from fixturefilehandler import ResourceFileDeployer
 from fixturefilehandler.file_paths import RelativeDeployFilePath
 
-from tests.testlibraries.file import FilePathUtility
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, ZaimCsvFileChecker
 from tests.testlibraries.row_data import ZaimRowData
@@ -19,34 +18,34 @@ from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 
 
 @pytest.fixture
-def directory_csv_convert_table(request: FixtureRequest):
+def directory_csv_convert_table(resource_path):
     """This fixture prepares directory for CSV files of convert tables."""
-    csv_convert_table_file_path = create_relative_deploy_file_path(request, 'csvconverttable')
+    csv_convert_table_file_path = create_relative_deploy_file_path(resource_path, 'csvconverttable')
     ResourceFileDeployer.setup(csv_convert_table_file_path)
     yield csv_convert_table_file_path
     ResourceFileDeployer.teardown(csv_convert_table_file_path)
 
 
 @pytest.fixture
-def directory_csv_input(request: FixtureRequest):
+def directory_csv_input(request: FixtureRequest, resource_path):
     """This fixture prepares directory for CSV files of input."""
-    csv_input_file_path = create_relative_deploy_file_path(request, 'csvinput', f'csvinput_{request.node.name}')
+    csv_input_file_path = create_relative_deploy_file_path(resource_path, 'csvinput', f'csvinput_{request.node.name}')
     ResourceFileDeployer.setup(csv_input_file_path)
     yield csv_input_file_path
     ResourceFileDeployer.teardown(csv_input_file_path)
 
 
 @pytest.fixture
-def directory_csv_output(request: FixtureRequest):
+def directory_csv_output(resource_path):
     """This fixture prepares directory for CSV files of output."""
-    csv_output_file_path = create_relative_deploy_file_path(request, 'csvoutput')
+    csv_output_file_path = create_relative_deploy_file_path(resource_path, 'csvoutput')
     ResourceFileDeployer.setup(csv_output_file_path)
     yield csv_output_file_path
     ResourceFileDeployer.teardown(csv_output_file_path)
 
 
 def create_relative_deploy_file_path(
-        request, directory_name: str, directory_name_resource: Optional[str] = None
+        resource_path, directory_name: str, directory_name_resource: Optional[str] = None
 ) -> RelativeDeployFilePath:
     """This  function creates relative path aggregate instance to deploy."""
     if directory_name_resource is None:
@@ -54,7 +53,7 @@ def create_relative_deploy_file_path(
     return RelativeDeployFilePath(
         target=Path(directory_name),
         backup=Path(f'{directory_name}_bak'),
-        resource=FilePathUtility.create_path_to_resource_directory(request.function) / Path(directory_name_resource),
+        resource=resource_path.parent / Path(directory_name_resource),
         base=InstanceResource.PATH_PROJECT_HOME_DIRECTORY
     )
 
@@ -244,9 +243,15 @@ class TestZaimCsvConverter:
         checker = ErrorCsvFileChecker(directory_csv_output)
         checker.assert_file('error_invalid_row.csv', [
             InvalidRowErrorRowData(
+                'gold_point_card_plus_201912_202008.csv', '',
+                'gold_point_card_plus_201912_202008.csv does not contain Footer row. '
+                'Confirm CSV file and footer again. '
+                "Footer = ['^$', '^$', '^$', '^$', '^$', '^\\\\d*$', '^$']"
+            ),
+            InvalidRowErrorRowData(
                 'mufg201810.csv', '',
-                ('mufg201810.csv does not include header row.Please confirm AccountConfig.header. '
-                 'AccountConfig.header = '
+                ('CSV file does not contain header row.Confirm CSV file and header again. '
+                 'Header = '
                  "['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分']")
             ),
             InvalidRowErrorRowData(

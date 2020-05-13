@@ -10,11 +10,9 @@ from zaimcsvconverter.models import Store, Item
 
 
 @pytest.fixture
-def fixture_convert_table_importer(request):
+def fixture_convert_table_importer(request, resource_path_root):
     """This fixture prepares ConvertTableImporter instance."""
-    return ConvertTableImporter(
-        InstanceResource.PATH_TEST_RESOURCES / Path(__file__).stem / request.node.name
-    )
+    return ConvertTableImporter(resource_path_root / Path(__file__).stem / request.node.name)
 
 
 class TestConvertTableImporter:

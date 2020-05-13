@@ -144,7 +144,7 @@ AccountContext の各プロパティは以下のように定義します。
 ---|---
 file_name_csv_convert|変換用テーブル CSV の種類を定義 `FileCsvConvert` を指定します。
 regex_csv_file_name|入力 CSV ファイルが、この口座の CSV ファイルであると判定するための正規表現を定義します。
-csv_factory|CSV ファイルのインスタンスの Factory クラス `CsvFactory` のインスタンスを指定します。
+god_slayer_factory|CSV ファイルのレコードを読み取るためのジェネレーターである `GodSlayer` の Factory クラス `GodSlayerFactory` のインスタンスを指定します。CSV の書式に合わせ、引数で `hedder`, `footer`, `partition`, `encoding` などを指定します。詳しくは [GodSlayer の README](https://pypi.org/project/godslayer/) を確認してください。
 input_row_data_class|手順3.で実装した `InputRowData` を指定します。
 input_row_factory|手順3.で実装した `InputRowFactory` を指定します。こちらはクラスではなくインスタンス生成して渡します。
 zaim_row_converter_selector|手順4.で実装した `ZaimRowConverter` を指定します。こちらはクラスではなくインスタンス生成して渡します。

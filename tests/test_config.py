@@ -18,10 +18,10 @@ class TestConfig:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_load():
+    def test_load(resource_path_root):
         """Arguments should load yaml file."""
         config = Config()
-        config.load(InstanceResource.PATH_FILE_CONFIG_FOR_TEST)
+        config.load(resource_path_root / 'config.yml.dist')
         assert config.waon.account_name == 'WAON'
         assert config.waon.auto_charge_source == 'イオン銀行'
         assert config.gold_point_card_plus.account_name == 'ヨドバシゴールドポイントカード・プラス'

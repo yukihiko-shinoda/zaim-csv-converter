@@ -1,9 +1,13 @@
 [[source]]
+name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "pypi"
 
 [packages]
+# To collect error when validate input record
+errorcollector = "*"
+# To read Kami CSV
+godslayer = "*"
 # To generate table name by model class name
 inflector = "*"
 # To uniquify undefined content errors
@@ -21,13 +25,14 @@ mypy = "*"
 pylint = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-resource-path = "*"
 radon = "*"
 
 [scripts]
 start = "python convert.py"
 test = "pytest tests"
-coverage = "pytest --verbose --cov=errorcollector --cov=godslayer --cov=zaimcsvconverter --cov-report=term-missing tests"
-coverage_xml = "pytest --cov-report xml --cov=errorcollector --cov=godslayer --cov=zaimcsvconverter --cov-report=term-missing tests"
+coverage = "pytest --verbose --cov=zaimcsvconverter --cov-report=term-missing tests"
+coverage_xml = "pytest --cov-report xml --cov=zaimcsvconverter --cov-report=term-missing tests"
 flake8 = "flake8 --max-line-length=120 --statistics --show-source --radon-show-closures ."
 cc = "radon cc --show-complexity --min B ."
 mi = "radon mi --show ."

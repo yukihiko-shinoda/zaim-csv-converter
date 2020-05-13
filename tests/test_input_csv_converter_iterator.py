@@ -4,24 +4,17 @@ import csv
 import pytest
 
 from tests.testlibraries.error_row_data_for_test import ErrorRowDataForTest
-from tests.testlibraries.file import FilePathUtility
 from zaimcsvconverter.exceptions import InvalidInputCsvError
 from zaimcsvconverter.input_csv_converter_iterator import InputCsvConverterIterator
-
-
-@pytest.fixture
-def directory_csv_input(request):
-    """This fixture prepares InputCsvConverterIterator."""
-    yield FilePathUtility.create_path_to_resource_directory(request.function) / request.node.name
 
 
 class TestInputCsvConverterIterator:
     """Tests for AccountCsvConverterIterator."""
     # pylint: disable=unused-argument
     @staticmethod
-    def test_success(yaml_config_load, database_session_store_item, directory_csv_input, tmp_path):
+    def test_success(yaml_config_load, database_session_store_item, resource_path, tmp_path):
         """Method processes all csv files in specified diretory."""
-        input_csv_converter_iterator = InputCsvConverterIterator(directory_csv_input, tmp_path)
+        input_csv_converter_iterator = InputCsvConverterIterator(resource_path, tmp_path)
         input_csv_converter_iterator.execute()
         files = sorted(tmp_path.rglob('*[!.gitkeep]'))
         assert len(files) == 2
@@ -30,12 +23,12 @@ class TestInputCsvConverterIterator:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_fail(yaml_config_load, database_session_store_item, directory_csv_input, tmp_path):
+    def test_fail(yaml_config_load, database_session_store_item, resource_path, tmp_path):
         """
         Method exports error csv files in specified diretory.
         Same content should be unified.
         """
-        input_csv_converter_iterator = InputCsvConverterIterator(directory_csv_input, tmp_path)
+        input_csv_converter_iterator = InputCsvConverterIterator(resource_path, tmp_path)
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter_iterator.execute()
         files = sorted(tmp_path.rglob('*[!.gitkeep]'))

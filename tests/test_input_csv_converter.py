@@ -51,8 +51,26 @@ class TestInputCsvConverterForStore:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.parametrize('path_file_csv_input', ('waon',), indirect=['path_file_csv_input'])
-    def test_stop_iteration(yaml_config_load, database_session_basic_store_waon, path_file_csv_input: Path, tmp_path):
+    @pytest.mark.parametrize(
+        'path_file_csv_input', ('waon',), indirect=['path_file_csv_input']
+    )
+    def test_stop_iteration_header(
+            yaml_config_load, database_session_basic_store_waon, path_file_csv_input: Path, tmp_path
+    ):
+        """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
+        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
+        assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []
+        with pytest.raises(InvalidInputCsvError):
+            input_csv_converter.execute()
+
+    # pylint: disable=unused-argument
+    @staticmethod
+    @pytest.mark.parametrize(
+        'path_file_csv_input', ('gold_point_card_plus_201912',), indirect=['path_file_csv_input']
+    )
+    def test_stop_iteration_footer(
+            yaml_config_load, database_session_stores_gold_point_card_plus, path_file_csv_input: Path, tmp_path
+    ):
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []

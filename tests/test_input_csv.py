@@ -7,6 +7,7 @@ import pytest
 from godslayer.exceptions import InvalidRecordError
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions import InvalidInputCsvError
 from zaimcsvconverter.input_csv import InputData
 
@@ -30,7 +31,7 @@ class TestInputCsv:
         Undefined content error handler should be empty.
         """
         account = Account.create_by_path_csv_input(path_file_csv_input)
-        csv_reader = account.value.csv_factory.create(path_file_csv_input)
+        csv_reader = Csv(account.value.god_slayer_factory.create(path_file_csv_input))
         input_data = InputData(csv_reader, account)
         with (tmp_path / 'test.csv').open('w', encoding='UTF-8', newline='\n') as file_zaim:
             writer_zaim = csv.writer(file_zaim)

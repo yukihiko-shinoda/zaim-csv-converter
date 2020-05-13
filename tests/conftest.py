@@ -1,11 +1,12 @@
 """This module implements config for pytest."""
+from pathlib import Path
+
 import pytest
 from fixturefilehandler.factories import DeployerFactory
 from fixturefilehandler.file_paths import YamlConfigFilePathBuilder
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.database_for_test import DatabaseForTest
-from tests.testlibraries.file import FilePathUtility
 from zaimcsvconverter import CONFIG
 
 
@@ -102,29 +103,46 @@ def database_session_item():
     ])
 
 
-YAML_CONFIG_FILE_PATH = YamlConfigFilePathBuilder(
-    path_target_directory=InstanceResource.PATH_PROJECT_HOME_DIRECTORY,
-    path_test_directory=InstanceResource.PATH_TEST_RESOURCES
-)
-YamlConfigFileDeployer = DeployerFactory.create(YAML_CONFIG_FILE_PATH)
-
-
 @pytest.fixture
-def yaml_config_file():
+def yaml_config_file(resource_path_root):
     """This fixture prepares YAML config file and loads it."""
+    yaml_config_file_path = YamlConfigFilePathBuilder(
+        path_target_directory=InstanceResource.PATH_PROJECT_HOME_DIRECTORY,
+        path_test_directory=resource_path_root
+    )
+    # noinspection PyPep8Naming
+    YamlConfigFileDeployer = DeployerFactory.create(yaml_config_file_path)
     YamlConfigFileDeployer.setup()
     yield
     YamlConfigFileDeployer.teardown()
 
 
 @pytest.fixture
-def yaml_config_load(request):
+def yaml_config_load(request, resource_path, resource_path_root):
     """This fixture prepares YAML config file and loads it."""
-    CONFIG.load(FilePathUtility.get_config_file_path(request))
+    CONFIG.load(get_config_file_path(request, resource_path, resource_path_root))
     yield
 
 
+def get_config_file_path(request, resource_path, resource_path_root) -> Path:
+    """This method build file path if file name is presented by parametrize."""
+    if hasattr(request, 'param'):
+        return resource_path.parent / request.param
+    return resource_path_root / 'config.yml.dist'
+
+
 @pytest.fixture
-def path_file_csv_input(request):
+def path_file_csv_input(request, resource_path):
     """This fixture prepare CSV output directory."""
-    yield FilePathUtility.get_input_csv_file_path(request)
+    yield get_input_csv_file_path(request, resource_path)
+
+
+def get_input_csv_file_path(request, resource_path) -> Path:
+    """This method build file path if file name is presented by parametrize."""
+    suffix = getattr(request, 'param', None)
+    if suffix is None:
+        suffix = ''
+    else:
+        suffix = f'_{suffix}'
+    file_name = f'{request.function.__name__}{suffix}.csv'
+    return resource_path.parent / file_name

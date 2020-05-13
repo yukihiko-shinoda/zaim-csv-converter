@@ -77,6 +77,12 @@ class TestGoldPointCardPlus201912Row:
         assert row.store.name_zaim == expected_store_name_zaim
         assert row.is_row_to_skip == expected_is_row_to_skip
 
+    @staticmethod
+    def test_is_row_to_skip(database_session_stores_gold_point_card_plus):
+        assert GoldPointCardPlus201912Row(
+            FileCsvConvertId.GOLD_POINT_CARD_PLUS, InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN
+        ).is_row_to_skip is False
+
 
 class TestGoldPointCardPlus201912RowFactory:
     """Tests for GoldPointCardPlusRowFactory."""

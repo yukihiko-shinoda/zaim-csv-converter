@@ -15,10 +15,7 @@ from zaimcsvconverter.models import StoreRowData, ItemRowData, FileCsvConvertId
 
 class InstanceResource:
     """This class implements fixture of instance."""
-    PATH_TESTS = Path(__file__).parent.parent
-    PATH_PROJECT_HOME_DIRECTORY = PATH_TESTS.parent
-    PATH_TEST_RESOURCES = PATH_TESTS / 'testresources'
-    PATH_FILE_CONFIG_FOR_TEST = PATH_TEST_RESOURCES / 'config.yml.dist'
+    PATH_PROJECT_HOME_DIRECTORY = Path(__file__).parent.parent.parent
     ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI = WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', '-')
     ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO = WaonRowData('2018/8/30', '板橋前野町', '1,489円', '支払', '-')
     ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND = WaonRowData('2018/8/7', 'ファミリーマートかぶと町永代', '129円', '支払', 'クレジットカード')
@@ -42,6 +39,9 @@ class InstanceResource:
     )
     ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC = GoldPointCardPlus201912RowData(
         '2019/11/05', '東京電力  電気料金等', '11905', '１', '１', '11905', ''
+    )
+    ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN = GoldPointCardPlus201912RowData(
+        '2019/10/31', 'ヤフージャパン', '1045', '１', '１', '1045', ''
     )
     ROW_DATA_MUFG_INCOME_CARD = MufgRowData('2018/10/1', 'カ−ド', '', '', '10000', '3000000', '', '', '入金')
     ROW_DATA_MUFG_INCOME_NOT_CARD = MufgRowData(
