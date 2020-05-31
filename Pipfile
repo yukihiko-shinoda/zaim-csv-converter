@@ -21,6 +21,7 @@ yamldataclassconfig = "*"
 factory_boy = "*"
 fixturefilehandler = "*"
 flake8 = "*"
+isort = "*"
 mypy = "*"
 # To use black
 pipenv-setup = "*"
