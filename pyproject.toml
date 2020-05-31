@@ -1,3 +1,11 @@
+[tool.isort]
+# @see https://github.com/timothycrosley/isort/issues/694#issuecomment-581246882
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 120
+
 [tool.pylint.basic]
 docstring-min-length = "7"
 
