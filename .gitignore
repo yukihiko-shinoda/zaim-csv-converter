@@ -12,5 +12,6 @@ csvoutput/*
 config.yml
 config.yml.bak
 coverage.xml
+htmlcov
 **/csvoutput/*
 !**/csvoutput/.gitkeep
