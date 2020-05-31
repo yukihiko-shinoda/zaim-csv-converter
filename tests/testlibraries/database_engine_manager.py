@@ -12,9 +12,10 @@ class DatabaseEngineManager(contextlib.AbstractContextManager):
     to keep data in the development / production database
     and inject new engine on every unit testing to run parallel.
     """
+
     def __init__(self, argument_scoped_session: scoped_session):
         self.scoped_session = argument_scoped_session
-        self.engine = sqlalchemy.create_engine('sqlite://')
+        self.engine = sqlalchemy.create_engine("sqlite://")
 
     def __enter__(self):
         self.scoped_session.configure(bind=self.engine)

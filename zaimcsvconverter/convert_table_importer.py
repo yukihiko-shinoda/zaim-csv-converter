@@ -9,12 +9,13 @@ from zaimcsvconverter.models import ConvertTableRecordMixin
 
 class ConvertTableImporter:
     """This class implements importing process for convert table CSV."""
+
     def __init__(self, directory_csv_convert):
         self.directory_csv_convert = directory_csv_convert
 
     def execute(self) -> None:
         """This method executes importing process for convert table CSV"""
-        for path in sorted(self.directory_csv_convert.glob('*.csv')):
+        for path in sorted(self.directory_csv_convert.glob("*.csv")):
             self._import_csv_to_database(path)
 
     @classmethod
@@ -26,7 +27,7 @@ class ConvertTableImporter:
     @classmethod
     def _load_csv(cls, file_csv_convert: FileCsvConvert, path: Path) -> List[ConvertTableRecordMixin]:
         list_convert_table = []
-        with path.open('r', encoding='UTF-8') as file_convert_table:
+        with path.open("r", encoding="UTF-8") as file_convert_table:
             for list_convert_table_row_standard_type_value in csv.reader(file_convert_table):
                 list_convert_table.append(
                     file_csv_convert.create_convert_table_row_instance(list_convert_table_row_standard_type_value)

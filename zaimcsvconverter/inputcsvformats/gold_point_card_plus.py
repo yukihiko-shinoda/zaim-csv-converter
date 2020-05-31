@@ -1,15 +1,16 @@
 """This module implements row model of GOLD POINT CARD+ CSV."""
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
 class GoldPointCardPlusRowData(InputStoreRowData):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     _used_date: str
     _used_store: str
@@ -39,19 +40,14 @@ class GoldPointCardPlusRowData(InputStoreRowData):
 
     @property
     def validate(self) -> bool:
-        self.stock_error(
-            lambda: self.date,
-            f'Invalid used date. Used date = {self._used_date}'
-        )
-        self.stock_error(
-            lambda: self.used_amount,
-            f'Invalid used amount. Used amount = {self._used_amount}'
-        )
+        self.stock_error(lambda: self.date, f"Invalid used date. Used date = {self._used_date}")
+        self.stock_error(lambda: self.used_amount, f"Invalid used amount. Used amount = {self._used_amount}")
         return super().validate
 
 
 class GoldPointCardPlusRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
+
     def __init__(self, row_data: GoldPointCardPlusRowData):
         super().__init__(FileCsvConvertId.GOLD_POINT_CARD_PLUS, row_data)
         self.used_amount: int = row_data.used_amount
@@ -63,5 +59,6 @@ class GoldPointCardPlusRow(InputStoreRow):
 
 class GoldPointCardPlusRowFactory(InputRowFactory[GoldPointCardPlusRowData, GoldPointCardPlusRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
+
     def create(self, input_row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
         return GoldPointCardPlusRow(input_row_data)

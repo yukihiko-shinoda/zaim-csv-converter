@@ -2,15 +2,17 @@
 from typing import List
 
 from godslayer.exceptions import InvalidRecordError
+
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import SkipRow
-from zaimcsvconverter.inputcsvformats import InputRowData, InputRow, InputStoreRow, InputItemRow
+from zaimcsvconverter.inputcsvformats import InputItemRow, InputRow, InputRowData, InputStoreRow
 from zaimcsvconverter.zaim_row import ZaimRow
 
 
 class RecordProcessor:
     """This class implements convert steps of input CSV row."""
+
     def __init__(self, account: Account):
         self._account = account
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()

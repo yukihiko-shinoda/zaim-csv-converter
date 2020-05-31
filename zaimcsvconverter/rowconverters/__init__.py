@@ -1,23 +1,25 @@
 """This module implements convert steps from input row to Zaim row."""
-from abc import abstractmethod, ABC
-from typing import TypeVar, Generic, Optional
+from abc import ABC, abstractmethod
+from typing import Generic, Optional, TypeVar
 
-from zaimcsvconverter.inputcsvformats import InputRow, InputStoreRow, InputItemRow
+from zaimcsvconverter.inputcsvformats import InputItemRow, InputRow, InputStoreRow
 from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
 
-TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)
-TypeVarInputStoreRow = TypeVar('TypeVarInputStoreRow', bound=InputStoreRow)
-TypeVarInputItemRow = TypeVar('TypeVarInputItemRow', bound=InputItemRow)
+TypeVarInputRow = TypeVar("TypeVarInputRow", bound=InputRow)
+TypeVarInputStoreRow = TypeVar("TypeVarInputStoreRow", bound=InputStoreRow)
+TypeVarInputItemRow = TypeVar("TypeVarInputItemRow", bound=InputItemRow)
 
 
 class ZaimRowConverter(Generic[TypeVarInputRow], ABC):
     """This class implements convert steps from input row to Zaim row."""
+
     def __init__(self, input_row: TypeVarInputRow):
         self.input_row: TypeVarInputRow = input_row
 
 
 class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim income row."""
+
     @property
     @abstractmethod
     def category(self) -> str:
@@ -42,6 +44,7 @@ class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow]):
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 class ZaimIncomeRowStoreConverter(ZaimIncomeRowConverter[TypeVarInputStoreRow], ABC):
     """This class implements convert steps from input store row to Zaim income row."""
+
     @property
     def category(self) -> str:
         # Reason: Pylint's bug. pylint: disable=no-member
@@ -55,6 +58,7 @@ class ZaimIncomeRowStoreConverter(ZaimIncomeRowConverter[TypeVarInputStoreRow], 
 
 class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim payment row."""
+
     @property
     @abstractmethod
     def category_large(self) -> Optional[str]:
@@ -93,6 +97,7 @@ class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow]):
 
 class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow], ABC):
     """This class implements convert steps from input store row to Zaim payment row."""
+
     @property
     def category_large(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
@@ -115,6 +120,7 @@ class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow]
 
 class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow], ABC):
     """This class implements convert steps from input item row to Zaim payment row."""
+
     @property
     def category_large(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
@@ -138,6 +144,7 @@ class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow], 
 
 class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow]):
     """This class implements convert steps from input row to Zaim transfer row."""
+
     @property
     @abstractmethod
     def cash_flow_source(self) -> str:
@@ -169,5 +176,6 @@ class ZaimRowConverterFactory(Generic[TypeVarInputRow]):
     however, pytest-cov detect import line only for TYPE_CHECKING as uncovered row.
     @see https://github.com/python/mypy/issues/6101
     """
+
     def create(self, input_row: TypeVarInputRow) -> ZaimRowConverter:
         """This method selects Zaim row converter."""

@@ -4,13 +4,17 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData, \
-    GoldPointCardPlusRowFactory
-from zaimcsvconverter.models import Store, FileCsvConvertId
+from zaimcsvconverter.inputcsvformats.gold_point_card_plus import (
+    GoldPointCardPlusRow,
+    GoldPointCardPlusRowData,
+    GoldPointCardPlusRowFactory,
+)
+from zaimcsvconverter.models import Store
 
 
 class TestGoldPointCardPlusRowData:
     """Tests for GoldPointCardPlusRowData."""
+
     # Reason: asserting properties can't be short no more.
     # noinspection DuplicatedCode
     @staticmethod
@@ -20,23 +24,34 @@ class TestGoldPointCardPlusRowData:
         Property date should return datetime object.
         Property store_date should return used_store.
         """
-        used_date = '2018/7/3'
-        used_store = '東京電力  電気料金等'
-        used_card = 'ご本人'
-        payment_kind = '1回払い'
-        number_of_division = ''
-        scheduled_payment_month = '18/8'
-        used_amount = '11402'
-        unknown_1 = '11402'
-        unknown_2 = 'unknown 2'
-        unknown_3 = 'unknown 3'
-        unknown_4 = 'unknown 4'
-        unknown_6 = 'unknown 5'
-        unknown_5 = 'unknown 6'
-        gold_point_card_plus_row_data = GoldPointCardPlusRowData(used_date, used_store, used_card, payment_kind,
-                                                                 number_of_division, scheduled_payment_month,
-                                                                 used_amount, unknown_1, unknown_2, unknown_3,
-                                                                 unknown_4, unknown_5, unknown_6)
+        used_date = "2018/7/3"
+        used_store = "東京電力  電気料金等"
+        used_card = "ご本人"
+        payment_kind = "1回払い"
+        number_of_division = ""
+        scheduled_payment_month = "18/8"
+        used_amount = "11402"
+        unknown_1 = "11402"
+        unknown_2 = "unknown 2"
+        unknown_3 = "unknown 3"
+        unknown_4 = "unknown 4"
+        unknown_6 = "unknown 5"
+        unknown_5 = "unknown 6"
+        gold_point_card_plus_row_data = GoldPointCardPlusRowData(
+            used_date,
+            used_store,
+            used_card,
+            payment_kind,
+            number_of_division,
+            scheduled_payment_month,
+            used_amount,
+            unknown_1,
+            unknown_2,
+            unknown_3,
+            unknown_4,
+            unknown_5,
+            unknown_6,
+        )
         assert gold_point_card_plus_row_data.used_card == used_card
         assert gold_point_card_plus_row_data.payment_kind == payment_kind
         assert gold_point_card_plus_row_data.number_of_division == number_of_division
@@ -54,30 +69,33 @@ class TestGoldPointCardPlusRowData:
 
 class TestGoldPointCardPlusRow:
     """Tests for GoldPointCartPlusRow."""
+
     # pylint: disable=protected-access,too-many-arguments,unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        (
-            'gold_point_card_plus_row_data, expected_date, expected_store_name_zaim, expected_is_row_to_skip'
-        ),
+        "gold_point_card_plus_row_data, expected_date, expected_store_name_zaim, expected_is_row_to_skip",
         [
             (
                 InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC,
-                datetime(2018, 7, 3, 0, 0, 0), '東京電力エナジーパートナー株式会社', False
+                datetime(2018, 7, 3, 0, 0, 0),
+                "東京電力エナジーパートナー株式会社",
+                False,
             ),
             (
                 InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP,
-                datetime(2018, 7, 4, 0, 0, 0), 'Amazon Japan G.K.', True
+                datetime(2018, 7, 4, 0, 0, 0),
+                "Amazon Japan G.K.",
+                True,
             ),
-        ]
+        ],
     )
     def test_init(
-            yaml_config_load,
-            database_session_stores_gold_point_card_plus,
-            gold_point_card_plus_row_data,
-            expected_date,
-            expected_store_name_zaim,
-            expected_is_row_to_skip
+        yaml_config_load,
+        database_session_stores_gold_point_card_plus,
+        gold_point_card_plus_row_data,
+        expected_date,
+        expected_store_name_zaim,
+        expected_is_row_to_skip,
     ):
         """
         Arguments should set into properties.
@@ -94,11 +112,12 @@ class TestGoldPointCardPlusRow:
 
 class TestGoldPointCardPlusRowFactory:
     """Tests for GoldPointCardPlusRowFactory."""
+
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.parametrize('argument, expected', [
-        (InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC, GoldPointCardPlusRow),
-    ])
+    @pytest.mark.parametrize(
+        "argument, expected", [(InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC, GoldPointCardPlusRow)]
+    )
     def test_create(argument, expected, database_session_stores_gold_point_card_plus):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access

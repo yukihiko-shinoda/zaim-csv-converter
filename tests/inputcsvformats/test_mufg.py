@@ -4,9 +4,15 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory, MufgStoreRow, MufgRow, \
-    MufgIncomeFromSelfRow, MufgPaymentToSelfRow
-from zaimcsvconverter.models import Store, FileCsvConvertId
+from zaimcsvconverter.inputcsvformats.mufg import (
+    MufgIncomeFromSelfRow,
+    MufgPaymentToSelfRow,
+    MufgRow,
+    MufgRowData,
+    MufgRowFactory,
+    MufgStoreRow,
+)
+from zaimcsvconverter.models import Store
 
 
 class TestMufgRowData:
@@ -18,17 +24,26 @@ class TestMufgRowData:
         Property date should return datetime object.
         Property store_date should return used_store.
         """
-        date = '2018/11/28'
-        summary = '水道'
-        summary_content = 'トウキヨウトスイドウ'
-        payed_amount = '3628'
-        deposit_amount = ''
-        balance = '5000000'
-        note = ''
-        is_uncapitalized = ''
-        cash_flow_kind = '振替支払い'
-        mufg_row_data = MufgRowData(date, summary, summary_content, payed_amount, deposit_amount, balance, note,
-                                    is_uncapitalized, cash_flow_kind)
+        date = "2018/11/28"
+        summary = "水道"
+        summary_content = "トウキヨウトスイドウ"
+        payed_amount = "3628"
+        deposit_amount = ""
+        balance = "5000000"
+        note = ""
+        is_uncapitalized = ""
+        cash_flow_kind = "振替支払い"
+        mufg_row_data = MufgRowData(
+            date,
+            summary,
+            summary_content,
+            payed_amount,
+            deposit_amount,
+            balance,
+            note,
+            is_uncapitalized,
+            cash_flow_kind,
+        )
         assert mufg_row_data.summary == summary
         assert mufg_row_data.payed_amount == 3628
         assert mufg_row_data.deposit_amount is None
@@ -42,6 +57,7 @@ class TestMufgRowData:
 
 class TestMufgIncomeRow:
     """Tests for MufgIncomeRow."""
+
     # pylint: disable=unused-argument
     @staticmethod
     def test_init(yaml_config_load, database_session_stores_mufg):
@@ -54,6 +70,7 @@ class TestMufgIncomeRow:
 
 class TestMufgPaymentRow:
     """Tests for MufgPaymentRow."""
+
     # pylint: disable=unused-argument
     @staticmethod
     def test_init(yaml_config_load, database_session_stores_mufg):
@@ -66,6 +83,7 @@ class TestMufgPaymentRow:
 
 class TestMufgIncomeFromSelfRow:
     """Tests for MufgIncomeFromSelfRow."""
+
     @staticmethod
     def test_deposit_amount_fail():
         """Property should raise ValueError when value is None."""
@@ -73,11 +91,12 @@ class TestMufgIncomeFromSelfRow:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
             MufgIncomeFromSelfRow(InstanceResource.ROW_DATA_MUFG_PAYMENT).deposit_amount
-        assert str(error.value) == 'Deposit amount on income row is not allowed empty.'
+        assert str(error.value) == "Deposit amount on income row is not allowed empty."
 
 
 class TestMufgPaymentToSelfRow:
     """Tests for MufgPaymentToSelfRow."""
+
     @staticmethod
     def test_payed_amount_fail():
         """Property should raise ValueError when value is None."""
@@ -85,16 +104,17 @@ class TestMufgPaymentToSelfRow:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
             MufgPaymentToSelfRow(InstanceResource.ROW_DATA_MUFG_INCOME_CARD).payed_amount
-        assert str(error.value) == 'Payed amount on payment row is not allowed empty.'
+        assert str(error.value) == "Payed amount on payment row is not allowed empty."
 
 
 class TestMufgTransferIncomeRow:
     """Tests for MufgTransferIncomeRow."""
+
     # pylint: disable=unused-argument
     @staticmethod
     def test_init(yaml_config_load, database_session_stores_mufg):
         """Arguments should set into properties."""
-        store_name = '三菱UFJ銀行'
+        store_name = "三菱UFJ銀行"
         mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
         assert mufg_row.date == datetime(2018, 8, 20, 0, 0, 0)
         assert isinstance(mufg_row.store, Store)
@@ -103,11 +123,12 @@ class TestMufgTransferIncomeRow:
 
 class TestMufgTransferPaymentRow:
     """Tests for MufgTransferPaymentRow."""
+
     # pylint: disable=unused-argument
     @staticmethod
     def test_init(yaml_config_load, database_session_stores_mufg):
         """Arguments should set into properties."""
-        store_name = '東京都水道局　経理部管理課'
+        store_name = "東京都水道局　経理部管理課"
         mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS)
         assert mufg_row.date == datetime(2018, 11, 28, 0, 0, 0)
         assert isinstance(mufg_row.store, Store)
@@ -116,19 +137,26 @@ class TestMufgTransferPaymentRow:
 
 class TestMufgRowFactory:
     """Tests for MufgRowFactory."""
+
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        'argument, expected_is_income, expected_is_payment, expected_is_transfer_income, expected_is_transfer_payment',
+        "argument, expected_is_income, expected_is_payment, expected_is_transfer_income, expected_is_transfer_payment",
         [
             (InstanceResource.ROW_DATA_MUFG_INCOME_CARD, True, False, False, False),
             (InstanceResource.ROW_DATA_MUFG_PAYMENT, False, True, False, False),
             (InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT, False, False, True, False),
             (InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS, False, False, False, True),
-        ]
+        ],
     )
-    def test_create_success(database_session_stores_mufg, argument, expected_is_income, expected_is_payment,
-                            expected_is_transfer_income, expected_is_transfer_payment):
+    def test_create_success(
+        database_session_stores_mufg,
+        argument,
+        expected_is_income,
+        expected_is_payment,
+        expected_is_transfer_income,
+        expected_is_transfer_payment,
+    ):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         mufg_row = MufgRowFactory().create(argument)

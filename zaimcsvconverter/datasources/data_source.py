@@ -1,12 +1,13 @@
 """This module implements data source model."""
 from abc import ABC, abstractmethod
-from typing import Generator, List, Any, Dict
+from typing import Any, Dict, Generator, List
 
 from godslayer.exceptions import InvalidRecordError
 
 
 class DataSource(ABC):
     """This class implements data source model."""
+
     def __init__(self):
         self.dictionary_invalid_record: Dict[int, List[InvalidRecordError]] = {}
 

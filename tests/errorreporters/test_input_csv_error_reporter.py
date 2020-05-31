@@ -1,4 +1,4 @@
-from typing import List, Generator, Any
+from typing import Any, Generator, List
 
 import pytest
 from godslayer.exceptions import InvalidRecordError

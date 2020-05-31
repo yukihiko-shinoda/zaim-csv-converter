@@ -1,10 +1,11 @@
 """This module implements row model of WAON CSV."""
 from __future__ import annotations
+
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from dataclasses import dataclass
 
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.utility import Utility
 
@@ -12,19 +13,22 @@ from zaimcsvconverter.utility import Utility
 @dataclass
 class WaonRowData(InputStoreRowData):
     """This class implements data class for wrapping list of WAON CSV row model."""
+
     class UseKind(Enum):
         """This class implements constant of user kind in WAON CSV."""
-        PAYMENT = '支払'
-        CHARGE = 'チャージ'
-        AUTO_CHARGE = 'オートチャージ'
-        DOWNLOAD_POINT = 'ポイントダウンロード'
+
+        PAYMENT = "支払"
+        CHARGE = "チャージ"
+        AUTO_CHARGE = "オートチャージ"
+        DOWNLOAD_POINT = "ポイントダウンロード"
 
     class ChargeKind(Enum):
         """This class implements constant of charge kind in WAON CSV."""
-        BANK_ACCOUNT = '銀行口座'
-        POINT = 'ポイント'
-        CASH = '現金'
-        NULL = '-'
+
+        BANK_ACCOUNT = "銀行口座"
+        POINT = "ポイント"
+        CASH = "現金"
+        NULL = "-"
 
     _date: str
     _used_store: str
@@ -54,27 +58,19 @@ class WaonRowData(InputStoreRowData):
 
     @property
     def validate(self) -> bool:
-        self.stock_error(
-            lambda: self.date,
-            f'Invalid date. Date = {self._date}'
-        )
-        self.stock_error(
-            lambda: self.used_amount,
-            f'Invalid used amount. Used amount = {self._used_amount}'
-        )
-        self.stock_error(
-            lambda: self.use_kind,
-            f'Invalid used amount. Use kind = {self._use_kind}'
-        )
+        self.stock_error(lambda: self.date, f"Invalid date. Date = {self._date}")
+        self.stock_error(lambda: self.used_amount, f"Invalid used amount. Used amount = {self._used_amount}")
+        self.stock_error(lambda: self.use_kind, f"Invalid used amount. Use kind = {self._use_kind}")
         self.stock_error(
             lambda: self.charge_kind,
-            f'The value of "Charge kind" has not been defined in this code. Charge kind = {self._charge_kind}'
+            f'The value of "Charge kind" has not been defined in this code. Charge kind = {self._charge_kind}',
         )
         return super().validate
 
 
 class WaonRow(InputStoreRow):
     """This class implements row model of WAON CSV."""
+
     def __init__(self, row_data: WaonRowData):
         super().__init__(FileCsvConvertId.WAON, row_data)
         self.used_amount: int = row_data.used_amount
@@ -104,6 +100,7 @@ class WaonRow(InputStoreRow):
 
 class WaonChargeRow(WaonRow):
     """This class implements charge row model of WAON CSV."""
+
     def __init__(self, row_data: WaonRowData):
         super().__init__(row_data)
         self._charge_kind: WaonRowData.ChargeKind = row_data.charge_kind
@@ -117,8 +114,7 @@ class WaonChargeRow(WaonRow):
     @property
     def validate(self) -> bool:
         self.stock_error(
-            lambda: self.charge_kind,
-            f'Charge kind in charge row is required. Charge kind = {self._charge_kind}'
+            lambda: self.charge_kind, f"Charge kind in charge row is required. Charge kind = {self._charge_kind}"
         )
         return super().validate
 
@@ -137,6 +133,7 @@ class WaonChargeRow(WaonRow):
 
 class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
     """This class implements factory to create WAON CSV row instance."""
+
     def create(self, input_row_data: WaonRowData) -> WaonRow:
         if input_row_data.use_kind in (WaonRowData.UseKind.CHARGE, WaonRowData.UseKind.AUTO_CHARGE):
             return WaonChargeRow(input_row_data)

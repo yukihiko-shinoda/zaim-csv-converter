@@ -2,12 +2,12 @@
 from __future__ import annotations
 
 from abc import ABC
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
-from dataclasses import dataclass
 
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputRowFactory, InputRow, InputStoreRow
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.utility import Utility
 
@@ -15,17 +15,19 @@ from zaimcsvconverter.utility import Utility
 @dataclass
 class MufgRowData(InputStoreRowData):
     """This class implements data class for wrapping list of MUFG bunk CSV row model."""
+
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     class Summary(Enum):
-        CARD = 'カ−ド'
-        CARD_CONVENIENCE_STORE_ATM = 'カ−ドＣ１'
+        CARD = "カ−ド"
+        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"
 
     class CashFlowKind(Enum):
         """This class implements constant of cash flow kind in MUFG CSV."""
-        INCOME = '入金'
-        PAYMENT = '支払い'
-        TRANSFER_INCOME = '振替入金'
-        TRANSFER_PAYMENT = '振替支払い'
+
+        INCOME = "入金"
+        PAYMENT = "支払い"
+        TRANSFER_INCOME = "振替入金"
+        TRANSFER_PAYMENT = "振替支払い"
 
     _date: str
     summary: str
@@ -59,29 +61,23 @@ class MufgRowData(InputStoreRowData):
 
     @property
     def validate(self) -> bool:
-        self.stock_error(
-            lambda: self.date,
-            f'Invalid date. Date = {self._date}'
-        )
+        self.stock_error(lambda: self.date, f"Invalid date. Date = {self._date}")
         # This comment prevents pylint duplicate-code.
+        self.stock_error(lambda: self.payed_amount, f"Invalid payed amount. Payed amount = {self._payed_amount}")
         self.stock_error(
-            lambda: self.payed_amount,
-            f'Invalid payed amount. Payed amount = {self._payed_amount}'
-        )
-        self.stock_error(
-            lambda: self.deposit_amount,
-            f'Invalid deposit amount. Deposit amount = {self._deposit_amount}'
+            lambda: self.deposit_amount, f"Invalid deposit amount. Deposit amount = {self._deposit_amount}"
         )
         self.stock_error(
             lambda: self.cash_flow_kind,
             'The value of "Cash flow kind" has not been defined in this code. '
-            f'Cash flow kind = {self._cash_flow_kind}'
+            f"Cash flow kind = {self._cash_flow_kind}",
         )
         return super().validate
 
 
 class MufgRow(InputRow):
     """This class implements row model of MUFG bank CSV."""
+
     def __init__(self, input_row_data: MufgRowData):
         super().__init__(FileCsvConvertId.MUFG, input_row_data)
         self.cash_flow_kind: MufgRowData.CashFlowKind = input_row_data.cash_flow_kind
@@ -105,8 +101,10 @@ class MufgRow(InputRow):
 
     @property
     def is_by_card(self) -> bool:
-        return self._summary == MufgRowData.Summary.CARD.value or \
-               self._summary == MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value
+        return (
+            self._summary == MufgRowData.Summary.CARD.value
+            or self._summary == MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value
+        )
 
     @property
     def is_income_from_other_own_account(self) -> bool:
@@ -115,6 +113,7 @@ class MufgRow(InputRow):
 
 class MufgIncomeRow(MufgRow, ABC):
     """This class implements income row model of MUFG bank CSV."""
+
     def __init__(self, row_data: MufgRowData):
         super().__init__(row_data)
         self._deposit_amount: Optional[int] = row_data.deposit_amount
@@ -122,20 +121,21 @@ class MufgIncomeRow(MufgRow, ABC):
     @property
     def deposit_amount(self) -> int:
         if self._deposit_amount is None:
-            raise ValueError('Deposit amount on income row is not allowed empty.')
+            raise ValueError("Deposit amount on income row is not allowed empty.")
         return self._deposit_amount
 
     @property
     def validate(self) -> bool:
         self.stock_error(
             lambda: self.deposit_amount,
-            f'Deposit amount in income row is required. Deposit amount = {self._deposit_amount}'
+            f"Deposit amount in income row is required. Deposit amount = {self._deposit_amount}",
         )
         return super().validate
 
 
 class MufgPaymentRow(MufgRow, ABC):
     """This class implements payment row model of MUFG bank CSV."""
+
     def __init__(self, row_data: MufgRowData):
         super().__init__(row_data)
         self._payed_amount: Optional[int] = row_data.payed_amount
@@ -143,14 +143,13 @@ class MufgPaymentRow(MufgRow, ABC):
     @property
     def payed_amount(self) -> int:
         if self._payed_amount is None:
-            raise ValueError('Payed amount on payment row is not allowed empty.')
+            raise ValueError("Payed amount on payment row is not allowed empty.")
         return self._payed_amount
 
     @property
     def validate(self) -> bool:
         self.stock_error(
-            lambda: self.payed_amount,
-            f'Payed amount in payment row is required. Payed amount = {self._payed_amount}'
+            lambda: self.payed_amount, f"Payed amount in payment row is required. Payed amount = {self._payed_amount}"
         )
         return super().validate
 
@@ -166,6 +165,7 @@ class MufgPaymentToSelfRow(MufgPaymentRow):
 # pylint: disable=too-many-instance-attributes
 class MufgStoreRow(MufgRow, InputStoreRow, ABC):
     """This class implements row model of MUFG bank CSV."""
+
     @property
     def is_transfer_income_from_other_own_account(self) -> bool:
         """This method returns whether this row is transfer income from other own account or not."""
@@ -192,18 +192,20 @@ class MufgPaymentToSomeoneRow(MufgStoreRow, MufgPaymentRow):
 
 class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
     """This class implements factory to create MUFG CSV row instance."""
+
     def create(self, input_row_data: MufgRowData) -> MufgRow:
         if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.INCOME:
             return MufgIncomeFromSelfRow(input_row_data)
         if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.PAYMENT:
             return MufgPaymentToSelfRow(input_row_data)
         if input_row_data.cash_flow_kind in (
-                MufgRowData.CashFlowKind.PAYMENT, MufgRowData.CashFlowKind.TRANSFER_PAYMENT
+            MufgRowData.CashFlowKind.PAYMENT,
+            MufgRowData.CashFlowKind.TRANSFER_PAYMENT,
         ):
             return MufgPaymentToSomeoneRow(input_row_data)
         if input_row_data.cash_flow_kind in (MufgRowData.CashFlowKind.INCOME, MufgRowData.CashFlowKind.TRANSFER_INCOME):
             return MufgIncomeFromOthersRow(input_row_data)
         raise ValueError(
-            f'Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}'
+            f"Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}"
         )  # pragma: no cover
         # Reason: This line is insurance for future development so process must be not able to reach

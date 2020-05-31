@@ -2,26 +2,35 @@
 from typing import Callable, Optional
 
 from zaimcsvconverter.config import SFCardViewerConfig
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRow, SFCardViewerEnterExitRow, \
-    SFCardViewerEnterRow
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import (
+    SFCardViewerEnterExitRow,
+    SFCardViewerEnterRow,
+    SFCardViewerRow,
+)
+from zaimcsvconverter.rowconverters import (
+    ZaimPaymentRowConverter,
+    ZaimPaymentRowStoreConverter,
+    ZaimRowConverter,
+    ZaimRowConverterFactory,
+    ZaimTransferRowConverter,
+)
 from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
-from zaimcsvconverter.rowconverters import ZaimPaymentRowStoreConverter, ZaimTransferRowConverter, \
-    ZaimRowConverterFactory, ZaimRowConverter, ZaimPaymentRowConverter
 
 
 class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFCardViewerRow]):
     """This class implements convert steps from SFCard Viewer row to Zaim payment row."""
+
     account_config: SFCardViewerConfig
 
     @property
     def category_large(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return '交通' if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
+        return "交通" if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
 
     @property
     def category_small(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return 'バス' if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
+        return "バス" if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
 
     @property
     def item_name(self) -> str:
@@ -44,6 +53,7 @@ class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFC
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
 class SFCardViewerZaimPaymentOnStationRowConverter(ZaimPaymentRowStoreConverter[SFCardViewerEnterExitRow]):
     """This class implements convert steps from SFCard Viewer enter row to Zaim payment row."""
+
     account_config: SFCardViewerConfig
 
     @property
@@ -53,8 +63,10 @@ class SFCardViewerZaimPaymentOnStationRowConverter(ZaimPaymentRowStoreConverter[
     @property
     def note(self) -> str:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return (f'{self.input_row.railway_company_name_enter} {self.input_row.station_name_enter}'
-                f' → {self.input_row.railway_company_name_exit} {self.input_row.store.name}')
+        return (
+            f"{self.input_row.railway_company_name_enter} {self.input_row.station_name_enter}"
+            f" → {self.input_row.railway_company_name_exit} {self.input_row.store.name}"
+        )
 
     @property
     def amount(self) -> int:
@@ -64,6 +76,7 @@ class SFCardViewerZaimPaymentOnStationRowConverter(ZaimPaymentRowStoreConverter[
 
 class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewerEnterRow]):
     """This class implements convert steps from SFCard Viewer enter row to Zaim transfer row."""
+
     account_config: SFCardViewerConfig
 
     @property
@@ -82,23 +95,30 @@ class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewer
 
 class SFCardViewerZaimRowConverterFactory(ZaimRowConverterFactory[SFCardViewerRow]):
     """This class implements select steps from SFCard Viewer input row to Zaim row converter."""
+
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config
 
     def create(self, input_row: SFCardViewerRow) -> ZaimRowConverter:
         if isinstance(input_row, SFCardViewerEnterExitRow):
+
             class ConcreteSFCardViewerZaimPaymentOnStationRowConverter(SFCardViewerZaimPaymentOnStationRowConverter):
                 account_config = self._account_config()
+
             return ConcreteSFCardViewerZaimPaymentOnStationRowConverter(input_row)
         if isinstance(input_row, SFCardViewerEnterRow):
+
             class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
                 account_config = self._account_config()
+
             return ConcreteSFCardViewerZaimTransferRowConverter(input_row)
         if isinstance(input_row, SFCardViewerRow):
+
             class ConcreteSFCardViewerZaimPaymentOnSomewhereRowConverter(
-                    SFCardViewerZaimPaymentOnSomewhereRowConverter
+                SFCardViewerZaimPaymentOnSomewhereRowConverter
             ):
                 account_config = self._account_config()
+
             return ConcreteSFCardViewerZaimPaymentOnSomewhereRowConverter(input_row)
-        raise ValueError(f'Unsupported row. class = {type(input_row)}')  # pragma: no cover
+        raise ValueError(f"Unsupported row. class = {type(input_row)}")  # pragma: no cover
         # Reason: This line is insurance for future development so process must be not able to reach

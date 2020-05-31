@@ -1,17 +1,18 @@
 """This module implements row model of GOLD POINT CARD+ CSV version 201912."""
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 
 from sqlalchemy.orm.exc import NoResultFound
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
 class GoldPointCardPlus201912RowData(InputStoreRowData):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV version 201912 row model."""
+
     _used_date: str
     _used_store: str
     _used_amount: str
@@ -34,19 +35,14 @@ class GoldPointCardPlus201912RowData(InputStoreRowData):
 
     @property
     def validate(self) -> bool:
-        self.stock_error(
-            lambda: self.date,
-            f'Invalid used date. Used date = {self._used_date}'
-        )
-        self.stock_error(
-            lambda: self.payed_amount,
-            f'Invalid used amount. Used amount = {self._used_amount}'
-        )
+        self.stock_error(lambda: self.date, f"Invalid used date. Used date = {self._used_date}")
+        self.stock_error(lambda: self.payed_amount, f"Invalid used amount. Used amount = {self._used_amount}")
         return super().validate
 
 
 class GoldPointCardPlus201912Row(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
+
     def __init__(self, row_data: GoldPointCardPlus201912RowData):
         super().__init__(FileCsvConvertId.GOLD_POINT_CARD_PLUS, row_data)
         self.payed_amount: int = row_data.payed_amount
@@ -62,7 +58,6 @@ class GoldPointCardPlus201912Row(InputStoreRow):
 
 class GoldPointCardPlus201912RowFactory(InputRowFactory[GoldPointCardPlus201912RowData, GoldPointCardPlus201912Row]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
-    def create(
-            self, input_row_data: GoldPointCardPlus201912RowData
-    ) -> GoldPointCardPlus201912Row:
+
+    def create(self, input_row_data: GoldPointCardPlus201912RowData) -> GoldPointCardPlus201912Row:
         return GoldPointCardPlus201912Row(input_row_data)

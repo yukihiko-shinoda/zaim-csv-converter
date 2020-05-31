@@ -1,26 +1,29 @@
 """This module implements row model of SF Card Viewer CSV."""
 from __future__ import annotations
+
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Callable
-from dataclasses import dataclass
 
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory, InputRow
 from zaimcsvconverter.config import SFCardViewerConfig
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
 class SFCardViewerRowData(InputStoreRowData):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
+
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     class Note(Enum):
         """This class implements constant of note in SF Card Viewer CSV."""
-        EMPTY = ''
-        SALES_GOODS = '物販'
-        AUTO_CHARGE = 'ｵｰﾄﾁｬｰｼﾞ'
-        EXIT_BY_WINDOW = '窓出'
-        BUS_TRAM = 'ﾊﾞｽ/路面等'
+
+        EMPTY = ""
+        SALES_GOODS = "物販"
+        AUTO_CHARGE = "ｵｰﾄﾁｬｰｼﾞ"
+        EXIT_BY_WINDOW = "窓出"
+        BUS_TRAM = "ﾊﾞｽ/路面等"
 
     _used_date: str
     is_commuter_pass_enter: str
@@ -51,19 +54,10 @@ class SFCardViewerRowData(InputStoreRowData):
 
     @property
     def validate(self) -> bool:
-        self.stock_error(
-            lambda: self.date,
-            f'Invalid used date. Used date = {self._used_date}'
-        )
+        self.stock_error(lambda: self.date, f"Invalid used date. Used date = {self._used_date}")
         # This comment prevents pylint duplicate-code.
-        self.stock_error(
-            lambda: self.used_amount,
-            f'Invalid used amount. Used amount = {self._used_amount}'
-        )
-        self.stock_error(
-            lambda: self.note,
-            f'Invalid note. Note = {self._note}'
-        )
+        self.stock_error(lambda: self.used_amount, f"Invalid used amount. Used amount = {self._used_amount}")
+        self.stock_error(lambda: self.note, f"Invalid note. Note = {self._note}")
         return super().validate
 
     @property
@@ -75,6 +69,7 @@ class SFCardViewerRowData(InputStoreRowData):
 # pylint: disable=too-many-instance-attributes
 class SFCardViewerRow(InputRow):
     """This class implements row model of SF Card Viewer CSV."""
+
     def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
         super().__init__(FileCsvConvertId.SF_CARD_VIEWER, row_data)
         self.used_amount: int = row_data.used_amount
@@ -108,6 +103,7 @@ class SFCardViewerRow(InputRow):
 
 class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow):
     """This class implements enter station row model of SF Card Viewer CSV."""
+
     def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
         super().__init__(row_data, account_config)
         self.railway_company_name_enter: str = row_data.railway_company_name_enter
@@ -116,19 +112,24 @@ class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow):
 
 class SFCardViewerEnterExitRow(SFCardViewerEnterRow):
     """This class implements enter and exit station row model of SF Card Viewer CSV."""
+
     def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
         super().__init__(row_data, account_config)
         self.railway_company_name_exit: str = row_data.railway_company_name_exit
 
     @property
     def is_row_to_skip(self) -> bool:
-        return self.is_exit_by_window and self.used_amount == 0 and \
-               self.railway_company_name_enter == self.railway_company_name_exit and \
-               self.station_name_enter == self.store.name
+        return (
+            self.is_exit_by_window
+            and self.used_amount == 0
+            and self.railway_company_name_enter == self.railway_company_name_exit
+            and self.station_name_enter == self.store.name
+        )
 
 
 class SFCardViewerRowFactory(InputRowFactory[SFCardViewerRowData, SFCardViewerRow]):
     """This class implements factory to create WAON CSV row instance."""
+
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config
 
