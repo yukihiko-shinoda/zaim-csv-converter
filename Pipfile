@@ -22,6 +22,8 @@ factory_boy = "*"
 fixturefilehandler = "*"
 flake8 = "*"
 mypy = "*"
+# To use black
+pipenv-setup = "*"
 pylint = "*"
 pytest = "*"
 pytest-cov = "*"
