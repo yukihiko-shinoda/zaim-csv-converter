@@ -18,9 +18,11 @@ sqlalchemy = "*"
 yamldataclassconfig = "*"
 
 [dev-packages]
+coverage = "*"
 factory_boy = "*"
 fixturefilehandler = "*"
 flake8 = "*"
+invoke = "*"
 isort = "*"
 mypy = "*"
 # To use black
@@ -29,7 +31,6 @@ pylint = "*"
 pytest = "*"
 pytest-resource-path = "*"
 radon = "*"
-invoke = "*"
 
 [scripts]
 start = "python convert.py"
