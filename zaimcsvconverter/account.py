@@ -53,6 +53,10 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
                 '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計', 'お届け先', '状態', '請求先',
                 '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類', '注文概要URL', '領収書URL', '商品URL'
             ],
+            partition=[
+                r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",
+                r".*", r".*", r".*", ""
+            ],
             encoding='utf-8-sig',
         ),
         init=False

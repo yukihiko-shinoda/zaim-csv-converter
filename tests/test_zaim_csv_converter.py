@@ -68,16 +68,12 @@ class TestZaimCsvConverter:
         try:
             ZaimCsvConverter.execute()
         except InvalidInputCsvError as error:
-            with (directory_csv_output.target / 'error_invalid_row.csv').open(
-                    'r', encoding='UTF-8', newline='\n'
-            ) as file:
-                csv_reader = csv.reader(file)
-                for list_row_data in csv_reader:
-                    print(list_row_data)
+            TestZaimCsvConverter.debug_csv('error_undefined_content.csv', directory_csv_output)
+            TestZaimCsvConverter.debug_csv('error_invalid_row.csv', directory_csv_output)
             raise error
         files = sorted(directory_csv_output.target.rglob('*[!.gitkeep]'))
 
-        assert len(files) == 15
+        assert len(files) == 16
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file('waon201807.csv', [
             ZaimRowData(
@@ -194,6 +190,28 @@ class TestZaimCsvConverter:
                 'Amazon Japan G.K.', '', '0', '-11', '0', '', '', ''
             ),
         ])
+        checker.assert_file('amazon_201911_202004.csv', [
+            ZaimRowData(
+                '2020-04-25', 'payment', '大型出費', '家電', 'ヨドバシゴールドポイントカード・プラス', '',
+                '【日本正規代理店品】 Drobo 5N2 NASケース(3.5インチ×5bay) ギガビットイーサネット×2 PDR-5N2', '',
+                'Amazon Japan G.K.', '', '0', '79482', '0', '', '', ''
+            ),
+            ZaimRowData(
+                '2020-04-25', 'payment', '通信', '宅急便', 'ヨドバシゴールドポイントカード・プラス', '',
+                '（配送料・手数料）', '',
+                'Amazon Japan G.K.', '', '0', '410', '0', '', '', ''
+            ),
+            ZaimRowData(
+                '2020-04-25', 'payment', '通信', 'その他', 'ヨドバシゴールドポイントカード・プラス', '',
+                '（割引）', '',
+                'Amazon Japan G.K.', '', '0', '-410', '0', '', '', ''
+            ),
+            ZaimRowData(
+                '2020-04-25', 'payment', '通信', 'その他', 'ヨドバシゴールドポイントカード・プラス', '',
+                '（Amazonポイント）', '',
+                'Amazon Japan G.K.', '', '0', '-60', '0', '', '', ''
+            ),
+        ])
         checker.assert_file('view_card202005.csv', [
             ZaimRowData(
                 '2020-03-31', 'payment', '通信', 'その他', 'ビューカード', '',
@@ -214,6 +232,15 @@ class TestZaimCsvConverter:
                 '', '', '', '', '0', '0', '3000', '', '', ''
             ),
         ])
+
+    @staticmethod
+    def debug_csv(csv_file_name, directory_csv_output):
+        with (directory_csv_output.target / csv_file_name).open(
+                'r', encoding='UTF-8', newline='\n'
+        ) as file:
+            csv_reader = csv.reader(file)
+            for list_row_data in csv_reader:
+                print(list_row_data)
 
     # pylint: disable=unused-argument
     @staticmethod
