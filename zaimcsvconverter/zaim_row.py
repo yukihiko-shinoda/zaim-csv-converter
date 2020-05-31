@@ -1,18 +1,20 @@
 """This module implements abstract row model of Zaim CSV."""
 from abc import abstractmethod
-from typing import List, Union, Optional
-
 from datetime import datetime
+from typing import List, Optional, Union
 
-
-# pylint: disable=too-many-instance-attributes
+from zaimcsvconverter.rowconverters import (
+    ZaimIncomeRowConverter,
+    ZaimPaymentRowConverter,
+    ZaimRowConverter,
+    ZaimTransferRowConverter,
+)
 from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
-from zaimcsvconverter.rowconverters import ZaimRowConverter, ZaimIncomeRowConverter, ZaimPaymentRowConverter, \
-    ZaimTransferRowConverter
 
 
 class ZaimRow:
     """This class implements abstract row model of Zaim CSV."""
+
     def __init__(self, zaim_row_converter: ZaimRowConverter):
         self._date: datetime = zaim_row_converter.input_row.date
 
@@ -27,7 +29,8 @@ class ZaimRow:
 
 class ZaimIncomeRow(ZaimRow):
     """This class implements income row model of Zaim CSV."""
-    METHOD: str = 'income'
+
+    METHOD: str = "income"
 
     def __init__(self, zaim_row_converter: ZaimIncomeRowConverter):
         self._category = zaim_row_converter.category
@@ -53,13 +56,14 @@ class ZaimIncomeRow(ZaimRow):
             ZaimCsvFormat.AMOUNT_TRANSFER_EMPTY,
             ZaimCsvFormat.BALANCE_ADJUSTMENT_EMPTY,
             ZaimCsvFormat.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
-            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY
+            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY,
         ]
 
 
 class ZaimPaymentRow(ZaimRow):
     """This class implements payment row model of Zaim CSV."""
-    METHOD: str = 'payment'
+
+    METHOD: str = "payment"
 
     def __init__(self, zaim_row_converter: ZaimPaymentRowConverter):
         self._category_large = zaim_row_converter.category_large
@@ -88,13 +92,14 @@ class ZaimPaymentRow(ZaimRow):
             ZaimCsvFormat.AMOUNT_TRANSFER_EMPTY,
             ZaimCsvFormat.BALANCE_ADJUSTMENT_EMPTY,
             ZaimCsvFormat.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
-            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY
+            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY,
         ]
 
 
 class ZaimTransferRow(ZaimRow):
     """This class implements transfer row model of Zaim CSV."""
-    METHOD: str = 'transfer'
+
+    METHOD: str = "transfer"
 
     def __init__(self, zaim_row_converter: ZaimTransferRowConverter):
         self._cash_flow_source: str = zaim_row_converter.cash_flow_source
@@ -119,7 +124,7 @@ class ZaimTransferRow(ZaimRow):
             self._amount_transfer,
             ZaimCsvFormat.BALANCE_ADJUSTMENT_EMPTY,
             ZaimCsvFormat.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
-            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY
+            ZaimCsvFormat.SETTING_AGGREGATE_EMPTY,
         ]
 
 
@@ -138,6 +143,7 @@ class ZaimRowFactory:
     however, pytest-cov detect import line only for TYPE_CHECKING as uncovered row.
     @see https://github.com/python/mypy/issues/6101
     """
+
     @staticmethod
     def create(zaim_row_converter: ZaimRowConverter) -> ZaimRow:
         """This method creates Zaim row."""
@@ -147,4 +153,4 @@ class ZaimRowFactory:
             return ZaimPaymentRow(zaim_row_converter)
         if isinstance(zaim_row_converter, ZaimTransferRowConverter):
             return ZaimTransferRow(zaim_row_converter)
-        raise ValueError(f'Undefined Zaim row converter. Zaim row converter = {zaim_row_converter.__class__.__name__}')
+        raise ValueError(f"Undefined Zaim row converter. Zaim row converter = {zaim_row_converter.__class__.__name__}")

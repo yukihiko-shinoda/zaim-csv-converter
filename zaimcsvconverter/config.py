@@ -1,6 +1,8 @@
 """This module implements configuration."""
 from __future__ import annotations
+
 from dataclasses import dataclass, field
+
 from dataclasses_json import DataClassJsonMixin
 from yamldataclassconfig.config import YamlDataClassConfig
 
@@ -8,6 +10,7 @@ from yamldataclassconfig.config import YamlDataClassConfig
 @dataclass
 class WaonConfig(DataClassJsonMixin):
     """This class implements configuration for WAON."""
+
     account_name: str
     auto_charge_source: str
 
@@ -15,6 +18,7 @@ class WaonConfig(DataClassJsonMixin):
 @dataclass
 class GoldPointCardPlusConfig(DataClassJsonMixin):
     """This class implements configuration for GOLD POINT CARD+."""
+
     account_name: str
     skip_amazon_row: bool
 
@@ -22,6 +26,7 @@ class GoldPointCardPlusConfig(DataClassJsonMixin):
 @dataclass
 class MufgConfig(DataClassJsonMixin):
     """This class implements configuration for MUFG bank."""
+
     account_name: str
     transfer_account_name: str
 
@@ -29,6 +34,7 @@ class MufgConfig(DataClassJsonMixin):
 @dataclass
 class SFCardViewerConfig(DataClassJsonMixin):
     """This class implements configuration for SF Card Viewer."""
+
     account_name: str
     auto_charge_source: str
     skip_sales_goods_row: bool
@@ -42,6 +48,7 @@ class PasmoConfig(SFCardViewerConfig):
 @dataclass
 class AmazonConfig(DataClassJsonMixin):
     """This class implements configuration for Amazon.co.jp."""
+
     store_name_zaim: str
     payment_account_name: str
 
@@ -49,6 +56,7 @@ class AmazonConfig(DataClassJsonMixin):
 @dataclass
 class ViewCardConfig(DataClassJsonMixin):
     """This class implements configuration for View Card."""
+
     account_name: str
     skip_suica_row: bool
 
@@ -61,31 +69,25 @@ class SuicaConfig(SFCardViewerConfig):
 @dataclass
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
+
     waon: WaonConfig = field(  # type: ignore
-        default=None,
-        metadata={'dataclasses_json': {'mm_field': WaonConfig}}
+        default=None, metadata={"dataclasses_json": {"mm_field": WaonConfig}}
     )
     gold_point_card_plus: GoldPointCardPlusConfig = field(  # type: ignore
-        default=None,
-        metadata={'dataclasses_json': {'mm_field': GoldPointCardPlusConfig}}
+        default=None, metadata={"dataclasses_json": {"mm_field": GoldPointCardPlusConfig}}
     )
     mufg: MufgConfig = field(  # type: ignore
-        default=None,
-        metadata={'dataclasses_json': {'mm_field': MufgConfig}}
+        default=None, metadata={"dataclasses_json": {"mm_field": MufgConfig}}
     )
     pasmo: PasmoConfig = field(  # type: ignore
-        default=None,
-        metadata={'dataclasses_json': {'mm_field': PasmoConfig}}
+        default=None, metadata={"dataclasses_json": {"mm_field": PasmoConfig}}
     )
     amazon: AmazonConfig = field(  # type: ignore
-        default=None,
-        metadata={'dataclasses_json': {'mm_field': AmazonConfig}}
+        default=None, metadata={"dataclasses_json": {"mm_field": AmazonConfig}}
     )
     view_card: ViewCardConfig = field(  # type: ignore
-        default=None,
-        metadata={'dataclasses_json': {'mm_field': ViewCardConfig}}
+        default=None, metadata={"dataclasses_json": {"mm_field": ViewCardConfig}}
     )
     suica: PasmoConfig = field(  # type: ignore
-        default=None,
-        metadata={'dataclasses_json': {'mm_field': SuicaConfig}}
+        default=None, metadata={"dataclasses_json": {"mm_field": SuicaConfig}}
     )

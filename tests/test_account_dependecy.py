@@ -9,6 +9,7 @@ from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
 
 class TestAccount:
     """Tests for account dependency."""
+
     @staticmethod
     def test_convert_string_to_int_or_none():
         """
@@ -17,14 +18,18 @@ class TestAccount:
         Default csv herder should be None.
         """
         file_name_csv_convert = FileCsvConvert.WAON
-        regex_csv_file_name = r'.*waon.*\.csv'
+        regex_csv_file_name = r".*waon.*\.csv"
         god_slayer_factory = GodSlayerFactory()
         input_row_data_class = WaonRowData
         input_row_factory = WaonRowFactory()
         zaim_row_factory_selector = WaonZaimRowConverterFactory()
         account_dependency = AccountContext(
-            file_name_csv_convert, regex_csv_file_name, god_slayer_factory,
-            input_row_data_class, input_row_factory, zaim_row_factory_selector
+            file_name_csv_convert,
+            regex_csv_file_name,
+            god_slayer_factory,
+            input_row_data_class,
+            input_row_factory,
+            zaim_row_factory_selector,
         )
         assert account_dependency.file_csv_convert == file_name_csv_convert
         assert account_dependency.regex_csv_file_name == regex_csv_file_name

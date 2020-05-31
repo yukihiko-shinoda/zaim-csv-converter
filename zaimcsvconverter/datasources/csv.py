@@ -1,8 +1,8 @@
 """This module implements CSV Datasource"""
-from typing import List, Generator, Any, Optional
+from typing import Any, Generator, List, Optional
 
 from godslayer.csv.god_slayer import GodSlayer
-from godslayer.exceptions import InvalidRecordError, InvalidHeaderError, InvalidFooterError
+from godslayer.exceptions import InvalidFooterError, InvalidHeaderError, InvalidRecordError
 
 from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.exceptions import InvalidInputCsvError, LogicError
@@ -10,6 +10,7 @@ from zaimcsvconverter.exceptions import InvalidInputCsvError, LogicError
 
 class Csv(DataSource):
     """This class implements abstract CSV Datasource"""
+
     def __init__(self, god_slayer: GodSlayer):
         super().__init__()
         self.god_slayer = god_slayer
@@ -28,9 +29,11 @@ class Csv(DataSource):
 
     @property
     def is_invalid(self) -> bool:
-        return bool(
-            self.dictionary_invalid_record
-        ) or self.invalid_header_error is not None or self.invalid_footer_error is not None
+        return (
+            bool(self.dictionary_invalid_record)
+            or self.invalid_header_error is not None
+            or self.invalid_footer_error is not None
+        )
 
     def mark_current_record_as_error(self, list_error: List[InvalidRecordError]):
         if self.god_slayer.index is None:
@@ -40,6 +43,6 @@ class Csv(DataSource):
     def raise_error_if_invalid(self) -> None:
         if self.is_invalid:
             raise InvalidInputCsvError(
-                f'Undefined store name in convert table CSV exists in {self.god_slayer.path_to_file.name}. '
-                'Please check property AccountCsvConverter.list_undefined_store.'
+                f"Undefined store name in convert table CSV exists in {self.god_slayer.path_to_file.name}. "
+                "Please check property AccountCsvConverter.list_undefined_store."
             )

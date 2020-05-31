@@ -14,9 +14,10 @@ from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
 class TestInputCsvConverterForStore:
     """Tests for AccountCsvConverter for store based CSV."""
+
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.parametrize('path_file_csv_input', ('waon',), indirect=['path_file_csv_input'])
+    @pytest.mark.parametrize("path_file_csv_input", ("waon",), indirect=["path_file_csv_input"])
     def test_success(yaml_config_load, database_session_basic_store_waon, path_file_csv_input: Path, tmp_path):
         """
         The row to skip should be skipped.
@@ -25,37 +26,35 @@ class TestInputCsvConverterForStore:
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []
         input_csv_converter.execute()
-        with (tmp_path / path_file_csv_input.name).open('r', encoding='UTF-8', newline='\n') as file_zaim:
+        with (tmp_path / path_file_csv_input.name).open("r", encoding="UTF-8", newline="\n") as file_zaim:
             # noinspection PyUnusedLocal
             assert sum(1 for row in file_zaim) == 2
             file_zaim.seek(0)
             reader_zaim = csv.reader(file_zaim)
             list_zaim_row = reader_zaim.__next__()
             zaim_row_data = ZaimRowData(*list_zaim_row)
-            assert zaim_row_data.date == '日付'
-            assert zaim_row_data.method == '方法'
-            assert zaim_row_data.category_large == 'カテゴリ'
-            assert zaim_row_data.category_small == 'カテゴリの内訳'
-            assert zaim_row_data.cash_flow_source == '支払元'
-            assert zaim_row_data.cash_flow_target == '入金先'
-            assert zaim_row_data.item_name == '品目'
-            assert zaim_row_data.note == 'メモ'
-            assert zaim_row_data.store_name == 'お店'
-            assert zaim_row_data.currency == '通貨'
-            assert zaim_row_data.amount_income == '収入'
-            assert zaim_row_data.amount_payment == '支出'
-            assert zaim_row_data.amount_transfer == '振替'
-            assert zaim_row_data.balance_adjustment == '残高調整'
-            assert zaim_row_data.amount_before_currency_conversion == '通貨変換前の金額'
-            assert zaim_row_data.setting_aggregate == '集計の設定'
+            assert zaim_row_data.date == "日付"
+            assert zaim_row_data.method == "方法"
+            assert zaim_row_data.category_large == "カテゴリ"
+            assert zaim_row_data.category_small == "カテゴリの内訳"
+            assert zaim_row_data.cash_flow_source == "支払元"
+            assert zaim_row_data.cash_flow_target == "入金先"
+            assert zaim_row_data.item_name == "品目"
+            assert zaim_row_data.note == "メモ"
+            assert zaim_row_data.store_name == "お店"
+            assert zaim_row_data.currency == "通貨"
+            assert zaim_row_data.amount_income == "収入"
+            assert zaim_row_data.amount_payment == "支出"
+            assert zaim_row_data.amount_transfer == "振替"
+            assert zaim_row_data.balance_adjustment == "残高調整"
+            assert zaim_row_data.amount_before_currency_conversion == "通貨変換前の金額"
+            assert zaim_row_data.setting_aggregate == "集計の設定"
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.parametrize(
-        'path_file_csv_input', ('waon',), indirect=['path_file_csv_input']
-    )
+    @pytest.mark.parametrize("path_file_csv_input", ("waon",), indirect=["path_file_csv_input"])
     def test_stop_iteration_header(
-            yaml_config_load, database_session_basic_store_waon, path_file_csv_input: Path, tmp_path
+        yaml_config_load, database_session_basic_store_waon, path_file_csv_input: Path, tmp_path
     ):
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
@@ -65,11 +64,9 @@ class TestInputCsvConverterForStore:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.parametrize(
-        'path_file_csv_input', ('gold_point_card_plus_201912',), indirect=['path_file_csv_input']
-    )
+    @pytest.mark.parametrize("path_file_csv_input", ("gold_point_card_plus_201912",), indirect=["path_file_csv_input"])
     def test_stop_iteration_footer(
-            yaml_config_load, database_session_stores_gold_point_card_plus, path_file_csv_input: Path, tmp_path
+        yaml_config_load, database_session_stores_gold_point_card_plus, path_file_csv_input: Path, tmp_path
     ):
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
@@ -80,11 +77,11 @@ class TestInputCsvConverterForStore:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        'database_session_with_schema',
+        "database_session_with_schema",
         [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
-        indirect=['database_session_with_schema']
+        indirect=["database_session_with_schema"],
     )
-    @pytest.mark.parametrize('path_file_csv_input', ('waon',), indirect=['path_file_csv_input'])
+    @pytest.mark.parametrize("path_file_csv_input", ("waon",), indirect=["path_file_csv_input"])
     def test_key_error(yaml_config_load, database_session_with_schema, path_file_csv_input: Path, tmp_path):
         """
         Method should raise error when store isn't be find on database.
@@ -95,15 +92,16 @@ class TestInputCsvConverterForStore:
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == [
-            ['waon.csv', 'マクドナルド津田沼駅前店', '']
+            ["waon.csv", "マクドナルド津田沼駅前店", ""]
         ]
 
 
 class TestInputCsvConverterForItem:
     """Tests for AcountCsvConverter for item based CSV."""
+
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.parametrize('path_file_csv_input', ('amazon',), indirect=['path_file_csv_input'])
+    @pytest.mark.parametrize("path_file_csv_input", ("amazon",), indirect=["path_file_csv_input"])
     def test_key_error(yaml_config_load, database_session_with_schema, path_file_csv_input: Path, tmp_path):
         """
         Method should raise error when store isn't be find on database.
@@ -114,5 +112,5 @@ class TestInputCsvConverterForItem:
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == [
-            ['amazon.csv', '', 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト']
+            ["amazon.csv", "", "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"]
         ]

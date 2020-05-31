@@ -1,21 +1,23 @@
 """This module implements row model of CSV."""
 from __future__ import annotations
-from abc import abstractmethod, ABC
-from dataclasses import field, dataclass
+
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional, TypeVar, Generic, List, Callable, Any
+from typing import Any, Callable, Generic, List, Optional, TypeVar
 
 from errorcollector.error_collector import MultipleErrorCollector, SingleErrorCollector
-
 from godslayer.exceptions import InvalidRecordError
+
 from zaimcsvconverter.exceptions import UndefinedContentError
-from zaimcsvconverter.models import Store, Item, FileCsvConvertId
+from zaimcsvconverter.models import FileCsvConvertId, Item, Store
 
 
 # @see https://github.com/python/mypy/issues/5374
 @dataclass
 class InputRowData:  # type: ignore
     """This class is abstract class of input CSV row data."""
+
     list_error: List[InvalidRecordError] = field(default_factory=list, init=False)
     undefined_content_error: Optional[UndefinedContentError] = field(default=None, init=False)
 
@@ -41,6 +43,7 @@ class InputRowData:  # type: ignore
 @dataclass
 class InputStoreRowData(InputRowData, ABC):  # type: ignore
     """This class is abstract class of input CSV row data including column to find store (nullable OK)."""
+
     _store: Optional[Store] = field(default=None, init=False)
 
     @property
@@ -51,7 +54,7 @@ class InputStoreRowData(InputRowData, ABC):  # type: ignore
     @property
     def is_empty_store_name(self) -> bool:
         """This property returns whether store name is empty or not."""
-        return str.strip(self.store_name) == ''
+        return str.strip(self.store_name) == ""
 
 
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
@@ -59,6 +62,7 @@ class InputStoreRowData(InputRowData, ABC):  # type: ignore
 @dataclass
 class InputItemRowData(InputRowData, ABC):  # type: ignore
     """This class is abstract class of input CSV row data including column to find item (nullable OK)."""
+
     _item: Optional[Store] = field(default=None, init=False)
 
     @property
@@ -67,11 +71,12 @@ class InputItemRowData(InputRowData, ABC):  # type: ignore
         """This property returns item name."""
 
 
-TypeVarInputRowData = TypeVar('TypeVarInputRowData', bound=InputRowData)
+TypeVarInputRowData = TypeVar("TypeVarInputRowData", bound=InputRowData)
 
 
 class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
+
     def __init__(self, file_csv_convert_id: FileCsvConvertId, input_row_data: TypeVarInputRowData):
         self.list_error: List[InvalidRecordError] = []
         self._file_csv_convert_id: FileCsvConvertId = file_csv_convert_id
@@ -97,6 +102,7 @@ class InputRow(Generic[TypeVarInputRowData]):
 
 class InputStoreRow(InputRow):
     """This class implements row model of CSV including store name data (disallow empty)."""
+
     def __init__(self, file_csv_convert_id: FileCsvConvertId, input_store_row_data: InputStoreRowData):
         super().__init__(file_csv_convert_id, input_store_row_data)
         self.store_name: str = input_store_row_data.store_name
@@ -113,8 +119,7 @@ class InputStoreRow(InputRow):
     @property
     def validate(self) -> bool:
         self.stock_undefined_content_error(
-            lambda: self.store,
-            f'Store name has not been defined in convert table CSV. Store name = {self.store_name}'
+            lambda: self.store, f"Store name has not been defined in convert table CSV. Store name = {self.store_name}"
         )
         return super().validate or self.undefined_content_error is not None
 
@@ -133,15 +138,16 @@ class InputStoreRow(InputRow):
         return [
             file_csv_convert.value.name,
             self.store_name,
-            '',
+            "",
         ]
 
 
 class InputItemRow(InputRow):
     """This class implements row model of CSV including item name data (disallow empty)."""
+
     def __init__(self, file_csv_convert_id: FileCsvConvertId, input_item_row_data: InputItemRowData):
         super().__init__(file_csv_convert_id, input_item_row_data)
-        self.store_name: str = ''
+        self.store_name: str = ""
         self.item_name: str = input_item_row_data.item_name
         self._item: Optional[Item] = None
         self.undefined_content_error: Optional[UndefinedContentError] = None
@@ -161,8 +167,7 @@ class InputItemRow(InputRow):
     @property
     def validate(self) -> bool:
         self.stock_undefined_content_error(
-            lambda: self.item,
-            f'Item name has not been defined in convert table CSV. Item name = {self.item_name}'
+            lambda: self.item, f"Item name has not been defined in convert table CSV. Item name = {self.item_name}"
         )
         return super().validate or self.undefined_content_error is not None
 
@@ -185,7 +190,7 @@ class InputItemRow(InputRow):
         ]
 
 
-TypeVarInputRow = TypeVar('TypeVarInputRow', bound=InputRow)
+TypeVarInputRow = TypeVar("TypeVarInputRow", bound=InputRow)
 
 
 class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
@@ -203,6 +208,7 @@ class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
     however, pytest-cov detect import line only for TYPE_CHECKING as uncovered row.
     @see https://github.com/python/mypy/issues/6101
     """
+
     @abstractmethod
     def create(self, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
         """This method creates input row by input CSV row data."""

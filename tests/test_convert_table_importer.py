@@ -5,7 +5,7 @@ from typing import List
 import pytest
 
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
-from zaimcsvconverter.models import Store, Item
+from zaimcsvconverter.models import Item, Store
 
 
 @pytest.fixture
@@ -16,34 +16,41 @@ def fixture_convert_table_importer(request, resource_path_root):
 
 class TestConvertTableImporter:
     """Tests for ConvertTableImporter"""
+
     def _prepare_fixture(self):
         pass
 
     def test_success(self, database_session_with_schema, fixture_convert_table_importer):
         """CSV should import into appropriate table."""
         fixture_convert_table_importer.execute()
-        self.assert_store_equal([
-            [1, 3, '', None, None, None, None, 'お財布'],
-            [2, 3, 'トウキヨウガス', '東京ガス（株）', '水道・光熱', 'ガス料金', None, None],
-            [3, 3, 'ＧＰマーケテイング', None, None, None, None, 'ゴールドポイントカード・プラス'],
-            [4, 3, 'トウキヨウトスイドウ', '東京都水道局　経理部管理課', '水道・光熱', '水道料金', None, None],
-            [5, 1, 'ファミリーマートかぶと町永代', 'ファミリーマート　かぶと町永代通り店', '食費', '食料品', None, None],
-            [6, 1, '板橋前野町', 'イオンスタイル　板橋前野町', '食費', '食料品', 'その他', None],
-        ], database_session_with_schema)
-        self.assert_item_equal([
-            [1, 5, '（Amazon ポイント）', '通信', 'その他'],
-            [2, 5, '（Amazonポイント）', '通信', 'その他'],
-            [3, 5, '（割引）', '通信', 'その他'],
-            [4, 5, '（配送料・手数料）', '通信', '宅配便'],
-            [5, 5, 'Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト', '大型出費', '家電'],
+        self.assert_store_equal(
             [
-                6,
-                5,
-                'LITTLE TREEチェアマット 120×90cm厚1.5mm 床を保護 机の擦り傷防止滑り止め カート可能 透明大型デスク足元マット フローリング/畳/床暖房対応 (120×90cm)',
-                '住まい',
-                '家具'
+                [1, 3, "", None, None, None, None, "お財布"],
+                [2, 3, "トウキヨウガス", "東京ガス（株）", "水道・光熱", "ガス料金", None, None],
+                [3, 3, "ＧＰマーケテイング", None, None, None, None, "ゴールドポイントカード・プラス"],
+                [4, 3, "トウキヨウトスイドウ", "東京都水道局　経理部管理課", "水道・光熱", "水道料金", None, None],
+                [5, 1, "ファミリーマートかぶと町永代", "ファミリーマート　かぶと町永代通り店", "食費", "食料品", None, None],
+                [6, 1, "板橋前野町", "イオンスタイル　板橋前野町", "食費", "食料品", "その他", None],
             ],
-        ], database_session_with_schema)
+            database_session_with_schema,
+        )
+        self.assert_item_equal(
+            [
+                [1, 5, "（Amazon ポイント）", "通信", "その他"],
+                [2, 5, "（Amazonポイント）", "通信", "その他"],
+                [3, 5, "（割引）", "通信", "その他"],
+                [4, 5, "（配送料・手数料）", "通信", "宅配便"],
+                [5, 5, "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト", "大型出費", "家電"],
+                [
+                    6,
+                    5,
+                    "LITTLE TREEチェアマット 120×90cm厚1.5mm 床を保護 机の擦り傷防止滑り止め カート可能 透明大型デスク足元マット フローリング/畳/床暖房対応 (120×90cm)",
+                    "住まい",
+                    "家具",
+                ],
+            ],
+            database_session_with_schema,
+        )
 
     @staticmethod
     def assert_store_equal(expected_stores, database_session_with_schema):

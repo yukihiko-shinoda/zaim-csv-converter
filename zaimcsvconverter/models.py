@@ -3,13 +3,13 @@ from __future__ import annotations
 
 import warnings
 from abc import abstractmethod
-from enum import Enum
-from typing import List, Type, TypeVar, Optional, Generic
-
 from dataclasses import dataclass
+from enum import Enum
+from typing import Generic, List, Optional, Type, TypeVar
+
 from inflector import Inflector
 from sqlalchemy import Column, Integer, String, UniqueConstraint, exc
-from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta, declared_attr
+from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base, declared_attr
 from sqlalchemy.orm.exc import NoResultFound
 
 from zaimcsvconverter import Session
@@ -18,6 +18,7 @@ from zaimcsvconverter.session_manager import SessionManager
 
 class FileCsvConvertId(Enum):
     """This class implements file for CSV convert id on database."""
+
     WAON = 1
     GOLD_POINT_CARD_PLUS = 2
     MUFG = 3
@@ -34,18 +35,20 @@ class FileCsvConvertId(Enum):
 Base: DeclarativeMeta = declarative_base()
 
 # noinspection Pylint
-TypeVarBase = TypeVar('TypeVarBase', bound=Base)
+TypeVarBase = TypeVar("TypeVarBase", bound=Base)
 
 
 @dataclass
 class ConvertTableRowData:
     """This class implements abstract data class for wrapping list of convert table row model."""
+
     name: str
 
 
 @dataclass
 class StoreRowData(ConvertTableRowData):
     """This class implements data class for wrapping list of store convert table row model."""
+
     name_zaim: Optional[str] = None
     category_payment_large: Optional[str] = None
     category_payment_small: Optional[str] = None
@@ -56,11 +59,12 @@ class StoreRowData(ConvertTableRowData):
 @dataclass
 class ItemRowData(ConvertTableRowData):
     """This class implements data class for wrapping list of item and category row model."""
+
     category_payment_large: Optional[str] = None
     category_payment_small: Optional[str] = None
 
 
-TypeVarConvertTableRowData = TypeVar('TypeVarConvertTableRowData', bound=ConvertTableRowData)
+TypeVarConvertTableRowData = TypeVar("TypeVarConvertTableRowData", bound=ConvertTableRowData)
 
 
 class ConvertTableRecordMixin:
@@ -68,6 +72,7 @@ class ConvertTableRecordMixin:
     This class implements convert table mixin.
     @see https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/mixins.html
     """
+
     @declared_attr
     def __tablename__(self):
         return Inflector().pluralize(self.__name__.lower())
@@ -78,7 +83,7 @@ class ConvertTableRecordMixin:
     category_payment_large: Column = Column(String(255))
     category_payment_small: Column = Column(String(255))
 
-    __table_args__ = (UniqueConstraint('file_csv_convert_id', 'name', name='_name_on_each_account_uc'),)
+    __table_args__ = (UniqueConstraint("file_csv_convert_id", "name", name="_name_on_each_account_uc"),)
 
     @abstractmethod
     def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: TypeVarConvertTableRowData):
@@ -87,11 +92,12 @@ class ConvertTableRecordMixin:
 
     @staticmethod
     def _get_str_or_none(value: Optional[str]) -> Optional[str]:
-        return value if value != '' else None
+        return value if value != "" else None
 
     @classmethod
     def try_to_find(
-            cls: Type[ConvertTableRecordMixin], file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
+        cls: Type[ConvertTableRecordMixin], file_csv_convert_id: FileCsvConvertId, name: str
+    ) -> TypeVarBase:
         """This method select Store model from database. If record is not exist, raise NoResultFound."""
         try:
             return cls.find(file_csv_convert_id, name)
@@ -104,10 +110,9 @@ class ConvertTableRecordMixin:
     def find(cls: Type[ConvertTableRecordMixin], file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
         """This method select Store model from database."""
         with SessionManager() as session:
-            return session.query(cls).filter(
-                cls.file_csv_convert_id == file_csv_convert_id.value,
-                cls.name == name
-            ).one()
+            return (
+                session.query(cls).filter(cls.file_csv_convert_id == file_csv_convert_id.value, cls.name == name).one()
+            )
 
     @classmethod
     def save_all(cls: Type[TypeVarBase], models: List[TypeVarBase]) -> None:
@@ -122,6 +127,7 @@ with warnings.catch_warnings():
 
     class Store(Base, ConvertTableRecordMixin):
         """This class implements Store model to convert from account CSV to Zaim CSV."""
+
         name_zaim: Column = Column(String(255))
         category_income: Column = Column(String(255))
         transfer_target: Column = Column(String(255))
@@ -137,7 +143,7 @@ with warnings.catch_warnings():
         @property
         def is_amazon(self) -> bool:
             """This property returns whether this store is Amazon.co.jp or not."""
-            return self.name in {'Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ', 'Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ', 'ＡＭＡＺＯＮ．ＣＯ．ＪＰ'}
+            return self.name in {"Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ", "Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ"}
 
     class Item(Base, ConvertTableRecordMixin):
         """This class implements Store model to convert from account CSV to Zaim CSV."""
@@ -157,12 +163,14 @@ def initialize_database() -> None:
 @dataclass
 class ClassConvertTable(Generic[TypeVarConvertTableRowData]):
     """This class implements association of classes about convert table."""
+
     model: Type[ConvertTableRecordMixin]
     row_data: Type[TypeVarConvertTableRowData]
 
 
 class ConvertTableType(Enum):
     """This class implements types of convert table."""
+
     STORE = ClassConvertTable(Store, StoreRowData)
     ITEM = ClassConvertTable(Item, ItemRowData)
 

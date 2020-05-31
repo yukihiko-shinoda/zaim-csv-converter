@@ -1,16 +1,17 @@
 """This module implements row model of GOLD POINT CARD+ CSV version 201912."""
 import re
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import InputStoreRowData, InputStoreRow, InputRowFactory
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
 class ViewCardRowData(InputStoreRowData):
     """This class implements data class for wrapping list of VIEW CARD CSV row model."""
+
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     _used_date: str
     _used_place: str
@@ -34,29 +35,27 @@ class ViewCardRowData(InputStoreRowData):
 
     @property
     def billing_amount_current_time(self) -> int:
-        return int(self._billing_amount_current_time.replace(',', ''))
+        return int(self._billing_amount_current_time.replace(",", ""))
 
     @property
     def is_suica(self) -> bool:
         """This property returns whether this store is Amazon.co.jp or not."""
-        return bool(re.search(r'　オートチャージ$', self._used_place))
+        return bool(re.search(r"　オートチャージ$", self._used_place))
 
     @property
     def validate(self) -> bool:
-        self.stock_error(
-            lambda: self.date,
-            f'Invalid used date. Used date = {self._used_date}'
-        )
+        self.stock_error(lambda: self.date, f"Invalid used date. Used date = {self._used_date}")
         self.stock_error(
             lambda: self.billing_amount_current_time,
-            f'Invalid billing amount of current time. '
-            f'Billing amount of current time = {self._billing_amount_current_time}'
+            f"Invalid billing amount of current time. "
+            f"Billing amount of current time = {self._billing_amount_current_time}",
         )
         return super().validate
 
 
 class ViewCardRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
+
     def __init__(self, row_data: ViewCardRowData):
         super().__init__(FileCsvConvertId.VIEW_CARD, row_data)
         self.billing_amount_current_time: int = row_data.billing_amount_current_time
@@ -69,7 +68,6 @@ class ViewCardRow(InputStoreRow):
 
 class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
-    def create(
-            self, input_row_data: ViewCardRowData
-    ) -> ViewCardRow:
+
+    def create(self, input_row_data: ViewCardRowData) -> ViewCardRow:
         return ViewCardRow(input_row_data)

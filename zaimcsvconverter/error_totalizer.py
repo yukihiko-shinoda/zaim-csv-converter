@@ -1,14 +1,15 @@
 """This module implements totalize process of error."""
-from typing import List, Generator, Union
+from typing import Generator, List, Union
 
 from zaimcsvconverter.csv_exporter import CsvExporter
-from zaimcsvconverter.error_handler import UndefinedContentErrorHandler, FileNameForError
-from zaimcsvconverter.input_csv import InputData
+from zaimcsvconverter.error_handler import FileNameForError, UndefinedContentErrorHandler
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
+from zaimcsvconverter.input_csv import InputData
 
 
 class ErrorTotalizer:
     """This class implements totalize process of error."""
+
     def __init__(self):
         self.list_invalid_input_data: List[InputData] = []
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()
@@ -37,8 +38,7 @@ class ErrorTotalizer:
     @property
     def message(self):
         """This property returns error message."""
-        message = ('Some invalid input CSV file exists. '
-                   f'Please check {FileNameForError.INVALID_ROW.value}')
+        message = "Some invalid input CSV file exists. " f"Please check {FileNameForError.INVALID_ROW.value}"
         if self.undefined_content_error_handler.is_presented:
-            message = message + f' and {FileNameForError.UNDEFINED_CONTENT.value}'
-        return f'{message}.'
+            message = message + f" and {FileNameForError.UNDEFINED_CONTENT.value}"
+        return f"{message}."

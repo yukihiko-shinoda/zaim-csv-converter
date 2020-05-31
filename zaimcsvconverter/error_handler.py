@@ -7,12 +7,12 @@ from typing import List, Union
 import numpy
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputStoreRow, InputItemRow
+from zaimcsvconverter.inputcsvformats import InputItemRow, InputStoreRow
 
 
 class FileNameForError(Enum):
-    INVALID_ROW: str = 'error_invalid_row.csv'
-    UNDEFINED_CONTENT: str = 'error_undefined_content.csv'
+    INVALID_ROW: str = "error_invalid_row.csv"
+    UNDEFINED_CONTENT: str = "error_undefined_content.csv"
 
 
 class UndefinedContentErrorHandler:

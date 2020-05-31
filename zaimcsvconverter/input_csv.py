@@ -2,8 +2,8 @@
 from typing import List
 
 from godslayer.exceptions import InvalidRecordError
-from zaimcsvconverter.account import Account
 
+from zaimcsvconverter.account import Account
 from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import SkipRow
@@ -12,6 +12,7 @@ from zaimcsvconverter.row_processor import RecordProcessor
 
 class InputData:
     """This class implements model of input CSV."""
+
     def __init__(self, datasource: DataSource, account: Account):
         self.account = account
         self.data_source = datasource

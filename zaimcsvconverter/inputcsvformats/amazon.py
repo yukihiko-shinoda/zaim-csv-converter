@@ -1,16 +1,17 @@
 """This module implements row model of Amazon.co.jp CSV."""
 
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import InputItemRowData, InputItemRow, InputRowFactory
-from zaimcsvconverter.models import Store, StoreRowData, FileCsvConvertId
+from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData, InputRowFactory
+from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
 @dataclass
 class AmazonRowData(InputItemRowData):
     """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
+
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     _ordered_date: str
     order_id: str
@@ -49,27 +50,19 @@ class AmazonRowData(InputItemRowData):
 
     @property
     def validate(self) -> bool:
-        self.stock_error(
-            lambda: self.date,
-            f'Invalid ordered date. Ordered date = {self._ordered_date}'
-        )
-        self.stock_error(
-            lambda: self.price,
-            f'Invalid price. Price = {self._price}'
-        )
-        self.stock_error(
-            lambda: self.number,
-            f'Invalid number. Number = {self._number}'
-        )
+        self.stock_error(lambda: self.date, f"Invalid ordered date. Ordered date = {self._ordered_date}")
+        self.stock_error(lambda: self.price, f"Invalid price. Price = {self._price}")
+        self.stock_error(lambda: self.number, f"Invalid number. Number = {self._number}")
         return super().validate
 
 
 # pylint: disable=too-many-instance-attributes
 class AmazonRow(InputItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
+
     def __init__(self, row_data: AmazonRowData):
         super().__init__(FileCsvConvertId.AMAZON, row_data)
-        self._store: Store = Store(FileCsvConvertId.AMAZON, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
+        self._store: Store = Store(FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim))
         self.price: int = row_data.price
         self.number: int = row_data.number
 
@@ -80,5 +73,6 @@ class AmazonRow(InputItemRow):
 
 class AmazonRowFactory(InputRowFactory[AmazonRowData, AmazonRow]):
     """This class implements factory to create Amazon.co.jp CSV row instance."""
+
     def create(self, input_row_data: AmazonRowData) -> AmazonRow:
         return AmazonRow(input_row_data)
