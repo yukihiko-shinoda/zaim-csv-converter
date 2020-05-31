@@ -29,5 +29,5 @@ jobs:
         with:
           python-version: '3.8'
       - run: python -m pip install pipenv
-      - run: python -m pipenv install --dev
+      - run: python -m pipenv sync --dev
       - run: python -m pipenv run invoke style --check
