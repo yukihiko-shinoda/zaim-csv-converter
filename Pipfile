@@ -30,6 +30,7 @@ pytest = "*"
 pytest-cov = "*"
 pytest-resource-path = "*"
 radon = "*"
+invoke = "*"
 
 [scripts]
 start = "python convert.py"
