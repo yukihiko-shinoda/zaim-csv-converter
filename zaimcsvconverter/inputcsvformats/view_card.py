@@ -34,7 +34,6 @@ class ViewCardRowData(InputStoreRowData):
 
     @property
     def billing_amount_current_time(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return int(self._billing_amount_current_time.replace(',', ''))
 
     @property

@@ -153,11 +153,9 @@ class TestZaimRowFactory:
     def test_fail():
         """Factory should raise ValueError when input row is undefined type."""
         class UndefinedZaimRowConverter(ZaimRowConverter):
-            # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             pass
 
         class UndefinedInputRow(InputRow):
-            # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             pass
 
         class UndefinedInputRowData(InputRowData):

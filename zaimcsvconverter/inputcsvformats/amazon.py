@@ -41,12 +41,10 @@ class AmazonRowData(InputItemRowData):
 
     @property
     def price(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return int(self._price)
 
     @property
     def number(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return int(self._number)
 
     @property

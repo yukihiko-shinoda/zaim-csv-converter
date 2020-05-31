@@ -35,7 +35,6 @@ class GoldPointCardPlusRowData(InputStoreRowData):
 
     @property
     def used_amount(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return int(self._used_amount)
 
     @property

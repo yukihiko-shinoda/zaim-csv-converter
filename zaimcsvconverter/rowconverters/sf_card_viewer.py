@@ -48,19 +48,16 @@ class SFCardViewerZaimPaymentOnStationRowConverter(ZaimPaymentRowStoreConverter[
 
     @property
     def cash_flow_source(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return self.account_config.account_name
 
     @property
     def note(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return (f'{self.input_row.railway_company_name_enter} {self.input_row.station_name_enter}'
                 f' → {self.input_row.railway_company_name_exit} {self.input_row.store.name}')
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.used_amount
 
@@ -91,19 +88,16 @@ class SFCardViewerZaimRowConverterFactory(ZaimRowConverterFactory[SFCardViewerRo
     def create(self, input_row: SFCardViewerRow) -> ZaimRowConverter:
         if isinstance(input_row, SFCardViewerEnterExitRow):
             class ConcreteSFCardViewerZaimPaymentOnStationRowConverter(SFCardViewerZaimPaymentOnStationRowConverter):
-                # Reason: Raw code is simple enough. pylint: disable=missing-docstring
                 account_config = self._account_config()
             return ConcreteSFCardViewerZaimPaymentOnStationRowConverter(input_row)
         if isinstance(input_row, SFCardViewerEnterRow):
             class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
-                # Reason: Raw code is simple enough. pylint: disable=missing-docstring
                 account_config = self._account_config()
             return ConcreteSFCardViewerZaimTransferRowConverter(input_row)
         if isinstance(input_row, SFCardViewerRow):
             class ConcreteSFCardViewerZaimPaymentOnSomewhereRowConverter(
                     SFCardViewerZaimPaymentOnSomewhereRowConverter
             ):
-                # Reason: Raw code is simple enough. pylint: disable=missing-docstring
                 account_config = self._account_config()
             return ConcreteSFCardViewerZaimPaymentOnSomewhereRowConverter(input_row)
         raise ValueError(f'Unsupported row. class = {type(input_row)}')  # pragma: no cover

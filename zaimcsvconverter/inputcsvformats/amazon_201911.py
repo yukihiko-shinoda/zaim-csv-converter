@@ -42,17 +42,14 @@ class Amazon201911RowData(InputItemRowData):
 
     @property
     def price(self) -> Optional[int]:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return None if self._price == '' else int(self._price)
 
     @property
     def number(self) -> Optional[int]:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return None if self._number == '' else int(self._number)
 
     @property
     def total_order(self) -> Optional[int]:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return None if self._total_order == '' else int(self._total_order)
 
     @property
@@ -77,7 +74,6 @@ class Amazon201911RowData(InputItemRowData):
 
     @property
     def is_discount(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.total_order is not None and self.total_order < 0
 
 
@@ -100,7 +96,6 @@ class Amazon201911DiscountRow(Amazon201911Row):
 
     @property
     def total_order(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         if self._total_order is None:
             raise ValueError('Total order on discount row is not allowed empty.')
         return self._total_order
@@ -123,14 +118,12 @@ class Amazon201911PaymentRow(Amazon201911Row):
 
     @property
     def price(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         if self._price is None:
             raise ValueError('Price on payment row is not allowed empty.')
         return self._price
 
     @property
     def number(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         if self._number is None:
             raise ValueError('Number on payment row is not allowed empty.')
         return self._number

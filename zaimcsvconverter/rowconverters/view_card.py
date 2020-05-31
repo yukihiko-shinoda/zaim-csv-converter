@@ -9,12 +9,10 @@ class ViewCardZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[ViewCardRow])
     """This class implements convert steps from GOLD POINT CARD + input row to Zaim payment row."""
     @property
     def cash_flow_source(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.view_card.account_name
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.billing_amount_current_time
 

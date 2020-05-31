@@ -17,7 +17,6 @@ class MufgRowData(InputStoreRowData):
     """This class implements data class for wrapping list of MUFG bunk CSV row model."""
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     class Summary(Enum):
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         CARD = 'カ−ド'
         CARD_CONVENIENCE_STORE_ATM = 'カ−ドＣ１'
 
@@ -48,17 +47,14 @@ class MufgRowData(InputStoreRowData):
 
     @property
     def payed_amount(self) -> Optional[int]:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return Utility.convert_string_to_int_or_none(self._payed_amount)
 
     @property
     def deposit_amount(self) -> Optional[int]:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return Utility.convert_string_to_int_or_none(self._deposit_amount)
 
     @property
     def cash_flow_kind(self) -> MufgRowData.CashFlowKind:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.CashFlowKind(self._cash_flow_kind)
 
     @property
@@ -93,33 +89,27 @@ class MufgRow(InputRow):
 
     @property
     def is_income(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.cash_flow_kind == MufgRowData.CashFlowKind.INCOME
 
     @property
     def is_payment(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.cash_flow_kind == MufgRowData.CashFlowKind.PAYMENT
 
     @property
     def is_transfer_income(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.cash_flow_kind == MufgRowData.CashFlowKind.TRANSFER_INCOME
 
     @property
     def is_transfer_payment(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.cash_flow_kind == MufgRowData.CashFlowKind.TRANSFER_PAYMENT
 
     @property
     def is_by_card(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self._summary == MufgRowData.Summary.CARD.value or \
                self._summary == MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value
 
     @property
     def is_income_from_other_own_account(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.is_income and self.is_by_card
 
 
@@ -131,7 +121,6 @@ class MufgIncomeRow(MufgRow, ABC):
 
     @property
     def deposit_amount(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         if self._deposit_amount is None:
             raise ValueError('Deposit amount on income row is not allowed empty.')
         return self._deposit_amount
@@ -153,7 +142,6 @@ class MufgPaymentRow(MufgRow, ABC):
 
     @property
     def payed_amount(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         if self._payed_amount is None:
             raise ValueError('Payed amount on payment row is not allowed empty.')
         return self._payed_amount

@@ -10,12 +10,10 @@ class Amazon201911DiscountZaimPaymentRowConverter(ZaimPaymentRowItemConverter[Am
     """This class implements convert steps from Amazon input row to Zaim payment row."""
     @property
     def cash_flow_source(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.amazon.payment_account_name
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.total_order
 
@@ -25,12 +23,10 @@ class Amazon201911PaymentZaimPaymentRowConverter(ZaimPaymentRowItemConverter[Ama
     """This class implements convert steps from Amazon input row to Zaim payment row."""
     @property
     def cash_flow_source(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.amazon.payment_account_name
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.price * self.input_row.number
 

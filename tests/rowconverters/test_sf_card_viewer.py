@@ -28,7 +28,6 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
         )
 
         class ConcreteSFCardViewerZaimPaymentOnStationRowConverter(SFCardViewerZaimPaymentOnStationRowConverter):
-            # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             account_config = CONFIG.pasmo
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(ConcreteSFCardViewerZaimPaymentOnStationRowConverter(sf_card_viewer_row))
@@ -59,7 +58,6 @@ class TestSFCardViewerZaimTransferRowConverter:
         )
 
         class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
-            # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             account_config = CONFIG.pasmo
         zaim_row = ZaimRowFactory.create(ConcreteSFCardViewerZaimTransferRowConverter(sf_card_viewer_row))
         assert isinstance(zaim_row, ZaimTransferRow)
