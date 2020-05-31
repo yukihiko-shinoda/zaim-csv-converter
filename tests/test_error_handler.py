@@ -4,7 +4,6 @@ from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRow
 from zaimcsvconverter.inputcsvformats.waon import WaonRow
-from zaimcsvconverter.models import FileCsvConvertId
 
 
 class TestErrorHandler:
@@ -23,15 +22,15 @@ class TestErrorHandler:
         error_handler_a = UndefinedContentErrorHandler()
         error_handler_a.append(
             FileCsvConvert.WAON,
-            WaonRow(FileCsvConvertId.WAON, InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI)
+            WaonRow(InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI)
         )
         assert error_handler_a.list_error == [error_waon]
         error_handler_b = UndefinedContentErrorHandler()
         error_handler_b.append(
-            FileCsvConvert.AMAZON, AmazonRow(FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+            FileCsvConvert.AMAZON, AmazonRow(InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         )
         error_handler_b.append(
-            FileCsvConvert.AMAZON, AmazonRow(FileCsvConvertId.AMAZON, InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+            FileCsvConvert.AMAZON, AmazonRow(InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         )
         assert error_handler_b.list_error == [error_amazon, error_amazon]
         error_handler_a.extend(error_handler_b)

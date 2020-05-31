@@ -79,9 +79,9 @@ class Amazon201911RowData(InputItemRowData):
 
 class Amazon201911Row(InputItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: Amazon201911RowData):
-        super().__init__(file_csv_convert_id, row_data)
-        self._store: Store = Store(file_csv_convert_id, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
+    def __init__(self, row_data: Amazon201911RowData):
+        super().__init__(FileCsvConvertId.AMAZON, row_data)
+        self._store: Store = Store(FileCsvConvertId.AMAZON, StoreRowData('Amazon.co.jp', CONFIG.amazon.store_name_zaim))
 
     @property
     def store(self) -> Store:
@@ -90,8 +90,8 @@ class Amazon201911Row(InputItemRow):
 
 class Amazon201911DiscountRow(Amazon201911Row):
     """This class implements row model of Amazon.co.jp CSV."""
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: Amazon201911RowData):
-        super().__init__(file_csv_convert_id, row_data)
+    def __init__(self, row_data: Amazon201911RowData):
+        super().__init__(row_data)
         self._total_order: Optional[int] = row_data.total_order
 
     @property
@@ -111,8 +111,8 @@ class Amazon201911DiscountRow(Amazon201911Row):
 
 class Amazon201911PaymentRow(Amazon201911Row):
     """This class implements row model of Amazon.co.jp CSV."""
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: Amazon201911RowData):
-        super().__init__(file_csv_convert_id, row_data)
+    def __init__(self, row_data: Amazon201911RowData):
+        super().__init__(row_data)
         self._price: Optional[int] = row_data.price
         self._number: Optional[int] = row_data.number
 
@@ -143,8 +143,8 @@ class Amazon201911PaymentRow(Amazon201911Row):
 
 class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911Row]):
     """This class implements factory to create Amazon.co.jp CSV row instance."""
-    def create(self, file_csv_convert_id: FileCsvConvertId, input_row_data: Amazon201911RowData) -> Amazon201911Row:
+    def create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:
         # @see https://github.com/furyutei/amzOrderHistoryFilter/issues/3#issuecomment-543645937
         if input_row_data.is_discount:
-            return Amazon201911DiscountRow(file_csv_convert_id, input_row_data)
-        return Amazon201911PaymentRow(file_csv_convert_id, input_row_data)
+            return Amazon201911DiscountRow(input_row_data)
+        return Amazon201911PaymentRow(input_row_data)

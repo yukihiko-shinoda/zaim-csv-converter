@@ -83,7 +83,7 @@ class TestGoldPointCardPlusRow:
         Arguments should set into properties.
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
-        row = GoldPointCardPlusRow(FileCsvConvertId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_row_data)
+        row = GoldPointCardPlusRow(gold_point_card_plus_row_data)
         assert row.date == expected_date
         assert isinstance(row.store, Store)
         # pylint: disable=protected-access
@@ -102,5 +102,5 @@ class TestGoldPointCardPlusRowFactory:
     def test_create(argument, expected, database_session_stores_gold_point_card_plus):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(FileCsvConvertId.MUFG, argument)
+        gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(argument)
         assert isinstance(gold_point_card_plus_row, expected)

@@ -57,8 +57,8 @@ class ViewCardRowData(InputStoreRowData):
 
 class ViewCardRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: ViewCardRowData):
-        super().__init__(file_csv_convert_id, row_data)
+    def __init__(self, row_data: ViewCardRowData):
+        super().__init__(FileCsvConvertId.VIEW_CARD, row_data)
         self.billing_amount_current_time: int = row_data.billing_amount_current_time
         self._is_suica: bool = row_data.is_suica
 
@@ -70,6 +70,6 @@ class ViewCardRow(InputStoreRow):
 class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
     def create(
-            self, file_csv_convert_id: FileCsvConvertId, input_row_data: ViewCardRowData
+            self, input_row_data: ViewCardRowData
     ) -> ViewCardRow:
-        return ViewCardRow(file_csv_convert_id, input_row_data)
+        return ViewCardRow(input_row_data)

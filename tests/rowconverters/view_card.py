@@ -64,5 +64,5 @@ class TestGoldPointCardPlus201912ZaimRowConverterFactory:
     )
     def test_select_factory(yaml_config_load, database_session_with_schema, input_row_data, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = ViewCardRowFactory().create(FileCsvConvertId.VIEW_CARD, input_row_data)
+        input_row = ViewCardRowFactory().create(input_row_data)
         assert isinstance(ViewCardZaimRowConverterFactory().create(input_row), expected)

@@ -52,8 +52,8 @@ class GoldPointCardPlusRowData(InputStoreRowData):
 
 class GoldPointCardPlusRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: GoldPointCardPlusRowData):
-        super().__init__(file_csv_convert_id, row_data)
+    def __init__(self, row_data: GoldPointCardPlusRowData):
+        super().__init__(FileCsvConvertId.GOLD_POINT_CARD_PLUS, row_data)
         self.used_amount: int = row_data.used_amount
 
     @property
@@ -63,7 +63,5 @@ class GoldPointCardPlusRow(InputStoreRow):
 
 class GoldPointCardPlusRowFactory(InputRowFactory[GoldPointCardPlusRowData, GoldPointCardPlusRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
-    def create(
-            self, file_csv_convert_id: FileCsvConvertId, input_row_data: GoldPointCardPlusRowData
-    ) -> GoldPointCardPlusRow:
-        return GoldPointCardPlusRow(file_csv_convert_id, input_row_data)
+    def create(self, input_row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
+        return GoldPointCardPlusRow(input_row_data)

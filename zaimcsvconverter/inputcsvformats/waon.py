@@ -75,8 +75,8 @@ class WaonRowData(InputStoreRowData):
 
 class WaonRow(InputStoreRow):
     """This class implements row model of WAON CSV."""
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: WaonRowData):
-        super().__init__(file_csv_convert_id, row_data)
+    def __init__(self, row_data: WaonRowData):
+        super().__init__(FileCsvConvertId.WAON, row_data)
         self.used_amount: int = row_data.used_amount
         self.use_kind: WaonRowData.UseKind = row_data.use_kind
 
@@ -104,8 +104,8 @@ class WaonRow(InputStoreRow):
 
 class WaonChargeRow(WaonRow):
     """This class implements charge row model of WAON CSV."""
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: WaonRowData):
-        super().__init__(file_csv_convert_id, row_data)
+    def __init__(self, row_data: WaonRowData):
+        super().__init__(row_data)
         self._charge_kind: WaonRowData.ChargeKind = row_data.charge_kind
 
     @property
@@ -137,7 +137,7 @@ class WaonChargeRow(WaonRow):
 
 class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
     """This class implements factory to create WAON CSV row instance."""
-    def create(self, file_csv_convert_id: FileCsvConvertId, input_row_data: WaonRowData) -> WaonRow:
+    def create(self, input_row_data: WaonRowData) -> WaonRow:
         if input_row_data.use_kind in (WaonRowData.UseKind.CHARGE, WaonRowData.UseKind.AUTO_CHARGE):
-            return WaonChargeRow(file_csv_convert_id, input_row_data)
-        return WaonRow(file_csv_convert_id, input_row_data)
+            return WaonChargeRow(input_row_data)
+        return WaonRow(input_row_data)

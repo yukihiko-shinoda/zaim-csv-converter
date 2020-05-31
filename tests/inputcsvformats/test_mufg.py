@@ -46,7 +46,7 @@ class TestMufgIncomeRow:
     @staticmethod
     def test_init(yaml_config_load, database_session_stores_mufg):
         """Arguments should set into properties."""
-        mufg_row = MufgStoreRow(FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_INCOME_CARD)
+        mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_INCOME_CARD)
         assert mufg_row.date == datetime(2018, 10, 1, 0, 0, 0)
         assert isinstance(mufg_row.store, Store)
         assert mufg_row.store.name_zaim is None
@@ -58,7 +58,7 @@ class TestMufgPaymentRow:
     @staticmethod
     def test_init(yaml_config_load, database_session_stores_mufg):
         """Arguments should set into properties."""
-        mufg_row = MufgStoreRow(FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_PAYMENT)
+        mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_PAYMENT)
         assert mufg_row.date == datetime(2018, 11, 5, 0, 0, 0)
         assert isinstance(mufg_row.store, Store)
         assert mufg_row.store.name_zaim is None
@@ -72,9 +72,7 @@ class TestMufgIncomeFromSelfRow:
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
-            MufgIncomeFromSelfRow(
-                FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_PAYMENT
-            ).deposit_amount
+            MufgIncomeFromSelfRow(InstanceResource.ROW_DATA_MUFG_PAYMENT).deposit_amount
         assert str(error.value) == 'Deposit amount on income row is not allowed empty.'
 
 
@@ -86,9 +84,7 @@ class TestMufgPaymentToSelfRow:
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
-            MufgPaymentToSelfRow(
-                FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_INCOME_CARD
-            ).payed_amount
+            MufgPaymentToSelfRow(InstanceResource.ROW_DATA_MUFG_INCOME_CARD).payed_amount
         assert str(error.value) == 'Payed amount on payment row is not allowed empty.'
 
 
@@ -99,7 +95,7 @@ class TestMufgTransferIncomeRow:
     def test_init(yaml_config_load, database_session_stores_mufg):
         """Arguments should set into properties."""
         store_name = '三菱UFJ銀行'
-        mufg_row = MufgStoreRow(FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
+        mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
         assert mufg_row.date == datetime(2018, 8, 20, 0, 0, 0)
         assert isinstance(mufg_row.store, Store)
         assert mufg_row.store.name_zaim == store_name
@@ -112,7 +108,7 @@ class TestMufgTransferPaymentRow:
     def test_init(yaml_config_load, database_session_stores_mufg):
         """Arguments should set into properties."""
         store_name = '東京都水道局　経理部管理課'
-        mufg_row = MufgStoreRow(FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS)
+        mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS)
         assert mufg_row.date == datetime(2018, 11, 28, 0, 0, 0)
         assert isinstance(mufg_row.store, Store)
         assert mufg_row.store.name_zaim == store_name
@@ -135,7 +131,7 @@ class TestMufgRowFactory:
                             expected_is_transfer_income, expected_is_transfer_payment):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        mufg_row = MufgRowFactory().create(FileCsvConvertId.MUFG, argument)
+        mufg_row = MufgRowFactory().create(argument)
         assert isinstance(mufg_row, MufgRow)
         assert mufg_row.is_income == expected_is_income
         assert mufg_row.is_payment == expected_is_payment
@@ -148,4 +144,4 @@ class TestMufgRowFactory:
         """Method should raise ValueError when note is not defined."""
         with pytest.raises(ValueError):
             # pylint: disable=protected-access
-            MufgRowFactory().create(FileCsvConvertId.MUFG, InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)
+            MufgRowFactory().create(InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)
