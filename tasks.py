@@ -42,10 +42,7 @@ def black(context, check=False) -> Result:
     return context.run("black {} {}".format(black_options, " ".join(PYTHON_DIRS)), warn=True)
 
 
-@task(help={
-    'publish': "Publish the result via coveralls",
-    'xml': "Export report as xml format",
-})
+@task(help={"publish": "Publish the result via coveralls", "xml": "Export report as xml format"})
 def coverage(context, publish=False, xml=False):
     """
     Create coverage report
