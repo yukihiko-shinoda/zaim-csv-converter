@@ -4,8 +4,6 @@ from pathlib import Path
 from typing import Optional
 
 import pytest
-from _pytest.fixtures import FixtureRequest  # type: ignore
-from fixturefilehandler import ResourceFileDeployer
 from fixturefilehandler.file_paths import RelativeDeployFilePath
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -13,33 +11,6 @@ from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, Zai
 from tests.testlibraries.row_data import InvalidRowErrorRowData, ZaimRowData
 from zaimcsvconverter.exceptions import InvalidInputCsvError
 from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
-
-
-@pytest.fixture
-def directory_csv_convert_table(resource_path):
-    """This fixture prepares directory for CSV files of convert tables."""
-    csv_convert_table_file_path = create_relative_deploy_file_path(resource_path, "csvconverttable")
-    ResourceFileDeployer.setup(csv_convert_table_file_path)
-    yield csv_convert_table_file_path
-    ResourceFileDeployer.teardown(csv_convert_table_file_path)
-
-
-@pytest.fixture
-def directory_csv_input(request: FixtureRequest, resource_path):
-    """This fixture prepares directory for CSV files of input."""
-    csv_input_file_path = create_relative_deploy_file_path(resource_path, "csvinput", f"csvinput_{request.node.name}")
-    ResourceFileDeployer.setup(csv_input_file_path)
-    yield csv_input_file_path
-    ResourceFileDeployer.teardown(csv_input_file_path)
-
-
-@pytest.fixture
-def directory_csv_output(resource_path):
-    """This fixture prepares directory for CSV files of output."""
-    csv_output_file_path = create_relative_deploy_file_path(resource_path, "csvoutput")
-    ResourceFileDeployer.setup(csv_output_file_path)
-    yield csv_output_file_path
-    ResourceFileDeployer.teardown(csv_output_file_path)
 
 
 def create_relative_deploy_file_path(

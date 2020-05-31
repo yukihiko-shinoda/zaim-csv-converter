@@ -1,17 +1,9 @@
 """Tests for convert_table_importer.py."""
-from pathlib import Path
 from typing import List
 
 import pytest
 
-from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 from zaimcsvconverter.models import Item, Store
-
-
-@pytest.fixture
-def fixture_convert_table_importer(request, resource_path_root):
-    """This fixture prepares ConvertTableImporter instance."""
-    return ConvertTableImporter(resource_path_root / Path(__file__).stem / request.node.name)
 
 
 class TestConvertTableImporter:

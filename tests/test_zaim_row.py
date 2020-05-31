@@ -1,5 +1,6 @@
 """Tests for zaim_row.py."""
 from datetime import datetime
+from typing import Type
 
 import pytest
 
@@ -10,7 +11,7 @@ from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
 from zaimcsvconverter.inputcsvformats.mufg import MufgIncomeFromOthersRow
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
-from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow
+from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
 from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.rowconverters import ZaimRowConverter
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
@@ -194,7 +195,12 @@ class TestZaimRowFactory:
         indirect=["database_session_with_schema"],
     )
     def test_success(
-        yaml_config_load, database_session_with_schema, zaim_row_converter_class, input_row, waon_row_data, expected
+        yaml_config_load,
+        database_session_with_schema,
+        zaim_row_converter_class,
+        input_row: Type[WaonRow],
+        waon_row_data: WaonRowData,
+        expected,
     ):
         """Factory should create appropriate type of Zaim row."""
         assert isinstance(ZaimRowFactory.create(zaim_row_converter_class(input_row(waon_row_data))), expected)
@@ -203,6 +209,7 @@ class TestZaimRowFactory:
     def test_fail():
         """Factory should raise ValueError when input row is undefined type."""
 
+        # Reason: This class is just for test. pylint: disable=too-few-public-methods
         class UndefinedZaimRowConverter(ZaimRowConverter):
             pass
 

@@ -13,6 +13,8 @@ from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 from zaimcsvconverter.models import FileCsvConvertId, ItemRowData, StoreRowData
 
 
+# Reason: Guarding for the future when it comes to calculating constants
+# pylint: disable=too-few-public-methods
 class InstanceResource:
     """This class implements fixture of instance."""
 

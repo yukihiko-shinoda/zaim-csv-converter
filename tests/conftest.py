@@ -2,12 +2,15 @@
 from pathlib import Path
 
 import pytest
+from fixturefilehandler import ResourceFileDeployer
 from fixturefilehandler.factories import DeployerFactory
 from fixturefilehandler.file_paths import YamlConfigFilePathBuilder
 
+from tests.test_zaim_csv_converter import create_relative_deploy_file_path
 from tests.testlibraries.database_for_test import DatabaseForTest
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter import CONFIG
+from zaimcsvconverter import CONFIG, Session
+from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 
 
 @pytest.fixture
@@ -157,3 +160,44 @@ def get_input_csv_file_path(request, resource_path) -> Path:
         suffix = f"_{suffix}"
     file_name = f"{request.function.__name__}{suffix}.csv"
     return resource_path.parent / file_name
+
+
+@pytest.fixture
+def fixture_convert_table_importer(resource_path):
+    """This fixture prepares ConvertTableImporter instance."""
+    return ConvertTableImporter(resource_path)
+
+
+@pytest.fixture
+def database_session_remove():
+    """This fixture remove created session after test."""
+    yield
+    # Remove it, so that the next test gets a new Session()
+    Session.remove()
+
+
+@pytest.fixture
+def directory_csv_convert_table(resource_path):
+    """This fixture prepares directory for CSV files of convert tables."""
+    csv_convert_table_file_path = create_relative_deploy_file_path(resource_path, "csvconverttable")
+    ResourceFileDeployer.setup(csv_convert_table_file_path)
+    yield csv_convert_table_file_path
+    ResourceFileDeployer.teardown(csv_convert_table_file_path)
+
+
+@pytest.fixture
+def directory_csv_input(request, resource_path):
+    """This fixture prepares directory for CSV files of input."""
+    csv_input_file_path = create_relative_deploy_file_path(resource_path, "csvinput", f"csvinput_{request.node.name}")
+    ResourceFileDeployer.setup(csv_input_file_path)
+    yield csv_input_file_path
+    ResourceFileDeployer.teardown(csv_input_file_path)
+
+
+@pytest.fixture
+def directory_csv_output(resource_path):
+    """This fixture prepares directory for CSV files of output."""
+    csv_output_file_path = create_relative_deploy_file_path(resource_path, "csvoutput")
+    ResourceFileDeployer.setup(csv_output_file_path)
+    yield csv_output_file_path
+    ResourceFileDeployer.teardown(csv_output_file_path)
