@@ -5,7 +5,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowFactory, Amazon201911RowData, \
     Amazon201911PaymentRow, Amazon201911DiscountRow
-from zaimcsvconverter.rowconverters.amazon201911 import Amazon201911DiscountZaimPaymentRowConverter, \
+from zaimcsvconverter.rowconverters.amazon_201911 import Amazon201911DiscountZaimPaymentRowConverter, \
     Amazon201911PaymentZaimPaymentRowConverter, Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
