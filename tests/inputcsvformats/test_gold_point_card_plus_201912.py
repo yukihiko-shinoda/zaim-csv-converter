@@ -69,7 +69,7 @@ class TestGoldPointCardPlus201912Row:
         Arguments should set into properties.
         :param GoldPointCardPlus201912RowData gold_point_card_plus_201912_row_data:
         """
-        row = GoldPointCardPlus201912Row(FileCsvConvertId.GOLD_POINT_CARD_PLUS, gold_point_card_plus_201912_row_data)
+        row = GoldPointCardPlus201912Row(gold_point_card_plus_201912_row_data)
         assert row.date == expected_date
         assert isinstance(row.store, Store)
         # pylint: disable=protected-access
@@ -80,7 +80,7 @@ class TestGoldPointCardPlus201912Row:
     @staticmethod
     def test_is_row_to_skip(database_session_stores_gold_point_card_plus):
         assert GoldPointCardPlus201912Row(
-            FileCsvConvertId.GOLD_POINT_CARD_PLUS, InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN
+            InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN
         ).is_row_to_skip is False
 
 
@@ -94,7 +94,5 @@ class TestGoldPointCardPlus201912RowFactory:
     def test_create(argument, expected, database_session_stores_gold_point_card_plus):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        gold_point_card_plus_row = GoldPointCardPlus201912RowFactory().create(
-            FileCsvConvertId.GOLD_POINT_CARD_PLUS, argument
-        )
+        gold_point_card_plus_row = GoldPointCardPlus201912RowFactory().create(argument)
         assert isinstance(gold_point_card_plus_row, expected)

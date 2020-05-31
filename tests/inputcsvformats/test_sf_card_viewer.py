@@ -54,7 +54,6 @@ class TestSFCardViewerRow:
         Arguments should set into properties.
         """
         sf_card_viewer_row = SFCardViewerEnterRow(
-            FileCsvConvertId.SF_CARD_VIEWER,
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
             CONFIG.pasmo
         )
@@ -78,7 +77,7 @@ class TestSFCardViewerSalesGoodsRow:
     ):
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
         sf_card_viewer_row = SFCardViewerRow(
-            FileCsvConvertId.SF_CARD_VIEWER, InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, CONFIG.pasmo
+            InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, CONFIG.pasmo
         )
         assert sf_card_viewer_row.is_row_to_skip == expected
 
@@ -101,7 +100,6 @@ class TestSFCardViewerExitByWindowRow:
     ):
         """Method should return true when entered station is as same as exit station and used amount is 0."""
         sf_card_viewer_row = SFCardViewerEnterExitRow(
-            FileCsvConvertId.SF_CARD_VIEWER,
             sf_card_viewer_row_data,
             CONFIG.pasmo
         )
@@ -132,9 +130,7 @@ class TestSFCardViewerRowFactory:
                             expected_is_exit_by_window, expected_is_bus_tram):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
-            FileCsvConvertId.SF_CARD_VIEWER, argument
-        )
+        sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(argument)
         assert isinstance(sf_card_viewer_row, SFCardViewerRow)
         assert sf_card_viewer_row.is_transportation == expected_is_transportation
         assert sf_card_viewer_row.is_sales_goods == expected_is_sales_goods
@@ -148,5 +144,5 @@ class TestSFCardViewerRowFactory:
         with pytest.raises(ValueError):
             # pylint: disable=protected-access
             SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
-                FileCsvConvertId.SF_CARD_VIEWER, InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE
+                InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE
             )

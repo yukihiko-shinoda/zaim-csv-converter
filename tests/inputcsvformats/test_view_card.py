@@ -72,7 +72,7 @@ class TestViewCardRow:
         :type view_card_row_data: ViewCardRowData
         """
         # noinspection PyTypeChecker
-        row = ViewCardRow(FileCsvConvertId.VIEW_CARD, view_card_row_data)
+        row = ViewCardRow(view_card_row_data)
         assert row.date == expected_date
         # pylint: disable=protected-access
         if expected_store_name_zaim is None:
@@ -97,5 +97,5 @@ class TestViewCardRowFactory:
     def test_create(argument, expected, database_session_stores_view_card):
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
-        view_card_row = ViewCardRowFactory().create(FileCsvConvertId.VIEW_CARD, argument)
+        view_card_row = ViewCardRowFactory().create(argument)
         assert isinstance(view_card_row, expected)

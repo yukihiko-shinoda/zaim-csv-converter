@@ -71,7 +71,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
 
     def create_input_row_instance(self, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
         """This method creates input row instance by input row data instance."""
-        return self.input_row_factory.create(self.file_csv_convert.value.id, input_row_data)
+        return self.input_row_factory.create(input_row_data)
 
     def convert_input_row_to_zaim_row(self, input_row: TypeVarInputRow) -> ZaimRow:
         """This method converts imput row into zaim row."""

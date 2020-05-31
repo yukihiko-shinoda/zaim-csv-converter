@@ -22,7 +22,6 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
         expected_amount = 195
         config_account_name = 'PASMO'
         sf_card_viewer_row = SFCardViewerEnterExitRow(
-            FileCsvConvertId.SF_CARD_VIEWER,
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
             CONFIG.pasmo
         )
@@ -52,7 +51,6 @@ class TestSFCardViewerZaimTransferRowConverter:
         config_account_name = 'PASMO'
         config_auto_charge_source = 'TOKYU CARD'
         sf_card_viewer_row = SFCardViewerRow(
-            FileCsvConvertId.SF_CARD_VIEWER,
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION,
             CONFIG.pasmo
         )
@@ -100,7 +98,7 @@ class TestSFCardViewerZaimRowConverterFactory:
     )
     def test_success(yaml_config_load, database_session_with_schema, input_row_data: SFCardViewerRowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(FileCsvConvertId.SF_CARD_VIEWER, input_row_data)
+        input_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(input_row_data)
         factory = SFCardViewerZaimRowConverterFactory(lambda: CONFIG.pasmo).create(input_row)
         # noinspection PyTypeChecker
         assert isinstance(factory, expected)

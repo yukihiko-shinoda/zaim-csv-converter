@@ -204,5 +204,5 @@ class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
     @see https://github.com/python/mypy/issues/6101
     """
     @abstractmethod
-    def create(self, file_csv_convert_id: FileCsvConvertId, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
+    def create(self, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
         """This method creates input row by input CSV row data."""
