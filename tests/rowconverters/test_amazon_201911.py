@@ -5,7 +5,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowFactory, Amazon201911RowData, \
     Amazon201911PaymentRow, Amazon201911DiscountRow
-from zaimcsvconverter.rowconverters.amazon201911 import Amazon201911DiscountZaimPaymentRowConverter, \
+from zaimcsvconverter.rowconverters.amazon_201911 import Amazon201911DiscountZaimPaymentRowConverter, \
     Amazon201911PaymentZaimPaymentRowConverter, Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
@@ -65,14 +65,12 @@ class TestAmazon201911ZaimRowConverterFactory:
     @pytest.mark.parametrize(
         'database_session_with_schema, input_row_data, expected',
         [
-            # Case when Amazon payment
             ([InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT], InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT,
              Amazon201911PaymentZaimPaymentRowConverter),
-            # Case when Amazon discount
             ([InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_AMAZON_POINT],
              InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT,
              Amazon201911DiscountZaimPaymentRowConverter),
-        ], indirect=['database_session_with_schema']
+        ], indirect=['database_session_with_schema'], ids=["Case when Amazon payment", "Case when Amazon discount"]
     )
     def test(yaml_config_load, database_session_with_schema, input_row_data: Amazon201911RowData, expected):
         """Input row should convert to suitable ZaimRow by transfer target."""

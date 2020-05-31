@@ -5,8 +5,8 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowFactory, \
-    Amazon201911RowData, Amazon201911DiscountRow, Amazon201911PaymentRow
-from zaimcsvconverter.models import Store, Item, FileCsvConvertId
+    Amazon201911RowData, Amazon201911DiscountRow, Amazon201911PaymentRow, Amazon201911ShippingHandlingRow
+from zaimcsvconverter.models import Store, Item
 
 
 class TestAmazon201911RowData:
@@ -47,7 +47,7 @@ class TestAmazon201911RowData:
         assert row_data.note == note
         assert row_data.price == 4980
         assert row_data.number == 1
-        assert row_data.subtotal_price_item == subtotal_price_item
+        assert row_data.subtotal_price_item == 6276
         assert row_data.destination == destination
         assert row_data.status == status
         assert row_data.billing_address == billing_address
@@ -86,6 +86,17 @@ class TestAmazon201911DiscountRow:
             # noinspection PyStatementEffect
             Amazon201911DiscountRow(InstanceResource.ROW_DATA_AMAZON_201911_HUMMING_FINE).total_order
         assert str(error.value) == 'Total order on discount row is not allowed empty.'
+
+
+class TestAmazon201911ShippingHandlingRow:
+    """Tests for Amazon201911ShippingHandlingRow."""
+    @staticmethod
+    def test_subtotal_price_item_fail():
+        with pytest.raises(ValueError) as error:
+            # pylint: disable=expression-not-assigned
+            # noinspection PyStatementEffect
+            Amazon201911ShippingHandlingRow(InstanceResource.ROW_DATA_AMAZON_201911_HUMMING_FINE).subtotal_price_item
+        assert str(error.value) == 'Subtotal price item on shipping handling row is not allowed empty.'
 
 
 class TestAmazon201911PaymentRow:
@@ -133,6 +144,7 @@ class TestAmazon201911RowFactory:
     @pytest.mark.parametrize('argument, expected', [
         (InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT, Amazon201911PaymentRow),
         (InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT, Amazon201911DiscountRow),
+        (InstanceResource.ROW_DATA_AMAZON_201911_SHIPPING_HANDLING, Amazon201911ShippingHandlingRow)
     ])
     def test_create(argument: Amazon201911RowData, expected, yaml_config_load, database_session_item):
         """Method should return Store model when note is defined."""

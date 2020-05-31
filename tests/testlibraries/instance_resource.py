@@ -103,6 +103,14 @@ class InstanceResource:
         'https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00'
         '?ie=UTF8&orderID=234-5678901-2345678&print=1',
         '')
+    ROW_DATA_AMAZON_201911_SHIPPING_HANDLING = Amazon201911RowData(
+        "2020/4/25", "234-5678901-2345678", "（配送料・手数料）", "※（注文全体）注文合計に反映", "", "", "410", "", "", "",
+        "テストアカウント", "", "", "", "",
+        "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=docs_ya_os_i"
+        "?ie=UTF8&orderID=234-5678901-2345678",
+        "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00"
+        "?ie=UTF8&orderID=234-5678901-2345678&print=1",""
+    )
     ROW_DATA_AMAZON_201911_HUMMING_FINE = Amazon201911RowData(
         '2019/11/09', '234-5678901-2345678', '【大容量】ハミングファイン 柔軟剤 リフレッシュグリーンの香り 詰め替え 1200ml',
         '販売： Amazon Japan G.K.  コンディション： 新品', '609', '1', '', '', 'ローソン桜塚',

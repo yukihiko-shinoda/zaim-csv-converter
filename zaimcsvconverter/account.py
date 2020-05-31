@@ -23,7 +23,7 @@ from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData,
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.amazon201911 import Amazon201911ZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.amazon_201911 import Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
@@ -52,6 +52,10 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
             header=[
                 '注文日', '注文番号', '商品名', '付帯情報', '価格', '個数', '商品小計', '注文合計', 'お届け先', '状態', '請求先',
                 '請求額', 'クレカ請求日', 'クレカ請求額', 'クレカ種類', '注文概要URL', '領収書URL', '商品URL'
+            ],
+            partition=[
+                r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",
+                r".*", r".*", r".*", ""
             ],
             encoding='utf-8-sig',
         ),
