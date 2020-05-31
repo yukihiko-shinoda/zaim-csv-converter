@@ -11,7 +11,6 @@ from zaimcsvconverter.inputcsvformats import InputStoreRow, InputItemRow
 
 
 class FileNameForError(Enum):
-    # Reason: Raw code is simple enough. pylint: disable=missing-docstring
     INVALID_ROW: str = 'error_invalid_row.csv'
     UNDEFINED_CONTENT: str = 'error_undefined_content.csv'
 

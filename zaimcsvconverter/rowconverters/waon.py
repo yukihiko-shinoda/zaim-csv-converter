@@ -10,12 +10,10 @@ class WaonZaimIncomeRowConverter(ZaimIncomeRowStoreConverter[WaonRow]):
     """This class implements convert steps from WAON input row to Zaim income row."""
     @property
     def cash_flow_target(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.waon.account_name
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.used_amount
 
@@ -25,12 +23,10 @@ class WaonZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[WaonRow]):
     """This class implements convert steps from WAON input row to Zaim payment row."""
     @property
     def cash_flow_source(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.waon.account_name
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.used_amount
 

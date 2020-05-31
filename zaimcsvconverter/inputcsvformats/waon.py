@@ -42,17 +42,14 @@ class WaonRowData(InputStoreRowData):
 
     @property
     def used_amount(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return Utility.convert_yen_string_to_int(self._used_amount)
 
     @property
     def use_kind(self) -> WaonRowData.UseKind:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.UseKind(self._use_kind)
 
     @property
     def charge_kind(self) -> WaonRowData.ChargeKind:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.ChargeKind(self._charge_kind)
 
     @property
@@ -90,22 +87,18 @@ class WaonRow(InputStoreRow):
 
     @property
     def is_payment(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.use_kind == WaonRowData.UseKind.PAYMENT
 
     @property
     def is_charge(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.use_kind == WaonRowData.UseKind.CHARGE
 
     @property
     def is_auto_charge(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.use_kind == WaonRowData.UseKind.AUTO_CHARGE
 
     @property
     def is_download_point(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.use_kind == WaonRowData.UseKind.DOWNLOAD_POINT
 
 
@@ -117,7 +110,6 @@ class WaonChargeRow(WaonRow):
 
     @property
     def charge_kind(self):
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         if self._charge_kind == WaonRowData.ChargeKind.NULL:
             raise ValueError(f'Charge kind on charge row is not allowed "{WaonRowData.ChargeKind.NULL.value}".')
         return self._charge_kind
@@ -132,17 +124,14 @@ class WaonChargeRow(WaonRow):
 
     @property
     def is_charge_by_point(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.POINT
 
     @property
     def is_charge_by_cash(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.CASH
 
     @property
     def is_charge_by_bank_account(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.BANK_ACCOUNT
 
 

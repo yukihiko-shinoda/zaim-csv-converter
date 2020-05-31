@@ -43,12 +43,10 @@ class SFCardViewerRowData(InputStoreRowData):
 
     @property
     def used_amount(self) -> int:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return int(self._used_amount)
 
     @property
     def note(self) -> SFCardViewerRowData.Note:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return SFCardViewerRowData.Note(self._note)
 
     @property
@@ -90,27 +88,22 @@ class SFCardViewerRow(InputRow):
 
     @property
     def is_transportation(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.note == SFCardViewerRowData.Note.EMPTY
 
     @property
     def is_sales_goods(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.note == SFCardViewerRowData.Note.SALES_GOODS
 
     @property
     def is_auto_charge(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.note == SFCardViewerRowData.Note.AUTO_CHARGE
 
     @property
     def is_exit_by_window(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.note == SFCardViewerRowData.Note.EXIT_BY_WINDOW
 
     @property
     def is_bus_tram(self) -> bool:
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return self.note == SFCardViewerRowData.Note.BUS_TRAM
 
 

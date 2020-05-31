@@ -21,12 +21,10 @@ class MufgZaimIncomeRowConverter(ZaimIncomeRowStoreConverter[MufgIncomeFromOther
     """This class implements convert steps from MUFG input row to Zaim income row."""
     @property
     def cash_flow_target(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.mufg.account_name
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.deposit_amount
 
@@ -36,12 +34,10 @@ class MufgZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[MufgPaymentToSome
     """This class implements convert steps from MUFG input row to Zaim payment row."""
     @property
     def cash_flow_source(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.mufg.account_name
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.payed_amount
 
@@ -60,12 +56,10 @@ class MufgAbstractIncomeZaimTransferRowConverter(MufgZaimTransferRowConverter[Ty
 
     @property
     def cash_flow_target(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.mufg.account_name
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.deposit_amount
 
@@ -74,7 +68,6 @@ class MufgAbstractPaymentZaimTransferRowConverter(MufgZaimTransferRowConverter[T
     """This class implements convert steps from MUFG payment input row [MufgPaymentRow]to Zaim transfer row."""
     @property
     def cash_flow_source(self) -> str:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         return CONFIG.mufg.account_name
 
     @property
@@ -84,7 +77,6 @@ class MufgAbstractPaymentZaimTransferRowConverter(MufgZaimTransferRowConverter[T
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=missing-docstring
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.payed_amount
 

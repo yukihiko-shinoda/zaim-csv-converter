@@ -25,7 +25,6 @@ class ErrorTotalizer:
 
     @property
     def is_presented(self):
-        # Reason: Raw code is simple enough. pylint: disable=missing-docstring
         return bool(self.list_invalid_input_data)
 
     def export_to_csv(self, directory_csv_output):
