@@ -1,3 +1,4 @@
+"""Tests for zaimcsvconverter.errorreporters.input_csv_error_reporter"""
 from typing import Any, Generator, List
 
 import pytest
@@ -8,9 +9,15 @@ from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceE
 
 
 class TestInputCsvErrorReporter:
+    """Tests for InputCsvErrorReporter"""
+
     @staticmethod
     def test_error():
+        """Method create() should raise appropriate error."""
+
         class Unexpected(DataSource):
+            """Unexpected class."""
+
             def __iter__(self) -> Generator[List[Any], None, None]:
                 pass
 

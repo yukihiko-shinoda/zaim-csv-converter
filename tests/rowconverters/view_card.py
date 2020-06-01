@@ -4,7 +4,6 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRow, ViewCardRowFactory
-from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.rowconverters.view_card import ViewCardZaimPaymentRowConverter, ViewCardZaimRowConverterFactory
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
@@ -17,7 +16,7 @@ class TestViewCardZaimPaymentRowConverter:
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        ("view_card_row_data, expected_date, " "expected_store_name_zaim, expected_use_amount"),
+        "view_card_row_data, expected_date, expected_store_name_zaim, expected_use_amount",
         [(InstanceResource.ROW_DATA_VIEW_CARD_ANNUAL_FEE, "2020-03-31", "ビューカード　ビューカードセンター", 524, False)],
     )
     def test(
@@ -29,7 +28,7 @@ class TestViewCardZaimPaymentRowConverter:
         database_session_stores_view_card,
     ):
         """Arguments should set into properties."""
-        row = ViewCardRow(FileCsvConvertId.VIEW_CARD, view_card_row_data)
+        row = ViewCardRow(view_card_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(ViewCardZaimPaymentRowConverter(row))
         assert isinstance(zaim_row, ZaimPaymentRow)

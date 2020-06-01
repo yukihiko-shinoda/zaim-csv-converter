@@ -23,10 +23,11 @@ class FilePathConvertTable(Enum):
 
     @property
     def path(self):
-        if os.name == "nt":
-            return "c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable" / self.value
-        else:
-            return "/root/workspace/zaim-csv-convereter/csvconvettable" / self.value
+        return (
+            "c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable" / self.value
+            if os.name == "nt"
+            else "/root/workspace/zaim-csv-convereter/csvconvettable" / self.value
+        )
 
 
 class TestFileCsvConvert:

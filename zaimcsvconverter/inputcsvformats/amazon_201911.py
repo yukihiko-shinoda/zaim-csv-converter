@@ -169,6 +169,8 @@ class Amazon201911DiscountRow(Amazon201911Row):
 
 
 class Amazon201911ShippingHandlingRow(Amazon201911Row):
+    """Row model of shipping / handling of Amazon.co.jp CSV."""
+
     def __init__(self, row_data):
         super().__init__(row_data)
         self._subtotal_price_item: Optional[int] = row_data.subtotal_price_item

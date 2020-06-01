@@ -15,7 +15,7 @@ from zaimcsvconverter.models import Base, ConvertTableRowData, FileCsvConvertId,
 class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Factory for Store model."""
 
-    class Meta:
+    class Meta:  # Reason: Model. pylint: disable=too-few-public-methods
         """Settings for factory_boy"""
 
         model = Store
@@ -25,7 +25,7 @@ class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
 class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Factory for Store model."""
 
-    class Meta:
+    class Meta:  # Reason: Model. pylint: disable=too-few-public-methods
         """Settings for factory_boy"""
 
         model = Item

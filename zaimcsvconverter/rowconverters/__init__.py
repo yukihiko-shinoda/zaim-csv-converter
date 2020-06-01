@@ -10,6 +10,7 @@ TypeVarInputStoreRow = TypeVar("TypeVarInputStoreRow", bound=InputStoreRow)
 TypeVarInputItemRow = TypeVar("TypeVarInputItemRow", bound=InputItemRow)
 
 
+# Reason: Abstract class. pylint: disable=too-few-public-methods
 class ZaimRowConverter(Generic[TypeVarInputRow], ABC):
     """This class implements convert steps from input row to Zaim row."""
 
