@@ -35,7 +35,7 @@ class WaonZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[WaonRow]):
     @property
     def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.used_amount
+        return -self.input_row.used_amount if self.input_row.is_payment_cancel else self.input_row.used_amount
 
 
 class WaonZaimTransferRowConverter(ZaimTransferRowConverter[WaonRow]):
@@ -61,7 +61,7 @@ class WaonZaimRowConverterFactory(ZaimRowConverterFactory[WaonRow]):
     def create(self, input_row: WaonRow) -> ZaimRowConverter:
         if isinstance(input_row, WaonChargeRow) and input_row.is_charge_by_point:
             return WaonZaimIncomeRowConverter(input_row)
-        if input_row.is_payment:
+        if input_row.is_payment or input_row.is_payment_cancel:
             return WaonZaimPaymentRowConverter(input_row)
         if isinstance(input_row, WaonChargeRow) and (
             input_row.is_auto_charge or input_row.is_charge_by_bank_account or input_row.is_charge_by_cash

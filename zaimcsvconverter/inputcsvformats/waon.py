@@ -18,6 +18,7 @@ class WaonRowData(InputStoreRowData):
         """This class implements constant of user kind in WAON CSV."""
 
         PAYMENT = "支払"
+        PAYMENT_CANCEL = "支払取消"
         CHARGE = "チャージ"
         AUTO_CHARGE = "オートチャージ"
         DOWNLOAD_POINT = "ポイントダウンロード"
@@ -84,6 +85,10 @@ class WaonRow(InputStoreRow):
     @property
     def is_payment(self) -> bool:
         return self.use_kind == WaonRowData.UseKind.PAYMENT
+
+    @property
+    def is_payment_cancel(self) -> bool:
+        return self.use_kind == WaonRowData.UseKind.PAYMENT_CANCEL
 
     @property
     def is_charge(self) -> bool:
