@@ -184,6 +184,26 @@ class InstanceResource:
         "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi?ie=UTF8&orderID=234-5678901-2345678",
         "https://www.amazon.co.jp/gp/product/B07146XVB5/ref=od_aui_detailpages00?ie=UTF8&psc=1",
     )
+    ROW_DATA_AMAZON_201911_MS_Learn_IN_MANGA = Amazon201911RowData(
+        "2020/6/6",
+        "D01-2345678-9012345",
+        "マンガでわかる MS Learn: 無料でAI・クラウド・アプリ開発を学ぼう",
+        "[Kindle 版] 湊川あい, 日本マイクロソフト株式会社  販売: Amazon Services International, Inc.",
+        "0",
+        "1",
+        "0",
+        "0",
+        "",
+        "デジタル注文: 2020/6/6",
+        "テストアカウント",
+        "0",
+        "",
+        "",
+        "",
+        "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=docs_ya_os_i?ie=UTF8&orderID=D01-2345678-9012345",
+        "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00?ie=UTF8&orderID=D01-2345678-9012345&print=1",
+        "https://www.amazon.co.jp/dp/B089M7LC28/ref=docs-os-doi_0",
+    )
     ROW_DATA_VIEW_CARD_ITABASHI_STATION_AUTO_CHARGE = ViewCardRowData(
         "2020/03/21", "板橋駅　オートチャージ", "3000", "", "3000", "１回払", "", "3000", "", "", ""
     )

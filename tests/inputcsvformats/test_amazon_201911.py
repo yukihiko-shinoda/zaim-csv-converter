@@ -9,6 +9,7 @@ from zaimcsvconverter.inputcsvformats.amazon_201911 import (
     Amazon201911PaymentRow,
     Amazon201911RowData,
     Amazon201911RowFactory,
+    Amazon201911RowToSkip,
     Amazon201911ShippingHandlingRow,
 )
 from zaimcsvconverter.models import Item, Store
@@ -174,6 +175,7 @@ class TestAmazon201911RowFactory:
             (InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT, Amazon201911PaymentRow),
             (InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT, Amazon201911DiscountRow),
             (InstanceResource.ROW_DATA_AMAZON_201911_SHIPPING_HANDLING, Amazon201911ShippingHandlingRow),
+            (InstanceResource.ROW_DATA_AMAZON_201911_MS_Learn_IN_MANGA, Amazon201911RowToSkip),
         ],
     )
     def test_create(argument: Amazon201911RowData, expected, yaml_config_load, database_session_item):
