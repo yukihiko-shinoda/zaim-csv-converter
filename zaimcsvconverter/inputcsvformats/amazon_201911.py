@@ -128,6 +128,20 @@ class Amazon201911RowData(InputItemRowData):
             and self.number > 0
         )
 
+    @property
+    def is_free_kindle(self) -> bool:
+        return (
+            self.price == 0
+            and self.total_order == 0
+            and self.subtotal_price_item == 0
+            and self.destination == ""
+            and self.status.startswith("デジタル注文:")
+            and self.billing_amount == "0"
+            and self.credit_card_billing_date == ""
+            and self.credit_card_billing_amount == ""
+            and self.credit_card_identity == ""
+        )
+
 
 class Amazon201911Row(InputItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
@@ -223,7 +237,7 @@ class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911Ro
 
     def create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:
         # @see https://github.com/furyutei/amzOrderHistoryFilter/issues/3#issuecomment-543645937
-        if input_row_data.is_billing_to_credit_card:
+        if input_row_data.is_billing_to_credit_card or input_row_data.is_free_kindle:
             return Amazon201911RowToSkip(input_row_data)
         if input_row_data.is_discount:
             return Amazon201911DiscountRow(input_row_data)
