@@ -154,6 +154,18 @@ class Account(Enum):
         GoldPointCardPlus201912RowFactory(),
         GoldPointCardPlus201912ZaimRowConverterFactory(),
     )
+    GOLD_POINT_CARD_PLUS_202009 = AccountContext(
+        FileCsvConvert.GOLD_POINT_CARD_PLUS,
+        r".*gold_point_card_plus_202009.*\.csv",
+        GodSlayerFactory(
+            header=[r".*　様", r"[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}", "ゴールドポイントカードプラス", "", "", "", ""],
+            footer=["^$", "^$", "^$", "^$", "^$", r"^\d*$", "^$"],
+            encoding="shift_jis_2004",
+        ),
+        GoldPointCardPlus201912RowData,
+        GoldPointCardPlus201912RowFactory(),
+        GoldPointCardPlus201912ZaimRowConverterFactory(),
+    )
     MUFG = AccountContext(
         FileCsvConvert.MUFG,
         r".*mufg.*\.csv",

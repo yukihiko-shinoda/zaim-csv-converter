@@ -200,8 +200,10 @@ class InstanceResource:
         "",
         "",
         "",
-        "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=docs_ya_os_i?ie=UTF8&orderID=D01-2345678-9012345",
-        "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00?ie=UTF8&orderID=D01-2345678-9012345&print=1",
+        "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html"
+        "/ref=docs_ya_os_i?ie=UTF8&orderID=D01-2345678-9012345",
+        "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html"
+        "/ref=ppx_yo_dt_b_dpi_o00?ie=UTF8&orderID=D01-2345678-9012345&print=1",
         "https://www.amazon.co.jp/dp/B089M7LC28/ref=docs-os-doi_0",
     )
     ROW_DATA_VIEW_CARD_ITABASHI_STATION_AUTO_CHARGE = ViewCardRowData(
