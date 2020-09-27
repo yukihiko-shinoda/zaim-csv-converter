@@ -17,6 +17,9 @@ class FilePathInput(Enum):
     GOLD_POINT_CARD_PLUS_201912 = Path(
         "c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\gold_point_card_plus_201912_202004.csv"
     )
+    GOLD_POINT_CARD_PLUS_202009 = Path(
+        "c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\gold_point_card_plus_202009_202009.csv"
+    )
     MUFG = Path("c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\mufg201804.csv")
     PASMO = Path("c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\pasmo201804.csv")
     AMAZON = Path("c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvinput\\amazon201804.csv")

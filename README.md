@@ -90,7 +90,8 @@ pipenv install
 ---|---
 WAON|waon
 ヨドバシゴールドポイントカード・プラス 2019 年 11 月以前の形式|gold_point_card_plus
-ヨドバシゴールドポイントカード・プラス 2019 年 12 月以降の形式|gold_point_card_plus_201912
+ヨドバシゴールドポイントカード・プラス 2019 年 12 月～2020 年 8 月時点の形式|gold_point_card_plus_201912
+ヨドバシゴールドポイントカード・プラス 2020 年 9 月以降の形式|gold_point_card_plus_202009
 三菱 UFJ 銀行|mufg
 PASMO|pasmo
 Amazon.co.jp 2019 年 11 月以前の形式|amazon
