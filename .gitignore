@@ -2,6 +2,7 @@
 .env
 .idea
 .mypy_cache
+.venv
 __pycache__/
 csvconverttable/*
 !csvconverttable/.gitkeep

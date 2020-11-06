@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  converter:
+    volumes:
+      # These volumes hinder pytest in development environment
+      # since pytest moves these directories to evacute for test.
+      - ./config.yml:/workspace/config.yml
+      - ./csvconverttable:/workspace/csvconverttable
+      - ./csvinput:/workspace/csvinput
+      - ./csvoutput:/workspace/csvoutput

@@ -1,0 +1,15 @@
+.devcontainer
+.github
+.idea
+.mypy_cache
+.pytest_cache
+.venv
+csvconverttable
+csvinput
+csvoutput
+docs
+htmlcov
+.env
+.gitignore
+config.yml
+coverage.xml

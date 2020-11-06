@@ -22,6 +22,8 @@ coverage = "*"
 factory_boy = "*"
 fixturefilehandler = "*"
 flake8 = "*"
+# To use flake8 --radon-show-closures
+flake8-polyfill = "*"
 invoke = "*"
 isort = "*"
 mypy = "*"
