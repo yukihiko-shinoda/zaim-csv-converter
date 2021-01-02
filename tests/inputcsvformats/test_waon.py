@@ -125,9 +125,7 @@ class TestWaonRowFactory:
         ],
     )
     def test_create(
-        database_session_basic_store_waon,
-        argument,
-        property_name_true,
+        database_session_basic_store_waon, argument, property_name_true,
     ):
         """Method should return Store model when use kind is defined."""
         list_property_use_kind = [
