@@ -22,6 +22,8 @@ class WaonRowData(InputStoreRowData):
         CHARGE = "チャージ"
         AUTO_CHARGE = "オートチャージ"
         DOWNLOAD_POINT = "ポイントダウンロード"
+        TRANSFER_WAON_UPLOAD = "WAON移行（アップロード）"
+        TRANSFER_WAON_DOWNLOAD = "WAON移行（ダウンロード）"
 
     class ChargeKind(Enum):
         """This class implements constant of charge kind in WAON CSV."""
@@ -80,7 +82,7 @@ class WaonRow(InputStoreRow):
     @property
     def is_row_to_skip(self) -> bool:
         """This property returns whether this row should be skipped or not."""
-        return self.is_download_point
+        return self.is_download_point or self.is_transfer_waon_upload or self.is_transfer_waon_download
 
     @property
     def is_payment(self) -> bool:
@@ -101,6 +103,14 @@ class WaonRow(InputStoreRow):
     @property
     def is_download_point(self) -> bool:
         return self.use_kind == WaonRowData.UseKind.DOWNLOAD_POINT
+
+    @property
+    def is_transfer_waon_upload(self) -> bool:
+        return self.use_kind == WaonRowData.UseKind.TRANSFER_WAON_UPLOAD
+
+    @property
+    def is_transfer_waon_download(self) -> bool:
+        return self.use_kind == WaonRowData.UseKind.TRANSFER_WAON_DOWNLOAD
 
 
 class WaonChargeRow(WaonRow):
