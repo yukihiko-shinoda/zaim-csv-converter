@@ -87,6 +87,8 @@ class TestWaonRow:
     def test_is_row_to_skip(database_session_basic_store_waon):
         """WaonRow which express download point should be row to skip."""
         assert WaonRow(WaonRowData("2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-")).is_row_to_skip
+        assert WaonRow(WaonRowData("2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（アップロード）", "-")).is_row_to_skip
+        assert WaonRow(WaonRowData("2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（ダウンロード）", "-")).is_row_to_skip
 
 
 class TestWaonChargeRow:
@@ -114,27 +116,31 @@ class TestWaonRowFactory:
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        "argument, expected_is_payment, expected_is_charge, expected_is_auto_charge, expected_is_download_point",
+        "argument, property_name_true",
         [
-            (InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI, True, False, False, False),
-            (InstanceResource.ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO, False, True, False, False),
-            (InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO, False, False, True, False),
-            (InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO, False, False, False, True),
+            (InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI, "is_payment"),
+            (InstanceResource.ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO, "is_charge"),
+            (InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO, "is_auto_charge"),
+            (InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO, "is_download_point"),
         ],
     )
     def test_create(
         database_session_basic_store_waon,
         argument,
-        expected_is_payment,
-        expected_is_charge,
-        expected_is_auto_charge,
-        expected_is_download_point,
+        property_name_true,
     ):
         """Method should return Store model when use kind is defined."""
+        list_property_use_kind = [
+            "is_payment",
+            "is_payment_cancel",
+            "is_charge",
+            "is_auto_charge",
+            "is_download_point",
+            "is_transfer_waon_upload",
+            "is_transfer_waon_download",
+        ]
         # pylint: disable=protected-access
         waon_row = WaonRowFactory().create(argument)
         assert isinstance(waon_row, WaonRow)
-        assert waon_row.is_payment == expected_is_payment
-        assert waon_row.is_charge == expected_is_charge
-        assert waon_row.is_auto_charge == expected_is_auto_charge
-        assert waon_row.is_download_point == expected_is_download_point
+        for property_use_kind in list_property_use_kind:
+            assert getattr(waon_row, property_use_kind) == (property_use_kind == property_name_true)
