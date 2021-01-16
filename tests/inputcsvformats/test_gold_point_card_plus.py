@@ -87,6 +87,14 @@ class TestGoldPointCardPlusRow:
                 "Amazon Japan G.K.",
                 True,
             ),
+            # Since アマゾン注文履歴フィルタ doesn't suppport return
+            # see: https://github.com/furyutei/amzOrderHistoryFilter/blob/30ff80c6ea5194ec4b9ede986e30b80cbdd21355/src/js/amzOrderHistoryFilter.user.js#L4157
+            (
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP_RETURN,
+                datetime(2018, 12, 18, 0, 0, 0),
+                "Amazon Japan G.K.",
+                False,
+            ),
         ],
     )
     def test_init(
