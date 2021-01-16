@@ -19,7 +19,7 @@ class GoldPointCardPlus201912RowData(InputStoreRowData):
     _number_of_division: str
     _current_time_of_division: str
     _payed_amount: str
-    _others: str
+    others: str
 
     @property
     def date(self) -> datetime:
@@ -43,9 +43,12 @@ class GoldPointCardPlus201912RowData(InputStoreRowData):
 class GoldPointCardPlus201912Row(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
 
+    OTHERS_RETURN = "返品"
+
     def __init__(self, row_data: GoldPointCardPlus201912RowData):
         super().__init__(FileCsvConvertId.GOLD_POINT_CARD_PLUS, row_data)
         self.payed_amount: int = row_data.payed_amount
+        self.others: str = row_data.others
 
     @property
     def is_row_to_skip(self) -> bool:
@@ -53,7 +56,7 @@ class GoldPointCardPlus201912Row(InputStoreRow):
             store = self.store
         except NoResultFound:
             return False
-        return CONFIG.gold_point_card_plus.skip_amazon_row and store.is_amazon
+        return CONFIG.gold_point_card_plus.skip_amazon_row and store.is_amazon and self.others != self.OTHERS_RETURN
 
 
 class GoldPointCardPlus201912RowFactory(InputRowFactory[GoldPointCardPlus201912RowData, GoldPointCardPlus201912Row]):

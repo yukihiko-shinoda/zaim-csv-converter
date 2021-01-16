@@ -54,7 +54,7 @@ class GoldPointCardPlusRow(InputStoreRow):
 
     @property
     def is_row_to_skip(self) -> bool:
-        return CONFIG.gold_point_card_plus.skip_amazon_row and self.store.is_amazon
+        return CONFIG.gold_point_card_plus.skip_amazon_row and self.store.is_amazon and self.used_amount >= 0
 
 
 class GoldPointCardPlusRowFactory(InputRowFactory[GoldPointCardPlusRowData, GoldPointCardPlusRow]):

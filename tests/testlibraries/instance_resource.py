@@ -31,11 +31,17 @@ class InstanceResource:
     ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP = GoldPointCardPlusRowData(
         "2018/7/4", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ", "ご本人", "1回払い", "", "18/8", "3456", "3456", "", "", "", "", ""
     )
+    ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP_RETURN = GoldPointCardPlusRowData(
+        "2018/12/18", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ", "ご本人", "1回払い", "", "18/8", "-7500", "-7500", "", "", "", "", ""
+    )
     ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC = GoldPointCardPlusRowData(
         "2018/7/3", "東京電力  電気料金等", "ご本人", "1回払い", "", "18/8", "11402", "11402", "", "", "", "", ""
     )
     ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS = GoldPointCardPlus201912RowData(
         "2019/11/09", "Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ", "1969", "１", "１", "1969", ""
+    )
+    ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_RETURN = GoldPointCardPlus201912RowData(
+        "2020/12/18", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ", "-7500", "１", "１", "-7500", "返品"
     )
     ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AWS = GoldPointCardPlus201912RowData(
         "2019/11/03", "AMAZON WEB SERVICES (AWS.AMAZON.CO)", "66", "１", "１", "66", "0.60　USD　110.712　11 03"
