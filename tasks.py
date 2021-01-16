@@ -42,6 +42,73 @@ def black(context, check=False) -> Result:
     return context.run("black {} {}".format(black_options, " ".join(PYTHON_DIRS)), warn=True)
 
 
+@task
+def lint_flake8(context):
+    """
+    Lint code with flake8
+    """
+    context.run("flake8 {} {}".format("--radon-show-closures", " ".join(PYTHON_DIRS)))
+
+
+@task
+def lint_pylint(context):
+    """
+    Lint code with pylint
+    """
+    context.run("pylint {}".format(" ".join(PYTHON_DIRS)))
+
+
+@task
+def lint_mypy(context):
+    """
+    Lint code with pylint
+    """
+    context.run("mypy {}".format(" ".join(PYTHON_DIRS)))
+
+
+@task(lint_flake8, lint_pylint, lint_mypy)
+def lint(_context):
+    """
+    Run all linting
+    """
+
+
+@task
+def radon_cc(context):
+    """
+    Reports code complexity.
+    """
+    context.run("radon cc {}".format(" ".join(PYTHON_DIRS)))
+
+
+@task
+def radon_mi(context):
+    """
+    Reports maintainability index.
+    """
+    context.run("radon mi {}".format(" ".join(PYTHON_DIRS)))
+
+
+@task(radon_cc, radon_mi)
+def radon(_context):
+    """
+    Reports radon.
+    """
+
+
+@task
+def xenon(context):
+    """
+    Check code complexity.
+    """
+    context.run((
+        "xenon"
+        " --max-absolute B"
+        " --max-modules B"
+        " --max-average B"
+        "{}").format(" ".join(PYTHON_DIRS)))
+
+
 @task(help={"publish": "Publish the result via coveralls", "xml": "Export report as xml format"})
 def coverage(context, publish=False, xml=False):
     """
