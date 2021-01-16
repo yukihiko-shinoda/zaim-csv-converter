@@ -32,7 +32,7 @@ def style(context, check=False):
 
 def isort(context, check=False) -> Result:
     """Runs isort."""
-    isort_options = "--recursive {}".format("--check-only --diff" if check else "")
+    isort_options = "{}".format("--check-only --diff" if check else "")
     return context.run("isort {} {}".format(isort_options, " ".join(PYTHON_DIRS)), warn=True)
 
 
