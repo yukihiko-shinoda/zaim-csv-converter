@@ -33,6 +33,7 @@ pylint = "*"
 pytest = "*"
 pytest-resource-path = "*"
 radon = "*"
+xenon = "*"
 
 [scripts]
 start = "python convert.py"
