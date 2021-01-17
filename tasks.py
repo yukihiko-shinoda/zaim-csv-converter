@@ -101,12 +101,7 @@ def xenon(context):
     """
     Check code complexity.
     """
-    context.run((
-        "xenon"
-        " --max-absolute B"
-        " --max-modules B"
-        " --max-average B"
-        "{}").format(" ".join(PYTHON_DIRS)))
+    context.run(("xenon --max-absolute B --max-modules B --max-average B {}").format(" ".join(PYTHON_DIRS)))
 
 
 @task(help={"publish": "Publish the result via coveralls", "xml": "Export report as xml format"})
