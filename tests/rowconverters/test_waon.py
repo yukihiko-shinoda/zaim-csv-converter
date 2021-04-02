@@ -150,6 +150,12 @@ class TestWaonZaimRowConverterConverter:
                 InstanceResource.ROW_DATA_WAON_CHARGE_CASH_ITABASHIMAENOCHO,
                 WaonZaimTransferRowConverter,
             ),
+            # Case when WAON charge by value download
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
+                InstanceResource.ROW_DATA_WAON_CHARGE_DOWNLOAD_VALUE_ITABASHIMAENOCHO,
+                WaonZaimIncomeRowConverter,
+            ),
         ],
         indirect=["database_session_with_schema"],
     )
