@@ -31,6 +31,7 @@ class WaonRowData(InputStoreRowData):
         BANK_ACCOUNT = "銀行口座"
         POINT = "ポイント"
         CASH = "現金"
+        DOWNLOAD_VALUE = "バリューダウンロード"
         NULL = "-"
 
     _date: str
@@ -144,6 +145,10 @@ class WaonChargeRow(WaonRow):
     @property
     def is_charge_by_bank_account(self) -> bool:
         return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.BANK_ACCOUNT
+
+    @property
+    def is_charge_by_download_value(self) -> bool:
+        return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.DOWNLOAD_VALUE
 
 
 class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
