@@ -6,9 +6,10 @@ see:
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from typing import ClassVar, List
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputItemRowData, InputRowFactory, InputStoreItemRow
@@ -18,6 +19,53 @@ from zaimcsvconverter.inputcsvformats import InputItemRowData, InputRowFactory, 
 # Reason: Specification. pylint: disable=too-many-instance-attributes
 class PayPalRowData(InputItemRowData):
     """This class implements data class for wrapping list of PayPal CSV row model."""
+
+    HEADER: ClassVar[List[str]] = field(
+        default=[
+            "日付",
+            "時間",
+            "タイムゾーン",
+            "名前",
+            "タイプ",
+            "ステータス",
+            "通貨",
+            "合計",
+            "手数料",
+            "正味",
+            "送信者メールアドレス",
+            "受信者メールアドレス",
+            "取引ID",
+            "配送先住所",
+            "住所ステータス",
+            "商品タイトル",
+            "商品ID",
+            "配送および手数料の額",
+            "保険金額",
+            "消費税",
+            "オプション1: 名前",
+            "オプション1: 金額",
+            "オプション2: 名前",
+            "オプション2: 金額",
+            "リファレンス トランザクションID",
+            "請求書番号",
+            "カスタム番号",
+            "数量",
+            "領収書ID",
+            "残高",
+            "住所1行目",
+            "住所2行目/地区/地域",
+            "市区町村",
+            "都道府県",
+            "郵便番号",
+            "国および地域",
+            "連絡先の電話番号",
+            "件名",
+            "備考",
+            "国コード",
+            "残高への影響",
+        ],
+        init=False,
+    )
 
     class Status(Enum):
         """This class implements constant of status in PayPal CSV."""
