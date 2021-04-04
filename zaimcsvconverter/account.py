@@ -26,6 +26,7 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowFactory,
 )
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
+from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData, PayPalRowFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
@@ -35,6 +36,7 @@ from zaimcsvconverter.rowconverters.amazon_201911 import Amazon201911ZaimRowConv
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.pay_pal import PayPalZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
@@ -101,7 +103,6 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
         ),
         init=False,
     )
-    file_csv_convert: FileCsvConvert
     regex_csv_file_name: str
     god_slayer_factory: GodSlayerFactory
     input_row_data_class: Type[TypeVarInputRowData]
@@ -127,7 +128,6 @@ class Account(Enum):
     """This class implements constant of account in Zaim."""
 
     WAON = AccountContext(
-        FileCsvConvert.WAON,
         r".*waon.*\.csv",
         GodSlayerFactory(header=["取引年月日", "利用店舗", "利用金額（税込）", "利用区分", "チャージ区分"]),
         WaonRowData,
@@ -135,7 +135,6 @@ class Account(Enum):
         WaonZaimRowConverterFactory(),
     )
     GOLD_POINT_CARD_PLUS = AccountContext(
-        FileCsvConvert.GOLD_POINT_CARD_PLUS,
         r".*gold_point_card_plus.*\.csv",
         GodSlayerFactory(encoding="shift_jis_2004"),
         GoldPointCardPlusRowData,
@@ -143,7 +142,6 @@ class Account(Enum):
         GoldPointCardPlusZaimRowConverterFactory(),
     )
     GOLD_POINT_CARD_PLUS_201912 = AccountContext(
-        FileCsvConvert.GOLD_POINT_CARD_PLUS,
         r".*gold_point_card_plus_201912.*\.csv",
         GodSlayerFactory(
             header=[r".*　様", r"[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}", "ゴールドポイントカードプラス"],
@@ -155,7 +153,6 @@ class Account(Enum):
         GoldPointCardPlus201912ZaimRowConverterFactory(),
     )
     GOLD_POINT_CARD_PLUS_202009 = AccountContext(
-        FileCsvConvert.GOLD_POINT_CARD_PLUS,
         r".*gold_point_card_plus_202009.*\.csv",
         GodSlayerFactory(
             header=[r".*　様", r"[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}", "ゴールドポイントカードプラス", "", "", "", ""],
@@ -167,7 +164,6 @@ class Account(Enum):
         GoldPointCardPlus201912ZaimRowConverterFactory(),
     )
     MUFG = AccountContext(
-        FileCsvConvert.MUFG,
         r".*mufg.*\.csv",
         GodSlayerFactory(
             header=["日付", "摘要", "摘要内容", "支払い金額", "預かり金額", "差引残高", "メモ", "未資金化区分", "入払区分"], encoding="shift_jis_2004",
@@ -177,7 +173,6 @@ class Account(Enum):
         MufgZaimRowConverterFactory(),
     )
     PASMO = AccountContext(
-        FileCsvConvert.SF_CARD_VIEWER,
         r".*pasmo.*\.csv",
         AccountContext.GOD_SLAYER_FACTORY_SF_CARD_VIEWER,
         SFCardViewerRowData,
@@ -186,7 +181,6 @@ class Account(Enum):
         SFCardViewerZaimRowConverterFactory(lambda: CONFIG.pasmo),
     )
     AMAZON = AccountContext(
-        FileCsvConvert.AMAZON,
         r".*amazon.*\.csv",
         AccountContext.GOD_SLAYER_FACTORY_AMAZON,
         AmazonRowData,
@@ -194,7 +188,6 @@ class Account(Enum):
         AmazonZaimRowConverterFactory(),
     )
     AMAZON_201911 = AccountContext(
-        FileCsvConvert.AMAZON,
         r".*amazon_201911.*\.csv",
         AccountContext.GOD_SLAYER_FACTORY_AMAZON,
         Amazon201911RowData,
@@ -202,7 +195,6 @@ class Account(Enum):
         Amazon201911ZaimRowConverterFactory(),
     )
     VIEW_CARD = AccountContext(
-        FileCsvConvert.VIEW_CARD,
         r".*view_card.*\.csv",
         GodSlayerFactory(
             header=[
@@ -226,13 +218,19 @@ class Account(Enum):
         ViewCardZaimRowConverterFactory(),
     )
     SUICA = AccountContext(
-        FileCsvConvert.SF_CARD_VIEWER,
         r".*suica.*\.csv",
         AccountContext.GOD_SLAYER_FACTORY_SF_CARD_VIEWER,
         SFCardViewerRowData,
         # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
         SFCardViewerRowFactory(lambda: CONFIG.suica),
         SFCardViewerZaimRowConverterFactory(lambda: CONFIG.suica),
+    )
+    PAY_PAL = AccountContext(
+        r".*pay_pal.*\.csv",
+        GodSlayerFactory(header=PayPalRowData.HEADER),
+        PayPalRowData,
+        PayPalRowFactory(),
+        PayPalZaimRowConverterFactory(),
     )
 
     @property

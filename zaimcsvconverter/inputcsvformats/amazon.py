@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData, InputRowFactory
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
@@ -61,7 +62,7 @@ class AmazonRow(InputItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: AmazonRowData):
-        super().__init__(FileCsvConvertId.AMAZON, row_data)
+        super().__init__(FileCsvConvert.AMAZON.value, row_data)
         self._store: Store = Store(FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim))
         self.price: int = row_data.price
         self.number: int = row_data.number

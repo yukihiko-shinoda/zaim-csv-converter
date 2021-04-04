@@ -4,6 +4,7 @@ waon:
 gold_point_card_plus:
   account_name: 'ヨドバシゴールドポイントカード・プラス'
   skip_amazon_row: true
+  skip_pay_pal_row: true
 mufg:
   account_name: '三菱UFJ銀行'
   transfer_account_name: 'お財布'
@@ -21,3 +22,6 @@ suica:
   account_name: 'Suica'
   auto_charge_source: 'ビューカード'
   skip_sales_goods_row: true
+pay_pal:
+  store_name_zaim: 'PayPal'
+  payment_account_name: 'ヨドバシゴールドポイントカード・プラス'

@@ -2,12 +2,9 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import List, Union
+from typing import List
 
 import numpy
-
-from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputItemRow, InputStoreRow
 
 
 class FileNameForError(Enum):
@@ -25,9 +22,10 @@ class UndefinedContentErrorHandler:
         for error_row in self.list_error:
             yield error_row
 
-    def append(self, file_csv_convert: FileCsvConvert, input_row: Union[InputStoreRow, InputItemRow]) -> None:
+    def extend_list(self, error: List[List[str]]) -> None:
         """This method appends error list argument into error list property."""
-        self.list_error.append(input_row.get_report_undefined_content_error(file_csv_convert))
+        self.list_error.extend(error)
+        self.uniquify()
 
     def extend(self, error_handler: UndefinedContentErrorHandler) -> None:
         """This method extends error list argument into error list property."""

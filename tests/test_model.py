@@ -4,6 +4,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
@@ -22,24 +23,24 @@ class TestModel:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, account, store_name, expected_store_name_zaim, expected_transfer_target",
+        "database_session_with_schema, file_csv_convert, store_name, expected_store_name_zaim, expected_transfer_target",
         [
             (
                 [InstanceResource.FIXTURE_RECORD_STORE_WAON_MAKUHARISHINTOSHIN],
-                Account.WAON,
+                FileCsvConvert.WAON,
                 "幕張新都心",
                 "イオンモール　幕張新都心",
                 None,
             ),
-            ([InstanceResource.FIXTURE_RECORD_STORE_MUFG_TOBU_CARD], Account.MUFG, "カ）トウブカ－ドビ", None, "東武カード"),
+            ([InstanceResource.FIXTURE_RECORD_STORE_MUFG_TOBU_CARD], FileCsvConvert.MUFG, "カ）トウブカ－ドビ", None, "東武カード"),
         ],
         indirect=["database_session_with_schema"],
     )
     def test_try_to_find_success(
-        database_session_with_schema, account, store_name, expected_store_name_zaim, expected_transfer_target
+        database_session_with_schema, file_csv_convert, store_name, expected_store_name_zaim, expected_transfer_target
     ):
         """Method should return Store model when store name is exist in database."""
-        store = Store.try_to_find(account.value.file_csv_convert.value.id, store_name)
+        store = Store.try_to_find(file_csv_convert.value.id, store_name)
         assert store.name == store_name
         assert store.name_zaim == expected_store_name_zaim
         assert store.transfer_target == expected_transfer_target
@@ -48,5 +49,5 @@ class TestModel:
     def test_try_to_find_failure(database_session_with_schema):
         """Method should raise KeyError when store name is not exist in database."""
         with pytest.raises(NoResultFound) as error:
-            Store.try_to_find(Account.WAON.value.file_csv_convert.value.id, "上尾")
+            Store.try_to_find(FileCsvConvert.WAON.value.id, "上尾")
         assert str(error) == "<ExceptionInfo NoResultFound('No row was found when one was required') tblen=6>"

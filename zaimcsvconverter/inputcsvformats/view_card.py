@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
@@ -57,7 +57,7 @@ class ViewCardRow(InputStoreRow):
     """This class implements row model of GOLD POINT CARD+ CSV."""
 
     def __init__(self, row_data: ViewCardRowData):
-        super().__init__(FileCsvConvertId.VIEW_CARD, row_data)
+        super().__init__(row_data, FileCsvConvert.VIEW_CARD.value)
         self.billing_amount_current_time: int = row_data.billing_amount_current_time
         self._is_suica: bool = row_data.is_suica
 

@@ -15,6 +15,8 @@ class FilePathConvertTable(Enum):
     SF_CARD_VIEWER = Path("sf_card_viewer.csv")
     AMAZON = Path("amazon.csv")
     VIEW_CARD = Path("view_card.csv")
+    PAY_PAL_STORE = Path("pay_pal_store.csv")
+    PAY_PAL_ITEM = Path("pay_pal_item.csv")
 
     @property
     def value(self) -> Path:

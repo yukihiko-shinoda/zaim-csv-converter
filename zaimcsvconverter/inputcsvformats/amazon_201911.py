@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import ClassVar, Optional
 
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData, InputRowFactory
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
@@ -107,6 +108,7 @@ class Amazon201911RowData(InputItemRowData):
 
     @property
     def is_discount(self) -> bool:
+        # Includes Amazon point
         return (
             not self.is_entire_order
             and not self.is_billing_to_credit_card
@@ -147,7 +149,7 @@ class Amazon201911Row(InputItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: Amazon201911RowData):
-        super().__init__(FileCsvConvertId.AMAZON, row_data)
+        super().__init__(FileCsvConvert.AMAZON.value, row_data)
         self._store: Store = Store(FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim))
 
     @property

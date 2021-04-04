@@ -5,8 +5,8 @@ from datetime import datetime
 from sqlalchemy.orm.exc import NoResultFound
 
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
@@ -46,7 +46,7 @@ class GoldPointCardPlus201912Row(InputStoreRow):
     OTHERS_RETURN = "返品"
 
     def __init__(self, row_data: GoldPointCardPlus201912RowData):
-        super().__init__(FileCsvConvertId.GOLD_POINT_CARD_PLUS, row_data)
+        super().__init__(row_data, FileCsvConvert.GOLD_POINT_CARD_PLUS.value)
         self.payed_amount: int = row_data.payed_amount
         self.others: str = row_data.others
 

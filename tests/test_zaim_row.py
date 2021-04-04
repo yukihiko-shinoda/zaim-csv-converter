@@ -12,7 +12,6 @@ from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
 from zaimcsvconverter.inputcsvformats.mufg import MufgIncomeFromOthersRow
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
-from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.rowconverters import ZaimRowConverter
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimIncomeRowConverter
@@ -235,7 +234,5 @@ class TestZaimRowFactory:
                 return False
 
         with pytest.raises(ValueError) as error:
-            ZaimRowFactory.create(
-                UndefinedZaimRowConverter(UndefinedInputRow(FileCsvConvertId.WAON, UndefinedInputRowData()))
-            )
+            ZaimRowFactory.create(UndefinedZaimRowConverter(UndefinedInputRow(UndefinedInputRowData())))
         assert str(error.value) == "Undefined Zaim row converter. Zaim row converter = UndefinedZaimRowConverter"

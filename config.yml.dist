@@ -8,6 +8,8 @@ gold_point_card_plus:
   account_name: 'ヨドバシゴールドポイントカード・プラス'
   # ↓ Amazonからの引き落としの履歴を省くかどうかを設定します。Amazon.co.jpのCSVをインポートする場合、2重登録を防ぐため true にします。
   skip_amazon_row: true
+  # ↓ PayPalからの引き落としの履歴を省くかどうかを設定します。PayPalのCSVをインポートする場合、2重登録を防ぐため true にします。
+  skip_pay_pal_row: true
 mufg:
   # ↓ Zaim上で三菱UFJ銀行用として登録している口座名を設定します。
   account_name: '三菱UFJ銀行'
@@ -41,3 +43,9 @@ suica:
   # ↓ 物販の情報をCSVから入力すると、後で分析を行うときに使途が不明になる可能性があります。
   # ↓ 物販のみ、レシートからの手動登録を行う場合、2重登録を防ぐため true にします。
   skip_sales_goods_row: true
+pay_pal:
+  # ↓ Zaim上でPayPalとして登録しているお店名を設定します。
+  store_name_zaim: 'PayPal'
+  # ↓ PayPalからの引き落とし先となる口座の、Zaim上で登録している口座名を設定します。
+  # ↓ PayPalのCSVは口座の情報が含まれないため、全ての履歴をここで指定した口座からの引き落としとして処理します。
+  payment_account_name: ''

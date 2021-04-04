@@ -10,6 +10,7 @@ from errorcollector.error_collector import MultipleErrorCollector, SingleErrorCo
 from godslayer.exceptions import InvalidRecordError
 
 from zaimcsvconverter.exceptions import UndefinedContentError
+from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
 from zaimcsvconverter.models import FileCsvConvertId, Item, Store
 
 
@@ -77,9 +78,8 @@ TypeVarInputRowData = TypeVar("TypeVarInputRowData", bound=InputRowData)
 class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
 
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, input_row_data: TypeVarInputRowData):
+    def __init__(self, input_row_data: TypeVarInputRowData):
         self.list_error: List[InvalidRecordError] = []
-        self._file_csv_convert_id: FileCsvConvertId = file_csv_convert_id
         self.date: datetime = input_row_data.date
 
     # Reason: Parent method. pylint: disable=no-self-use
@@ -100,57 +100,69 @@ class InputRow(Generic[TypeVarInputRowData]):
         return False
 
 
-class InputStoreRow(InputRow):
+class InputContentRow(InputRow):
+    """Row model of CSV including at least either store or item name data."""
+
+    @abstractmethod
+    def get_report_undefined_content_error(self) -> List[List[str]]:
+        raise NotImplementedError()
+
+
+class InputStoreRow(InputContentRow):
     """This class implements row model of CSV including store name data (disallow empty)."""
 
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, input_store_row_data: InputStoreRowData):
-        super().__init__(file_csv_convert_id, input_store_row_data)
+    def __init__(self, input_store_row_data: InputStoreRowData, file_csv_convert_context_store: FileCsvConvertContext):
+        super().__init__(input_store_row_data)
+        self._file_csv_convert_store: FileCsvConvertContext = file_csv_convert_context_store
         self.store_name: str = input_store_row_data.store_name
         self._store: Optional[Store] = None
-        self.undefined_content_error: Optional[UndefinedContentError] = None
+        self.undefined_content_error_store: Optional[UndefinedContentError] = None
 
     @property
     def store(self) -> Store:
         """This method finds store data from database if has not find."""
         if self._store is None:
-            self._store = Store.try_to_find(self._file_csv_convert_id, self.store_name)
+            self._store = Store.try_to_find(self._file_csv_convert_store.id, self.store_name)
         return self._store
 
-    @property
-    def validate(self) -> bool:
-        self.stock_undefined_content_error(
-            lambda: self.store, f"Store name has not been defined in convert table CSV. Store name = {self.store_name}"
-        )
-        return super().validate or self.undefined_content_error is not None
-
-    def stock_undefined_content_error(self, method: Callable[[], Any], message: str) -> Any:
+    def stock_undefined_content_error_store(self, method: Callable[[], Any], message: str) -> Any:
         """This method stocks undefined content error."""
         error_collector = SingleErrorCollector(UndefinedContentError, message)
         # noinspection PyUnusedLocal
         return_value = None
         with error_collector:
             return_value = method()
-        self.undefined_content_error = error_collector.error
+        self.undefined_content_error_store = error_collector.error
+        if self.undefined_content_error_store is not None:
+            self.list_error.insert(0, self.undefined_content_error_store)
         return return_value
 
-    def get_report_undefined_content_error(self, file_csv_convert) -> List[str]:
+    @property
+    def validate(self) -> bool:
+        self.stock_undefined_content_error_store(
+            lambda: self.store, f"Store name has not been defined in convert table CSV. Store name = {self.store_name}"
+        )
+        return super().validate or self.undefined_content_error_store is not None
+
+    def get_report_undefined_content_error(self) -> List[List[str]]:
         """This method returns report of undefined content error."""
-        return [
-            file_csv_convert.value.name,
-            self.store_name,
-            "",
-        ]
+        return (
+            []
+            if self.undefined_content_error_store is None
+            else [[self._file_csv_convert_store.name, self.store_name, ""]]
+        )
 
 
-class InputItemRow(InputRow):
+class InputItemRow(InputContentRow):
     """This class implements row model of CSV including item name data (disallow empty)."""
 
-    def __init__(self, file_csv_convert_id: FileCsvConvertId, input_item_row_data: InputItemRowData):
-        super().__init__(file_csv_convert_id, input_item_row_data)
+    def __init__(self, file_csv_convert_item: FileCsvConvertContext, input_item_row_data: InputItemRowData):
+        super().__init__(input_item_row_data)
+        self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_item
         self.store_name: str = ""
         self.item_name: str = input_item_row_data.item_name
         self._item: Optional[Item] = None
-        self.undefined_content_error: Optional[UndefinedContentError] = None
+        self.undefined_content_error_item: Optional[UndefinedContentError] = None
 
     @property
     @abstractmethod
@@ -161,36 +173,89 @@ class InputItemRow(InputRow):
     def item(self) -> Item:
         """This method finds store data from database if has not find."""
         if self._item is None:
-            self._item = Item.try_to_find(self._file_csv_convert_id, self.item_name)
+            self._item = Item.try_to_find(self._file_csv_convert_item.id, self.item_name)
         return self._item
 
-    @property
-    def validate(self) -> bool:
-        self.stock_undefined_content_error(
-            lambda: self.item, f"Item name has not been defined in convert table CSV. Item name = {self.item_name}"
-        )
-        return super().validate or self.undefined_content_error is not None
-
-    def stock_undefined_content_error(self, method: Callable[[], Any], message: str) -> Any:
+    def stock_undefined_content_error_item(self, method: Callable[[], Any], message: str) -> Any:
         """This method stocks undefined content error."""
         error_collector = SingleErrorCollector(UndefinedContentError, message)
         # noinspection PyUnusedLocal
         return_value = None
         with error_collector:
             return_value = method()
-        self.undefined_content_error = error_collector.error
+        self.undefined_content_error_item = error_collector.error
+        if self.undefined_content_error_item is not None:
+            self.list_error.insert(0, self.undefined_content_error_item)
         return return_value
 
-    def get_report_undefined_content_error(self, file_csv_convert) -> List[str]:
+    @property
+    def validate(self) -> bool:
+        self.stock_undefined_content_error_item(
+            lambda: self.item, f"Item name has not been defined in convert table CSV. Item name = {self.item_name}"
+        )
+        return super().validate or self.undefined_content_error_item is not None
+
+    def get_report_undefined_content_error(self) -> List[List[str]]:
         """This method returns report of undefined content error."""
-        return [
-            file_csv_convert.value.name,
-            self.store_name,
-            self.item_name,
-        ]
+        return (
+            []
+            if self.undefined_content_error_item is None
+            else [[self._file_csv_convert_item.name, "", self.item_name]]
+        )
+
+
+class InputStoreItemRow(InputStoreRow):
+    """This class implements row model of CSV including store name and item name data (disallow empty)."""
+
+    def __init__(
+        self,
+        input_item_row_data: InputItemRowData,
+        file_csv_convert_context_store: FileCsvConvertContext,
+        file_csv_convert_context_item: FileCsvConvertId,
+    ):
+        super().__init__(input_item_row_data, file_csv_convert_context_store)
+        self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_context_item
+        self.store_name: str = ""
+        self.item_name: str = input_item_row_data.item_name
+        self._item: Optional[Item] = None
+        self.undefined_content_error_item: Optional[UndefinedContentError] = None
+
+    @property
+    def item(self) -> Item:
+        """This method finds store data from database if has not find."""
+        if self._item is None:
+            self._item = Item.try_to_find(self._file_csv_convert_item.id, self.item_name)
+        return self._item
+
+    def stock_undefined_content_error_item(self, method: Callable[[], Any], message: str) -> Any:
+        """This method stocks undefined content error."""
+        error_collector = SingleErrorCollector(UndefinedContentError, message)
+        # noinspection PyUnusedLocal
+        return_value = None
+        with error_collector:
+            return_value = method()
+        self.undefined_content_error_item = error_collector.error
+        if self.undefined_content_error_item is not None:
+            self.list_error.insert(0, self.undefined_content_error_item)
+        return return_value
+
+    @property
+    def validate(self) -> bool:
+        self.stock_undefined_content_error_item(
+            lambda: self.item, f"Item name has not been defined in convert table CSV. Item name = {self.item_name}"
+        )
+        return super().validate or self.undefined_content_error_item is not None
+
+    def get_report_undefined_content_error(self) -> List[str]:
+        """This method returns report of undefined content error."""
+        report_undefined_content_error = super().get_report_undefined_content_error()
+        if self.undefined_content_error_item is not None:
+            report_undefined_content_error.append([self._file_csv_convert_item.name, "", self.item_name])
+        return report_undefined_content_error
 
 
 TypeVarInputRow = TypeVar("TypeVarInputRow", bound=InputRow)
+TypeVarInputContentRow = TypeVar("TypeVarInputContentRow", bound=InputContentRow)
 
 
 class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
