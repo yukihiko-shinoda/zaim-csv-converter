@@ -102,6 +102,7 @@ class InputRow(Generic[TypeVarInputRowData]):
 
 class InputContentRow(InputRow):
     """Row model of CSV including at least either store or item name data."""
+
     @abstractmethod
     def get_report_undefined_content_error(self) -> List[List[str]]:
         raise NotImplementedError()

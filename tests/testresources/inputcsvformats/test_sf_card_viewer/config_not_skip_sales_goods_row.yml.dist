@@ -9,6 +9,7 @@ waon:
 gold_point_card_plus:
   account_name: 'ヨドバシゴールドポイントカード・プラス'
   skip_amazon_row: true
+  skip_pay_pal_row: true
 mufg:
   account_name: '三菱UFJ銀行'
   transfer_account_name: 'お財布'

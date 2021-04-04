@@ -8,6 +8,8 @@ gold_point_card_plus:
   account_name: 'ヨドバシゴールドポイントカード・プラス'
   # ↓ Amazonからの引き落としの履歴を省くかどうかを設定します。Amazon.co.jpのCSVをインポートする場合、2重登録を防ぐため true にします。
   skip_amazon_row: true
+  # ↓ PayPalからの引き落としの履歴を省くかどうかを設定します。PayPalのCSVをインポートする場合、2重登録を防ぐため true にします。
+  skip_pay_pal_row: true
 mufg:
   # ↓ Zaim上で三菱UFJ銀行用として登録している口座名を設定します。
   account_name: '三菱UFJ銀行'

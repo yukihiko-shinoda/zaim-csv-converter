@@ -1,6 +1,7 @@
 """This module implements SQLAlchemy database models."""
 from __future__ import annotations
 
+import re
 import warnings
 from abc import abstractmethod
 from dataclasses import dataclass
@@ -144,7 +145,12 @@ with warnings.catch_warnings():
         @property
         def is_amazon(self) -> bool:
             """This property returns whether this store is Amazon.co.jp or not."""
-            return self.name in {"Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ", "Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ"}
+            return self.name in ["Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ", "Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ"]
+
+        @property
+        def is_pay_pal(self) -> bool:
+            """This property returns whether this store is Amazon.co.jp or not."""
+            return self.name in ["ＰａｙＰａｌ決済"] or re.search(r"PAYPAL\s*", self.name) is not None
 
     class Item(Base, ConvertTableRecordMixin):
         """This class implements Store model to convert from account CSV to Zaim CSV."""
