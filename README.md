@@ -21,6 +21,7 @@ Zaim で口座連携をするために
 - Amazon.co.jp
 - ビューカード
 - Suica
+- PayPal (experimental)
 
 ※ [対応口座追加のための開発手順](docs/CONTRIBUTING.md)をまとめました、プルリクエストをお待ちしています。
 
@@ -66,6 +67,7 @@ WAON|waon.csv|お店単位
 Suica,PASMO|sf_card_viewer.csv|お店単位
 Amazon.co.jp|amazon.csv|品目単位
 ビューカード|view_card.csv|お店単位
+PayPal|pay_pal_store.csv, pay_pal_item.csv|お店単位、品目単位
 
 ※ 文字コードは UTF-8 で準備してください。
 
@@ -98,6 +100,7 @@ Amazon.co.jp 2019 年 11 月以前の形式|amazon
 Amazon.co.jp 2019 年 12 月以降の形式|amazon_201911
 ビューカード|view_card
 Suica|suica
+PayPal|pay_pal_store, pay_pal_item
 
 変換対象CSVの準備方法の詳細は[変換対象 CSV の準備方法](#変換対象-CSV-の準備方法)を参照してください。
 
@@ -316,3 +319,32 @@ Chrome 拡張の[アマゾン注文履歴フィルタ](https://chrome.google.com
 4.\
 
 [明細 CSV ダウンロード] ボタンをクリック
+
+### PayPal
+
+1\.
+
+[PayPal](https://www.paypal.com/signin) にログインします。
+
+2.\
+
+[レポート] をクリック
+
+3.\
+
+[取引履歴のダウンロード] をクリック
+
+4.\
+
+フォームに次の内容を入力して [レポートを作成] ボタンをクリックします。
+
+入力項目|入力する内容
+---|---
+[取引タイプ]|「すべての取引」
+[日付範囲]|該当月の初日から末日
+[形式]|「CSV」
+
+5.\
+
+「取引レポートをダウンロードできるようになりました」というメールが届いたら
+[ダウンロード] リンクをクリック
