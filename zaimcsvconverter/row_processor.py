@@ -40,4 +40,3 @@ class RecordProcessor:
         if not isinstance(input_row, (InputStoreRow, InputItemRow)) or input_row.undefined_content_error is None:
             return
         self.undefined_content_error_handler.append(self._account.value.file_csv_convert, input_row)
-        self.list_error.insert(0, input_row.undefined_content_error)

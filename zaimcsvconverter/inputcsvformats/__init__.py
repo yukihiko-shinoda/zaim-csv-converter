@@ -131,6 +131,8 @@ class InputStoreRow(InputRow):
         with error_collector:
             return_value = method()
         self.undefined_content_error = error_collector.error
+        if self.undefined_content_error is not None:
+            self.list_error.insert(0, self.undefined_content_error)
         return return_value
 
     def get_report_undefined_content_error(self, file_csv_convert) -> List[str]:
@@ -179,6 +181,8 @@ class InputItemRow(InputRow):
         with error_collector:
             return_value = method()
         self.undefined_content_error = error_collector.error
+        if self.undefined_content_error is not None:
+            self.list_error.insert(0, self.undefined_content_error)
         return return_value
 
     def get_report_undefined_content_error(self, file_csv_convert) -> List[str]:
