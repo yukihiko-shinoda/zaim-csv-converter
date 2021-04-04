@@ -1,10 +1,10 @@
 """Tests for model."""
-from zaimcsvconverter.file_csv_convert import FileCsvConvert
 import pytest
 from sqlalchemy.orm.exc import NoResultFound
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
