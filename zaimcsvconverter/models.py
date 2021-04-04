@@ -25,6 +25,7 @@ class FileCsvConvertId(Enum):
     SF_CARD_VIEWER = 4
     AMAZON = 5
     VIEW_CARD = 6
+    PAY_PAL = 7
 
     @property
     def value(self) -> int:

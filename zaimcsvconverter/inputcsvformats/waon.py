@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.utility import Utility
 
 
@@ -76,7 +76,7 @@ class WaonRow(InputStoreRow):
     """This class implements row model of WAON CSV."""
 
     def __init__(self, row_data: WaonRowData):
-        super().__init__(FileCsvConvertId.WAON, row_data)
+        super().__init__(row_data, FileCsvConvert.WAON.value)
         self.used_amount: int = row_data.used_amount
         self.use_kind: WaonRowData.UseKind = row_data.use_kind
 

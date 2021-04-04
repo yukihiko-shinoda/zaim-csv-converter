@@ -7,8 +7,8 @@ from enum import Enum
 from typing import Callable
 
 from zaimcsvconverter.config import SFCardViewerConfig
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.models import FileCsvConvertId
 
 
 @dataclass
@@ -70,8 +70,8 @@ class SFCardViewerRowData(InputStoreRowData):
 class SFCardViewerRow(InputRow):
     """This class implements row model of SF Card Viewer CSV."""
 
-    def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
-        super().__init__(FileCsvConvertId.SF_CARD_VIEWER, row_data)
+    def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig, *args, **kwargs):
+        super().__init__(row_data, *args, **kwargs)
         self.used_amount: int = row_data.used_amount
         self.note = row_data.note
         self._account_config: SFCardViewerConfig = account_config
@@ -105,7 +105,7 @@ class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow):
     """This class implements enter station row model of SF Card Viewer CSV."""
 
     def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
-        super().__init__(row_data, account_config)
+        super().__init__(row_data, account_config, FileCsvConvert.SF_CARD_VIEWER.value)
         self.railway_company_name_enter: str = row_data.railway_company_name_enter
         self.station_name_enter: str = row_data.station_name_enter
 

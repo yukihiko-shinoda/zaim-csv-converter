@@ -26,6 +26,7 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowFactory,
 )
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
+from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData, PayPalRowFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
@@ -35,6 +36,7 @@ from zaimcsvconverter.rowconverters.amazon_201911 import Amazon201911ZaimRowConv
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.pay_pal import PayPalZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
@@ -233,6 +235,58 @@ class Account(Enum):
         # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
         SFCardViewerRowFactory(lambda: CONFIG.suica),
         SFCardViewerZaimRowConverterFactory(lambda: CONFIG.suica),
+    )
+    PAY_PAL = AccountContext(
+        FileCsvConvert.PAY_PAL_STORE,
+        r".*pay_pal.*\.csv",
+        GodSlayerFactory(
+            header=[
+                "日付",
+                "時間",
+                "タイムゾーン",
+                "名前",
+                "タイプ",
+                "ステータス",
+                "通貨",
+                "合計",
+                "手数料",
+                "正味",
+                "送信者メールアドレス",
+                "受信者メールアドレス",
+                "取引ID",
+                "配送先住所",
+                "住所ステータス",
+                "商品タイトル",
+                "商品ID",
+                "配送および手数料の額",
+                "保険金額",
+                "消費税",
+                "オプション1: 名前",
+                "オプション1: 金額",
+                "オプション2: 名前",
+                "オプション2: 金額",
+                "リファレンス トランザクションID",
+                "請求書番号",
+                "カスタム番号",
+                "数量",
+                "領収書ID",
+                "残高",
+                "住所1行目",
+                "住所2行目/地区/地域",
+                "市区町村",
+                "都道府県",
+                "郵便番号",
+                "国および地域",
+                "連絡先の電話番号",
+                "件名",
+                "備考",
+                "国コード",
+                "残高への影響",
+            ],
+        ),
+        PayPalRowData,
+        PayPalRowFactory(),
+        PayPalZaimRowConverterFactory(),
     )
 
     @property

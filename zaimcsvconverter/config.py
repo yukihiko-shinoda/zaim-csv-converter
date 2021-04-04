@@ -67,6 +67,15 @@ class SuicaConfig(SFCardViewerConfig):
 
 
 @dataclass
+class PayPalConfig(DataClassJsonMixin):
+    """This class implements configuration for PayPal."""
+
+    store_name_zaim: str
+    payment_account_name: str
+
+
+@dataclass
+# Reason: Specification. pylint: disable=too-many-instance-attributes
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
 
@@ -90,4 +99,7 @@ class Config(YamlDataClassConfig):
     )
     suica: PasmoConfig = field(  # type: ignore
         default=None, metadata={"dataclasses_json": {"mm_field": SuicaConfig}}
+    )
+    pay_pal: PayPalConfig = field(  # type: ignore
+        default=None, metadata={"dataclasses_json": {"mm_field": PayPalConfig}}
     )

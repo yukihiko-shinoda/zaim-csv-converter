@@ -42,6 +42,8 @@ class FileCsvConvert(Enum):
     )
     AMAZON = FileCsvConvertContext(FileCsvConvertId.AMAZON, "amazon.csv", ConvertTableType.ITEM,)
     VIEW_CARD = FileCsvConvertContext(FileCsvConvertId.VIEW_CARD, "view_card.csv", ConvertTableType.STORE,)
+    PAY_PAL_STORE = FileCsvConvertContext(FileCsvConvertId.PAY_PAL, "pay_pal_store.csv", ConvertTableType.STORE,)
+    PAY_PAL_ITEM = FileCsvConvertContext(FileCsvConvertId.PAY_PAL, "pay_pal_item.csv", ConvertTableType.ITEM,)
 
     @property
     def value(self) -> FileCsvConvertContext:

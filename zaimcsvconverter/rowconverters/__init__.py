@@ -2,12 +2,13 @@
 from abc import ABC, abstractmethod
 from typing import Generic, Optional, TypeVar
 
-from zaimcsvconverter.inputcsvformats import InputItemRow, InputRow, InputStoreRow
+from zaimcsvconverter.inputcsvformats import InputItemRow, InputRow, InputStoreItemRow, InputStoreRow
 from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
 
 TypeVarInputRow = TypeVar("TypeVarInputRow", bound=InputRow)
 TypeVarInputStoreRow = TypeVar("TypeVarInputStoreRow", bound=InputStoreRow)
 TypeVarInputItemRow = TypeVar("TypeVarInputItemRow", bound=InputItemRow)
+TypeVarInputStoreItemRow = TypeVar("TypeVarInputStoreItemRow", bound=InputStoreItemRow)
 
 
 # Reason: Abstract class. pylint: disable=too-few-public-methods
@@ -121,6 +122,30 @@ class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow]
 
 class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow], ABC):
     """This class implements convert steps from input item row to Zaim payment row."""
+
+    @property
+    def category_large(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.item.category_payment_large
+
+    @property
+    def category_small(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.item.category_payment_small
+
+    @property
+    def item_name(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.item.name
+
+    @property
+    def store_name(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.store.name_zaim
+
+
+class ZaimPaymentRowStoreItemConverter(ZaimPaymentRowConverter[TypeVarInputStoreItemRow], ABC):
+    """This class implements convert steps from input store item row to Zaim payment row."""
 
     @property
     def category_large(self) -> Optional[str]:

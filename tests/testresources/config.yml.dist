@@ -21,3 +21,6 @@ suica:
   account_name: 'Suica'
   auto_charge_source: 'ビューカード'
   skip_sales_goods_row: true
+pay_pal:
+  store_name_zaim: 'PayPal'
+  payment_account_name: 'ヨドバシゴールドポイントカード・プラス'

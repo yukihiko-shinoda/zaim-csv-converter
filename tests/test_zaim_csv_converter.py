@@ -39,12 +39,13 @@ class TestZaimCsvConverter:
         try:
             ZaimCsvConverter.execute()
         except InvalidInputCsvError as error:
-            TestZaimCsvConverter.debug_csv("error_undefined_content.csv", directory_csv_output)
+            if (directory_csv_output.target / "error_undefined_content.csv").exists():
+                TestZaimCsvConverter.debug_csv("error_undefined_content.csv", directory_csv_output)
             TestZaimCsvConverter.debug_csv("error_invalid_row.csv", directory_csv_output)
             raise error
         files = sorted(directory_csv_output.target.rglob("*[!.gitkeep]"))
 
-        assert len(files) == 16
+        assert len(files) == 17
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file(
             "waon201807.csv",
@@ -540,6 +541,65 @@ class TestZaimCsvConverter:
                 ),
                 ZaimRowData(
                     "2020-03-21", "transfer", "-", "-", "ビューカード", "Suica", "", "", "", "", "0", "0", "3000", "", "", ""
+                ),
+            ],
+        )
+        checker.assert_file(
+            "pay_pal201810.csv",
+            [
+                ZaimRowData(
+                    "2018-10-11",
+                    "payment",
+                    "教育・教養",
+                    "参考書",
+                    "ヨドバシゴールドポイントカード・プラス",
+                    "",
+                    "プロダクティブ・プログラマ",
+                    "",
+                    "PayPal",
+                    "",
+                    "0",
+                    "2246",
+                    "0",
+                    "",
+                    "",
+                    "",
+                ),
+                ZaimRowData(
+                    "2018-10-11",
+                    "payment",
+                    "教育・教養",
+                    "参考書",
+                    "ヨドバシゴールドポイントカード・プラス",
+                    "",
+                    "プログラマが知るべき97のこと",
+                    "",
+                    "PayPal",
+                    "",
+                    "0",
+                    "1642",
+                    "0",
+                    "",
+                    "",
+                    "",
+                ),
+                ZaimRowData(
+                    "2018-10-22",
+                    "payment",
+                    "教育・教養",
+                    "参考書",
+                    "ヨドバシゴールドポイントカード・プラス",
+                    "",
+                    "退屈なことはPythonにやらせよう",
+                    "",
+                    "PayPal",
+                    "",
+                    "0",
+                    "3197",
+                    "0",
+                    "",
+                    "",
+                    "",
                 ),
             ],
         )

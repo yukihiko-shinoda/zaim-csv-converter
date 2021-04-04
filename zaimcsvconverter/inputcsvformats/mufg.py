@@ -7,8 +7,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
+from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.utility import Utility
 
 
@@ -78,8 +78,8 @@ class MufgRowData(InputStoreRowData):
 class MufgRow(InputRow):
     """This class implements row model of MUFG bank CSV."""
 
-    def __init__(self, input_row_data: MufgRowData):
-        super().__init__(FileCsvConvertId.MUFG, input_row_data)
+    def __init__(self, input_row_data: MufgRowData, *args, **kwargs):
+        super().__init__(input_row_data, *args, **kwargs)
         self.cash_flow_kind: MufgRowData.CashFlowKind = input_row_data.cash_flow_kind
         self._summary: str = input_row_data.summary
 
@@ -114,8 +114,8 @@ class MufgRow(InputRow):
 class MufgIncomeRow(MufgRow, ABC):
     """This class implements income row model of MUFG bank CSV."""
 
-    def __init__(self, row_data: MufgRowData):
-        super().__init__(row_data)
+    def __init__(self, row_data: MufgRowData, *args, **kwargs):
+        super().__init__(row_data, *args, **kwargs)
         self._deposit_amount: Optional[int] = row_data.deposit_amount
 
     @property
@@ -136,8 +136,8 @@ class MufgIncomeRow(MufgRow, ABC):
 class MufgPaymentRow(MufgRow, ABC):
     """This class implements payment row model of MUFG bank CSV."""
 
-    def __init__(self, row_data: MufgRowData):
-        super().__init__(row_data)
+    def __init__(self, row_data: MufgRowData, *args, **kwargs):
+        super().__init__(row_data, *args, **kwargs)
         self._payed_amount: Optional[int] = row_data.payed_amount
 
     @property
@@ -165,6 +165,9 @@ class MufgPaymentToSelfRow(MufgPaymentRow):
 # pylint: disable=too-many-instance-attributes
 class MufgStoreRow(MufgRow, InputStoreRow, ABC):
     """This class implements row model of MUFG bank CSV."""
+
+    def __init__(self, input_row_data: MufgRowData):
+        super().__init__(input_row_data, FileCsvConvert.MUFG.value)
 
     @property
     def is_transfer_income_from_other_own_account(self) -> bool:
