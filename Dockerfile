@@ -1,5 +1,5 @@
 # Slim image can't install numpy
-FROM python:3.9.0-buster as production
+FROM python:3.9.8-bullseye as production
 WORKDIR /workspace
 COPY Pipfile Pipfile.lock /workspace/
 RUN pip --no-cache-dir install pipenv \
