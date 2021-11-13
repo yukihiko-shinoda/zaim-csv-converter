@@ -101,9 +101,9 @@ class MufgRow(InputRow):
 
     @property
     def is_by_card(self) -> bool:
-        return (
-            self._summary == MufgRowData.Summary.CARD.value
-            or self._summary == MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value
+        return self._summary in (
+            MufgRowData.Summary.CARD.value,
+            self._summary == MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value,
         )
 
     @property

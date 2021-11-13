@@ -24,22 +24,29 @@ def style(context, check=False):
     """
     for result in [
         isort(context, check),
+        autoflake(context, check),
         black(context, check),
     ]:
         if result.failed:
             raise Failure(result)
 
 
+def autoflake(context, check=False) -> Result:
+    """Runs autoflake."""
+    autoflake_options = f"{'--recursive'} {'--check' if check else '--in-place'}"
+    return context.run(f"autoflake {autoflake_options} {' '.join(PYTHON_DIRS)}", warn=True)
+
+
 def isort(context, check=False) -> Result:
     """Runs isort."""
-    isort_options = "{}".format("--check-only --diff" if check else "")
-    return context.run("isort {} {}".format(isort_options, " ".join(PYTHON_DIRS)), warn=True)
+    isort_options = f"{'--check-only --diff' if check else ''}"
+    return context.run(f"isort {isort_options} {' '.join(PYTHON_DIRS)}", warn=True)
 
 
 def black(context, check=False) -> Result:
     """Runs black."""
-    black_options = "{}".format("--check --diff" if check else "")
-    return context.run("black {} {}".format(black_options, " ".join(PYTHON_DIRS)), warn=True)
+    black_options = f"{'--check --diff' if check else ''}"
+    return context.run(f"black {black_options} {' '.join(PYTHON_DIRS)}", warn=True)
 
 
 @task
@@ -47,7 +54,7 @@ def lint_flake8(context):
     """
     Lint code with flake8
     """
-    context.run("flake8 {} {}".format("--radon-show-closures", " ".join(PYTHON_DIRS)))
+    context.run(f"flake8 --radon-show-closures {' '.join(PYTHON_DIRS)}")
 
 
 @task
@@ -55,7 +62,7 @@ def lint_pylint(context):
     """
     Lint code with pylint
     """
-    context.run("pylint {}".format(" ".join(PYTHON_DIRS)))
+    context.run(f"pylint {' '.join(PYTHON_DIRS)}")
 
 
 @task
@@ -63,7 +70,7 @@ def lint_mypy(context):
     """
     Lint code with pylint
     """
-    context.run("mypy {}".format(" ".join(PYTHON_DIRS)))
+    context.run(f"mypy {' '.join(PYTHON_DIRS)}")
 
 
 @task(lint_flake8, lint_pylint, lint_mypy)
@@ -78,7 +85,7 @@ def radon_cc(context):
     """
     Reports code complexity.
     """
-    context.run("radon cc {}".format(" ".join(PYTHON_DIRS)))
+    context.run(f"radon cc {' '.join(PYTHON_DIRS)}")
 
 
 @task
@@ -86,7 +93,7 @@ def radon_mi(context):
     """
     Reports maintainability index.
     """
-    context.run("radon mi {}".format(" ".join(PYTHON_DIRS)))
+    context.run(f"radon mi {' '.join(PYTHON_DIRS)}")
 
 
 @task(radon_cc, radon_mi)
@@ -101,7 +108,7 @@ def xenon(context):
     """
     Check code complexity.
     """
-    context.run(("xenon --max-absolute B --max-modules B --max-average B {}").format(" ".join(PYTHON_DIRS)))
+    context.run((f"xenon --max-absolute B --max-modules B --max-average B {' '.join(PYTHON_DIRS)}"))
 
 
 @task(help={"publish": "Publish the result via coveralls", "xml": "Export report as xml format"})
@@ -109,7 +116,7 @@ def coverage(context, publish=False, xml=False):
     """
     Create coverage report
     """
-    context.run("coverage run --source {} -m pytest".format(SOURCE_DIR))
+    context.run(f"coverage run --source {SOURCE_DIR} -m pytest")
     context.run("coverage report")
     if publish:
         # Publish the results via coveralls
