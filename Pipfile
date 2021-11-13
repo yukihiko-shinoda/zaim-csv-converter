@@ -18,6 +18,7 @@ sqlalchemy = "*"
 yamldataclassconfig = "*"
 
 [dev-packages]
+autoflake = "*"
 coverage = "*"
 factory_boy = "*"
 fixturefilehandler = "*"

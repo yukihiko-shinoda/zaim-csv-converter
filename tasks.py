@@ -24,10 +24,17 @@ def style(context, check=False):
     """
     for result in [
         isort(context, check),
+        autoflake(context, check),
         black(context, check),
     ]:
         if result.failed:
             raise Failure(result)
+
+
+def autoflake(context, check=False) -> Result:
+    """Runs autoflake."""
+    autoflake_options = f"{'--recursive'} {'--check' if check else '--in-place'}"
+    return context.run(f"autoflake {autoflake_options} {' '.join(PYTHON_DIRS)}", warn=True)
 
 
 def isort(context, check=False) -> Result:
