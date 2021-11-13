@@ -6,6 +6,7 @@ import warnings
 from abc import abstractmethod
 from dataclasses import dataclass
 from enum import Enum
+from types import DynamicClassAttribute
 from typing import Generic, List, Optional, Type, TypeVar
 
 from inflector import Inflector
@@ -28,7 +29,7 @@ class FileCsvConvertId(Enum):
     VIEW_CARD = 6
     PAY_PAL = 7
 
-    @property
+    @DynamicClassAttribute
     def value(self) -> int:
         """This method overwrite super method for type hint."""
         return super().value
@@ -181,7 +182,7 @@ class ConvertTableType(Enum):
     STORE = ClassConvertTable(Store, StoreRowData)
     ITEM = ClassConvertTable(Item, ItemRowData)
 
-    @property
+    @DynamicClassAttribute
     def value(self) -> ClassConvertTable:
         """This method overwrite super method for type hint."""
         return super().value

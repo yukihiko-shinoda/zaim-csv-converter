@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from types import DynamicClassAttribute
 from typing import List
 
 from zaimcsvconverter.models import ConvertTableRecordMixin, ConvertTableType, FileCsvConvertId
@@ -45,7 +46,7 @@ class FileCsvConvert(Enum):
     PAY_PAL_STORE = FileCsvConvertContext(FileCsvConvertId.PAY_PAL, "pay_pal_store.csv", ConvertTableType.STORE,)
     PAY_PAL_ITEM = FileCsvConvertContext(FileCsvConvertId.PAY_PAL, "pay_pal_item.csv", ConvertTableType.ITEM,)
 
-    @property
+    @DynamicClassAttribute
     def value(self) -> FileCsvConvertContext:
         """This method overwrite super method for type hint."""
         return super().value

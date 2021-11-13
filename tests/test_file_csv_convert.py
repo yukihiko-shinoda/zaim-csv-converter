@@ -2,6 +2,7 @@
 import os
 from enum import Enum
 from pathlib import Path
+from types import DynamicClassAttribute
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 
@@ -18,7 +19,7 @@ class FilePathConvertTable(Enum):
     PAY_PAL_STORE = Path("pay_pal_store.csv")
     PAY_PAL_ITEM = Path("pay_pal_item.csv")
 
-    @property
+    @DynamicClassAttribute
     def value(self) -> Path:
         """This method overwrite super method for type hint."""
         return super().value

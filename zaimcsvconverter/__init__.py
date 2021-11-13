@@ -1,6 +1,7 @@
 """This module implements default database settings."""
 from enum import Enum
 from pathlib import Path
+from types import DynamicClassAttribute
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -29,7 +30,7 @@ class DirectoryCsv(Enum):
     INPUT = Path(__file__).parent.parent / "./csvinput/"
     OUTPUT = Path(__file__).parent.parent / "./csvoutput/"
 
-    @property
+    @DynamicClassAttribute
     def value(self) -> Path:
         """This method overwrite super method for type hint."""
         return super().value

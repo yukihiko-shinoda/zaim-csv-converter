@@ -5,12 +5,12 @@ import re
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
+from types import DynamicClassAttribute
 from typing import Generic, List, Type
 
 from godslayer.god_slayer_factory import GodSlayerFactory
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import (
     InputRow,
     InputRowData,
@@ -119,7 +119,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
         return self.input_row_factory.create(input_row_data)
 
     def convert_input_row_to_zaim_row(self, input_row: TypeVarInputRow) -> ZaimRow:
-        """This method converts imput row into zaim row."""
+        """This method converts input row into zaim row."""
         converter = self.zaim_row_converter_selector.create(input_row)
         return ZaimRowFactory.create(converter)
 
@@ -233,7 +233,7 @@ class Account(Enum):
         PayPalZaimRowConverterFactory(),
     )
 
-    @property
+    @DynamicClassAttribute
     def value(self) -> AccountContext:
         """This method overwrite super method for type hint."""
         return super().value

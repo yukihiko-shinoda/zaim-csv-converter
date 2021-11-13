@@ -3,7 +3,6 @@ import pytest
 from sqlalchemy.orm.exc import NoResultFound
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.account import Account
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
@@ -23,7 +22,13 @@ class TestModel:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, file_csv_convert, store_name, expected_store_name_zaim, expected_transfer_target",
+        (
+            "database_session_with_schema, "
+            "file_csv_convert, "
+            "store_name, "
+            "expected_store_name_zaim, "
+            "expected_transfer_target"
+        ),
         [
             (
                 [InstanceResource.FIXTURE_RECORD_STORE_WAON_MAKUHARISHINTOSHIN],

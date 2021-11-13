@@ -1,6 +1,7 @@
 """Tests for account.py"""
 from enum import Enum
 from pathlib import Path
+from types import DynamicClassAttribute
 
 import pytest
 
@@ -28,7 +29,7 @@ class FilePathInput(Enum):
     SUICA = Path("c:\\Users\\user\\workspace\\zaim-csv-converter\\csvinput\\suica202003.csv")
     PAY_PAL = Path("c:\\Users\\user\\workspace\\zaim-csv-converter\\csvinput\\pay_pal201711.csv")
 
-    @property
+    @DynamicClassAttribute
     def value(self) -> Path:
         """This method overwrite super method for type hint."""
         return super().value
