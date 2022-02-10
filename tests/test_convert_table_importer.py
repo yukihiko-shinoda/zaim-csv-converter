@@ -7,7 +7,7 @@ from zaimcsvconverter.models import Item, Store
 
 
 class TestConvertTableImporter:
-    """Tests for ConvertTableImporter"""
+    """Tests for ConvertTableImporter."""
 
     def _prepare_fixture(self):
         pass

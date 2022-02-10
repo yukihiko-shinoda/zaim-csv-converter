@@ -3,7 +3,7 @@ from zaimcsvconverter.session_manager import SessionManager
 
 
 class TestAccount:
-    """Tests for session manager"""
+    """Tests for session manager."""
 
     # pylint: disable=unused-argument
     @staticmethod

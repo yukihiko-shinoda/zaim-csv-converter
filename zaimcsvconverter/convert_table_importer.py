@@ -14,7 +14,7 @@ class ConvertTableImporter:
         self.directory_csv_convert = directory_csv_convert
 
     def execute(self) -> None:
-        """This method executes importing process for convert table CSV"""
+        """This method executes importing process for convert table CSV."""
         for path in sorted(self.directory_csv_convert.glob("*.csv")):
             self._import_csv_to_database(path)
 

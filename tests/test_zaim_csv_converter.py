@@ -1,10 +1,10 @@
-"""Tests for zaim_csv_converter.py"""
+"""Tests for zaim_csv_converter.py."""
 import csv
 from pathlib import Path
 from typing import Optional
 
-import pytest
 from fixturefilehandler.file_paths import RelativeDeployFilePath
+import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, ZaimCsvFileChecker
@@ -213,7 +213,22 @@ class TestZaimCsvConverter:
             "mufg201808.csv",
             [
                 ZaimRowData(
-                    "2018-08-20", "income", "その他", "-", "", "三菱UFJ銀行", "", "", "三菱UFJ銀行", "", "20", "0", "0", "", "", ""
+                    "2018-08-20",
+                    "income",
+                    "その他",
+                    "-",
+                    "",
+                    "三菱UFJ銀行",
+                    "",
+                    "",
+                    "三菱UFJ銀行",
+                    "",
+                    "20",
+                    "0",
+                    "0",
+                    "",
+                    "",
+                    "",
                 ),
             ],
         )
@@ -616,9 +631,10 @@ class TestZaimCsvConverter:
     def test_fail(
         yaml_config_file, directory_csv_convert_table, directory_csv_input, directory_csv_output, database_session
     ):
-        """
-        Correct input CSV files should be converted into Zaim format CSV file.
-        Incorrect input CSV files should be reported on error_undefined_content.csv.
+        """Tests following:
+
+        - Correct input CSV files should be converted into Zaim format CSV file.
+        - Incorrect input CSV files should be reported on error_undefined_content.csv.
         """
         with pytest.raises(InvalidInputCsvError) as error:
             ZaimCsvConverter.execute()

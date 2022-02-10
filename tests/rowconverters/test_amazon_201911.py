@@ -18,7 +18,7 @@ from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
 class TestAmazon201911DiscountZaimPaymentRowConverter:
-    """ Tests for Amazon201911ZaimPaymentRowConverter."""
+    """Tests for Amazon201911ZaimPaymentRowConverter."""
 
     # pylint: disable=unused-argument
     @staticmethod
@@ -43,7 +43,7 @@ class TestAmazon201911DiscountZaimPaymentRowConverter:
 
 
 class TestAmazon201911PaymentZaimPaymentRowConverter:
-    """ Tests for Amazon201911ZaimPaymentRowConverter."""
+    """Tests for Amazon201911ZaimPaymentRowConverter."""
 
     # pylint: disable=unused-argument
     @staticmethod

@@ -1,10 +1,10 @@
 """This module implements constants which suitable module to belong is not defined."""
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
+import re
 from types import DynamicClassAttribute
 from typing import Generic, List, Type
 
@@ -30,7 +30,6 @@ from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData, PayPalRowFac
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
-from zaimcsvconverter.rowconverters import ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.amazon_201911 import Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
@@ -40,6 +39,7 @@ from zaimcsvconverter.rowconverters.pay_pal import PayPalZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
+from zaimcsvconverter.rowconverters import ZaimRowConverterFactory
 from zaimcsvconverter.zaim_row import ZaimRow, ZaimRowFactory
 
 

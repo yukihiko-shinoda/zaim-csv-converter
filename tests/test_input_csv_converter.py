@@ -19,9 +19,10 @@ class TestInputCsvConverterForStore:
     @staticmethod
     @pytest.mark.parametrize("path_file_csv_input", ("waon",), indirect=["path_file_csv_input"])
     def test_success(yaml_config_load, database_session_basic_store_waon, path_file_csv_input: Path, tmp_path):
-        """
-        The row to skip should be skipped.
-        First line should be header.
+        """Tests following:
+
+        - The row to skip should be skipped.
+        - First line should be header.
         """
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []
@@ -83,9 +84,10 @@ class TestInputCsvConverterForStore:
     )
     @pytest.mark.parametrize("path_file_csv_input", ("waon",), indirect=["path_file_csv_input"])
     def test_key_error(yaml_config_load, database_session_with_schema, path_file_csv_input: Path, tmp_path):
-        """
-        Method should raise error when store isn't be find on database.
-        Undefined store is listed up on property.
+        """Tests following:
+
+        - Method should raise error when store isn't be find on database.
+        - Undefined store is listed up on property.
         """
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []
@@ -103,9 +105,10 @@ class TestInputCsvConverterForItem:
     @staticmethod
     @pytest.mark.parametrize("path_file_csv_input", ("amazon",), indirect=["path_file_csv_input"])
     def test_key_error(yaml_config_load, database_session_with_schema, path_file_csv_input: Path, tmp_path):
-        """
-        Method should raise error when store isn't be find on database.
-        Undefined item is listed up on property.
+        """Tests following:
+
+        - Method should raise error when store isn't be find on database.
+        - Undefined item is listed up on property.
         """
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
         assert input_csv_converter.input_csv.undefined_content_error_handler.list_error == []

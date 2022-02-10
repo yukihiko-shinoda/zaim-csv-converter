@@ -25,9 +25,10 @@ class TestInputCsvConverterIterator:
     # pylint: disable=unused-argument
     @staticmethod
     def test_fail(yaml_config_load, database_session_store_item, resource_path, tmp_path):
-        """
-        Method exports error csv files in specified diretory.
-        Same content should be unified.
+        """Tests following:
+
+        - Method exports error csv files in specified diretory.
+        - Same content should be unified.
         """
         input_csv_converter_iterator = InputCsvConverterIterator(resource_path, tmp_path)
         with pytest.raises(InvalidInputCsvError):

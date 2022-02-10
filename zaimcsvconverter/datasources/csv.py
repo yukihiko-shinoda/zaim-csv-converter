@@ -1,4 +1,4 @@
-"""This module implements CSV Datasource"""
+"""This module implements CSV Datasource."""
 from typing import Any, Generator, List, Optional
 
 from godslayer.csv.god_slayer import GodSlayer
@@ -9,7 +9,7 @@ from zaimcsvconverter.exceptions import InvalidInputCsvError, LogicError
 
 
 class Csv(DataSource):
-    """This class implements abstract CSV Datasource"""
+    """This class implements abstract CSV Datasource."""
 
     def __init__(self, god_slayer: GodSlayer):
         super().__init__()

@@ -20,9 +20,10 @@ class TestGoldPointCardPlus201912RowData:
     @staticmethod
     # pylint: disable=too-many-locals
     def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         used_date = "2019/11/03"
         used_store = "AMAZON WEB SERVICES (AWS.AMAZON.CO)"
@@ -83,8 +84,8 @@ class TestGoldPointCardPlus201912Row:
         expected_store_name_zaim,
         expected_is_row_to_skip,
     ):
-        """
-        Arguments should set into properties.
+        """Arguments should set into properties.
+
         :param GoldPointCardPlus201912RowData gold_point_card_plus_201912_row_data:
         """
         row = GoldPointCardPlus201912Row(gold_point_card_plus_201912_row_data)
@@ -98,7 +99,9 @@ class TestGoldPointCardPlus201912Row:
     @staticmethod
     def test_is_row_to_skip(database_session_stores_gold_point_card_plus):
         assert (
-            GoldPointCardPlus201912Row(InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN).is_row_to_skip
+            GoldPointCardPlus201912Row(
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN
+            ).is_row_to_skip
             is False
         )
 

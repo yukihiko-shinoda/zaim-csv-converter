@@ -6,8 +6,8 @@ from fixturefilehandler.file_paths import RelativeVacateFilePath
 
 
 class CsvFilePathBuilder(RelativeVacateFilePath):
-    """
-    This class builds file path for config file.
+    """This class builds file path for config file.
+
     Default value is maybe suitable for standard directory structure of python project.
     """
 

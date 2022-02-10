@@ -1,4 +1,4 @@
-"""Tests for account.py"""
+"""Tests for account.py."""
 from enum import Enum
 from pathlib import Path
 from types import DynamicClassAttribute

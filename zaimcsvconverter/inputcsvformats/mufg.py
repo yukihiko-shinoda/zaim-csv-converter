@@ -187,8 +187,8 @@ class MufgIncomeFromOthersRow(MufgStoreRow, MufgIncomeRow):
 
 # pylint: disable=too-many-ancestors
 class MufgPaymentToSomeoneRow(MufgStoreRow, MufgPaymentRow):
-    """
-    This class implements payment row model of MUFG bank CSV.
+    """This class implements payment row model of MUFG bank CSV.
+
     It may to others, also may to self.
     """
 
@@ -206,7 +206,10 @@ class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
             MufgRowData.CashFlowKind.TRANSFER_PAYMENT,
         ):
             return MufgPaymentToSomeoneRow(input_row_data)
-        if input_row_data.cash_flow_kind in (MufgRowData.CashFlowKind.INCOME, MufgRowData.CashFlowKind.TRANSFER_INCOME):
+        if input_row_data.cash_flow_kind in (
+            MufgRowData.CashFlowKind.INCOME,
+            MufgRowData.CashFlowKind.TRANSFER_INCOME,
+        ):
             return MufgIncomeFromOthersRow(input_row_data)
         raise ValueError(
             f"Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}"

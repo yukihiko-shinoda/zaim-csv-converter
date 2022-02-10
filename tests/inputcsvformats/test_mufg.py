@@ -20,9 +20,10 @@ class TestMufgRowData:
 
     @staticmethod
     def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         date = "2018/11/28"
         summary = "水道"

@@ -20,9 +20,10 @@ class TestSFCardViewerRowData:
 
     @staticmethod
     def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         used_date = "2018/11/13"
         is_commuter_pass_enter = ""
@@ -64,9 +65,7 @@ class TestSFCardViewerRow:
     # pylint: disable=unused-argument
     @staticmethod
     def test_init(yaml_config_load, database_session_stores_sf_card_viewer):
-        """
-        Arguments should set into properties.
-        """
+        """Arguments should set into properties."""
         sf_card_viewer_row = SFCardViewerEnterRow(
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
         )

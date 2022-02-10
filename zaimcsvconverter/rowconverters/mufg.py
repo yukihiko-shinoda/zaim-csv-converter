@@ -1,5 +1,5 @@
-"""
-This module implements convert steps from MUFG input row to Zaim row.
+"""This module implements convert steps from MUFG input row to Zaim row.
+
 @see https://faq01.bk.mufg.jp/usr/file/attachment/main_contents_0401.pdf
 """
 from abc import ABC, abstractmethod
@@ -121,7 +121,9 @@ class MufgTransferIncomeZaimTransferRowConverter(MufgAbstractIncomeZaimTransferR
         return self.input_row.store.transfer_target
 
 
-class MufgTransferPaymentZaimTransferRowConverter(MufgAbstractPaymentZaimTransferRowConverter[MufgPaymentToSomeoneRow]):
+class MufgTransferPaymentZaimTransferRowConverter(
+    MufgAbstractPaymentZaimTransferRowConverter[MufgPaymentToSomeoneRow]
+):
     """This class implements convert steps from MUFG transfer payment input row to Zaim transfer row."""
 
     @property

@@ -6,7 +6,7 @@ from zaimcsvconverter.inputcsvformats.waon import WaonRow
 
 
 class TestErrorHandler:
-    """Tests for UndefinedContentErrorHandler"""
+    """Tests for UndefinedContentErrorHandler."""
 
     @staticmethod
     def test_init_is_presented_false():

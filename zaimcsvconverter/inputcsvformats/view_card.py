@@ -1,7 +1,7 @@
 """This module implements row model of GOLD POINT CARD+ CSV version 201912."""
-import re
 from dataclasses import dataclass
 from datetime import datetime
+import re
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert

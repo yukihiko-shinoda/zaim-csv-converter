@@ -63,7 +63,9 @@ class AmazonRow(InputItemRow):
 
     def __init__(self, row_data: AmazonRowData):
         super().__init__(FileCsvConvert.AMAZON.value, row_data)
-        self._store: Store = Store(FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim))
+        self._store: Store = Store(
+            FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim)
+        )
         self.price: int = row_data.price
         self.number: int = row_data.number
 

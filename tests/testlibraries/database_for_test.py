@@ -1,5 +1,5 @@
-"""
-This module implements testing utility using SQLAlchemy and factory_boy.
+"""This module implements testing utility using SQLAlchemy and factory_boy.
+
 @see https://factoryboy.readthedocs.io/en/latest/orms.html#sqlalchemy
 """
 from dataclasses import dataclass
@@ -8,15 +8,15 @@ from typing import List
 import factory
 
 from tests.testlibraries.database_engine_manager import DatabaseEngineManager
-from zaimcsvconverter import Session
 from zaimcsvconverter.models import Base, ConvertTableRowData, FileCsvConvertId, Item, Store
+from zaimcsvconverter import Session
 
 
 class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Factory for Store model."""
 
     class Meta:  # Reason: Model. pylint: disable=too-few-public-methods
-        """Settings for factory_boy"""
+        """Settings for factory_boy."""
 
         model = Store
         sqlalchemy_session = Session
@@ -26,7 +26,7 @@ class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Factory for Store model."""
 
     class Meta:  # Reason: Model. pylint: disable=too-few-public-methods
-        """Settings for factory_boy"""
+        """Settings for factory_boy."""
 
         model = Item
         sqlalchemy_session = Session

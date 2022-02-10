@@ -20,9 +20,10 @@ class TestGoldPointCardPlusRowData:
     @staticmethod
     # pylint: disable=too-many-locals
     def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         used_date = "2018/7/3"
         used_store = "東京電力  電気料金等"
@@ -105,8 +106,8 @@ class TestGoldPointCardPlusRow:
         expected_store_name_zaim,
         expected_is_row_to_skip,
     ):
-        """
-        Arguments should set into properties.
+        """Arguments should set into properties.
+
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
         row = GoldPointCardPlusRow(gold_point_card_plus_row_data)

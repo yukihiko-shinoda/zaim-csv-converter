@@ -1,17 +1,17 @@
 """This module implements SQLAlchemy database models."""
 from __future__ import annotations
 
-import re
-import warnings
 from abc import abstractmethod
 from dataclasses import dataclass
 from enum import Enum
+import re
 from types import DynamicClassAttribute
 from typing import Generic, List, Optional, Type, TypeVar
+import warnings
 
 from inflector import Inflector
-from sqlalchemy import Column, Integer, String, UniqueConstraint, exc
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base, declared_attr
+from sqlalchemy import Column, exc, Integer, String, UniqueConstraint
+from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta, declared_attr
 from sqlalchemy.orm.exc import NoResultFound
 
 from zaimcsvconverter import Session
@@ -71,8 +71,8 @@ TypeVarConvertTableRowData = TypeVar("TypeVarConvertTableRowData", bound=Convert
 
 
 class ConvertTableRecordMixin:
-    """
-    This class implements convert table mixin.
+    """This class implements convert table mixin.
+
     @see https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/mixins.html
     """
 
@@ -101,7 +101,10 @@ class ConvertTableRecordMixin:
     def try_to_find(
         cls: Type[ConvertTableRecordMixin], file_csv_convert_id: FileCsvConvertId, name: str
     ) -> TypeVarBase:
-        """This method select Store model from database. If record is not exist, raise NoResultFound."""
+        """This method select Store model from database.
+
+        If record is not exist, raise NoResultFound.
+        """
         try:
             return cls.find(file_csv_convert_id, name)
         except NoResultFound:

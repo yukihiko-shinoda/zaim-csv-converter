@@ -1,10 +1,10 @@
 """This module implements config for pytest."""
 from pathlib import Path
 
-import pytest
-from fixturefilehandler import ResourceFileDeployer
 from fixturefilehandler.factories import DeployerFactory
 from fixturefilehandler.file_paths import YamlConfigFilePathBuilder
+from fixturefilehandler import ResourceFileDeployer
+import pytest
 
 from tests.test_zaim_csv_converter import create_relative_deploy_file_path
 from tests.testlibraries.database_for_test import DatabaseForTest
@@ -80,7 +80,9 @@ def database_session_stores_sf_card_viewer():
 @pytest.fixture
 def database_session_stores_view_card():
     """This fixture prepares database session and records."""
-    yield from DatabaseForTest.database_session_with_schema([InstanceResource.FIXTURE_RECORD_STORE_VIEW_CARD_VIEW_CARD])
+    yield from DatabaseForTest.database_session_with_schema(
+        [InstanceResource.FIXTURE_RECORD_STORE_VIEW_CARD_VIEW_CARD]
+    )
 
 
 @pytest.fixture

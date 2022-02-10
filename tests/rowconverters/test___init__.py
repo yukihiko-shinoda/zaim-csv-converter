@@ -162,7 +162,9 @@ class TestZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    def test_select_factory(yaml_config_load, database_session_with_schema, account: Account, input_row_data, expected):
+    def test_select_factory(
+        yaml_config_load, database_session_with_schema, account: Account, input_row_data, expected
+    ):
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = account.create_input_row_instance(input_row_data)
         factory_class = account.value.zaim_row_converter_selector.create(input_row)

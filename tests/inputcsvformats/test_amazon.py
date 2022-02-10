@@ -14,9 +14,10 @@ class TestAmazonRowData:
     @staticmethod
     # pylint: disable=too-many-locals
     def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         ordered_date = "2018/10/23"
         order_id = "123-4567890-1234567"
@@ -34,9 +35,7 @@ class TestAmazonRowData:
         credit_card_billing_amount = "5952"
         credit_card_identity = "Visa（下4けたが1234）"
         url_order_summary = "https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=123-4567890-1234567"
-        url_receipt = (
-            "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi?ie=UTF8&orderID=123-4567890-1234567"
-        )
+        url_receipt = "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi?ie=UTF8&orderID=123-4567890-1234567"
         url_item = "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1"
         row_data = AmazonRowData(
             ordered_date,

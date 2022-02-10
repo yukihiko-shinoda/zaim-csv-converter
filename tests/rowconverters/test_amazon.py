@@ -9,7 +9,7 @@ from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
 class TestAmazonZaimPaymentRowConverter:
-    """ Tests for AmazonZaimPaymentRowConverter."""
+    """Tests for AmazonZaimPaymentRowConverter."""
 
     # pylint: disable=unused-argument
     @staticmethod

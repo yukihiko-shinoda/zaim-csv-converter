@@ -17,9 +17,10 @@ class TestViewCardRowData:
     @staticmethod
     # pylint: disable=too-many-locals
     def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         used_date = "2020/03/31"
         used_place = "カード年会費"
@@ -80,8 +81,8 @@ class TestViewCardRow:
         expected_store_name_zaim,
         expected_is_row_to_skip,
     ):
-        """
-        Arguments should set into properties.
+        """Arguments should set into properties.
+
         :type view_card_row_data: ViewCardRowData
         """
         # noinspection PyTypeChecker

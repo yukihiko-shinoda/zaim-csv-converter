@@ -13,9 +13,10 @@ class TestWaonRowData:
 
     @staticmethod
     def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         date = "2018/8/7"
         used_store = "ファミリーマートかぶと町永代"
@@ -73,8 +74,8 @@ class TestWaonRow:
         expected_store_name_zaim,
         expected_amount,
     ):
-        """
-        Arguments should set into properties.
+        """Arguments should set into properties.
+
         :param WaonRowData waon_row_data:
         """
         waon_row = WaonRow(waon_row_data)

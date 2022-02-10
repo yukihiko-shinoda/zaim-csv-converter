@@ -6,12 +6,9 @@ from sqlalchemy.orm import scoped_session
 
 
 class DatabaseEngineManager(contextlib.AbstractContextManager):
-    """
-    This class implements context manager which replaces database engine
-    from the one for development / production to the one for unit testing
-    to keep data in the development / production database
-    and inject new engine on every unit testing to run parallel.
-    """
+    """This class implements context manager which replaces database engine from the one for development / production
+    to the one for unit testing to keep data in the development / production database and inject new engine on every
+    unit testing to run parallel."""
 
     def __init__(self, argument_scoped_session: scoped_session):
         self.scoped_session = argument_scoped_session

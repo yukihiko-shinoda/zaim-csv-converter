@@ -37,7 +37,9 @@ class Amazon201911PaymentZaimPaymentRowConverter(ZaimPaymentRowItemConverter[Ama
         return self.input_row.price * self.input_row.number
 
 
-class Amazon201911ShippingHandlingZaimPaymentRowConverter(ZaimPaymentRowItemConverter[Amazon201911ShippingHandlingRow]):
+class Amazon201911ShippingHandlingZaimPaymentRowConverter(
+    ZaimPaymentRowItemConverter[Amazon201911ShippingHandlingRow]
+):
     """This class implements convert steps from Amazon input row to Zaim payment row."""
 
     @property
