@@ -47,7 +47,12 @@ add_select = ["D212", "D214", "D410", "D411", "D415", "D416", "D417"]
 # D400: First line may ends with ":" for expression.
 # D402: First line may ends with function signature for expression.
 # D415: First line may ends with ":" for expression.
-add_ignore = ["D400", "D401", "D402", "D415"]
+# D101: Docstring may be missed in public class since docstring-min-length is set.
+# D102: Docstring may be missed in public method since docstring-min-length is set.
+# D105: Docstring may be missed in magic method since docstring-min-length is set.
+# D105: Docstring may be missed in public nested class since docstring-min-length is set.
+# D107: Docstring may be missed in __init__ method since docstring-min-length is set.
+add_ignore = ["D400", "D401", "D402", "D415", "D101", "D102", "D105", "D106", "D107"]
 
 # [tool.pytest.ini_options]
 # log_cli = true

@@ -26,10 +26,12 @@ class TestSFCardViewerRowData:
         - Property store_date should return used_store.
         """
         used_date = "2018/11/13"
-        is_commuter_pass_enter = ""
+        # Reason: Not hardcoded password.
+        is_commuter_pass_enter = ""  # nosec
         railway_company_name_enter = "メトロ"
         station_name_enter = "六本木一丁目"
-        is_commuter_pass_exit = ""
+        # Reason: Not hardcoded password.
+        is_commuter_pass_exit = ""  # nosec
         railway_company_name_exit = "メトロ"
         station_name_exit = "後楽園"
         used_amount = "195"

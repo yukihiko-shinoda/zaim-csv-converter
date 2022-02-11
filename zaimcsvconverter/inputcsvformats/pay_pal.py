@@ -1,5 +1,5 @@
-"""
-This module implements row model of PayPal CSV.
+"""This module implements row model of PayPal CSV.
+
 see:
   - PayPal activity download specification
     https://www.paypalobjects.com/webstatic/en_US/developer/docs/pdf/PP_ActivityDownload.pdf
