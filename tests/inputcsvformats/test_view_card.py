@@ -16,10 +16,11 @@ class TestViewCardRowData:
     # noinspection DuplicatedCode
     @staticmethod
     # pylint: disable=too-many-locals
-    def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+    def test_init_and_property() -> None:
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         used_date = "2020/03/31"
         used_place = "カード年会費"
@@ -72,16 +73,15 @@ class TestViewCardRow:
             ),
         ],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_view_card")
     def test_init(
-        yaml_config_load,
-        database_session_stores_view_card,
-        view_card_row_data,
-        expected_date,
-        expected_store_name_zaim,
-        expected_is_row_to_skip,
-    ):
-        """
-        Arguments should set into properties.
+        view_card_row_data: ViewCardRowData,
+        expected_date: datetime,
+        expected_store_name_zaim: str,
+        expected_is_row_to_skip: bool,
+    ) -> None:
+        """Arguments should set into properties.
+
         :type view_card_row_data: ViewCardRowData
         """
         # noinspection PyTypeChecker
@@ -106,7 +106,8 @@ class TestViewCardRowFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize("argument, expected", [(InstanceResource.ROW_DATA_VIEW_CARD_ANNUAL_FEE, ViewCardRow)])
-    def test_create(argument, expected, database_session_stores_view_card):
+    @pytest.mark.usefixtures("database_session_stores_view_card")
+    def test_create(argument: ViewCardRowData, expected: type[ViewCardRow]) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         view_card_row = ViewCardRowFactory().create(argument)

@@ -3,13 +3,15 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
-from zaimcsvconverter.inputcsvformats.waon import WaonRow, WaonRowData, WaonRowFactory
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
+from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 from zaimcsvconverter.rowconverters.waon import (
     WaonZaimIncomeRowConverter,
     WaonZaimPaymentRowConverter,
-    WaonZaimRowConverterFactory,
     WaonZaimTransferRowConverter,
 )
+from zaimcsvconverter.rowconverters import ZaimRowConverter
 from zaimcsvconverter.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRowFactory, ZaimTransferRow
 
 
@@ -22,18 +24,15 @@ class TestWaonZaimIncomeRowConverter:
         "waon_row_data, expected_date, expected_store, expected_amount_income",
         [(InstanceResource.ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO, "2018-10-22", "イオンスタイル　板橋前野町", 1504)],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
     def test(
-        waon_row_data,
-        expected_date,
-        expected_store,
-        expected_amount_income,
-        yaml_config_load,
-        database_session_basic_store_waon,
-    ):
+        waon_row_data: WaonRowData, expected_date: str, expected_store: str, expected_amount_income: int,
+    ) -> None:
         """Arguments should set into properties."""
-        waon_row = WaonRow(waon_row_data)
+        account_context = Account.WAON.value
+        waon_row = account_context.create_input_row_instance(waon_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(WaonZaimIncomeRowConverter(waon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
         assert isinstance(zaim_row, ZaimIncomeRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -61,18 +60,15 @@ class TestWaonZaimPaymentRowConverter:
             (InstanceResource.ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO, "2018-08-30", "イオンスタイル　板橋前野町", 1489),
         ],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
     def test(
-        waon_row_data,
-        expected_date,
-        expected_store,
-        expected_amount_payment,
-        yaml_config_load,
-        database_session_basic_store_waon,
-    ):
+        waon_row_data: WaonRowData, expected_date: str, expected_store: str, expected_amount_payment: int,
+    ) -> None:
         """Arguments should set into properties."""
-        waon_row = WaonRow(waon_row_data)
+        account_context = Account.WAON.value
+        waon_row = account_context.create_input_row_instance(waon_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(WaonZaimPaymentRowConverter(waon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -97,12 +93,12 @@ class TestWaonZaimTransferRowConverter:
             (InstanceResource.ROW_DATA_WAON_CHARGE_BANK_ACCOUNT_ITABASHIMAENOCHO, "2018-10-22", 10000),
         ],
     )
-    def test(
-        waon_row_data, expected_date, expected_amount_payment, yaml_config_load, database_session_basic_store_waon
-    ):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
+    def test(waon_row_data: WaonRowData, expected_date: str, expected_amount_payment: int) -> None:
         """Arguments should set into properties."""
-        waon_row = WaonRow(waon_row_data)
-        zaim_row = ZaimRowFactory.create(WaonZaimTransferRowConverter(waon_row))
+        account_context = Account.WAON.value
+        waon_row = account_context.create_input_row_instance(waon_row_data)
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -159,10 +155,15 @@ class TestWaonZaimRowConverterConverter:
         ],
         indirect=["database_session_with_schema"],
     )
-    def test_success(yaml_config_load, database_session_with_schema, input_row_data: WaonRowData, expected):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test_success(
+        input_row_data: WaonRowData, expected: type[ZaimRowConverter[InputRow[InputRowData], InputRowData]]
+    ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = WaonRowFactory().create(input_row_data)
-        assert isinstance(WaonZaimRowConverterFactory().create(input_row), expected)
+        account_context = Account.WAON.value
+        input_row = account_context.create_input_row_instance(input_row_data)
+        actual = account_context.zaim_row_converter_factory.create(input_row)
+        assert isinstance(actual, expected)
 
     @staticmethod
     @pytest.mark.parametrize(
@@ -170,9 +171,13 @@ class TestWaonZaimRowConverterConverter:
         [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
         indirect=["database_session_with_schema"],
     )
-    def test_fail(yaml_config_load, database_session_with_schema):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test_fail() -> None:
         """Create method should raise ValueError when input row is undefined type."""
-        input_row = WaonRowFactory().create(InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO)
+        account_context = Account.WAON.value
+        input_row = account_context.create_input_row_instance(
+            InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO
+        )
         with pytest.raises(ValueError) as error:
-            WaonZaimRowConverterFactory().create(input_row)
+            account_context.zaim_row_converter_factory.create(input_row)
         assert str(error.value) == "Unsupported row. Input row = WaonRow, UseKind.DOWNLOAD_POINT"

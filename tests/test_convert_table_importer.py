@@ -1,18 +1,22 @@
 """Tests for convert_table_importer.py."""
-from typing import List
+from typing import Any, List
 
 import pytest
+from sqlalchemy.orm.session import Session as SQLAlchemySession
 
+from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 from zaimcsvconverter.models import Item, Store
 
 
 class TestConvertTableImporter:
-    """Tests for ConvertTableImporter"""
+    """Tests for ConvertTableImporter."""
 
-    def _prepare_fixture(self):
+    def _prepare_fixture(self) -> None:
         pass
 
-    def test_success(self, database_session_with_schema, fixture_convert_table_importer):
+    def test_success(
+        self, database_session_with_schema: SQLAlchemySession, fixture_convert_table_importer: ConvertTableImporter
+    ) -> None:
         """CSV should import into appropriate table."""
         fixture_convert_table_importer.execute()
         self.assert_store_equal(
@@ -45,7 +49,7 @@ class TestConvertTableImporter:
         )
 
     @staticmethod
-    def assert_store_equal(expected_stores, database_session_with_schema):
+    def assert_store_equal(expected_stores: list[Any], database_session_with_schema: SQLAlchemySession) -> None:
         """This method asserts Store table."""
         stores: List[Store] = database_session_with_schema.query(Store).order_by(Store.id.asc()).all()
         assert len(stores) == len(expected_stores)
@@ -63,7 +67,7 @@ class TestConvertTableImporter:
             index += 1
 
     @staticmethod
-    def assert_item_equal(expected_items, database_session_with_schema):
+    def assert_item_equal(expected_items: list[Any], database_session_with_schema: SQLAlchemySession) -> None:
         """This method asserts Store table."""
         items: List[Item] = database_session_with_schema.query(Item).order_by(Item.id.asc()).all()
         assert len(items) == len(expected_items)
@@ -79,7 +83,8 @@ class TestConvertTableImporter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_fail(fixture_convert_table_importer, database_session_with_schema):
+    @pytest.mark.usefixtures("database_session_with_schema")
+    def test_fail(fixture_convert_table_importer: ConvertTableImporter) -> None:
         """Method should raise error when the file which name is not correct is included."""
         with pytest.raises(ValueError):
             fixture_convert_table_importer.execute()

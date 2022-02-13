@@ -1,5 +1,5 @@
-"""
-This module implements row model of PayPal CSV.
+"""This module implements row model of PayPal CSV.
+
 see:
   - PayPal activity download specification
     https://www.paypalobjects.com/webstatic/en_US/developer/docs/pdf/PP_ActivityDownload.pdf
@@ -12,12 +12,12 @@ from enum import Enum
 from typing import ClassVar, List
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputItemRowData, InputRowFactory, InputStoreItemRow
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreItemRow, InputStoreItemRowData
 
 
 @dataclass
 # Reason: Specification. pylint: disable=too-many-instance-attributes
-class PayPalRowData(InputItemRowData):
+class PayPalRowData(InputStoreItemRowData):
     """This class implements data class for wrapping list of PayPal CSV row model."""
 
     HEADER: ClassVar[List[str]] = field(
@@ -188,7 +188,7 @@ class PayPalRowData(InputItemRowData):
         return super().validate
 
 
-class PayPalRow(InputStoreItemRow):
+class PayPalRow(InputStoreItemRow[PayPalRowData]):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: PayPalRowData):
@@ -207,7 +207,7 @@ class PayPalRow(InputStoreItemRow):
         )
         return super().validate
 
-    def check_net_is_gross_plus_fee(self) -> bool:
+    def check_net_is_gross_plus_fee(self) -> None:
         if self.net != self.gross + self.fee:
             raise ValueError()
 
@@ -231,5 +231,9 @@ class PayPalRow(InputStoreItemRow):
 class PayPalRowFactory(InputRowFactory[PayPalRowData, PayPalRow]):
     """This class implements factory to create Amazon.co.jp CSV row instance."""
 
-    def create(self, input_row_data: PayPalRowData) -> PayPalRow:
+    # Reason: The example implementation of returns ignore incompatible return type.
+    # see:
+    #   - Create your own container — returns 0.18.0 documentation
+    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
+    def create(self, input_row_data: PayPalRowData) -> PayPalRow:  # type: ignore
         return PayPalRow(input_row_data)

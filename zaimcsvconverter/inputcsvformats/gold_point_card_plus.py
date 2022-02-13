@@ -45,7 +45,7 @@ class GoldPointCardPlusRowData(InputStoreRowData):
         return super().validate
 
 
-class GoldPointCardPlusRow(InputStoreRow):
+class GoldPointCardPlusRow(InputStoreRow[GoldPointCardPlusRowData]):
     """This class implements row model of GOLD POINT CARD+ CSV."""
 
     def __init__(self, row_data: GoldPointCardPlusRowData):
@@ -65,5 +65,9 @@ class GoldPointCardPlusRow(InputStoreRow):
 class GoldPointCardPlusRowFactory(InputRowFactory[GoldPointCardPlusRowData, GoldPointCardPlusRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
 
-    def create(self, input_row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:
+    # Reason: The example implementation of returns ignore incompatible return type.
+    # see:
+    #   - Create your own container — returns 0.18.0 documentation
+    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
+    def create(self, input_row_data: GoldPointCardPlusRowData) -> GoldPointCardPlusRow:  # type: ignore
         return GoldPointCardPlusRow(input_row_data)

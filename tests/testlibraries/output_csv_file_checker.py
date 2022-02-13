@@ -1,11 +1,12 @@
 """This module implements checker for output CSV file."""
-import csv
 from abc import abstractmethod
+import csv
 from dataclasses import dataclass, field
 from typing import Generic, List, Type, TypeVar
 
 from fixturefilehandler.file_paths import RelativeDeployFilePath
 
+from tests.testlibraries.csv_types import CSVReader
 from tests.testlibraries.row_data import InvalidRowErrorRowData, ZaimRowData
 from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
 
@@ -13,14 +14,14 @@ TypeVarOutputRowData = TypeVar("TypeVarOutputRowData")
 
 
 # @see https://github.com/python/mypy/issues/5374
-@dataclass
-class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):  # type: ignore
+@dataclass  # type: ignore
+class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):
     """This class helps to check output CSV file."""
 
     directory_csv_output: RelativeDeployFilePath
     output_row_data_class: Type[TypeVarOutputRowData] = field(init=False)
 
-    def assert_file(self, file_name: str, list_expected: List[TypeVarOutputRowData]):
+    def assert_file(self, file_name: str, list_expected: List[TypeVarOutputRowData]) -> None:
         """This method checks Zaim CSV file."""
         list_output_row_data: List[TypeVarOutputRowData] = self.read_output_csv(file_name)
         assert len(list_output_row_data) == len(
@@ -30,9 +31,11 @@ class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):  # type: ignore
             assert output_row_data == expected, self._build_error_message(list_output_row_data, output_row_data)
 
     @staticmethod
-    def _build_error_message(list_output_row_data, output_row_data):
+    def _build_error_message(
+        list_output_row_data: List[TypeVarOutputRowData], output_row_data: TypeVarOutputRowData
+    ) -> str:
         debug_list_output_row_data = ",\n".join(str(output_row_data) for output_row_data in list_output_row_data)
-        return f", output_row_data = {output_row_data}\n" f"list_output_row_data = {debug_list_output_row_data}"
+        return f", output_row_data = {output_row_data}\nlist_output_row_data = {debug_list_output_row_data}"
 
     def read_output_csv(self, file_name: str) -> List[TypeVarOutputRowData]:
         """This method reads output CSV files and returns as list of output row data instance."""
@@ -42,29 +45,29 @@ class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):  # type: ignore
             self.assert_header_and_skip(csv_reader)
             for list_row_data in csv_reader:
                 # Reason: Pylint has not support dataclasses. pylint: disable=not-callable
-                list_zaim_row_data.append(self.output_row_data_class(*list_row_data))  # type: ignore
+                list_zaim_row_data.append(self.output_row_data_class(*list_row_data))
         return list_zaim_row_data
 
     @abstractmethod
-    def assert_header_and_skip(self, csv_reader) -> None:
+    def assert_header_and_skip(self, csv_reader: CSVReader) -> None:
         """This method reads output CSV files and returns as list of output row data instance."""
 
 
 @dataclass
-class ZaimCsvFileChecker(OutputCsvFileChecker):
+class ZaimCsvFileChecker(OutputCsvFileChecker[ZaimRowData]):
     """This class helps to check Zaim CSV file."""
 
     output_row_data_class: Type[ZaimRowData] = field(default=ZaimRowData, init=False)
 
-    def assert_header_and_skip(self, csv_reader) -> None:
+    def assert_header_and_skip(self, csv_reader: CSVReader) -> None:
         assert csv_reader.__next__() == ZaimCsvFormat.HEADER
 
 
 @dataclass
-class ErrorCsvFileChecker(OutputCsvFileChecker):
+class ErrorCsvFileChecker(OutputCsvFileChecker[InvalidRowErrorRowData]):
     """This class helps to check Zaim CSV file."""
 
     output_row_data_class: Type[InvalidRowErrorRowData] = field(default=InvalidRowErrorRowData, init=False)
 
-    def assert_header_and_skip(self, csv_reader) -> None:
+    def assert_header_and_skip(self, csv_reader: CSVReader) -> None:
         pass

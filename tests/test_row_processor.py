@@ -1,6 +1,6 @@
 """Tests for row_processror.py."""
-import pytest
 from godslayer.exceptions import InvalidRecordError
+import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
@@ -17,10 +17,12 @@ class TestRowProcessor:
         [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
         indirect=["database_session_with_schema"],
     )
-    def test(yaml_config_load, database_session_with_schema):
-        """
-        RecordProcessor should raise error when input row is invalid.
-        RecordProcessor should collect error when input row is invalid.
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test() -> None:
+        """Tests following:
+
+        - RecordProcessor should raise error when input row is invalid.
+        - RecordProcessor should collect error when input row is invalid.
         """
         row_process = RecordProcessor(Account.WAON)
         with pytest.raises(InvalidRecordError):

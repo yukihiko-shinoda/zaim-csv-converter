@@ -19,10 +19,11 @@ class TestGoldPointCardPlusRowData:
     # noinspection DuplicatedCode
     @staticmethod
     # pylint: disable=too-many-locals
-    def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+    def test_init_and_property() -> None:
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         used_date = "2018/7/3"
         used_store = "東京電力  電気料金等"
@@ -97,16 +98,15 @@ class TestGoldPointCardPlusRow:
             ),
         ],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_gold_point_card_plus")
     def test_init(
-        yaml_config_load,
-        database_session_stores_gold_point_card_plus,
-        gold_point_card_plus_row_data,
-        expected_date,
-        expected_store_name_zaim,
-        expected_is_row_to_skip,
-    ):
-        """
-        Arguments should set into properties.
+        gold_point_card_plus_row_data: GoldPointCardPlusRowData,
+        expected_date: datetime,
+        expected_store_name_zaim: str,
+        expected_is_row_to_skip: bool,
+    ) -> None:
+        """Arguments should set into properties.
+
         :param GoldPointCardPlusRowData gold_point_card_plus_row_data:
         """
         row = GoldPointCardPlusRow(gold_point_card_plus_row_data)
@@ -126,7 +126,8 @@ class TestGoldPointCardPlusRowFactory:
     @pytest.mark.parametrize(
         "argument, expected", [(InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC, GoldPointCardPlusRow)]
     )
-    def test_create(argument, expected, database_session_stores_gold_point_card_plus):
+    @pytest.mark.usefixtures("database_session_stores_gold_point_card_plus")
+    def test_create(argument: GoldPointCardPlusRowData, expected: type[GoldPointCardPlusRow]) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(argument)

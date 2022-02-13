@@ -1,27 +1,27 @@
 """Tests for zaim_row.py."""
 from datetime import datetime
-from typing import Type
+from typing import cast, Type
 
 import pytest
+from returns.primitives.hkt import Kind1
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
+from zaimcsvconverter.account import Account
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
-from zaimcsvconverter.inputcsvformats.mufg import MufgIncomeFromOthersRow
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, InputRowFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
-from zaimcsvconverter.rowconverters import ZaimRowConverter
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.mufg import MufgZaimIncomeRowConverter
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import (
     WaonZaimIncomeRowConverter,
     WaonZaimPaymentRowConverter,
     WaonZaimTransferRowConverter,
 )
-from zaimcsvconverter.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRowFactory, ZaimTransferRow
+from zaimcsvconverter.rowconverters import ZaimRowConverter, ZaimRowConverterFactory
+from zaimcsvconverter.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRow, ZaimRowFactory, ZaimTransferRow
 
 
 class TestZaimIncomeRow:
@@ -29,11 +29,15 @@ class TestZaimIncomeRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_all(yaml_config_load, database_session_stores_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_item")
+    def test_all() -> None:
         """Argument should set into properties."""
-        mufg_row = MufgIncomeFromOthersRow(InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
+        account_context = Account.MUFG.value
+        mufg_row = account_context.create_input_row_instance(
+            InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT
+        )
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_low = ZaimRowFactory.create(MufgZaimIncomeRowConverter(mufg_row))
+        zaim_low = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-08-20"
@@ -61,7 +65,7 @@ class TestZaimPaymentRow:
     @staticmethod
     @pytest.mark.parametrize(
         (
-            "input_row_factory, input_row_data, zaim_row_converter_selector, expected_date, "
+            "input_row_factory, input_row_data, zaim_row_converter_factory, expected_date, "
             "expected_category_large, expected_category_small, expected_cash_flow_source, expected_item_name, "
             "expected_note, expected_store_name, expected_amount_payment"
         ),
@@ -94,24 +98,23 @@ class TestZaimPaymentRow:
             ),
         ],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_item")
     def test_all(
-        yaml_config_load,
-        database_session_stores_item,
-        input_row_factory,
+        input_row_factory: InputRowFactory[InputRowData, InputRow[InputRowData]],
         input_row_data: SFCardViewerRowData,
-        zaim_row_converter_selector,
-        expected_date,
-        expected_category_large,
-        expected_category_small,
-        expected_cash_flow_source,
-        expected_item_name,
-        expected_note,
-        expected_store_name,
-        expected_amount_payment,
-    ):
+        zaim_row_converter_factory: ZaimRowConverterFactory[InputRow[InputRowData], InputRowData],
+        expected_date: str,
+        expected_category_large: str,
+        expected_category_small: str,
+        expected_cash_flow_source: str,
+        expected_item_name: str,
+        expected_note: str,
+        expected_store_name: str,
+        expected_amount_payment: int,
+    ) -> None:
         """Argument should set into properties."""
         input_row = input_row_factory.create(input_row_data)
-        zaim_low = ZaimRowFactory.create(zaim_row_converter_selector.create(input_row))
+        zaim_low = ZaimRowFactory.create(zaim_row_converter_factory.create(input_row))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
@@ -137,10 +140,14 @@ class TestZaimTransferRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_all(yaml_config_load, database_session_stores_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_item")
+    def test_all() -> None:
         """Argument should set into properties."""
-        waon_auto_charge_row = WaonRow(InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO)
-        zaim_low = ZaimRowFactory.create(WaonZaimTransferRowConverter(waon_auto_charge_row))
+        account_context = Account.WAON.value
+        waon_auto_charge_row = account_context.create_input_row_instance(
+            InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO
+        )
+        zaim_low = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_auto_charge_row))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-11-11"
@@ -167,7 +174,7 @@ class TestZaimRowFactory:
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, zaim_row_converter_class, input_row, waon_row_data, expected",
+        "database_session_with_schema, zaim_row_converter_class, input_row_class, waon_row_data, expected",
         [
             (
                 [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
@@ -193,26 +200,29 @@ class TestZaimRowFactory:
         ],
         indirect=["database_session_with_schema"],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
     def test_success(
-        yaml_config_load,
-        database_session_with_schema,
-        zaim_row_converter_class,
-        input_row: Type[WaonRow],
+        zaim_row_converter_class: type[ZaimRowConverter[WaonRow, WaonRowData]],
+        input_row_class: Type[WaonRow],
         waon_row_data: WaonRowData,
-        expected,
-    ):
+        expected: type[ZaimRow],
+    ) -> None:
         """Factory should create appropriate type of Zaim row."""
-        assert isinstance(ZaimRowFactory.create(zaim_row_converter_class(input_row(waon_row_data))), expected)
+        account_context = Account.WAON.value
+        input_row = account_context.create_input_row_instance(waon_row_data)
+        assert isinstance(
+            ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(input_row)), expected
+        )
 
     @staticmethod
-    def test_fail():
+    def test_fail() -> None:
         """Factory should raise ValueError when input row is undefined type."""
 
         # Reason: This class is just for test. pylint: disable=too-few-public-methods
-        class UndefinedZaimRowConverter(ZaimRowConverter):
+        class UndefinedZaimRowConverter(ZaimRowConverter[InputRow[InputRowData], InputRowData]):
             pass
 
-        class UndefinedInputRow(InputRow):
+        class UndefinedInputRow(InputRow[InputRowData]):
             pass
 
         class UndefinedInputRowData(InputRowData):
@@ -233,6 +243,9 @@ class TestZaimRowFactory:
             def validate(self) -> bool:
                 return False
 
+        undefined_input_row = cast(
+            Kind1[InputRow[InputRowData], InputRowData], UndefinedInputRow(UndefinedInputRowData())
+        )
         with pytest.raises(ValueError) as error:
-            ZaimRowFactory.create(UndefinedZaimRowConverter(UndefinedInputRow(UndefinedInputRowData())))
+            ZaimRowFactory.create(UndefinedZaimRowConverter(undefined_input_row))
         assert str(error.value) == "Undefined Zaim row converter. Zaim row converter = UndefinedZaimRowConverter"

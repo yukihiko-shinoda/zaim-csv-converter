@@ -72,7 +72,7 @@ class WaonRowData(InputStoreRowData):
         return super().validate
 
 
-class WaonRow(InputStoreRow):
+class WaonRow(InputStoreRow[WaonRowData]):
     """This class implements row model of WAON CSV."""
 
     def __init__(self, row_data: WaonRowData):
@@ -122,7 +122,7 @@ class WaonChargeRow(WaonRow):
         self._charge_kind: WaonRowData.ChargeKind = row_data.charge_kind
 
     @property
-    def charge_kind(self):
+    def charge_kind(self) -> WaonRowData.ChargeKind:
         if self._charge_kind == WaonRowData.ChargeKind.NULL:
             raise ValueError(f'Charge kind on charge row is not allowed "{WaonRowData.ChargeKind.NULL.value}".')
         return self._charge_kind
@@ -154,7 +154,11 @@ class WaonChargeRow(WaonRow):
 class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
     """This class implements factory to create WAON CSV row instance."""
 
-    def create(self, input_row_data: WaonRowData) -> WaonRow:
+    # Reason: The example implementation of returns ignore incompatible return type.
+    # see:
+    #   - Create your own container — returns 0.18.0 documentation
+    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
+    def create(self, input_row_data: WaonRowData) -> WaonRow:  # type: ignore
         if input_row_data.use_kind in (WaonRowData.UseKind.CHARGE, WaonRowData.UseKind.AUTO_CHARGE):
             return WaonChargeRow(input_row_data)
         return WaonRow(input_row_data)

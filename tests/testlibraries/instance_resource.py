@@ -74,7 +74,9 @@ class InstanceResource:
     ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION = SFCardViewerRowData(
         "2018/11/13", "", "メトロ", "六本木一丁目", "", "メトロ", "後楽園", "195", "3601", ""
     )
-    ROW_DATA_SF_CARD_VIEWER_SALES_GOODS = SFCardViewerRowData("2018/11/14", "", "", "", "", "", "", "480", "3005", "物販")
+    ROW_DATA_SF_CARD_VIEWER_SALES_GOODS = SFCardViewerRowData(
+        "2018/11/14", "", "", "", "", "", "", "480", "3005", "物販"
+    )
     ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION = SFCardViewerRowData(
         "2018/11/11", "", "JR東", "秋葉原", "", "", "", "-3000", "5022", "ｵｰﾄﾁｬｰｼﾞ"
     )
@@ -104,7 +106,8 @@ class InstanceResource:
         "5952",
         "Visa（下4けたが1234）",
         "https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=123-4567890-1234567",
-        "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi" "?ie=UTF8&orderID=123-4567890-1234567",
+        "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
+        "?ie=UTF8&orderID=123-4567890-1234567",
         "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1",
     )
     ROW_DATA_AMAZON_201911_ECHO_DOT = Amazon201911RowData(
@@ -124,7 +127,8 @@ class InstanceResource:
         "5952",
         "Visa（下4けたが1234）",
         "https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=234-5678901-2345678",
-        "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi" "?ie=UTF8&orderID=234-5678901-2345678",
+        "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
+        "?ie=UTF8&orderID=234-5678901-2345678",
         "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1",
     )
     ROW_DATA_AMAZON_201911_AMAZON_POINT = Amazon201911RowData(

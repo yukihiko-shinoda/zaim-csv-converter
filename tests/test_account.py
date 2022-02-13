@@ -1,4 +1,4 @@
-"""Tests for account.py"""
+"""Tests for account.py."""
 from enum import Enum
 from pathlib import Path
 from types import DynamicClassAttribute
@@ -39,13 +39,13 @@ class TestAccount:
     """Tests for Account."""
 
     @staticmethod
-    def test_create_by_path_csv_input():
+    def test_create_by_path_csv_input() -> None:
         """All accounts should have regex."""
         for account in Account:
             assert isinstance(Account.create_by_path_csv_input(FilePathInput[account.name].value), Account)
 
     @staticmethod
-    def test_create_by_path_csv_input_error():
+    def test_create_by_path_csv_input_error() -> None:
         """All accounts should have regex."""
         with pytest.raises(ValueError) as error:
             Account.create_by_path_csv_input(Path("test.csv"))

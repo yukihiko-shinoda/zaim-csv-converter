@@ -1,7 +1,7 @@
 """This module implements row model of GOLD POINT CARD+ CSV version 201912."""
-import re
 from dataclasses import dataclass
 from datetime import datetime
+import re
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -53,7 +53,7 @@ class ViewCardRowData(InputStoreRowData):
         return super().validate
 
 
-class ViewCardRow(InputStoreRow):
+class ViewCardRow(InputStoreRow[ViewCardRowData]):
     """This class implements row model of GOLD POINT CARD+ CSV."""
 
     def __init__(self, row_data: ViewCardRowData):
@@ -69,5 +69,9 @@ class ViewCardRow(InputStoreRow):
 class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
 
-    def create(self, input_row_data: ViewCardRowData) -> ViewCardRow:
+    # Reason: The example implementation of returns ignore incompatible return type.
+    # see:
+    #   - Create your own container — returns 0.18.0 documentation
+    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
+    def create(self, input_row_data: ViewCardRowData) -> ViewCardRow:  # type: ignore
         return ViewCardRow(input_row_data)

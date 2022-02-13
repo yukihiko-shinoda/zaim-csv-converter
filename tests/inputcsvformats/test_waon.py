@@ -12,10 +12,11 @@ class TestWaonRowData:
     """Tests for WaonRowData."""
 
     @staticmethod
-    def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+    def test_init_and_property() -> None:
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         date = "2018/8/7"
         used_store = "ファミリーマートかぶと町永代"
@@ -31,7 +32,8 @@ class TestWaonRowData:
 
     @staticmethod
     # pylint: disable=unused-argument
-    def test_validate(database_session_with_schema):
+    @pytest.mark.usefixtures("database_session_with_schema")
+    def test_validate() -> None:
         """Validate method should collect errors."""
         assert InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND.validate
         assert (
@@ -65,26 +67,24 @@ class TestWaonRow:
             ),
         ],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
     def test_init_success(
-        yaml_config_load,
-        database_session_basic_store_waon,
-        waon_row_data,
-        expected_date,
-        expected_store_name_zaim,
-        expected_amount,
-    ):
-        """
-        Arguments should set into properties.
+        waon_row_data: WaonRowData, expected_date: datetime, expected_store_name_zaim: str, expected_amount: int,
+    ) -> None:
+        """Arguments should set into properties.
+
         :param WaonRowData waon_row_data:
         """
         waon_row = WaonRow(waon_row_data)
         assert waon_row.date == expected_date
         assert isinstance(waon_row.store, Store)
         assert waon_row.store.name_zaim == expected_store_name_zaim
+        assert waon_row.used_amount == expected_amount
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_is_row_to_skip(database_session_basic_store_waon):
+    @pytest.mark.usefixtures("database_session_basic_store_waon")
+    def test_is_row_to_skip() -> None:
         """WaonRow which express download point should be row to skip."""
         assert WaonRow(WaonRowData("2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-")).is_row_to_skip
         assert WaonRow(WaonRowData("2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（アップロード）", "-")).is_row_to_skip
@@ -101,7 +101,8 @@ class TestWaonChargeRow:
         [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
         indirect=["database_session_with_schema"],
     )
-    def test_charge_kind_fail(yaml_config_load, database_session_with_schema):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test_charge_kind_fail() -> None:
         """Property should raise ValueError when charge kind is null on WAON charge row."""
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
@@ -124,9 +125,8 @@ class TestWaonRowFactory:
             (InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO, "is_download_point"),
         ],
     )
-    def test_create(
-        database_session_basic_store_waon, argument, property_name_true,
-    ):
+    @pytest.mark.usefixtures("database_session_basic_store_waon")
+    def test_create(argument: WaonRowData, property_name_true: str) -> None:
         """Method should return Store model when use kind is defined."""
         list_property_use_kind = [
             "is_payment",

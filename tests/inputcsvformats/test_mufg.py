@@ -19,10 +19,11 @@ class TestMufgRowData:
     """Tests for MufgRowData."""
 
     @staticmethod
-    def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+    def test_init_and_property() -> None:
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         date = "2018/11/28"
         summary = "水道"
@@ -60,7 +61,8 @@ class TestMufgIncomeRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_stores_mufg):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    def test_init() -> None:
         """Arguments should set into properties."""
         mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_INCOME_CARD)
         assert mufg_row.date == datetime(2018, 10, 1, 0, 0, 0)
@@ -73,7 +75,8 @@ class TestMufgPaymentRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_stores_mufg):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    def test_init() -> None:
         """Arguments should set into properties."""
         mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_PAYMENT)
         assert mufg_row.date == datetime(2018, 11, 5, 0, 0, 0)
@@ -85,7 +88,7 @@ class TestMufgIncomeFromSelfRow:
     """Tests for MufgIncomeFromSelfRow."""
 
     @staticmethod
-    def test_deposit_amount_fail():
+    def test_deposit_amount_fail() -> None:
         """Property should raise ValueError when value is None."""
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
@@ -98,7 +101,7 @@ class TestMufgPaymentToSelfRow:
     """Tests for MufgPaymentToSelfRow."""
 
     @staticmethod
-    def test_payed_amount_fail():
+    def test_payed_amount_fail() -> None:
         """Property should raise ValueError when value is None."""
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
@@ -112,7 +115,8 @@ class TestMufgTransferIncomeRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_stores_mufg):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    def test_init() -> None:
         """Arguments should set into properties."""
         store_name = "三菱UFJ銀行"
         mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT)
@@ -126,7 +130,8 @@ class TestMufgTransferPaymentRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_stores_mufg):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    def test_init() -> None:
         """Arguments should set into properties."""
         store_name = "東京都水道局　経理部管理課"
         mufg_row = MufgStoreRow(InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS)
@@ -149,14 +154,14 @@ class TestMufgRowFactory:
             (InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS, False, False, False, True),
         ],
     )
+    @pytest.mark.usefixtures("database_session_stores_mufg")
     def test_create_success(
-        database_session_stores_mufg,
-        argument,
-        expected_is_income,
-        expected_is_payment,
-        expected_is_transfer_income,
-        expected_is_transfer_payment,
-    ):
+        argument: MufgRowData,
+        expected_is_income: bool,
+        expected_is_payment: bool,
+        expected_is_transfer_income: bool,
+        expected_is_transfer_payment: bool,
+    ) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         mufg_row = MufgRowFactory().create(argument)
@@ -168,7 +173,8 @@ class TestMufgRowFactory:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_create_fail(database_session_stores_mufg):
+    @pytest.mark.usefixtures("database_session_stores_mufg")
+    def test_create_fail() -> None:
         """Method should raise ValueError when note is not defined."""
         with pytest.raises(ValueError):
             # pylint: disable=protected-access

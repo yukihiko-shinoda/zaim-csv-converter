@@ -3,6 +3,7 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimPaymentRowConverter
 from zaimcsvconverter.rowconverters.mufg import (
@@ -23,6 +24,7 @@ from zaimcsvconverter.rowconverters.waon import (
     WaonZaimPaymentRowConverter,
     WaonZaimTransferRowConverter,
 )
+from zaimcsvconverter.rowconverters import ZaimPaymentRowConverter
 
 
 class TestZaimRowConverterFactory:
@@ -162,9 +164,14 @@ class TestZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    def test_select_factory(yaml_config_load, database_session_with_schema, account: Account, input_row_data, expected):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test_select_factory(
+        account: Account,
+        input_row_data: InputRowData,
+        expected: type[ZaimPaymentRowConverter[InputRow[InputRowData], InputRowData]],
+    ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = account.create_input_row_instance(input_row_data)
-        factory_class = account.value.zaim_row_converter_selector.create(input_row)
+        input_row = account.value.create_input_row_instance(input_row_data)
+        factory_class = account.value.zaim_row_converter_factory.create(input_row)
         # noinspection PyTypeChecker
         assert isinstance(factory_class, expected)

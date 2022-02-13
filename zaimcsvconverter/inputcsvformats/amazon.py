@@ -58,12 +58,14 @@ class AmazonRowData(InputItemRowData):
 
 
 # pylint: disable=too-many-instance-attributes
-class AmazonRow(InputItemRow):
+class AmazonRow(InputItemRow[AmazonRowData]):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: AmazonRowData):
         super().__init__(FileCsvConvert.AMAZON.value, row_data)
-        self._store: Store = Store(FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim))
+        self._store: Store = Store(
+            FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim)
+        )
         self.price: int = row_data.price
         self.number: int = row_data.number
 
@@ -75,5 +77,9 @@ class AmazonRow(InputItemRow):
 class AmazonRowFactory(InputRowFactory[AmazonRowData, AmazonRow]):
     """This class implements factory to create Amazon.co.jp CSV row instance."""
 
-    def create(self, input_row_data: AmazonRowData) -> AmazonRow:
+    # Reason: The example implementation of returns ignore incompatible return type.
+    # see:
+    #   - Create your own container — returns 0.18.0 documentation
+    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
+    def create(self, input_row_data: AmazonRowData) -> AmazonRow:  # type: ignore
         return AmazonRow(input_row_data)

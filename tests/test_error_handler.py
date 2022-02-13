@@ -1,4 +1,6 @@
 """Tests for error_handler.py."""
+import pytest
+
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRow
@@ -6,16 +8,17 @@ from zaimcsvconverter.inputcsvformats.waon import WaonRow
 
 
 class TestErrorHandler:
-    """Tests for UndefinedContentErrorHandler"""
+    """Tests for UndefinedContentErrorHandler."""
 
     @staticmethod
-    def test_init_is_presented_false():
+    def test_init_is_presented_false() -> None:
         """list_error should be empty when initialized."""
         assert not UndefinedContentErrorHandler().is_presented
 
     @staticmethod
     # pylint: disable=unused-argument
-    def test_append_undefined_content_extend_is_presented_true_uniquify_iter(yaml_config_load):
+    @pytest.mark.usefixtures("yaml_config_load")
+    def test_append_undefined_content_extend_is_presented_true_uniquify_iter() -> None:
         """Instance should be iterable."""
         error_amazon = ["amazon.csv", "", "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"]
         error_waon = ["waon.csv", "ファミリーマートかぶと町永代", ""]

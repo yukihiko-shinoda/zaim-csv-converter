@@ -145,12 +145,14 @@ class Amazon201911RowData(InputItemRowData):
         )
 
 
-class Amazon201911Row(InputItemRow):
+class Amazon201911Row(InputItemRow[Amazon201911RowData]):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: Amazon201911RowData):
         super().__init__(FileCsvConvert.AMAZON.value, row_data)
-        self._store: Store = Store(FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim))
+        self._store: Store = Store(
+            FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim)
+        )
 
     @property
     def store(self) -> Store:
@@ -187,12 +189,12 @@ class Amazon201911DiscountRow(Amazon201911Row):
 class Amazon201911ShippingHandlingRow(Amazon201911Row):
     """Row model of shipping / handling of Amazon.co.jp CSV."""
 
-    def __init__(self, row_data):
+    def __init__(self, row_data: Amazon201911RowData) -> None:
         super().__init__(row_data)
         self._subtotal_price_item: Optional[int] = row_data.subtotal_price_item
 
     @property
-    def subtotal_price_item(self):
+    def subtotal_price_item(self) -> int:
         if self._subtotal_price_item is None:
             raise ValueError("Subtotal price item on shipping handling row is not allowed empty.")
         return self._subtotal_price_item
@@ -237,7 +239,11 @@ class Amazon201911PaymentRow(Amazon201911Row):
 class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911Row]):
     """This class implements factory to create Amazon.co.jp CSV row instance."""
 
-    def create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:
+    # Reason: The example implementation of returns ignore incompatible return type.
+    # see:
+    #   - Create your own container — returns 0.18.0 documentation
+    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
+    def create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:  # type: ignore
         # @see https://github.com/furyutei/amzOrderHistoryFilter/issues/3#issuecomment-543645937
         if input_row_data.is_billing_to_credit_card or input_row_data.is_free_kindle:
             return Amazon201911RowToSkip(input_row_data)

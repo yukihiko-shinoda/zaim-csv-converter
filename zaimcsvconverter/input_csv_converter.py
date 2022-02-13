@@ -2,9 +2,9 @@
 import csv
 from pathlib import Path
 
-from zaimcsvconverter import DirectoryCsv
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.datasources.csv import Csv
+from zaimcsvconverter import DirectoryCsv
 from zaimcsvconverter.input_csv import InputData
 from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
 

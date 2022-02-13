@@ -7,7 +7,13 @@ from pathlib import Path
 from types import DynamicClassAttribute
 from typing import List
 
-from zaimcsvconverter.models import ConvertTableRecordMixin, ConvertTableType, FileCsvConvertId
+from zaimcsvconverter.models import (
+    Base,
+    ConvertTableRecordMixin,
+    ConvertTableRowData,
+    ConvertTableType,
+    FileCsvConvertId,
+)
 
 
 @dataclass
@@ -21,7 +27,7 @@ class FileCsvConvertContext:
 
     def create_convert_table_row_instance(
         self, list_convert_table_row_standard_type_value: List[str]
-    ) -> ConvertTableRecordMixin:
+    ) -> ConvertTableRecordMixin[Base, ConvertTableRowData]:
         """This method creates convert table row model instance by list data of convert table row."""
         convert_table_type = self.convert_table_type.value
         # noinspection PyArgumentList
@@ -61,6 +67,6 @@ class FileCsvConvert(Enum):
 
     def create_convert_table_row_instance(
         self, list_convert_table_row_standard_type_value: List[str]
-    ) -> ConvertTableRecordMixin:
+    ) -> ConvertTableRecordMixin[Base, ConvertTableRowData]:
         """This method creates convert table row model instance by list data of convert table row."""
         return self.value.create_convert_table_row_instance(list_convert_table_row_standard_type_value)

@@ -1,10 +1,10 @@
-"""Tests for zaim_csv_converter.py"""
+"""Tests for zaim_csv_converter.py."""
 import csv
 from pathlib import Path
 from typing import Optional
 
-import pytest
 from fixturefilehandler.file_paths import RelativeDeployFilePath
+import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, ZaimCsvFileChecker
@@ -14,7 +14,7 @@ from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 
 
 def create_relative_deploy_file_path(
-    resource_path, directory_name: str, directory_name_resource: Optional[str] = None
+    resource_path: Path, directory_name: str, directory_name_resource: Optional[str] = None
 ) -> RelativeDeployFilePath:
     """This  function creates relative path aggregate instance to deploy."""
     if directory_name_resource is None:
@@ -32,9 +32,10 @@ class TestZaimCsvConverter:
 
     # pylint: disable=too-many-arguments,too-many-locals,unused-argument
     @staticmethod
-    def test_success(
-        yaml_config_file, directory_csv_convert_table, directory_csv_input, directory_csv_output, database_session
-    ):
+    @pytest.mark.usefixtures(
+        "yaml_config_file", "directory_csv_convert_table", "directory_csv_input", "database_session"
+    )
+    def test_success(directory_csv_output: RelativeDeployFilePath) -> None:
         """Input CSV files should be converted into Zaim format CSV file."""
         try:
             ZaimCsvConverter.execute()
@@ -213,7 +214,22 @@ class TestZaimCsvConverter:
             "mufg201808.csv",
             [
                 ZaimRowData(
-                    "2018-08-20", "income", "その他", "-", "", "三菱UFJ銀行", "", "", "三菱UFJ銀行", "", "20", "0", "0", "", "", ""
+                    "2018-08-20",
+                    "income",
+                    "その他",
+                    "-",
+                    "",
+                    "三菱UFJ銀行",
+                    "",
+                    "",
+                    "三菱UFJ銀行",
+                    "",
+                    "20",
+                    "0",
+                    "0",
+                    "",
+                    "",
+                    "",
                 ),
             ],
         )
@@ -605,7 +621,7 @@ class TestZaimCsvConverter:
         )
 
     @staticmethod
-    def debug_csv(csv_file_name, directory_csv_output):
+    def debug_csv(csv_file_name: str, directory_csv_output: RelativeDeployFilePath) -> None:
         with (directory_csv_output.target / csv_file_name).open("r", encoding="UTF-8", newline="\n") as file:
             csv_reader = csv.reader(file)
             for list_row_data in csv_reader:
@@ -613,18 +629,20 @@ class TestZaimCsvConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_fail(
-        yaml_config_file, directory_csv_convert_table, directory_csv_input, directory_csv_output, database_session
-    ):
-        """
-        Correct input CSV files should be converted into Zaim format CSV file.
-        Incorrect input CSV files should be reported on error_undefined_content.csv.
+    @pytest.mark.usefixtures(
+        "yaml_config_file", "directory_csv_convert_table", "directory_csv_input", "database_session"
+    )
+    def test_fail(directory_csv_output: RelativeDeployFilePath) -> None:
+        """Tests following:
+
+        - Correct input CSV files should be converted into Zaim format CSV file.
+        - Incorrect input CSV files should be reported on error_undefined_content.csv.
         """
         with pytest.raises(InvalidInputCsvError) as error:
             ZaimCsvConverter.execute()
         assert str(error.value) == "Some invalid input CSV file exists. Please check error_invalid_row.csv."
-        checker = ZaimCsvFileChecker(directory_csv_output)
-        checker.assert_file(
+        zaim_csv_file_checker = ZaimCsvFileChecker(directory_csv_output)
+        zaim_csv_file_checker.assert_file(
             "waon201808.csv",
             [
                 ZaimRowData(
@@ -647,7 +665,7 @@ class TestZaimCsvConverter:
                 ),
             ],
         )
-        checker.assert_file(
+        zaim_csv_file_checker.assert_file(
             "amazon201810.csv",
             [
                 ZaimRowData(
@@ -670,8 +688,8 @@ class TestZaimCsvConverter:
                 ),
             ],
         )
-        checker = ErrorCsvFileChecker(directory_csv_output)
-        checker.assert_file(
+        error_csv_file_checker = ErrorCsvFileChecker(directory_csv_output)
+        error_csv_file_checker.assert_file(
             "error_invalid_row.csv",
             [
                 InvalidRowErrorRowData(

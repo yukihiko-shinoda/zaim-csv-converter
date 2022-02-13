@@ -2,8 +2,8 @@
 import csv
 from pathlib import Path
 
-import pytest
 from godslayer.exceptions import InvalidRecordError
+import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
@@ -22,15 +22,17 @@ class TestInputCsv:
         [([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO], "waon")],
         indirect=["database_session_with_schema", "path_file_csv_input"],
     )
-    def test(yaml_config_load, database_session_with_schema, path_file_csv_input: Path, tmp_path):
-        """
-        InvalidInputCsvError should be raised
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test(path_file_csv_input: Path, tmp_path: Path) -> None:
+        """Tests following:
+
+        - InvalidInputCsvError should be raised
           when there are row having store name which there are no data in convert table.
-        Input CSV should be invalid
+        - Input CSV should be invalid
           when there are row having store name which there are no data in convert table.
-        Invalid row dictionary should store InvalidRowError
+        - Invalid row dictionary should store InvalidRowError
           when there are row having store name which there are no data in convert table.
-        Undefined content error handler should be empty.
+        - Undefined content error handler should be empty.
         """
         account = Account.create_by_path_csv_input(path_file_csv_input)
         csv_reader = Csv(account.value.god_slayer_factory.create(path_file_csv_input))

@@ -1,18 +1,18 @@
-"""Tests for zaimcsvconverter.errorreporters.input_csv_error_reporter"""
+"""Tests for zaimcsvconverter.errorreporters.input_csv_error_reporter."""
 from typing import Any, Generator, List
 
-import pytest
 from godslayer.exceptions import InvalidRecordError
+import pytest
 
 from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
 
 
 class TestInputCsvErrorReporter:
-    """Tests for InputCsvErrorReporter"""
+    """Tests for InputCsvErrorReporter."""
 
     @staticmethod
-    def test_error():
+    def test_error() -> None:
         """Method create() should raise appropriate error."""
 
         class Unexpected(DataSource):
@@ -21,7 +21,7 @@ class TestInputCsvErrorReporter:
             def __iter__(self) -> Generator[List[Any], None, None]:
                 pass
 
-            def mark_current_record_as_error(self, list_error: List[InvalidRecordError]):
+            def mark_current_record_as_error(self, list_error: List[InvalidRecordError]) -> None:
                 pass
 
             @property

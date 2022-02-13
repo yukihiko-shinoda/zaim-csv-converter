@@ -1,20 +1,21 @@
 """This module implements fixtures file handler for CSV files."""
 import os
 from pathlib import Path
+from typing import Optional
 
 from fixturefilehandler.file_paths import RelativeVacateFilePath
 
 
 class CsvFilePathBuilder(RelativeVacateFilePath):
-    """
-    This class builds file path for config file.
+    """This class builds file path for config file.
+
     Default value is maybe suitable for standard directory structure of python project.
     """
 
     def __init__(
         self,
         target: Path = Path("export.csv"),
-        backup: Path = None,
+        backup: Optional[Path] = None,
         base: Path = Path(os.getcwd()),
         output: Path = Path("csvoutput"),
     ):

@@ -7,6 +7,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.amazon_201911 import (
     Amazon201911DiscountRow,
     Amazon201911PaymentRow,
+    Amazon201911Row,
     Amazon201911RowData,
     Amazon201911RowFactory,
     Amazon201911RowToSkip,
@@ -22,10 +23,11 @@ class TestAmazon201911RowData:
     # noinspection DuplicatedCode
     @staticmethod
     # pylint: disable=too-many-locals
-    def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+    def test_init_and_property() -> None:
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         ordered_date = "2018/10/23"
         order_id = "123-4567890-1234567"
@@ -44,7 +46,8 @@ class TestAmazon201911RowData:
         credit_card_identity = "Visa（下4けたが1234）"
         url_order_summary = "https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=123-4567890-1234567"
         url_receipt = (
-            "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi?ie=UTF8&orderID=123-4567890-1234567"
+            "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
+            "?ie=UTF8&orderID=123-4567890-1234567"
         )
         url_item = "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1"
         row_data = Amazon201911RowData(
@@ -92,7 +95,8 @@ class TestAmazon201911DiscountRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test_init() -> None:
         """Arguments should set into properties."""
         store_name = "Amazon Japan G.K."
         item_name = "（Amazon ポイント）"
@@ -104,7 +108,7 @@ class TestAmazon201911DiscountRow:
         assert amazon_row.item.name == item_name
 
     @staticmethod
-    def test_total_order_fail():
+    def test_total_order_fail() -> None:
         """Property should raise ValueError when value is None."""
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
@@ -117,7 +121,7 @@ class TestAmazon201911ShippingHandlingRow:
     """Tests for Amazon201911ShippingHandlingRow."""
 
     @staticmethod
-    def test_subtotal_price_item_fail():
+    def test_subtotal_price_item_fail() -> None:
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
@@ -132,7 +136,8 @@ class TestAmazon201911PaymentRow:
     # noinspection DuplicatedCode
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test_init() -> None:
         """Arguments should set into properties."""
         store_name = "Amazon Japan G.K."
         item_name = "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"
@@ -146,7 +151,7 @@ class TestAmazon201911PaymentRow:
         assert amazon_row.item.name == item_name
 
     @staticmethod
-    def test_price_fail():
+    def test_price_fail() -> None:
         """Property should raise ValueError when value is None."""
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
@@ -155,7 +160,7 @@ class TestAmazon201911PaymentRow:
         assert str(error.value) == "Price on payment row is not allowed empty."
 
     @staticmethod
-    def test_number_fail():
+    def test_number_fail() -> None:
         """Property should raise ValueError when value is None."""
         with pytest.raises(ValueError) as error:
             # pylint: disable=expression-not-assigned
@@ -178,7 +183,8 @@ class TestAmazon201911RowFactory:
             (InstanceResource.ROW_DATA_AMAZON_201911_MS_Learn_IN_MANGA, Amazon201911RowToSkip),
         ],
     )
-    def test_create(argument: Amazon201911RowData, expected, yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test_create(argument: Amazon201911RowData, expected: type[Amazon201911Row]) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = Amazon201911RowFactory().create(argument)

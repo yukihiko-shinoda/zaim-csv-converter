@@ -4,17 +4,17 @@ from pathlib import Path
 from typing import List
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.models import ConvertTableRecordMixin
+from zaimcsvconverter.models import Base, ConvertTableRecordMixin, ConvertTableRowData
 
 
 class ConvertTableImporter:
     """This class implements importing process for convert table CSV."""
 
-    def __init__(self, directory_csv_convert):
+    def __init__(self, directory_csv_convert: Path) -> None:
         self.directory_csv_convert = directory_csv_convert
 
     def execute(self) -> None:
-        """This method executes importing process for convert table CSV"""
+        """This method executes importing process for convert table CSV."""
         for path in sorted(self.directory_csv_convert.glob("*.csv")):
             self._import_csv_to_database(path)
 
@@ -25,7 +25,9 @@ class ConvertTableImporter:
         file_csv_convert.value.convert_table_type.value.model.save_all(list_convert_table)
 
     @classmethod
-    def _load_csv(cls, file_csv_convert: FileCsvConvert, path: Path) -> List[ConvertTableRecordMixin]:
+    def _load_csv(
+        cls, file_csv_convert: FileCsvConvert, path: Path
+    ) -> List[ConvertTableRecordMixin[Base, ConvertTableRowData]]:
         list_convert_table = []
         with path.open("r", encoding="UTF-8") as file_convert_table:
             for list_convert_table_row_standard_type_value in csv.reader(file_convert_table):

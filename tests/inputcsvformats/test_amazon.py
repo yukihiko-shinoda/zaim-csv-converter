@@ -13,10 +13,11 @@ class TestAmazonRowData:
 
     @staticmethod
     # pylint: disable=too-many-locals
-    def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+    def test_init_and_property() -> None:
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         ordered_date = "2018/10/23"
         order_id = "123-4567890-1234567"
@@ -35,7 +36,8 @@ class TestAmazonRowData:
         credit_card_identity = "Visa（下4けたが1234）"
         url_order_summary = "https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=123-4567890-1234567"
         url_receipt = (
-            "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi?ie=UTF8&orderID=123-4567890-1234567"
+            "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
+            "?ie=UTF8&orderID=123-4567890-1234567"
         )
         url_item = "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1"
         row_data = AmazonRowData(
@@ -83,7 +85,8 @@ class TestAmazonRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test_init() -> None:
         """Arguments should set into properties."""
         store_name = "Amazon Japan G.K."
         item_name = "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"
@@ -103,7 +106,8 @@ class TestAmazonRowFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize("argument, expected", [(InstanceResource.ROW_DATA_AMAZON_ECHO_DOT, AmazonRow)])
-    def test_create(argument, expected, yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test_create(argument: AmazonRowData, expected: type[AmazonRow]) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = AmazonRowFactory().create(argument)

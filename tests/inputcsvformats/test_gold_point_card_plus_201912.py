@@ -19,10 +19,11 @@ class TestGoldPointCardPlus201912RowData:
     # noinspection DuplicatedCode
     @staticmethod
     # pylint: disable=too-many-locals
-    def test_init_and_property():
-        """
-        Property date should return datetime object.
-        Property store_date should return used_store.
+    def test_init_and_property() -> None:
+        """Tests following:
+
+        - Property date should return datetime object.
+        - Property store_date should return used_store.
         """
         used_date = "2019/11/03"
         used_store = "AMAZON WEB SERVICES (AWS.AMAZON.CO)"
@@ -75,16 +76,15 @@ class TestGoldPointCardPlus201912Row:
             ),
         ],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_gold_point_card_plus")
     def test_init(
-        yaml_config_load,
-        database_session_stores_gold_point_card_plus,
-        gold_point_card_plus_201912_row_data,
-        expected_date,
-        expected_store_name_zaim,
-        expected_is_row_to_skip,
-    ):
-        """
-        Arguments should set into properties.
+        gold_point_card_plus_201912_row_data: GoldPointCardPlus201912RowData,
+        expected_date: datetime,
+        expected_store_name_zaim: str,
+        expected_is_row_to_skip: bool,
+    ) -> None:
+        """Arguments should set into properties.
+
         :param GoldPointCardPlus201912RowData gold_point_card_plus_201912_row_data:
         """
         row = GoldPointCardPlus201912Row(gold_point_card_plus_201912_row_data)
@@ -96,9 +96,12 @@ class TestGoldPointCardPlus201912Row:
         assert row.is_row_to_skip == expected_is_row_to_skip
 
     @staticmethod
-    def test_is_row_to_skip(database_session_stores_gold_point_card_plus):
+    @pytest.mark.usefixtures("database_session_stores_gold_point_card_plus")
+    def test_is_row_to_skip() -> None:
         assert (
-            GoldPointCardPlus201912Row(InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN).is_row_to_skip
+            GoldPointCardPlus201912Row(
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN
+            ).is_row_to_skip
             is False
         )
 
@@ -112,7 +115,8 @@ class TestGoldPointCardPlus201912RowFactory:
         "argument, expected",
         [(InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC, GoldPointCardPlus201912Row)],
     )
-    def test_create(argument, expected, database_session_stores_gold_point_card_plus):
+    @pytest.mark.usefixtures("database_session_stores_gold_point_card_plus")
+    def test_create(argument: GoldPointCardPlus201912RowData, expected: type[GoldPointCardPlus201912Row]) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = GoldPointCardPlus201912RowFactory().create(argument)

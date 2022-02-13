@@ -19,26 +19,34 @@ yamldataclassconfig = "*"
 
 [dev-packages]
 autoflake = "*"
+bandit = "*"
+cohesion = "*"
+# Hotfix for Pipenv's Bug @see https://github.com/pypa/pipenv/issues/4101
+colorama = "*"
 coverage = "*"
+dlint = "*"
+docformatter = "*"
+dodgy = "*"
 factory_boy = "*"
 fixturefilehandler = "*"
 flake8 = "*"
 # To use flake8 --radon-show-closures
 flake8-polyfill = "*"
+hacking = "*"
 invoke = "*"
 isort = "*"
 mypy = "*"
 # To use black
 pipenv-setup = "*"
+pydocstyle = "*"
 pylint = "*"
 pytest = "*"
 pytest-resource-path = "*"
 radon = "*"
+returns = "*"
+sqlalchemy-stubs = "*"
 xenon = "*"
 
 [scripts]
 start = "python convert.py"
 test = "pytest tests"
-flake8 = "flake8 --radon-show-closures ."
-cc = "radon cc ."
-mi = "radon mi ."

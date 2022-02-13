@@ -7,14 +7,14 @@ class Utility:
     """This class implements utility."""
 
     @staticmethod
-    def convert_string_to_int_or_none(string) -> Optional[int]:
+    def convert_string_to_int_or_none(string: str) -> Optional[int]:
         """This method converts string to int or None."""
         if string == "":
             return None
         return int(string.replace(",", ""))
 
     @staticmethod
-    def convert_yen_string_to_int(yen_string: str):
+    def convert_yen_string_to_int(yen_string: str) -> int:
         """This method convert YEN string to int."""
         if "." in yen_string:
             raise ValueError(f"Decimal is unsupported. Yen string = {yen_string}")

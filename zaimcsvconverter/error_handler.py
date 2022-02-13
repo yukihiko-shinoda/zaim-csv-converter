@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import List
+from typing import Iterator, List
 
 import numpy
 
@@ -15,12 +15,11 @@ class FileNameForError(Enum):
 class UndefinedContentErrorHandler:
     """This class implements undefined content error handler."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.list_error: List[List[str]] = []
 
-    def __iter__(self):
-        for error_row in self.list_error:
-            yield error_row
+    def __iter__(self) -> Iterator[List[str]]:
+        return self.list_error.__iter__()
 
     def extend_list(self, error: List[List[str]]) -> None:
         """This method appends error list argument into error list property."""

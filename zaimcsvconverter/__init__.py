@@ -22,9 +22,7 @@ CONFIG: Config = Config()
 
 
 class DirectoryCsv(Enum):
-    """
-    This class implements constant of path to directory of CSV.
-    """
+    """This class implements constant of path to directory of CSV."""
 
     CONVERT = Path(__file__).parent.parent / "./csvconverttable/"
     INPUT = Path(__file__).parent.parent / "./csvinput/"

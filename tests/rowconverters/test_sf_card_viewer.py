@@ -3,19 +3,15 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
-from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import (
-    SFCardViewerEnterExitRow,
-    SFCardViewerRow,
-    SFCardViewerRowData,
-    SFCardViewerRowFactory,
-)
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.rowconverters.sf_card_viewer import (
     SFCardViewerZaimPaymentOnSomewhereRowConverter,
     SFCardViewerZaimPaymentOnStationRowConverter,
-    SFCardViewerZaimRowConverterFactory,
     SFCardViewerZaimTransferRowConverter,
 )
+from zaimcsvconverter.rowconverters import ZaimRowConverter
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory, ZaimTransferRow
 
 
@@ -24,19 +20,17 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test(yaml_config_load, database_session_stores_sf_card_viewer):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 195
         config_account_name = "PASMO"
-        sf_card_viewer_row = SFCardViewerEnterExitRow(
-            InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
+        account_context = Account.PASMO.value
+        sf_card_viewer_row = account_context.create_input_row_instance(
+            InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION
         )
-
-        class ConcreteSFCardViewerZaimPaymentOnStationRowConverter(SFCardViewerZaimPaymentOnStationRowConverter):
-            account_config = CONFIG.pasmo
-
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(ConcreteSFCardViewerZaimPaymentOnStationRowConverter(sf_card_viewer_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -53,19 +47,17 @@ class TestSFCardViewerZaimTransferRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test(yaml_config_load, database_session_stores_sf_card_viewer):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 3000
         config_account_name = "PASMO"
         config_auto_charge_source = "TOKYU CARD"
-        sf_card_viewer_row = SFCardViewerRow(
-            InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION, CONFIG.pasmo
+        account_context = Account.PASMO.value
+        sf_card_viewer_row = account_context.create_input_row_instance(
+            InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION
         )
-
-        class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
-            account_config = CONFIG.pasmo
-
-        zaim_row = ZaimRowFactory.create(ConcreteSFCardViewerZaimTransferRowConverter(sf_card_viewer_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -118,9 +110,13 @@ class TestSFCardViewerZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    def test_success(yaml_config_load, database_session_with_schema, input_row_data: SFCardViewerRowData, expected):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test_success(
+        input_row_data: SFCardViewerRowData, expected: type[ZaimRowConverter[InputRow[InputRowData], InputRowData]]
+    ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(input_row_data)
-        factory = SFCardViewerZaimRowConverterFactory(lambda: CONFIG.pasmo).create(input_row)
+        account_context = Account.PASMO.value
+        sf_card_viewer_row = account_context.create_input_row_instance(input_row_data)
+        factory = account_context.zaim_row_converter_factory.create(sf_card_viewer_row)
         # noinspection PyTypeChecker
         assert isinstance(factory, expected)
