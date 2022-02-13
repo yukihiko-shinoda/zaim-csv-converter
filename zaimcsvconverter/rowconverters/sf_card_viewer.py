@@ -1,11 +1,14 @@
 """This module implements convert steps from SFCard Viewer input row to Zaim row."""
 from typing import Callable, Optional
 
+from returns.primitives.hkt import Kind1
+
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import (
     SFCardViewerEnterExitRow,
     SFCardViewerEnterRow,
     SFCardViewerRow,
+    SFCardViewerRowData,
 )
 from zaimcsvconverter.rowconverters import (
     ZaimPaymentRowConverter,
@@ -17,7 +20,7 @@ from zaimcsvconverter.rowconverters import (
 from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
 
 
-class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFCardViewerRow]):
+class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFCardViewerRow, SFCardViewerRowData]):
     """This class implements convert steps from SFCard Viewer row to Zaim payment row."""
 
     account_config: SFCardViewerConfig
@@ -51,7 +54,9 @@ class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFC
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
-class SFCardViewerZaimPaymentOnStationRowConverter(ZaimPaymentRowStoreConverter[SFCardViewerEnterExitRow]):
+class SFCardViewerZaimPaymentOnStationRowConverter(
+    ZaimPaymentRowStoreConverter[SFCardViewerEnterExitRow, SFCardViewerRowData]
+):
     """This class implements convert steps from SFCard Viewer enter row to Zaim payment row."""
 
     account_config: SFCardViewerConfig
@@ -74,7 +79,7 @@ class SFCardViewerZaimPaymentOnStationRowConverter(ZaimPaymentRowStoreConverter[
         return self.input_row.used_amount
 
 
-class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewerEnterRow]):
+class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewerEnterRow, SFCardViewerRowData]):
     """This class implements convert steps from SFCard Viewer enter row to Zaim transfer row."""
 
     account_config: SFCardViewerConfig
@@ -93,25 +98,29 @@ class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewer
         return -1 * self.input_row.used_amount
 
 
-class SFCardViewerZaimRowConverterFactory(ZaimRowConverterFactory[SFCardViewerRow]):
+class SFCardViewerZaimRowConverterFactory(ZaimRowConverterFactory[SFCardViewerRow, SFCardViewerRowData]):
     """This class implements select steps from SFCard Viewer input row to Zaim row converter."""
 
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config
 
-    def create(self, input_row: SFCardViewerRow) -> ZaimRowConverter:
+    def create(
+        self, input_row: Kind1[SFCardViewerRow, SFCardViewerRowData]
+    ) -> ZaimRowConverter[SFCardViewerRow, SFCardViewerRowData]:
         if isinstance(input_row, SFCardViewerEnterExitRow):
 
             class ConcreteSFCardViewerZaimPaymentOnStationRowConverter(SFCardViewerZaimPaymentOnStationRowConverter):
                 account_config = self._account_config()
 
-            return ConcreteSFCardViewerZaimPaymentOnStationRowConverter(input_row)
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return ConcreteSFCardViewerZaimPaymentOnStationRowConverter(input_row)  # type: ignore
         if isinstance(input_row, SFCardViewerEnterRow):
 
             class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
                 account_config = self._account_config()
 
-            return ConcreteSFCardViewerZaimTransferRowConverter(input_row)
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return ConcreteSFCardViewerZaimTransferRowConverter(input_row)  # type: ignore
         if isinstance(input_row, SFCardViewerRow):
 
             class ConcreteSFCardViewerZaimPaymentOnSomewhereRowConverter(

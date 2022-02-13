@@ -3,8 +3,9 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRow, AmazonRowFactory
-from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter, AmazonZaimRowConverterFactory
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData
+from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
@@ -13,15 +14,17 @@ class TestAmazonZaimPaymentRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test(yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 4980
         config_account_name = "ヨドバシゴールドポイントカード・プラス"
         store_name = "Amazon Japan G.K."
         item_name = "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"
-        amazon_row = AmazonRow(InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
+        account_context = Account.AMAZON.value
+        amazon_row = account_context.create_input_row_instance(InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(AmazonZaimPaymentRowConverter(amazon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -50,7 +53,10 @@ class TestAmazonZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    def test(yaml_config_load, database_session_with_schema, input_row_data, expected):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test(input_row_data: AmazonRowData, expected: type[AmazonZaimPaymentRowConverter]) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = AmazonRowFactory().create(input_row_data)
-        assert isinstance(AmazonZaimRowConverterFactory().create(input_row), expected)
+        account_context = Account.AMAZON.value
+        amazon_row = account_context.create_input_row_instance(input_row_data)
+        actual = account_context.zaim_row_converter_factory.create(amazon_row)
+        assert isinstance(actual, expected)

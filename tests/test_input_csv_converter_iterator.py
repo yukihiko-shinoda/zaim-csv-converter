@@ -1,5 +1,6 @@
 """Tests for input_csv_converter_iterator.py."""
 import csv
+from pathlib import Path
 
 import pytest
 
@@ -13,7 +14,8 @@ class TestInputCsvConverterIterator:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_success(yaml_config_load, database_session_store_item, resource_path, tmp_path):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_store_item")
+    def test_success(resource_path: Path, tmp_path: Path) -> None:
         """Method processes all csv files in specified diretory."""
         input_csv_converter_iterator = InputCsvConverterIterator(resource_path, tmp_path)
         input_csv_converter_iterator.execute()
@@ -24,7 +26,8 @@ class TestInputCsvConverterIterator:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_fail(yaml_config_load, database_session_store_item, resource_path, tmp_path):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_store_item")
+    def test_fail(resource_path: Path, tmp_path: Path) -> None:
         """Tests following:
 
         - Method exports error csv files in specified diretory.

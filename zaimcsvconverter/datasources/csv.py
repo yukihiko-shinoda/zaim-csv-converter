@@ -35,7 +35,7 @@ class Csv(DataSource):
             or self.invalid_footer_error is not None
         )
 
-    def mark_current_record_as_error(self, list_error: List[InvalidRecordError]):
+    def mark_current_record_as_error(self, list_error: List[InvalidRecordError]) -> None:
         if self.god_slayer.index is None:
             raise LogicError("This method can't be called before iterate this instance.")  # pragma: no cover
         self.dictionary_invalid_record[self.god_slayer.index] = list_error

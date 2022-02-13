@@ -1,25 +1,39 @@
 """This module implements convert steps from input row to Zaim row."""
 from abc import ABC, abstractmethod
-from typing import Generic, Optional, TypeVar
+from typing import cast, Generic, Optional
 
-from zaimcsvconverter.inputcsvformats import InputItemRow, InputRow, InputStoreItemRow, InputStoreRow
+from returns.primitives.hkt import Kind1, kinded
+
+from zaimcsvconverter.inputcsvformats import (
+    TypeVarInputItemRow,
+    TypeVarInputItemRowData,
+    TypeVarInputRow,
+    TypeVarInputRowData,
+    TypeVarInputStoreItemRow,
+    TypeVarInputStoreItemRowData,
+    TypeVarInputStoreRow,
+    TypeVarInputStoreRowData,
+)
 from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
-
-TypeVarInputRow = TypeVar("TypeVarInputRow", bound=InputRow)
-TypeVarInputStoreRow = TypeVar("TypeVarInputStoreRow", bound=InputStoreRow)
-TypeVarInputItemRow = TypeVar("TypeVarInputItemRow", bound=InputItemRow)
-TypeVarInputStoreItemRow = TypeVar("TypeVarInputStoreItemRow", bound=InputStoreItemRow)
 
 
 # Reason: Abstract class. pylint: disable=too-few-public-methods
-class ZaimRowConverter(Generic[TypeVarInputRow], ABC):
+class ZaimRowConverter(Generic[TypeVarInputRow, TypeVarInputRowData], ABC):
     """This class implements convert steps from input row to Zaim row."""
 
-    def __init__(self, input_row: TypeVarInputRow):
-        self.input_row: TypeVarInputRow = input_row
+    def __init__(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]):
+        self.input_row = cast(TypeVarInputRow, self.to_container(input_row))
+
+    @kinded
+    @classmethod
+    def to_container(
+        cls, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]
+    ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
+        # To check type of TypeVarInputRowData (probably...)
+        return input_row
 
 
-class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow]):
+class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements convert steps from input row to Zaim income row."""
 
     @property
@@ -44,7 +58,7 @@ class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow]):
 
 
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
-class ZaimIncomeRowStoreConverter(ZaimIncomeRowConverter[TypeVarInputStoreRow], ABC):
+class ZaimIncomeRowStoreConverter(ZaimIncomeRowConverter[TypeVarInputStoreRow, TypeVarInputStoreRowData], ABC):
     """This class implements convert steps from input store row to Zaim income row."""
 
     @property
@@ -58,7 +72,7 @@ class ZaimIncomeRowStoreConverter(ZaimIncomeRowConverter[TypeVarInputStoreRow], 
         return self.input_row.store.name_zaim
 
 
-class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow]):
+class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements convert steps from input row to Zaim payment row."""
 
     @property
@@ -97,7 +111,7 @@ class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow]):
         """This property returns amount payment."""
 
 
-class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow], ABC):
+class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow, TypeVarInputStoreRowData], ABC):
     """This class implements convert steps from input store row to Zaim payment row."""
 
     @property
@@ -120,7 +134,7 @@ class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow]
         return self.input_row.store.name_zaim
 
 
-class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow], ABC):
+class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow, TypeVarInputItemRowData], ABC):
     """This class implements convert steps from input item row to Zaim payment row."""
 
     @property
@@ -144,7 +158,9 @@ class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow], 
         return self.input_row.store.name_zaim
 
 
-class ZaimPaymentRowStoreItemConverter(ZaimPaymentRowConverter[TypeVarInputStoreItemRow], ABC):
+class ZaimPaymentRowStoreItemConverter(
+    ZaimPaymentRowConverter[TypeVarInputStoreItemRow, TypeVarInputStoreItemRowData], ABC
+):
     """This class implements convert steps from input store item row to Zaim payment row."""
 
     @property
@@ -168,7 +184,7 @@ class ZaimPaymentRowStoreItemConverter(ZaimPaymentRowConverter[TypeVarInputStore
         return self.input_row.store.name_zaim
 
 
-class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow]):
+class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements convert steps from input row to Zaim transfer row."""
 
     @property
@@ -187,7 +203,7 @@ class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow]):
         """This property returns amount transfer."""
 
 
-class ZaimRowConverterFactory(Generic[TypeVarInputRow]):
+class ZaimRowConverterFactory(Generic[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements factory of Zaim row converter.
 
     Why factory class is independent from input row data class is because we can't achieve 100% coverage without this
@@ -200,5 +216,8 @@ class ZaimRowConverterFactory(Generic[TypeVarInputRow]):
     @see https://github.com/python/mypy/issues/6101
     """
 
-    def create(self, input_row: TypeVarInputRow) -> ZaimRowConverter:
+    def create(
+        self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]
+    ) -> ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]:
         """This method selects Zaim row converter."""
+        raise NotImplementedError

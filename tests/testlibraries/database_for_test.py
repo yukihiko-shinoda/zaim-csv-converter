@@ -3,16 +3,21 @@
 @see https://factoryboy.readthedocs.io/en/latest/orms.html#sqlalchemy
 """
 from dataclasses import dataclass
-from typing import List
+from typing import Generator, List, Optional
 
 import factory
+from sqlalchemy.orm.session import Session as SQLAlchemySession
 
 from tests.testlibraries.database_engine_manager import DatabaseEngineManager
 from zaimcsvconverter.models import Base, ConvertTableRowData, FileCsvConvertId, Item, Store
 from zaimcsvconverter import Session
 
 
-class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
+# Reason: Since stub for SQLAlchemy lacks.
+# see:
+#   - Answer: python - Class cannot subclass 'QObject' (has type 'Any') using mypy - Stack Overflow
+#     https://stackoverflow.com/a/49897523/12721873
+class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):  # type: ignore
     """Factory for Store model."""
 
     class Meta:  # Reason: Model. pylint: disable=too-few-public-methods
@@ -22,7 +27,11 @@ class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = Session
 
 
-class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):
+# Reason: Since stub for SQLAlchemy lacks.
+# see:
+#   - Answer: python - Class cannot subclass 'QObject' (has type 'Any') using mypy - Stack Overflow
+#     https://stackoverflow.com/a/49897523/12721873
+class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):  # type: ignore
     """Factory for Store model."""
 
     class Meta:  # Reason: Model. pylint: disable=too-few-public-methods
@@ -39,7 +48,7 @@ class FixtureRecord:
     file_csv_convert_id: FileCsvConvertId
     row_data: ConvertTableRowData
 
-    def define(self):
+    def define(self) -> None:
         """This method defines factory_boy fixture records by using properties."""
         if self.file_csv_convert_id is FileCsvConvertId.AMAZON:
             ItemFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)
@@ -62,13 +71,15 @@ class DatabaseForTest:
     """This class implements methods about database for unit testing."""
 
     @classmethod
-    def database_session(cls):
+    def database_session(cls) -> Generator[SQLAlchemySession, None, None]:
         """This fixture prepares database session to reset database after each test."""
         with DatabaseEngineManager(Session):
             yield Session()
 
     @classmethod
-    def database_session_with_schema(cls, list_fixture_record: List[FixtureRecord] = None):
+    def database_session_with_schema(
+        cls, list_fixture_record: Optional[List[FixtureRecord]] = None
+    ) -> Generator[SQLAlchemySession, None, None]:
         """This fixture prepares database session and fixture records to reset database after each test."""
         with DatabaseEngineManager(Session) as engine:
             session = Session()

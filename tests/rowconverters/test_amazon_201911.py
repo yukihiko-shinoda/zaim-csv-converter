@@ -3,17 +3,13 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
-from zaimcsvconverter.inputcsvformats.amazon_201911 import (
-    Amazon201911DiscountRow,
-    Amazon201911PaymentRow,
-    Amazon201911RowData,
-    Amazon201911RowFactory,
-)
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911Row, Amazon201911RowData
 from zaimcsvconverter.rowconverters.amazon_201911 import (
     Amazon201911DiscountZaimPaymentRowConverter,
     Amazon201911PaymentZaimPaymentRowConverter,
-    Amazon201911ZaimRowConverterFactory,
 )
+from zaimcsvconverter.rowconverters import ZaimPaymentRowItemConverter
 from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
@@ -22,15 +18,17 @@ class TestAmazon201911DiscountZaimPaymentRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test(yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test() -> None:
         """Arguments should set into properties."""
         expected_amount = -11
         config_account_name = "ヨドバシゴールドポイントカード・プラス"
         store_name = "Amazon Japan G.K."
         item_name = "（Amazon ポイント）"
-        amazon_row = Amazon201911DiscountRow(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT)
+        account_context = Account.AMAZON_201911.value
+        amazon_row = account_context.create_input_row_instance(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(Amazon201911DiscountZaimPaymentRowConverter(amazon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -47,15 +45,17 @@ class TestAmazon201911PaymentZaimPaymentRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test(yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 4980
         config_account_name = "ヨドバシゴールドポイントカード・プラス"
         store_name = "Amazon Japan G.K."
         item_name = "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"
-        amazon_row = Amazon201911PaymentRow(InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
+        account_context = Account.AMAZON_201911.value
+        amazon_row = account_context.create_input_row_instance(InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(Amazon201911PaymentZaimPaymentRowConverter(amazon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -89,7 +89,13 @@ class TestAmazon201911ZaimRowConverterFactory:
         indirect=["database_session_with_schema"],
         ids=["Case when Amazon payment", "Case when Amazon discount"],
     )
-    def test(yaml_config_load, database_session_with_schema, input_row_data: Amazon201911RowData, expected):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test(
+        input_row_data: Amazon201911RowData,
+        expected: type[ZaimPaymentRowItemConverter[Amazon201911Row, Amazon201911RowData]],
+    ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
-        input_row = Amazon201911RowFactory().create(input_row_data)
-        assert isinstance(Amazon201911ZaimRowConverterFactory().create(input_row), expected)
+        account_context = Account.AMAZON_201911.value
+        amazon_row = account_context.create_input_row_instance(input_row_data)
+        actual = account_context.zaim_row_converter_factory.create(amazon_row)
+        assert isinstance(actual, expected)

@@ -13,7 +13,7 @@ class TestAmazonRowData:
 
     @staticmethod
     # pylint: disable=too-many-locals
-    def test_init_and_property():
+    def test_init_and_property() -> None:
         """Tests following:
 
         - Property date should return datetime object.
@@ -85,7 +85,8 @@ class TestAmazonRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test_init() -> None:
         """Arguments should set into properties."""
         store_name = "Amazon Japan G.K."
         item_name = "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"
@@ -105,7 +106,8 @@ class TestAmazonRowFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize("argument, expected", [(InstanceResource.ROW_DATA_AMAZON_ECHO_DOT, AmazonRow)])
-    def test_create(argument, expected, yaml_config_load, database_session_item):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    def test_create(argument: AmazonRowData, expected: type[AmazonRow]) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = AmazonRowFactory().create(argument)

@@ -17,7 +17,8 @@ class TestRowProcessor:
         [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
         indirect=["database_session_with_schema"],
     )
-    def test(yaml_config_load, database_session_with_schema):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test() -> None:
         """Tests following:
 
         - RecordProcessor should raise error when input row is invalid.

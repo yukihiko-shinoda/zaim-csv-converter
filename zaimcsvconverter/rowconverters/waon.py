@@ -1,6 +1,10 @@
 """This module implements convert steps from WAON input row to Zaim row."""
+from typing import cast
+
+from returns.primitives.hkt import Kind1
+
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow
+from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
 from zaimcsvconverter.rowconverters import (
     ZaimIncomeRowStoreConverter,
     ZaimPaymentRowStoreConverter,
@@ -11,7 +15,7 @@ from zaimcsvconverter.rowconverters import (
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
-class WaonZaimIncomeRowConverter(ZaimIncomeRowStoreConverter[WaonRow]):
+class WaonZaimIncomeRowConverter(ZaimIncomeRowStoreConverter[WaonChargeRow, WaonRowData]):
     """This class implements convert steps from WAON input row to Zaim income row."""
 
     @property
@@ -25,7 +29,7 @@ class WaonZaimIncomeRowConverter(ZaimIncomeRowStoreConverter[WaonRow]):
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
-class WaonZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[WaonRow]):
+class WaonZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[WaonRow, WaonRowData]):
     """This class implements convert steps from WAON input row to Zaim payment row."""
 
     @property
@@ -38,7 +42,7 @@ class WaonZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[WaonRow]):
         return -self.input_row.used_amount if self.input_row.is_payment_cancel else self.input_row.used_amount
 
 
-class WaonZaimTransferRowConverter(ZaimTransferRowConverter[WaonRow]):
+class WaonZaimTransferRowConverter(ZaimTransferRowConverter[WaonRow, WaonRowData]):
     """This class implements convert steps from WAON input row to Zaim transfer row."""
 
     @property
@@ -55,24 +59,25 @@ class WaonZaimTransferRowConverter(ZaimTransferRowConverter[WaonRow]):
         return self.input_row.used_amount
 
 
-class WaonZaimRowConverterFactory(ZaimRowConverterFactory[WaonRow]):
+class WaonZaimRowConverterFactory(ZaimRowConverterFactory[WaonRow, WaonRowData]):
     """This class implements select steps from WAON input row to Zaim row converter."""
 
-    def create(self, input_row: WaonRow) -> ZaimRowConverter:
+    def create(self, input_row: Kind1[WaonRow, WaonRowData]) -> ZaimRowConverter[WaonRow, WaonRowData]:
         if isinstance(input_row, WaonChargeRow) and (
             input_row.is_charge_by_point or input_row.is_charge_by_download_value
         ):
-            return WaonZaimIncomeRowConverter(input_row)
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return WaonZaimIncomeRowConverter(input_row)  # type:ignore
         if input_row.is_payment or input_row.is_payment_cancel:
-            return WaonZaimPaymentRowConverter(input_row)
+            return cast(ZaimRowConverter[WaonRow, WaonRowData], WaonZaimPaymentRowConverter(input_row))
         if isinstance(input_row, WaonChargeRow) and (
             input_row.is_auto_charge or input_row.is_charge_by_bank_account or input_row.is_charge_by_cash
         ):
-            return WaonZaimTransferRowConverter(input_row)
+            return cast(ZaimRowConverter[WaonRow, WaonRowData], WaonZaimTransferRowConverter(input_row))
         raise ValueError(self.build_message(input_row))
 
     @staticmethod
-    def build_message(input_row: WaonRow) -> str:
+    def build_message(input_row: Kind1[WaonRow, WaonRowData]) -> str:
         """This method builds error message."""
         message = f"Unsupported row. Input row = {input_row.__class__.__name__}, {input_row.use_kind}"
         if isinstance(input_row, WaonChargeRow):  # pragma: no cover

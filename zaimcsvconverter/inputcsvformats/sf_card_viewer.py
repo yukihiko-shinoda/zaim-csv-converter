@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Callable
+from typing import Any, Callable
 
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -67,10 +67,12 @@ class SFCardViewerRowData(InputStoreRowData):
 
 
 # pylint: disable=too-many-instance-attributes
-class SFCardViewerRow(InputRow):
+class SFCardViewerRow(InputRow[SFCardViewerRowData]):
     """This class implements row model of SF Card Viewer CSV."""
 
-    def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig, *args, **kwargs):
+    def __init__(
+        self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig, *args: Any, **kwargs: Any
+    ) -> None:
         super().__init__(row_data, *args, **kwargs)
         self.used_amount: int = row_data.used_amount
         self.note = row_data.note
@@ -101,7 +103,7 @@ class SFCardViewerRow(InputRow):
         return self.note == SFCardViewerRowData.Note.BUS_TRAM
 
 
-class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow):
+class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow[SFCardViewerRowData]):
     """This class implements enter station row model of SF Card Viewer CSV."""
 
     def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
@@ -133,7 +135,11 @@ class SFCardViewerRowFactory(InputRowFactory[SFCardViewerRowData, SFCardViewerRo
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config
 
-    def create(self, input_row_data: SFCardViewerRowData) -> SFCardViewerRow:
+    # Reason: The example implementation of returns ignore incompatible return type.
+    # see:
+    #   - Create your own container — returns 0.18.0 documentation
+    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
+    def create(self, input_row_data: SFCardViewerRowData) -> SFCardViewerRow:  # type: ignore
         if input_row_data.note in (SFCardViewerRowData.Note.EMPTY, SFCardViewerRowData.Note.EXIT_BY_WINDOW):
             return SFCardViewerEnterExitRow(input_row_data, self._account_config())
         if input_row_data.note == SFCardViewerRowData.Note.AUTO_CHARGE:

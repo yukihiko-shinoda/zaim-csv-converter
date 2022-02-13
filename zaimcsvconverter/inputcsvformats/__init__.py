@@ -8,15 +8,16 @@ from typing import Any, Callable, Generic, List, Optional, TypeVar
 
 from errorcollector.error_collector import MultipleErrorCollector, SingleErrorCollector
 from godslayer.exceptions import InvalidRecordError
+from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.exceptions import UndefinedContentError
 from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
-from zaimcsvconverter.models import FileCsvConvertId, Item, Store
+from zaimcsvconverter.models import Item, Store
 
 
 # @see https://github.com/python/mypy/issues/5374
-@dataclass
-class InputRowData:  # type: ignore
+@dataclass  # type: ignore
+class InputRowData:
     """This class is abstract class of input CSV row data."""
 
     list_error: List[InvalidRecordError] = field(default_factory=list, init=False)
@@ -41,8 +42,8 @@ class InputRowData:  # type: ignore
 
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
-@dataclass
-class InputStoreRowData(InputRowData, ABC):  # type: ignore
+@dataclass  # type: ignore
+class InputStoreRowData(InputRowData, ABC):
     """This class is abstract class of input CSV row data including column to find store (nullable OK)."""
 
     _store: Optional[Store] = field(default=None, init=False)
@@ -60,8 +61,8 @@ class InputStoreRowData(InputRowData, ABC):  # type: ignore
 
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
-@dataclass
-class InputItemRowData(InputRowData, ABC):  # type: ignore
+@dataclass  # type: ignore
+class InputItemRowData(InputRowData, ABC):
     """This class is abstract class of input CSV row data including column to find item (nullable OK)."""
 
     _item: Optional[Store] = field(default=None, init=False)
@@ -72,7 +73,17 @@ class InputItemRowData(InputRowData, ABC):  # type: ignore
         """This property returns item name."""
 
 
+# Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
+# @see https://github.com/python/mypy/issues/5374
+@dataclass  # type: ignore
+class InputStoreItemRowData(InputStoreRowData, InputItemRowData, ABC):
+    """This class is abstract class of input CSV row data including column to find item (nullable OK)."""
+
+
 TypeVarInputRowData = TypeVar("TypeVarInputRowData", bound=InputRowData)
+TypeVarInputStoreRowData = TypeVar("TypeVarInputStoreRowData", bound=InputStoreRowData)
+TypeVarInputItemRowData = TypeVar("TypeVarInputItemRowData", bound=InputItemRowData)
+TypeVarInputStoreItemRowData = TypeVar("TypeVarInputStoreItemRowData", bound=InputStoreItemRowData)
 
 
 class InputRow(Generic[TypeVarInputRowData]):
@@ -100,7 +111,7 @@ class InputRow(Generic[TypeVarInputRowData]):
         return False
 
 
-class InputContentRow(InputRow):
+class InputContentRow(InputRow[TypeVarInputRowData]):
     """Row model of CSV including at least either store or item name data."""
 
     @abstractmethod
@@ -108,10 +119,12 @@ class InputContentRow(InputRow):
         raise NotImplementedError()
 
 
-class InputStoreRow(InputContentRow):
+class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
     """This class implements row model of CSV including store name data (disallow empty)."""
 
-    def __init__(self, input_store_row_data: InputStoreRowData, file_csv_convert_context_store: FileCsvConvertContext):
+    def __init__(
+        self, input_store_row_data: TypeVarInputStoreRowData, file_csv_convert_context_store: FileCsvConvertContext
+    ):
         super().__init__(input_store_row_data)
         self._file_csv_convert_store: FileCsvConvertContext = file_csv_convert_context_store
         self.store_name: str = input_store_row_data.store_name
@@ -153,10 +166,10 @@ class InputStoreRow(InputContentRow):
         )
 
 
-class InputItemRow(InputContentRow):
+class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
     """This class implements row model of CSV including item name data (disallow empty)."""
 
-    def __init__(self, file_csv_convert_item: FileCsvConvertContext, input_item_row_data: InputItemRowData):
+    def __init__(self, file_csv_convert_item: FileCsvConvertContext, input_item_row_data: TypeVarInputItemRowData):
         super().__init__(input_item_row_data)
         self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_item
         self.store_name: str = ""
@@ -204,19 +217,19 @@ class InputItemRow(InputContentRow):
         )
 
 
-class InputStoreItemRow(InputStoreRow):
+class InputStoreItemRow(InputStoreRow[TypeVarInputStoreItemRowData]):
     """This class implements row model of CSV including store name and item name data (disallow empty)."""
 
     def __init__(
         self,
-        input_item_row_data: InputItemRowData,
+        input_store_item_row_data: TypeVarInputStoreItemRowData,
         file_csv_convert_context_store: FileCsvConvertContext,
-        file_csv_convert_context_item: FileCsvConvertId,
+        file_csv_convert_context_item: FileCsvConvertContext,
     ):
-        super().__init__(input_item_row_data, file_csv_convert_context_store)
+        super().__init__(input_store_item_row_data, file_csv_convert_context_store)
         self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_context_item
         self.store_name: str = ""
-        self.item_name: str = input_item_row_data.item_name
+        self.item_name: str = input_store_item_row_data.item_name
         self._item: Optional[Item] = None
         self.undefined_content_error_item: Optional[UndefinedContentError] = None
 
@@ -246,7 +259,7 @@ class InputStoreItemRow(InputStoreRow):
         )
         return super().validate or self.undefined_content_error_item is not None
 
-    def get_report_undefined_content_error(self) -> List[str]:
+    def get_report_undefined_content_error(self) -> List[List[str]]:
         """This method returns report of undefined content error."""
         report_undefined_content_error = super().get_report_undefined_content_error()
         if self.undefined_content_error_item is not None:
@@ -254,8 +267,11 @@ class InputStoreItemRow(InputStoreRow):
         return report_undefined_content_error
 
 
-TypeVarInputRow = TypeVar("TypeVarInputRow", bound=InputRow)
-TypeVarInputContentRow = TypeVar("TypeVarInputContentRow", bound=InputContentRow)
+TypeVarInputRow = TypeVar("TypeVarInputRow", bound=InputRow[Any])
+TypeVarInputContentRow = TypeVar("TypeVarInputContentRow", bound=InputContentRow[Any])
+TypeVarInputStoreRow = TypeVar("TypeVarInputStoreRow", bound=InputStoreRow[Any])
+TypeVarInputItemRow = TypeVar("TypeVarInputItemRow", bound=InputItemRow[Any])
+TypeVarInputStoreItemRow = TypeVar("TypeVarInputStoreItemRow", bound=InputStoreItemRow[Any])
 
 
 class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
@@ -272,5 +288,5 @@ class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
     """
 
     @abstractmethod
-    def create(self, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
+    def create(self, input_row_data: TypeVarInputRowData) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
         """This method creates input row by input CSV row data."""

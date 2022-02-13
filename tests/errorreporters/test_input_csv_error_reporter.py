@@ -12,7 +12,7 @@ class TestInputCsvErrorReporter:
     """Tests for InputCsvErrorReporter."""
 
     @staticmethod
-    def test_error():
+    def test_error() -> None:
         """Method create() should raise appropriate error."""
 
         class Unexpected(DataSource):
@@ -21,7 +21,7 @@ class TestInputCsvErrorReporter:
             def __iter__(self) -> Generator[List[Any], None, None]:
                 pass
 
-            def mark_current_record_as_error(self, list_error: List[InvalidRecordError]):
+            def mark_current_record_as_error(self, list_error: List[InvalidRecordError]) -> None:
                 pass
 
             @property

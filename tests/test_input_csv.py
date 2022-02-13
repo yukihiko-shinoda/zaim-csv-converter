@@ -22,7 +22,8 @@ class TestInputCsv:
         [([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO], "waon")],
         indirect=["database_session_with_schema", "path_file_csv_input"],
     )
-    def test(yaml_config_load, database_session_with_schema, path_file_csv_input: Path, tmp_path):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    def test(path_file_csv_input: Path, tmp_path: Path) -> None:
         """Tests following:
 
         - InvalidInputCsvError should be raised

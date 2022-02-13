@@ -25,7 +25,7 @@ class DataSourceErrorReporterFactory:
     """This class creates ImputCsvErrorReporter instance."""
 
     @staticmethod
-    def create(data_source: DataSource):
+    def create(data_source: DataSource) -> InputCsvErrorReporter:
         """Creates InputCsvErrorReporter instance."""
         if isinstance(data_source, Csv):
             return InputCsvErrorReporter(data_source)

@@ -6,9 +6,10 @@ from enum import Enum
 from pathlib import Path
 import re
 from types import DynamicClassAttribute
-from typing import Generic, List, Type
+from typing import cast, Generic, List, Type
 
 from godslayer.god_slayer_factory import GodSlayerFactory
+from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats import (
@@ -107,20 +108,22 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     god_slayer_factory: GodSlayerFactory
     input_row_data_class: Type[TypeVarInputRowData]
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
-    zaim_row_converter_selector: ZaimRowConverterFactory[TypeVarInputRow]
+    zaim_row_converter_factory: ZaimRowConverterFactory[TypeVarInputRow, TypeVarInputRowData]
 
     def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> InputRowData:
         """This method creates input row data instance by list data of input row."""
         # noinspection PyArgumentList
-        return self.input_row_data_class(*list_input_row_standard_type_value)  # type: ignore
+        return self.input_row_data_class(*list_input_row_standard_type_value)
 
-    def create_input_row_instance(self, input_row_data: TypeVarInputRowData) -> TypeVarInputRow:
+    def create_input_row_instance(
+        self, input_row_data: TypeVarInputRowData
+    ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
         """This method creates input row instance by input row data instance."""
         return self.input_row_factory.create(input_row_data)
 
-    def convert_input_row_to_zaim_row(self, input_row: TypeVarInputRow) -> ZaimRow:
+    def convert_input_row_to_zaim_row(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]) -> ZaimRow:
         """This method converts input row into zaim row."""
-        converter = self.zaim_row_converter_selector.create(input_row)
+        converter = self.zaim_row_converter_factory.create(input_row)
         return ZaimRowFactory.create(converter)
 
 
@@ -234,28 +237,15 @@ class Account(Enum):
     )
 
     @DynamicClassAttribute
-    def value(self) -> AccountContext:
+    def value(self) -> AccountContext[InputRowData, InputRow[InputRowData]]:
         """This method overwrite super method for type hint."""
-        return super().value
+        return cast(AccountContext[InputRowData, InputRow[InputRowData]], super().value)
 
     @staticmethod
     def create_by_path_csv_input(path: Path) -> Account:
         """This function create correct setting instance by argument."""
         # noinspection PyUnusedLocal
-        account: Account
         matches = [account for account in Account if re.search(account.value.regex_csv_file_name, path.name)]
         if not matches:
             raise ValueError("can't detect account type by csv file name. Please confirm csv file name.")
         return max(matches, key=lambda matched_account: len(matched_account.value.regex_csv_file_name))
-
-    def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> InputRowData:
-        """This method creates input row data instance by list data of input row."""
-        return self.value.create_input_row_data_instance(list_input_row_standard_type_value)
-
-    def create_input_row_instance(self, input_row_data: InputRowData) -> InputRow:
-        """This method creates input row instance by input row data instance."""
-        return self.value.create_input_row_instance(input_row_data)
-
-    def convert_input_row_to_zaim_row(self, input_row: InputRow) -> ZaimRow:
-        """This method converts input row into zaim row."""
-        return self.value.convert_input_row_to_zaim_row(input_row)

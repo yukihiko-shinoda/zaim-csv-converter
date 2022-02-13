@@ -10,7 +10,7 @@ class TestAccount:
     """Tests for account dependency."""
 
     @staticmethod
-    def test_convert_string_to_int_or_none():
+    def test_convert_string_to_int_or_none() -> None:
         """Argument should set into properties.
 
         Default encode should be UTF-8. Default csv herder should be None.
@@ -31,4 +31,4 @@ class TestAccount:
         assert account_context.god_slayer_factory == god_slayer_factory
         assert account_context.input_row_data_class == input_row_data_class
         assert account_context.input_row_factory == input_row_factory
-        assert account_context.zaim_row_converter_selector == zaim_row_factory_selector
+        assert account_context.zaim_row_converter_factory == zaim_row_factory_selector

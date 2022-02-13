@@ -25,7 +25,7 @@ class FilePathConvertTable(Enum):
         return super().value
 
     @property
-    def path(self):
+    def path(self) -> Path:
         return (
             "c:\\Users\\user\\workspace\\zaim-csv-convereter\\csvconvettable" / self.value
             if os.name == "nt"
@@ -37,7 +37,7 @@ class TestFileCsvConvert:
     """Tests for FileCsvConvert."""
 
     @staticmethod
-    def test_create_by_path_csv_convert():
+    def test_create_by_path_csv_convert() -> None:
         """All accounts should have definition of convert table file name."""
         for file_csv_convert in FileCsvConvert:
             assert isinstance(

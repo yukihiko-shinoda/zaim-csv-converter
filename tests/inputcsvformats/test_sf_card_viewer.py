@@ -19,7 +19,7 @@ class TestSFCardViewerRowData:
     """Tests for SFCardViewerRowData."""
 
     @staticmethod
-    def test_init_and_property():
+    def test_init_and_property() -> None:
         """Tests following:
 
         - Property date should return datetime object.
@@ -66,7 +66,8 @@ class TestSFCardViewerRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    def test_init(yaml_config_load, database_session_stores_sf_card_viewer):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    def test_init() -> None:
         """Arguments should set into properties."""
         sf_card_viewer_row = SFCardViewerEnterRow(
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION, CONFIG.pasmo
@@ -86,7 +87,8 @@ class TestSFCardViewerSalesGoodsRow:
         [("config_skip_sales_goods_row.yml.dist", True), ("config_not_skip_sales_goods_row.yml.dist", False)],
         indirect=["yaml_config_load"],
     )
-    def test_is_row_to_skip(yaml_config_load, database_session_stores_sf_card_viewer, expected):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    def test_is_row_to_skip(expected: bool) -> None:
         """SFCardViewerSalesGoodsRow should convert to ZaimPaymentRow."""
         sf_card_viewer_row = SFCardViewerRow(InstanceResource.ROW_DATA_SF_CARD_VIEWER_SALES_GOODS, CONFIG.pasmo)
         assert sf_card_viewer_row.is_row_to_skip == expected
@@ -106,9 +108,8 @@ class TestSFCardViewerExitByWindowRow:
             (InstanceResource.ROW_DATA_SF_CARD_VIEWER_EXIT_BY_WINDOW_KITASENJU_STATION, True),
         ],
     )
-    def test_is_row_to_skip(
-        sf_card_viewer_row_data, expected, yaml_config_load, database_session_stores_sf_card_viewer
-    ):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    def test_is_row_to_skip(sf_card_viewer_row_data: SFCardViewerRowData, expected: bool) -> None:
         """Method should return true when entered station is as same as exit station and used amount is 0."""
         sf_card_viewer_row = SFCardViewerEnterExitRow(sf_card_viewer_row_data, CONFIG.pasmo)
         assert sf_card_viewer_row.is_row_to_skip == expected
@@ -146,16 +147,15 @@ class TestSFCardViewerRowFactory:
             (InstanceResource.ROW_DATA_SF_CARD_VIEWER_BUS_TRAM, False, False, False, False, True),
         ],
     )
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
     def test_create_success(
-        yaml_config_load,
-        database_session_stores_sf_card_viewer,
         argument: SFCardViewerRowData,
-        expected_is_transportation,
-        expected_is_sales_goods,
-        expected_is_auto_charge,
-        expected_is_exit_by_window,
-        expected_is_bus_tram,
-    ):
+        expected_is_transportation: bool,
+        expected_is_sales_goods: bool,
+        expected_is_auto_charge: bool,
+        expected_is_exit_by_window: bool,
+        expected_is_bus_tram: bool,
+    ) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         sf_card_viewer_row = SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(argument)
@@ -167,7 +167,8 @@ class TestSFCardViewerRowFactory:
         assert sf_card_viewer_row.is_bus_tram == expected_is_bus_tram
 
     @staticmethod
-    def test_create_fail(yaml_config_load, database_session_stores_sf_card_viewer):
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    def test_create_fail() -> None:
         """Method should raise ValueError when note is not defined."""
         with pytest.raises(ValueError):
             # pylint: disable=protected-access

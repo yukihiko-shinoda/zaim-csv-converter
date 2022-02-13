@@ -5,7 +5,7 @@ from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
@@ -75,10 +75,10 @@ class MufgRowData(InputStoreRowData):
         return super().validate
 
 
-class MufgRow(InputRow):
+class MufgRow(InputRow[MufgRowData]):
     """This class implements row model of MUFG bank CSV."""
 
-    def __init__(self, input_row_data: MufgRowData, *args, **kwargs):
+    def __init__(self, input_row_data: MufgRowData, *args: Any, **kwargs: Any):
         super().__init__(input_row_data, *args, **kwargs)
         self.cash_flow_kind: MufgRowData.CashFlowKind = input_row_data.cash_flow_kind
         self._summary: str = input_row_data.summary
@@ -101,10 +101,7 @@ class MufgRow(InputRow):
 
     @property
     def is_by_card(self) -> bool:
-        return self._summary in (
-            MufgRowData.Summary.CARD.value,
-            self._summary == MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value,
-        )
+        return self._summary in (MufgRowData.Summary.CARD.value, MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value,)
 
     @property
     def is_income_from_other_own_account(self) -> bool:
@@ -114,7 +111,7 @@ class MufgRow(InputRow):
 class MufgIncomeRow(MufgRow, ABC):
     """This class implements income row model of MUFG bank CSV."""
 
-    def __init__(self, row_data: MufgRowData, *args, **kwargs):
+    def __init__(self, row_data: MufgRowData, *args: Any, **kwargs: Any):
         super().__init__(row_data, *args, **kwargs)
         self._deposit_amount: Optional[int] = row_data.deposit_amount
 
@@ -136,7 +133,7 @@ class MufgIncomeRow(MufgRow, ABC):
 class MufgPaymentRow(MufgRow, ABC):
     """This class implements payment row model of MUFG bank CSV."""
 
-    def __init__(self, row_data: MufgRowData, *args, **kwargs):
+    def __init__(self, row_data: MufgRowData, *args: Any, **kwargs: Any) -> None:
         super().__init__(row_data, *args, **kwargs)
         self._payed_amount: Optional[int] = row_data.payed_amount
 
@@ -163,7 +160,7 @@ class MufgPaymentToSelfRow(MufgPaymentRow):
 
 
 # pylint: disable=too-many-instance-attributes
-class MufgStoreRow(MufgRow, InputStoreRow, ABC):
+class MufgStoreRow(MufgRow, InputStoreRow[MufgRowData], ABC):
     """This class implements row model of MUFG bank CSV."""
 
     def __init__(self, input_row_data: MufgRowData):
@@ -196,7 +193,11 @@ class MufgPaymentToSomeoneRow(MufgStoreRow, MufgPaymentRow):
 class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
     """This class implements factory to create MUFG CSV row instance."""
 
-    def create(self, input_row_data: MufgRowData) -> MufgRow:
+    # Reason: The example implementation of returns ignore incompatible return type.
+    # see:
+    #   - Create your own container — returns 0.18.0 documentation
+    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
+    def create(self, input_row_data: MufgRowData) -> MufgRow:  # type: ignore
         if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.INCOME:
             return MufgIncomeFromSelfRow(input_row_data)
         if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.PAYMENT:
