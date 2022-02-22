@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 
 from tests.testlibraries.error_row_data_for_test import ErrorRowDataForTest
+from zaimcsvconverter.csvconverter.input_csv_converter_iterator import InputCsvConverterIterator
 from zaimcsvconverter.exceptions import InvalidInputCsvError
-from zaimcsvconverter.input_csv_converter_iterator import InputCsvConverterIterator
 
 
 class TestInputCsvConverterIterator:

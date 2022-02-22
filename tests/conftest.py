@@ -11,9 +11,9 @@ import pytest
 from pytest import FixtureRequest
 from sqlalchemy.orm.session import Session as SQLAlchemySession
 
-from tests.test_zaim_csv_converter import create_relative_deploy_file_path
 from tests.testlibraries.database_for_test import DatabaseForTest
 from tests.testlibraries.instance_resource import InstanceResource
+from tests.zaim.test_zaim_csv_converter import create_relative_deploy_file_path
 from zaimcsvconverter import CONFIG, Session
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 

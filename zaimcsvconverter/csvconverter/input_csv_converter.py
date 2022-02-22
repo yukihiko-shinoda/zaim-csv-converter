@@ -3,10 +3,10 @@ import csv
 from pathlib import Path
 
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.csvconverter.input_csv import InputData
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter import DirectoryCsv
-from zaimcsvconverter.input_csv import InputData
-from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
+from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 
 
 class InputCsvConverter:

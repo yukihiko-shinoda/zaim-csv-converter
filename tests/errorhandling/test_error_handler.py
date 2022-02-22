@@ -2,7 +2,7 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
+from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRow
 from zaimcsvconverter.inputcsvformats.waon import WaonRow
 
@@ -17,7 +17,7 @@ class TestErrorHandler:
 
     @staticmethod
     # pylint: disable=unused-argument
-    @pytest.mark.usefixtures("yaml_config_load")
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
     def test_append_undefined_content_extend_is_presented_true_uniquify_iter() -> None:
         """Instance should be iterable."""
         error_amazon = ["amazon.csv", "", "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"]

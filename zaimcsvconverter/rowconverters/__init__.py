@@ -14,7 +14,7 @@ from zaimcsvconverter.inputcsvformats import (
     TypeVarInputStoreRow,
     TypeVarInputStoreRowData,
 )
-from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
+from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 
 
 # Reason: Abstract class. pylint: disable=too-few-public-methods

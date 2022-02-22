@@ -10,7 +10,7 @@ from zaimcsvconverter.rowconverters.amazon_201911 import (
     Amazon201911PaymentZaimPaymentRowConverter,
 )
 from zaimcsvconverter.rowconverters import ZaimPaymentRowItemConverter
-from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
+from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
 class TestAmazon201911DiscountZaimPaymentRowConverter:

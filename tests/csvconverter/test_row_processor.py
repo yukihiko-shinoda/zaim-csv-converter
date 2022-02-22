@@ -4,7 +4,7 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.row_processor import RecordProcessor
+from zaimcsvconverter.csvconverter.row_processor import RecordProcessor
 
 
 class TestRowProcessor:

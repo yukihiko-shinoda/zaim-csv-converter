@@ -6,7 +6,7 @@ from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPointCardPlus201912RowData
 from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimPaymentRowConverter
-from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
+from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
 class TestGoldPointCardPlus201912ZaimPaymentRowConverter:

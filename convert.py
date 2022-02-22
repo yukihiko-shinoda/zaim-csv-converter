@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """This module implements only calling Zaim CSV converter package."""
-from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
+from zaimcsvconverter.zaim.zaim_csv_converter import ZaimCsvConverter
 
 
 def main() -> None:

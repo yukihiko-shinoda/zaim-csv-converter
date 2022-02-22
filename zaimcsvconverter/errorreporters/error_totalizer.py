@@ -2,10 +2,10 @@
 from pathlib import Path
 from typing import Generator, List, Union
 
-from zaimcsvconverter.csv_exporter import CsvExporter
-from zaimcsvconverter.error_handler import FileNameForError, UndefinedContentErrorHandler
+from zaimcsvconverter.csvconverter.input_csv import InputData
+from zaimcsvconverter.errorhandling.error_handler import FileNameForError, UndefinedContentErrorHandler
+from zaimcsvconverter.errorreporters.csv_exporter import CsvExporter
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
-from zaimcsvconverter.input_csv import InputData
 
 
 class ErrorTotalizer:

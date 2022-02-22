@@ -8,8 +8,8 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
+from zaimcsvconverter.csvconverter.input_csv_converter import InputCsvConverter
 from zaimcsvconverter.exceptions import InvalidInputCsvError
-from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
 
 class TestInputCsvConverterForStore:
