@@ -12,7 +12,7 @@ from zaimcsvconverter.rowconverters.sf_card_viewer import (
     SFCardViewerZaimTransferRowConverter,
 )
 from zaimcsvconverter.rowconverters import ZaimRowConverter
-from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory, ZaimTransferRow
+from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory, ZaimTransferRow
 
 
 class TestSFCardViewerZaimPaymentOnStationRowConverter:

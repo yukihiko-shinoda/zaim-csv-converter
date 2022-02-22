@@ -21,7 +21,7 @@ from zaimcsvconverter.rowconverters.waon import (
     WaonZaimTransferRowConverter,
 )
 from zaimcsvconverter.rowconverters import ZaimRowConverter, ZaimRowConverterFactory
-from zaimcsvconverter.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRow, ZaimRowFactory, ZaimTransferRow
+from zaimcsvconverter.zaim.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRow, ZaimRowFactory, ZaimTransferRow
 
 
 class TestZaimIncomeRow:

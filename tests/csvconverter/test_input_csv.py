@@ -7,9 +7,9 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.csvconverter.input_csv import InputData
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions import InvalidInputCsvError
-from zaimcsvconverter.input_csv import InputData
 
 
 class TestInputCsv:

@@ -5,10 +5,10 @@ from godslayer.exceptions import InvalidRecordError
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
+from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import SkipRow
 from zaimcsvconverter.inputcsvformats import InputContentRow, InputRow, InputRowData
-from zaimcsvconverter.zaim_row import ZaimRow
+from zaimcsvconverter.zaim.zaim_row import ZaimRow
 
 
 class RecordProcessor:

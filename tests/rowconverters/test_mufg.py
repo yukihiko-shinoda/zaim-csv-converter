@@ -15,7 +15,7 @@ from zaimcsvconverter.rowconverters.mufg import (
     MufgZaimPaymentRowConverter,
 )
 from zaimcsvconverter.rowconverters import ZaimRowConverter
-from zaimcsvconverter.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRowFactory, ZaimTransferRow
+from zaimcsvconverter.zaim.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRowFactory, ZaimTransferRow
 
 
 class TestMufgZaimIncomeRowConverter:

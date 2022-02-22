@@ -6,7 +6,7 @@ from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter
-from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
+from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
 class TestAmazonZaimPaymentRowConverter:

@@ -17,7 +17,7 @@ from zaimcsvconverter.rowconverters import (
     ZaimRowConverterFactory,
     ZaimTransferRowConverter,
 )
-from zaimcsvconverter.zaim_csv_format import ZaimCsvFormat
+from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 
 
 class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFCardViewerRow, SFCardViewerRowData]):

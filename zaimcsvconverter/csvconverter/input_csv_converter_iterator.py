@@ -2,9 +2,9 @@
 from pathlib import Path
 from typing import Generator
 
-from zaimcsvconverter.error_totalizer import ErrorTotalizer
+from zaimcsvconverter.csvconverter.input_csv_converter import InputCsvConverter
+from zaimcsvconverter.errorreporters.error_totalizer import ErrorTotalizer
 from zaimcsvconverter.exceptions import InvalidInputCsvError
-from zaimcsvconverter.input_csv_converter import InputCsvConverter
 
 
 class InputCsvConverterIterator:

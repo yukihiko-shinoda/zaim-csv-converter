@@ -6,7 +6,7 @@ from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData
 from zaimcsvconverter.rowconverters.view_card import ViewCardZaimPaymentRowConverter
-from zaimcsvconverter.zaim_row import ZaimPaymentRow, ZaimRowFactory
+from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
 class TestViewCardZaimPaymentRowConverter:

@@ -10,7 +10,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, ZaimCsvFileChecker
 from tests.testlibraries.row_data import InvalidRowErrorRowData, ZaimRowData
 from zaimcsvconverter.exceptions import InvalidInputCsvError
-from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
+from zaimcsvconverter.zaim.zaim_csv_converter import ZaimCsvConverter
 
 
 def create_relative_deploy_file_path(

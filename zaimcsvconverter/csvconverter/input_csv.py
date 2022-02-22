@@ -5,10 +5,10 @@ from godslayer.exceptions import InvalidRecordError
 
 from tests.testlibraries.csv_types import CSVWriter
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.csvconverter.row_processor import RecordProcessor
 from zaimcsvconverter.datasources.data_source import DataSource
-from zaimcsvconverter.error_handler import UndefinedContentErrorHandler
+from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import SkipRow
-from zaimcsvconverter.row_processor import RecordProcessor
 
 
 class InputData:
