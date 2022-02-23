@@ -1,5 +1,5 @@
 """This module implements convert steps from SBI Sumishin net bank input row to Zaim row."""
-from typing import cast
+from typing import cast, Union
 
 from returns.primitives.hkt import Kind1
 
@@ -92,27 +92,57 @@ class SBISumishinNetBankZaimRowConverterFactory(
 ):
     """This class implements select steps from MUFG input row to Zaim row converter."""
 
+    KEY_INSTANCE_TYPE_INSTANCE_OF_WITHDRAWAL_ROW = "instance_of_withdrawal_row"
+    KEY_INSTANCE_TYPE_INSTANCE_OF_DEPOSIT_ROW = "instance_of_deposit_row"
+    KEY_TRANSACTION_TYPE_TRANSACTION_WITH_OTHERS = "transaction_with_others"
+    KEY_TRANSACTION_TYPE_TRANSFER = "transfer"
+
     def create(
         self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]
     ) -> ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData]:
-        dekinded_input_row = cast(SBISumishinNetBankRow, input_row)
-        converter = None
-        if isinstance(input_row, SBISumishinNetBankWithdrawalRow) and dekinded_input_row.is_transaction_with_others:
-            # Reason: The returns can't detect correct type limited by if instance block.
-            converter = SBISumishinNetBankZaimPaymentRowConverter(input_row)  # type: ignore
-        elif isinstance(input_row, SBISumishinNetBankWithdrawalRow) and dekinded_input_row.is_transfer:
-            # Reason: The returns can't detect correct type limited by if instance block.
-            converter = SBISumishinNetBankWithdrawalZaimTransferRowConverter(input_row)  # type: ignore
-        elif isinstance(input_row, SBISumishinNetBankDepositRow) and dekinded_input_row.is_transaction_with_others:
-            # Reason: The returns can't detect correct type limited by if instance block.
-            converter = SBISumishinNetBankZaimIncomeRowConverter(input_row)  # type: ignore
-        elif isinstance(input_row, SBISumishinNetBankDepositRow) and dekinded_input_row.is_transfer:
-            # Reason: The returns can't detect correct type limited by if instance block.
-            converter = SBISumishinNetBankDepositZaimTransferRowConverter(input_row)  # type: ignore
-        else:
-            raise ValueError(self.build_message(input_row))  # pragma: no cover
+        dictionary: dict[
+            str,
+            dict[
+                str,
+                type[
+                    Union[
+                        SBISumishinNetBankZaimPaymentRowConverter,
+                        SBISumishinNetBankWithdrawalZaimTransferRowConverter,
+                        SBISumishinNetBankZaimIncomeRowConverter,
+                        SBISumishinNetBankDepositZaimTransferRowConverter,
+                    ]
+                ],
+            ],
+        ] = {
+            self.KEY_INSTANCE_TYPE_INSTANCE_OF_WITHDRAWAL_ROW: {
+                self.KEY_TRANSACTION_TYPE_TRANSACTION_WITH_OTHERS: SBISumishinNetBankZaimPaymentRowConverter,
+                self.KEY_TRANSACTION_TYPE_TRANSFER: SBISumishinNetBankWithdrawalZaimTransferRowConverter,
+            },
+            self.KEY_INSTANCE_TYPE_INSTANCE_OF_DEPOSIT_ROW: {
+                self.KEY_TRANSACTION_TYPE_TRANSACTION_WITH_OTHERS: SBISumishinNetBankZaimIncomeRowConverter,
+                self.KEY_TRANSACTION_TYPE_TRANSFER: SBISumishinNetBankDepositZaimTransferRowConverter,
+            },
+        }
+        instance_type = self.check_instance_type(input_row)
+        transaction_type = self.check_transaction_type(input_row)
+        # Reason: The returns can't detect correct type limited by if instance block.
+        converter = dictionary[instance_type][transaction_type](input_row)  # type: ignore
         return cast(ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData], converter)
-        # Reason: This line is insurance for future development so process must be not able to reach
+
+    def check_transaction_type(self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]) -> str:
+        dekinded_input_row = cast(SBISumishinNetBankRow, input_row)
+        if dekinded_input_row.is_transaction_with_others:
+            return self.KEY_TRANSACTION_TYPE_TRANSACTION_WITH_OTHERS
+        if dekinded_input_row.is_transfer:
+            return self.KEY_TRANSACTION_TYPE_TRANSFER
+        raise ValueError(self.build_message(input_row))  # pragma: no cover
+
+    def check_instance_type(self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]) -> str:
+        if isinstance(input_row, SBISumishinNetBankWithdrawalRow):
+            return self.KEY_INSTANCE_TYPE_INSTANCE_OF_WITHDRAWAL_ROW
+        if isinstance(input_row, SBISumishinNetBankDepositRow):
+            return self.KEY_INSTANCE_TYPE_INSTANCE_OF_DEPOSIT_ROW
+        raise ValueError(self.build_message(input_row))  # pragma: no cover
 
     @staticmethod
     def build_message(input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]) -> str:  # pragma: no cover
