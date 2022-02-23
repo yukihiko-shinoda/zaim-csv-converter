@@ -1,5 +1,5 @@
 """This module implements convert steps of input CSV row."""
-from typing import List
+from typing import cast, List
 
 from godslayer.exceptions import InvalidRecordError
 from returns.primitives.hkt import Kind1
@@ -26,9 +26,10 @@ class RecordProcessor:
             self.list_error = input_row_data.list_error
             raise InvalidRecordError()
         input_row = self._account.value.create_input_row_instance(input_row_data)
-        if input_row.is_row_to_skip:
+        dekinded_input_row = cast(InputRow[InputRowData], input_row)
+        if dekinded_input_row.is_row_to_skip:
             raise SkipRow()
-        if input_row.validate:
+        if dekinded_input_row.validate:
             self._stock_row_error(input_row)
             raise InvalidRecordError()
         return self._account.value.convert_input_row_to_zaim_row(input_row)

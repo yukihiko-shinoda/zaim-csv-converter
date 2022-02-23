@@ -28,6 +28,10 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
 )
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
 from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData, PayPalRowFactory
+from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import (
+    SBISumishinNetBankRowData,
+    SBISumishinNetBankRowFactory,
+)
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
@@ -37,6 +41,7 @@ from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlu
 from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.pay_pal import PayPalZaimRowConverterFactory
+from zaimcsvconverter.rowconverters.sbi_sumishin_net_bank import SBISumishinNetBankZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
@@ -234,6 +239,13 @@ class Account(Enum):
         PayPalRowData,
         PayPalRowFactory(),
         PayPalZaimRowConverterFactory(),
+    )
+    SBI_SUMISHIN_NET_BANK = AccountContext(
+        r".*sbi_sumishin_net_bank.*\.csv",
+        GodSlayerFactory(header=["日付", "内容", "出金金額(円)", "入金金額(円)", "残高(円)", "メモ"], encoding="shift_jis_2004",),
+        SBISumishinNetBankRowData,
+        SBISumishinNetBankRowFactory(),
+        SBISumishinNetBankZaimRowConverterFactory(),
     )
 
     @DynamicClassAttribute

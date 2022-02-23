@@ -25,3 +25,6 @@ suica:
 pay_pal:
   store_name_zaim: 'PayPal'
   payment_account_name: 'ヨドバシゴールドポイントカード・プラス'
+sbi_sumishin_net_bank:
+  account_name: '住信 SBI ネット銀行'
+  transfer_account_name: 'お財布'

@@ -76,6 +76,14 @@ class PayPalConfig(DataClassJsonMixin):
 
 
 @dataclass
+class SBISumishinNetBankConfig(DataClassJsonMixin):
+    """This class implements configuration for SBI Sumishin Net Bank."""
+
+    account_name: str
+    transfer_account_name: str
+
+
+@dataclass
 # Reason: Specification. pylint: disable=too-many-instance-attributes
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
@@ -103,4 +111,7 @@ class Config(YamlDataClassConfig):
     )
     pay_pal: PayPalConfig = field(  # type: ignore
         default=None, metadata={"dataclasses_json": {"mm_field": PayPalConfig}}
+    )
+    sbi_sumishin_net_bank: SBISumishinNetBankConfig = field(  # type: ignore
+        default=None, metadata={"dataclasses_json": {"mm_field": SBISumishinNetBankConfig}}
     )

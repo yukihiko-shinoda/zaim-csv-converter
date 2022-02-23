@@ -22,6 +22,7 @@ Zaim で口座連携をするために
 - ビューカード
 - Suica
 - PayPal (experimental)
+- 住信 SBI ネット銀行 (experimental)
 
 ※ [対応口座追加のための開発手順](docs/CONTRIBUTING.md)をまとめました、プルリクエストをお待ちしています。
 
@@ -68,6 +69,7 @@ Suica,PASMO|sf_card_viewer.csv|お店単位
 Amazon.co.jp|amazon.csv|品目単位
 ビューカード|view_card.csv|お店単位
 PayPal|pay_pal_store.csv, pay_pal_item.csv|お店単位、品目単位
+住信 SBI ネット銀行|sbi_sumishin_net_bank.csv|お店単位
 
 ※ 文字コードは UTF-8 で準備してください。
 
@@ -101,6 +103,7 @@ Amazon.co.jp 2019 年 12 月以降の形式|amazon_201911
 ビューカード|view_card
 Suica|suica
 PayPal|pay_pal_store, pay_pal_item
+住信 SBI ネット銀行|sbi_sumishin_net_bank
 
 変換対象CSVの準備方法の詳細は[変換対象 CSV の準備方法](#変換対象-CSV-の準備方法)を参照してください。
 
@@ -348,3 +351,28 @@ Chrome 拡張の[アマゾン注文履歴フィルタ](https://chrome.google.com
 
 「取引レポートをダウンロードできるようになりました」というメールが届いたら
 [ダウンロード] リンクをクリック
+
+### 住信 SBI ネット銀行
+
+「代表口座」と「SBI ハイブリッド預金」がそれぞれダウンロードできます。両方ダウンロードして変換し、両方 Zaim にインポートします。
+
+1\.
+
+[住信 SBI ネット銀行](https://www.netbk.co.jp/contents/pages/wpl010101/i010101CT/DI01010210) にログインします。
+
+2\.
+
+画面右上 [入出金明細] をクリック
+
+3\.
+
+フォームに次の内容を入力して [表示] ボタンをクリックします。
+
+入力項目|入力する内容
+---|---
+[表示口座]|「代表口座」または「SBI ハイブリッド預金」
+[期間]|「前月」
+
+4\.
+
+[CSV でダウンロード] ボタンをクリックします。
