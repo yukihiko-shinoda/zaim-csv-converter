@@ -28,6 +28,9 @@ class FilePathInput(Enum):
     VIEW_CARD = Path("c:\\Users\\user\\workspace\\zaim-csv-converter\\csvinput\\view_card_201804.csv")
     SUICA = Path("c:\\Users\\user\\workspace\\zaim-csv-converter\\csvinput\\suica202003.csv")
     PAY_PAL = Path("c:\\Users\\user\\workspace\\zaim-csv-converter\\csvinput\\pay_pal201711.csv")
+    SBI_SUMISHIN_NET_BANK = Path(
+        "c:\\Users\\user\\workspace\\zaim-csv-converter\\csvinput\\sbi_sumishin_net_bank201711.csv"
+    )
 
     @DynamicClassAttribute
     def value(self) -> Path:

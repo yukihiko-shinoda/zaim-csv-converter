@@ -31,7 +31,7 @@ convert_table_type|入力 CSV ファイルの各行がお店単位の場合は `
 
 ### 3. 入力 CSV ファイルのフォーマットに依存する処理を追加する開発
 
-inputcsvformat 配下に新規対応口座の入力 CSV モデル module を作成します。
+inputcsvformats 配下に新規対応口座の入力 CSV モデル module を作成します。
 
 #### 3-1. 入力 CSV の行の各列のプロパティを定義した dataclass の実装
 
@@ -75,7 +75,18 @@ Store モデルを返すように実装してください。(amazon.py を参考
 メソッド、プロパティ名|実装内容
 ---|---
 validate|モデル内のプロパティを検証し、異常があれば `InvalidRowError` を生成してプロパティ `list_error` に追加して `True` を返してください。 異常がなければ `False` を返してください。
-is_row_to_skip|この行を処理する必要がない場合、Falseを返すように実装してください。実装しない場合は常にskipせず処理されます。
+is_row_to_skip|この行を処理する必要がない場合、`True` を返すように実装してください。実装しない場合は常に skip せず処理されます。
+
+##### どうして dataclass を作ったのに CSV の行のモデルクラスも作るの？
+
+CSV 形式は、実際には性質の異なる行や、その属性を、
+言わば強引に 1 つのテーブルとして出力しています。
+(データベース用語の「非正規化」)
+たとえば、多くの CSV では、出金の行と入金の行で、
+それぞれの行のみが値を持つ列が存在することがあります。
+
+このような観点から、行の中の不要な列などはプロパティとして持たないモデルクラスに変換した方が、
+プログラム中で間違った仕訳をコーディングしてしまうリスクが減らせることが期待できます。
 
 ### 4. 入力 CSV の行モデルを Zaim 形式 CSV の行モデルに変換する処理を追加する開発
 
@@ -99,11 +110,11 @@ create メソッドを実装してください。
 #### 4-2. 入力 CSV の行モデルクラスをZaim形式CSVの行モデルクラス変換する Converter クラスの実装
 
 InputRow モデルを ZaimRow モデルに変換するための Converter クラスと、
-手順 3-5. で後述する ZaimRowConverterFactory クラスで、
+手順 4-5. で後述する ZaimRowConverterFactory クラスで、
 入力 CSV の行モデルクラスインスタンスを作り分けることにより、
 Strategy パターンを実装できます。
 
-実装する Coverter クラスは、対象の行がZaimの支出、収入、振替の内、どの記録にあたるかによって、
+実装する Converter クラスは、対象の行がZaimの支出、収入、振替の内、どの記録にあたるかによって、
 `ZaimIncomeRowConverter`, `ZaimPaymentRowConverter`, `ZaimTransferRowConverter`
 のいずれかを継承して実装してください。
 
@@ -111,23 +122,23 @@ Strategy パターンを実装できます。
 
 メソッド、プロパティ名|実装内容
 ---|---
-_cash_flow_target|この行が収入の行の場合、出力 CSV に「入金先」として記載すべき文字列を返してください。
-_amount_income|この行が収入の行の場合、出力 CSV に「収入」として記載すべき数値を返してください。
+cash_flow_target|この行が収入の行の場合、出力 CSV に「入金先」として記載すべき文字列を返してください。
+amount|この行が収入の行の場合、出力 CSV に「収入」として記載すべき数値を返してください。
 
 `ZaimPaymentRowConverter`
 
 メソッド、プロパティ名|実装内容
 ---|---
-_cash_flow_source|この行が支出の行の場合、出力 CSV に「支払元」として記載すべき文字列を返してください。
-_amount_payment|この行が支出の行の場合、出力 CSV に「支出」として記載すべき数値を返してください。
+cash_flow_source|この行が支出の行の場合、出力 CSV に「支払元」として記載すべき文字列を返してください。
+amount|この行が支出の行の場合、出力 CSV に「支出」として記載すべき数値を返してください。
 
 `ZaimTransferRowConverter`
 
 メソッド、プロパティ名|実装内容
 ---|---
-_cash_flow_source|この行が振替の行の場合、出力 CSV に「支払元」として記載すべき文字列を返してください。
-_cash_flow_target|この行が振替の行の場合、出力 CSV に「入金先」として記載すべき文字列を返してください。
-_amount_transfer|この行が振替の行の場合、出力 CSV に「振替」として記載すべき数値を返してください。
+cash_flow_source|この行が振替の行の場合、出力 CSV に「支払元」として記載すべき文字列を返してください。
+cash_flow_target|この行が振替の行の場合、出力 CSV に「入金先」として記載すべき文字列を返してください。
+amount|この行が振替の行の場合、出力 CSV に「振替」として記載すべき数値を返してください。
 
 ### 4-5. ZaimRowConverterFactory クラスの実装
 
@@ -145,7 +156,7 @@ AccountContext の各プロパティは以下のように定義します。
 regex_csv_file_name|入力 CSV ファイルが、この口座の CSV ファイルであると判定するための正規表現を定義します。
 god_slayer_factory|CSV ファイルのレコードを読み取るためのジェネレーターである `GodSlayer` の Factory クラス `GodSlayerFactory` のインスタンスを指定します。CSV の書式に合わせ、引数で `hedder`, `footer`, `partition`, `encoding` などを指定します。詳しくは [GodSlayer の README](https://pypi.org/project/godslayer/) を確認してください。
 input_row_data_class|手順3.で実装した `InputRowData` を指定します。
-input_row_factory|手順3.で実装した `InputRowFactory` を指定します。こちらはクラスではなくインスタンス生成して渡します。
+input_row_factory|手順4.で実装した `InputRowFactory` を指定します。こちらはクラスではなくインスタンス生成して渡します。
 zaim_row_converter_factory|手順4.で実装した `ZaimRowConverter` を指定します。こちらはクラスではなくインスタンス生成して渡します。
 
 ### 6. 属性の定義の追加に伴うテストの修正
@@ -173,18 +184,40 @@ CSV ファイルへのパスの例を追加します。
 
 次のディレクトリー内に変換テーブルの例となる CSV ファイルを追加します。
 
-`tests/testresources/test_zaim_csv_converter/csvconvettable`
+`tests/testresources/zaim/test_zaim_csv_converter/csvconvettable`
 
 #### 7-2. 入力 CSV ファイルの例の追加
 
 次のディレクトリー内に入力 CSV ファイルの例となる CSV ファイルを追加します。
 クレジットカード情報などをリポジトリーにコミットしないよう注意します。
 
+`tests/testresources/zaim/test_zaim_csv_converter/csvinput_test_success`
+
 #### 7-3. テスト用 config.yml に口座の設定を追加
 
 `tests/testresources/config.yml.dist` に追加した口座の設定の例を追加します。
 
-#### 7-4. `test_zaim_csv_converter.py` の修正
+#### 7-4. 期待する変換結果の定義
+
+`tests/testlibraries/integration_test_expected_factory.py` に、期待する変換結果を返す関数を定義します。
+
+#### 7-5. `test_zaim_csv_converter.py` の修正
+
+`tests/zaim/test_zaim_csv_converter.py` を開き、`test_success()` を確認します。
+
+ファイルの数を確認している箇所を修正します:
+
+```diff
+- assert len(files) == 17
++ assert len(files) == 18
+```
+
+変換後のファイルの assertion を追加します:
+
+```diff
+        checker.assert_file("pay_pal201810.csv", create_zaim_row_data_pay_pal_201810())
++       checker.assert_file("sbi_sumishin_net_bank202201.csv", create_zaim_row_data_sbi_sumishin_net_bank_202201())
+```
 
 ### 8. ユニットテストの実行
 
