@@ -1,5 +1,5 @@
 """This module implements convert steps of input CSV row."""
-from typing import Generic, List, cast
+from typing import cast, Generic, List
 
 from godslayer.exceptions import InvalidRecordError
 from returns.primitives.hkt import Kind1

@@ -2,15 +2,31 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+from pydantic.dataclasses import dataclass as pydantic_dataclass
 from sqlalchemy.orm.exc import NoResultFound
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
+from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
+from zaimcsvconverter.inputcsvformats.custom_data_types import StringToDateTime
+
+
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class GoldPointCardPlus201912RowDataPydantic(AbstractPydantic):
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+
+    used_date: StringToDateTime
+    used_store: str
+    used_amount: str
+    number_of_division: str
+    current_time_of_division: str
+    payed_amount: int
+    others: str
 
 
 @dataclass
-class GoldPointCardPlus201912RowData(InputStoreRowData):
+class GoldPointCardPlus201912RowData(InputStoreRowData[GoldPointCardPlus201912RowDataPydantic]):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV version 201912 row model."""
 
     _used_date: str
@@ -21,26 +37,33 @@ class GoldPointCardPlus201912RowData(InputStoreRowData):
     _payed_amount: str
     others: str
 
+    def create_pydantic(self) -> GoldPointCardPlus201912RowDataPydantic:
+        return GoldPointCardPlus201912RowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._used_date,  # type: ignore
+            self._used_store,
+            self._used_amount,
+            self._number_of_division,
+            self._current_time_of_division,
+            self._payed_amount,  # type: ignore
+            self.others,
+        )
+
     @property
     def date(self) -> datetime:
         return datetime.strptime(self._used_date, "%Y/%m/%d")
 
     @property
     def store_name(self) -> str:
-        return self._used_store
+        return self.pydantic.used_store
 
     @property
     def payed_amount(self) -> int:
-        return int(self._payed_amount)
+        return self.pydantic.payed_amount
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid used date. Used date = {self._used_date}")
-        self.stock_error(lambda: self.payed_amount, f"Invalid used amount. Used amount = {self._used_amount}")
         return super().validate
-
-    def create_pydantic(self) -> None:
-        return None
 
 
 class GoldPointCardPlus201912Row(InputStoreRow[GoldPointCardPlus201912RowData]):
