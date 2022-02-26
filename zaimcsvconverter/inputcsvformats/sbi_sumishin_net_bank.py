@@ -46,6 +46,9 @@ class SBISumishinNetBankRowData(InputStoreRowData):
         )
         return super().validate
 
+    def create_pydantic(self) -> None:
+        return None
+
 
 class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
     """This class implements row model of SBI Sumishin net bank CSV."""

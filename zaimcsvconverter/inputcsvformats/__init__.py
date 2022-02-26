@@ -7,7 +7,11 @@ from datetime import datetime
 from typing import Any, Callable, Generic, List, Optional, TypeVar
 
 from errorcollector.error_collector import MultipleErrorCollector, SingleErrorCollector
-from godslayer.exceptions import InvalidRecordError
+
+# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
+from godslayer import InvalidRecordError  # type: ignore
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+from pydantic import ValidationError
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.exceptions import UndefinedContentError
@@ -15,13 +19,30 @@ from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
 from zaimcsvconverter.models import Item, Store
 
 
+@pydantic_dataclass
+class AbstractPydantic:
+    pass
+
+
+TypeVarPydantic = TypeVar("TypeVarPydantic", bound=AbstractPydantic)
+
+
 # @see https://github.com/python/mypy/issues/5374
 @dataclass  # type: ignore
-class InputRowData:
+class InputRowData(Generic[TypeVarPydantic]):
     """This class is abstract class of input CSV row data."""
 
     list_error: List[InvalidRecordError] = field(default_factory=list, init=False)
     undefined_content_error: Optional[UndefinedContentError] = field(default=None, init=False)
+    pydantic: TypeVarPydantic = field(init=False)
+
+    def __post_init__(self) -> None:
+        try:
+            self.pydantic = self.create_pydantic()
+        except ValidationError as exc:
+            self.list_error.extend(
+                [InvalidRecordError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
+            )
 
     @property
     @abstractmethod
@@ -39,11 +60,15 @@ class InputRowData:
         with MultipleErrorCollector(InvalidRecordError, message, self.list_error):
             return method()
 
+    @abstractmethod
+    def create_pydantic(self) -> TypeVarPydantic:
+        raise NotImplementedError
+
 
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
 @dataclass  # type: ignore
-class InputStoreRowData(InputRowData, ABC):
+class InputStoreRowData(InputRowData[TypeVarPydantic], ABC):
     """This class is abstract class of input CSV row data including column to find store (nullable OK)."""
 
     _store: Optional[Store] = field(default=None, init=False)
@@ -62,7 +87,7 @@ class InputStoreRowData(InputRowData, ABC):
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
 @dataclass  # type: ignore
-class InputItemRowData(InputRowData, ABC):
+class InputItemRowData(InputRowData[TypeVarPydantic], ABC):
     """This class is abstract class of input CSV row data including column to find item (nullable OK)."""
 
     _item: Optional[Store] = field(default=None, init=False)
@@ -76,7 +101,7 @@ class InputItemRowData(InputRowData, ABC):
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method
 # @see https://github.com/python/mypy/issues/5374
 @dataclass  # type: ignore
-class InputStoreItemRowData(InputStoreRowData, InputItemRowData, ABC):
+class InputStoreItemRowData(InputStoreRowData[TypeVarPydantic], InputItemRowData[TypeVarPydantic], ABC):
     """This class is abstract class of input CSV row data including column to find item (nullable OK)."""
 
 

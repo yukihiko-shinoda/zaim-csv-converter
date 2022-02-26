@@ -144,6 +144,9 @@ class Amazon201911RowData(InputItemRowData):
             and self.credit_card_identity == ""
         )
 
+    def create_pydantic(self) -> None:
+        return None
+
 
 class Amazon201911Row(InputItemRow[Amazon201911RowData]):
     """This class implements row model of Amazon.co.jp CSV."""

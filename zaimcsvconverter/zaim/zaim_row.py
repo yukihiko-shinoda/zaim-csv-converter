@@ -3,7 +3,13 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import Any, List, Optional, Union
 
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, TypeVarInputRow, TypeVarInputRowData
+from zaimcsvconverter.inputcsvformats import (
+    InputRow,
+    InputRowData,
+    TypeVarInputRow,
+    TypeVarInputRowData,
+    TypeVarPydantic,
+)
 from zaimcsvconverter.rowconverters import (
     ZaimIncomeRowConverter,
     ZaimPaymentRowConverter,
@@ -16,7 +22,7 @@ from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 class ZaimRow:
     """This class implements abstract row model of Zaim CSV."""
 
-    def __init__(self, zaim_row_converter: ZaimRowConverter[InputRow[Any], InputRowData]):
+    def __init__(self, zaim_row_converter: ZaimRowConverter[InputRow[Any], InputRowData[TypeVarPydantic]]):
         self._date: datetime = zaim_row_converter.input_row.date
 
     @property
@@ -33,7 +39,7 @@ class ZaimIncomeRow(ZaimRow):
 
     METHOD: str = "income"
 
-    def __init__(self, zaim_row_converter: ZaimIncomeRowConverter[InputRow[Any], InputRowData]):
+    def __init__(self, zaim_row_converter: ZaimIncomeRowConverter[InputRow[Any], InputRowData[TypeVarPydantic]]):
         self._category = zaim_row_converter.category
         self._cash_flow_target = zaim_row_converter.cash_flow_target
         self._store_name = zaim_row_converter.store_name
@@ -66,7 +72,7 @@ class ZaimPaymentRow(ZaimRow):
 
     METHOD: str = "payment"
 
-    def __init__(self, zaim_row_converter: ZaimPaymentRowConverter[InputRow[Any], InputRowData]):
+    def __init__(self, zaim_row_converter: ZaimPaymentRowConverter[InputRow[Any], InputRowData[TypeVarPydantic]]):
         self._category_large = zaim_row_converter.category_large
         self._category_small = zaim_row_converter.category_small
         self._cash_flow_source = zaim_row_converter.cash_flow_source
@@ -102,7 +108,7 @@ class ZaimTransferRow(ZaimRow):
 
     METHOD: str = "transfer"
 
-    def __init__(self, zaim_row_converter: ZaimTransferRowConverter[InputRow[Any], InputRowData]):
+    def __init__(self, zaim_row_converter: ZaimTransferRowConverter[InputRow[Any], InputRowData[TypeVarPydantic]]):
         self._cash_flow_source: str = zaim_row_converter.cash_flow_source
         self._cash_flow_target: str = zaim_row_converter.cash_flow_target
         self._amount_transfer: int = zaim_row_converter.amount

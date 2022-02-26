@@ -52,6 +52,9 @@ class ViewCardRowData(InputStoreRowData):
         )
         return super().validate
 
+    def create_pydantic(self) -> None:
+        return None
+
 
 class ViewCardRow(InputStoreRow[ViewCardRowData]):
     """This class implements row model of GOLD POINT CARD+ CSV."""

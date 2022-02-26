@@ -24,7 +24,7 @@ class TestRowProcessor:
         - RecordProcessor should raise error when input row is invalid.
         - RecordProcessor should collect error when input row is invalid.
         """
-        row_process = RecordProcessor(Account.WAON)
+        row_process = RecordProcessor(Account.WAON.value)
         with pytest.raises(InvalidRecordError):
             row_process.execute(["2018/11/11", "板橋前野町", "5,000円", "オートチャージ", "-"])
         list_error = row_process.list_error

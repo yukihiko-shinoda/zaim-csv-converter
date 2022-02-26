@@ -5,20 +5,12 @@ from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 import re
-from types import DynamicClassAttribute
-from typing import cast, Generic, List, Type
+from typing import Generic, List, Type
 
 from godslayer.god_slayer_factory import GodSlayerFactory
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import (
-    InputRow,
-    InputRowData,
-    InputRowFactory,
-    TypeVarInputRow,
-    TypeVarInputRowData,
-)
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData, AmazonRowFactory
 from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowData, Amazon201911RowFactory
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowData, GoldPointCardPlusRowFactory
@@ -26,6 +18,7 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
     GoldPointCardPlus201912RowFactory,
 )
+from zaimcsvconverter.inputcsvformats import InputRowFactory, TypeVarInputRow, TypeVarInputRowData
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
 from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData, PayPalRowFactory
 from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import (
@@ -115,7 +108,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
     zaim_row_converter_factory: ZaimRowConverterFactory[TypeVarInputRow, TypeVarInputRowData]
 
-    def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> InputRowData:
+    def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> TypeVarInputRowData:
         """This method creates input row data instance by list data of input row."""
         # noinspection PyArgumentList
         return self.input_row_data_class(*list_input_row_standard_type_value)
@@ -251,11 +244,6 @@ class Account(Enum):
         SBISumishinNetBankRowFactory(),
         SBISumishinNetBankZaimRowConverterFactory(),
     )
-
-    @DynamicClassAttribute
-    def value(self) -> AccountContext[InputRowData, InputRow[InputRowData]]:
-        """This method overwrite super method for type hint."""
-        return cast(AccountContext[InputRowData, InputRow[InputRowData]], super().value)
 
     @staticmethod
     def create_by_path_csv_input(path: Path) -> Account:

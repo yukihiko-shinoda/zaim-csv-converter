@@ -74,6 +74,9 @@ class MufgRowData(InputStoreRowData):
         )
         return super().validate
 
+    def create_pydantic(self) -> None:
+        return None
+
 
 class MufgRow(InputRow[MufgRowData]):
     """This class implements row model of MUFG bank CSV."""

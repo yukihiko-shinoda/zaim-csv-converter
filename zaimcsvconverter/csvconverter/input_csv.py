@@ -26,7 +26,7 @@ class InputData:
         self.data_source.raise_error_if_invalid()
 
     def _process_record(self, list_input_row_standard_type_value: List[str], writer_zaim: CSVWriter) -> None:
-        record_processor = RecordProcessor(self.account)
+        record_processor = RecordProcessor(self.account.value)
         try:
             zaim_row = record_processor.execute(list_input_row_standard_type_value)
         except InvalidRecordError:

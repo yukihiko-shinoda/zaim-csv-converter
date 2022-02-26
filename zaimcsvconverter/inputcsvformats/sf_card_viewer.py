@@ -65,6 +65,9 @@ class SFCardViewerRowData(InputStoreRowData):
         """This property returns whether this row is auto charge or not."""
         return self.note == SFCardViewerRowData.Note.AUTO_CHARGE
 
+    def create_pydantic(self) -> None:
+        return None
+
 
 # pylint: disable=too-many-instance-attributes
 class SFCardViewerRow(InputRow[SFCardViewerRowData]):

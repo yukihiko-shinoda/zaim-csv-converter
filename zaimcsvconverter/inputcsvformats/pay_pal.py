@@ -187,6 +187,9 @@ class PayPalRowData(InputStoreItemRowData):
         )
         return super().validate
 
+    def create_pydantic(self) -> None:
+        return None
+
 
 class PayPalRow(InputStoreItemRow[PayPalRowData]):
     """This class implements row model of Amazon.co.jp CSV."""

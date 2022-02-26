@@ -56,6 +56,9 @@ class AmazonRowData(InputItemRowData):
         self.stock_error(lambda: self.number, f"Invalid number. Number = {self._number}")
         return super().validate
 
+    def create_pydantic(self) -> None:
+        return None
+
 
 # pylint: disable=too-many-instance-attributes
 class AmazonRow(InputItemRow[AmazonRowData]):

@@ -4,7 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, TypeVarPydantic
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData
 from zaimcsvconverter.rowconverters.mufg import (
     MufgIncomeZaimTransferRowConverter,
@@ -249,7 +249,8 @@ class TestMufgZaimRowConverterFactory:
     )
     @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
     def test_success(
-        input_row_data: MufgRowData, expected: type[ZaimRowConverter[InputRow[InputRowData], InputRowData]]
+        input_row_data: MufgRowData,
+        expected: type[ZaimRowConverter[InputRow[InputRowData[TypeVarPydantic]], InputRowData[TypeVarPydantic]]],
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.MUFG.value

@@ -3,7 +3,7 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, TypeVarPydantic
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimPaymentRowConverter
 from zaimcsvconverter.rowconverters.mufg import (
@@ -167,8 +167,10 @@ class TestZaimRowConverterFactory:
     @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
     def test_select_factory(
         account: Account,
-        input_row_data: InputRowData,
-        expected: type[ZaimPaymentRowConverter[InputRow[InputRowData], InputRowData]],
+        input_row_data: InputRowData[TypeVarPydantic],
+        expected: type[
+            ZaimPaymentRowConverter[InputRow[InputRowData[TypeVarPydantic]], InputRowData[TypeVarPydantic]]
+        ],
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         input_row = account.value.create_input_row_instance(input_row_data)

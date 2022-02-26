@@ -5,14 +5,11 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
-# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
-from godslayer import InvalidRecordError  # type: ignore
 from pydantic.dataclasses import dataclass as pydantic_dataclass
-from pydantic import ValidationError
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
+from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.inputcsvformats.custom_data_types import StrictYenStringToInt, StringToDateTime
-from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
 
 
 class UseKind(str, Enum):
@@ -39,7 +36,7 @@ class ChargeKind(str, Enum):
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class WaonRowDataPydantic:
+class WaonRowDataPydantic(AbstractPydantic):
     """This class implements data class for wrapping list of WAON CSV row model."""
 
     date: StringToDateTime
@@ -50,7 +47,7 @@ class WaonRowDataPydantic:
 
 
 @dataclass
-class WaonRowData(InputStoreRowData):
+class WaonRowData(InputStoreRowData[WaonRowDataPydantic]):
     """This class implements data class for wrapping list of WAON CSV row model."""
 
     _date: str
@@ -60,20 +57,15 @@ class WaonRowData(InputStoreRowData):
     _charge_kind: str
     pydantic: WaonRowDataPydantic = field(init=False)
 
-    def __post_init__(self) -> None:
-        try:
-            self.pydantic = WaonRowDataPydantic(
-                # Reason: Maybe, there are no way to specify type before converted by pydantic
-                self._date,
-                self._used_store,
-                self._used_amount,
-                self._use_kind,
-                self._charge_kind,  # type: ignore
-            )
-        except ValidationError as exc:
-            self.list_error.extend(
-                [InvalidRecordError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
-            )
+    def create_pydantic(self) -> WaonRowDataPydantic:
+        return WaonRowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._date,  # type: ignore
+            self._used_store,
+            self._used_amount,  # type: ignore
+            self._use_kind,  # type: ignore
+            self._charge_kind,  # type: ignore
+        )
 
     @property
     def date(self) -> datetime:

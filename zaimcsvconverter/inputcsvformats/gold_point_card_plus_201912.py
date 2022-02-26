@@ -39,6 +39,9 @@ class GoldPointCardPlus201912RowData(InputStoreRowData):
         self.stock_error(lambda: self.payed_amount, f"Invalid used amount. Used amount = {self._used_amount}")
         return super().validate
 
+    def create_pydantic(self) -> None:
+        return None
+
 
 class GoldPointCardPlus201912Row(InputStoreRow[GoldPointCardPlus201912RowData]):
     """This class implements row model of GOLD POINT CARD+ CSV."""

@@ -4,7 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, TypeVarPydantic
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.rowconverters.sf_card_viewer import (
     SFCardViewerZaimPaymentOnSomewhereRowConverter,
@@ -112,7 +112,8 @@ class TestSFCardViewerZaimRowConverterFactory:
     )
     @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
     def test_success(
-        input_row_data: SFCardViewerRowData, expected: type[ZaimRowConverter[InputRow[InputRowData], InputRowData]]
+        input_row_data: SFCardViewerRowData,
+        expected: type[ZaimRowConverter[InputRow[InputRowData[TypeVarPydantic]], InputRowData[TypeVarPydantic]]],
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.PASMO.value
