@@ -4,7 +4,14 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData, WaonRowFactory
+from zaimcsvconverter.inputcsvformats.waon import (
+    ChargeKind,
+    UseKind,
+    WaonChargeRow,
+    WaonRow,
+    WaonRowData,
+    WaonRowFactory,
+)
 from zaimcsvconverter.models import Store
 
 
@@ -24,24 +31,41 @@ class TestWaonRowData:
         use_kind = "支払"
         charge_kind = "-"
         waon_row_data = WaonRowData(date, used_store, used_amount, use_kind, charge_kind)
+        assert len(waon_row_data.list_error) == 0, waon_row_data.list_error
         assert waon_row_data.date == datetime(2018, 8, 7, 0, 0)
         assert waon_row_data.store_name == used_store
         assert waon_row_data.used_amount == 129
-        assert waon_row_data.use_kind == WaonRowData.UseKind.PAYMENT
-        assert waon_row_data.charge_kind == WaonRowData.ChargeKind.NULL
+        assert waon_row_data.use_kind == UseKind.PAYMENT
+        assert waon_row_data.charge_kind == ChargeKind.NULL
 
     @staticmethod
     # pylint: disable=unused-argument
     @pytest.mark.usefixtures("database_session_with_schema")
     def test_validate() -> None:
         """Validate method should collect errors."""
-        assert InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND.validate
-        assert (
-            str(
-                # Reason: Pylint has not support dataclasses. pylint: disable=unsubscriptable-object
-                InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND.list_error[0]
-            )
-            == "Invalid used amount. Use kind = 入金"
+        row_data = WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND)
+        assert row_data.validate
+        assert len(row_data.list_error) == 1
+        assert str(
+            # Reason: Pylint has not support dataclasses. pylint: disable=unsubscriptable-object
+            row_data.list_error[0]
+        ) == (
+            "Invalid use_kind, value is not a valid enumeration member; permitted: "
+            "'支払', '支払取消', 'チャージ', 'オートチャージ', 'ポイントダウンロード', "
+            "'WAON移行（アップロード）', 'WAON移行（ダウンロード）'"
+        )
+
+    @staticmethod
+    def test_unsuported_charge_kind() -> None:
+        row_data = WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
+        assert row_data.validate
+        assert len(row_data.list_error) == 1
+        assert str(
+            # Reason: Pylint has not support dataclasses. pylint: disable=unsubscriptable-object
+            row_data.list_error[0]
+        ) == (
+            "Invalid charge_kind, value is not a valid enumeration member; permitted: "
+            "'銀行口座', 'ポイント', '現金', 'バリューダウンロード', '-'"
         )
 
 
@@ -69,7 +93,10 @@ class TestWaonRow:
     )
     @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
     def test_init_success(
-        waon_row_data: WaonRowData, expected_date: datetime, expected_store_name_zaim: str, expected_amount: int,
+        waon_row_data: WaonRowData,
+        expected_date: datetime,
+        expected_store_name_zaim: str,
+        expected_amount: int,
     ) -> None:
         """Arguments should set into properties.
 

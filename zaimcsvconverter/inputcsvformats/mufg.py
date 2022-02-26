@@ -101,7 +101,10 @@ class MufgRow(InputRow[MufgRowData]):
 
     @property
     def is_by_card(self) -> bool:
-        return self._summary in (MufgRowData.Summary.CARD.value, MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value,)
+        return self._summary in (
+            MufgRowData.Summary.CARD.value,
+            MufgRowData.Summary.CARD_CONVENIENCE_STORE_ATM.value,
+        )
 
     @property
     def is_income_from_other_own_account(self) -> bool:

@@ -26,7 +26,10 @@ class TestWaonZaimIncomeRowConverter:
     )
     @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
     def test(
-        waon_row_data: WaonRowData, expected_date: str, expected_store: str, expected_amount_income: int,
+        waon_row_data: WaonRowData,
+        expected_date: str,
+        expected_store: str,
+        expected_amount_income: int,
     ) -> None:
         """Arguments should set into properties."""
         account_context = Account.WAON.value
@@ -62,7 +65,10 @@ class TestWaonZaimPaymentRowConverter:
     )
     @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
     def test(
-        waon_row_data: WaonRowData, expected_date: str, expected_store: str, expected_amount_payment: int,
+        waon_row_data: WaonRowData,
+        expected_date: str,
+        expected_store: str,
+        expected_amount_payment: int,
     ) -> None:
         """Arguments should set into properties."""
         account_context = Account.WAON.value
@@ -180,4 +186,4 @@ class TestWaonZaimRowConverterConverter:
         )
         with pytest.raises(ValueError) as error:
             account_context.zaim_row_converter_factory.create(input_row)
-        assert str(error.value) == "Unsupported row. Input row = WaonRow, UseKind.DOWNLOAD_POINT"
+        assert str(error.value) == "Unsupported row. Input row = WaonRow, ポイントダウンロード"

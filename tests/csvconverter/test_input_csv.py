@@ -48,5 +48,5 @@ class TestInputCsv:
         assert input_data.data_source.is_invalid
         invalid_row_error = input_data.data_source.dictionary_invalid_record[0][0]
         assert isinstance(invalid_row_error, InvalidRecordError)
-        assert str(invalid_row_error) == "Charge kind in charge row is required. Charge kind = ChargeKind.NULL"
+        assert str(invalid_row_error) == "Charge kind in charge row is required. Charge kind = -"
         assert not input_data.undefined_content_error_handler.is_presented

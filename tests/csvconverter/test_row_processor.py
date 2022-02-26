@@ -29,5 +29,5 @@ class TestRowProcessor:
             row_process.execute(["2018/11/11", "板橋前野町", "5,000円", "オートチャージ", "-"])
         list_error = row_process.list_error
         assert len(list_error) == 1
-        assert str(list_error[0]) == "Charge kind in charge row is required. Charge kind = ChargeKind.NULL"
+        assert str(list_error[0]) == "Charge kind in charge row is required. Charge kind = -"
         assert not row_process.undefined_content_error_handler.is_presented

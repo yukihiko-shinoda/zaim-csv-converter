@@ -74,7 +74,8 @@ class TestZaimCsvConverter:
         checker.assert_file("waon201811.csv", create_zaim_row_data_waon_201811())
         checker.assert_file("gold_point_card_plus201807.csv", create_zaim_row_data_gold_point_card_plus_201807())
         checker.assert_file(
-            "gold_point_card_plus_201912_202007.csv", create_zaim_row_data_gold_point_card_plus_201912_201807(),
+            "gold_point_card_plus_201912_202007.csv",
+            create_zaim_row_data_gold_point_card_plus_201912_201807(),
         )
         checker.assert_file("mufg201808.csv", create_zaim_row_data_mufg_201808())
         checker.assert_file("mufg201810.csv", create_zaim_row_data_mufg_201810())
@@ -112,10 +113,12 @@ class TestZaimCsvConverter:
         assert str(error.value) == "Some invalid input CSV file exists. Please check error_invalid_row.csv."
         zaim_csv_file_checker = ZaimCsvFileChecker(directory_csv_output)
         zaim_csv_file_checker.assert_file(
-            "waon201808.csv", create_zaim_row_data_waon_201808(),
+            "waon201808.csv",
+            create_zaim_row_data_waon_201808(),
         )
         zaim_csv_file_checker.assert_file(
-            "amazon201810.csv", create_zaim_row_data_amazon_201810(),
+            "amazon201810.csv",
+            create_zaim_row_data_amazon_201810(),
         )
         error_csv_file_checker = ErrorCsvFileChecker(directory_csv_output)
         error_csv_file_checker.assert_file(
@@ -140,7 +143,10 @@ class TestZaimCsvConverter:
                 InvalidRowErrorRowData(
                     "waon201808.csv",
                     "1",
-                    'The value of "Charge kind" has not been defined in this code. Charge kind = クレジットカード',
+                    (
+                        "Invalid charge_kind, value is not a valid enumeration member; permitted: "
+                        "'銀行口座', 'ポイント', '現金', 'バリューダウンロード', '-'"
+                    ),
                 ),
             ],
         )

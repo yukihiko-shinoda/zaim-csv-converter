@@ -1,74 +1,102 @@
 """This module implements row model of WAON CSV."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
+# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
+from godslayer import InvalidRecordError  # type: ignore
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+from pydantic import ValidationError
+
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
+from zaimcsvconverter.inputcsvformats.custom_data_types import StrictYenStringToInt, StringToDateTime
 from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.utility import Utility
+
+
+class UseKind(str, Enum):
+    """This class implements constant of user kind in WAON CSV."""
+
+    PAYMENT = "支払"
+    PAYMENT_CANCEL = "支払取消"
+    CHARGE = "チャージ"
+    AUTO_CHARGE = "オートチャージ"
+    DOWNLOAD_POINT = "ポイントダウンロード"
+    TRANSFER_WAON_UPLOAD = "WAON移行（アップロード）"
+    TRANSFER_WAON_DOWNLOAD = "WAON移行（ダウンロード）"
+
+
+class ChargeKind(str, Enum):
+    """This class implements constant of charge kind in WAON CSV."""
+
+    BANK_ACCOUNT = "銀行口座"
+    POINT = "ポイント"
+    CASH = "現金"
+    DOWNLOAD_VALUE = "バリューダウンロード"
+    NULL = "-"
+
+
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class WaonRowDataPydantic:
+    """This class implements data class for wrapping list of WAON CSV row model."""
+
+    date: StringToDateTime
+    used_store: str
+    used_amount: StrictYenStringToInt
+    use_kind: UseKind
+    charge_kind: ChargeKind
 
 
 @dataclass
 class WaonRowData(InputStoreRowData):
     """This class implements data class for wrapping list of WAON CSV row model."""
 
-    class UseKind(Enum):
-        """This class implements constant of user kind in WAON CSV."""
-
-        PAYMENT = "支払"
-        PAYMENT_CANCEL = "支払取消"
-        CHARGE = "チャージ"
-        AUTO_CHARGE = "オートチャージ"
-        DOWNLOAD_POINT = "ポイントダウンロード"
-        TRANSFER_WAON_UPLOAD = "WAON移行（アップロード）"
-        TRANSFER_WAON_DOWNLOAD = "WAON移行（ダウンロード）"
-
-    class ChargeKind(Enum):
-        """This class implements constant of charge kind in WAON CSV."""
-
-        BANK_ACCOUNT = "銀行口座"
-        POINT = "ポイント"
-        CASH = "現金"
-        DOWNLOAD_VALUE = "バリューダウンロード"
-        NULL = "-"
-
     _date: str
     _used_store: str
     _used_amount: str
     _use_kind: str
     _charge_kind: str
+    pydantic: WaonRowDataPydantic = field(init=False)
+
+    def __post_init__(self) -> None:
+        try:
+            self.pydantic = WaonRowDataPydantic(
+                # Reason: Maybe, there are no way to specify type before converted by pydantic
+                self._date,
+                self._used_store,
+                self._used_amount,
+                self._use_kind,
+                self._charge_kind,  # type: ignore
+            )
+        except ValidationError as exc:
+            self.list_error.extend(
+                [InvalidRecordError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
+            )
 
     @property
     def date(self) -> datetime:
-        return datetime.strptime(self._date, "%Y/%m/%d")
+        return self.pydantic.date
 
     @property
     def store_name(self) -> str:
-        return self._used_store
+        return self.pydantic.used_store
 
     @property
     def used_amount(self) -> int:
-        return Utility.convert_yen_string_to_int(self._used_amount)
+        return self.pydantic.used_amount
 
     @property
-    def use_kind(self) -> WaonRowData.UseKind:
-        return self.UseKind(self._use_kind)
+    def use_kind(self) -> UseKind:
+        return self.pydantic.use_kind
 
     @property
-    def charge_kind(self) -> WaonRowData.ChargeKind:
-        return self.ChargeKind(self._charge_kind)
+    def charge_kind(self) -> ChargeKind:
+        return self.pydantic.charge_kind
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid date. Date = {self._date}")
-        self.stock_error(lambda: self.used_amount, f"Invalid used amount. Used amount = {self._used_amount}")
-        self.stock_error(lambda: self.use_kind, f"Invalid used amount. Use kind = {self._use_kind}")
-        self.stock_error(
-            lambda: self.charge_kind,
-            f'The value of "Charge kind" has not been defined in this code. Charge kind = {self._charge_kind}',
-        )
         return super().validate
 
 
@@ -78,7 +106,7 @@ class WaonRow(InputStoreRow[WaonRowData]):
     def __init__(self, row_data: WaonRowData):
         super().__init__(row_data, FileCsvConvert.WAON.value)
         self.used_amount: int = row_data.used_amount
-        self.use_kind: WaonRowData.UseKind = row_data.use_kind
+        self.use_kind: UseKind = row_data.use_kind
 
     @property
     def is_row_to_skip(self) -> bool:
@@ -87,31 +115,31 @@ class WaonRow(InputStoreRow[WaonRowData]):
 
     @property
     def is_payment(self) -> bool:
-        return self.use_kind == WaonRowData.UseKind.PAYMENT
+        return self.use_kind == UseKind.PAYMENT
 
     @property
     def is_payment_cancel(self) -> bool:
-        return self.use_kind == WaonRowData.UseKind.PAYMENT_CANCEL
+        return self.use_kind == UseKind.PAYMENT_CANCEL
 
     @property
     def is_charge(self) -> bool:
-        return self.use_kind == WaonRowData.UseKind.CHARGE
+        return self.use_kind == UseKind.CHARGE
 
     @property
     def is_auto_charge(self) -> bool:
-        return self.use_kind == WaonRowData.UseKind.AUTO_CHARGE
+        return self.use_kind == UseKind.AUTO_CHARGE
 
     @property
     def is_download_point(self) -> bool:
-        return self.use_kind == WaonRowData.UseKind.DOWNLOAD_POINT
+        return self.use_kind == UseKind.DOWNLOAD_POINT
 
     @property
     def is_transfer_waon_upload(self) -> bool:
-        return self.use_kind == WaonRowData.UseKind.TRANSFER_WAON_UPLOAD
+        return self.use_kind == UseKind.TRANSFER_WAON_UPLOAD
 
     @property
     def is_transfer_waon_download(self) -> bool:
-        return self.use_kind == WaonRowData.UseKind.TRANSFER_WAON_DOWNLOAD
+        return self.use_kind == UseKind.TRANSFER_WAON_DOWNLOAD
 
 
 class WaonChargeRow(WaonRow):
@@ -119,12 +147,12 @@ class WaonChargeRow(WaonRow):
 
     def __init__(self, row_data: WaonRowData):
         super().__init__(row_data)
-        self._charge_kind: WaonRowData.ChargeKind = row_data.charge_kind
+        self._charge_kind: ChargeKind = row_data.charge_kind
 
     @property
-    def charge_kind(self) -> WaonRowData.ChargeKind:
-        if self._charge_kind == WaonRowData.ChargeKind.NULL:
-            raise ValueError(f'Charge kind on charge row is not allowed "{WaonRowData.ChargeKind.NULL.value}".')
+    def charge_kind(self) -> ChargeKind:
+        if self._charge_kind == ChargeKind.NULL:
+            raise ValueError(f'Charge kind on charge row is not allowed "{ChargeKind.NULL.value}".')
         return self._charge_kind
 
     @property
@@ -136,19 +164,19 @@ class WaonChargeRow(WaonRow):
 
     @property
     def is_charge_by_point(self) -> bool:
-        return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.POINT
+        return self.is_charge and self.charge_kind == ChargeKind.POINT
 
     @property
     def is_charge_by_cash(self) -> bool:
-        return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.CASH
+        return self.is_charge and self.charge_kind == ChargeKind.CASH
 
     @property
     def is_charge_by_bank_account(self) -> bool:
-        return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.BANK_ACCOUNT
+        return self.is_charge and self.charge_kind == ChargeKind.BANK_ACCOUNT
 
     @property
     def is_charge_by_download_value(self) -> bool:
-        return self.is_charge and self.charge_kind == WaonRowData.ChargeKind.DOWNLOAD_VALUE
+        return self.is_charge and self.charge_kind == ChargeKind.DOWNLOAD_VALUE
 
 
 class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
@@ -159,6 +187,6 @@ class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
     #   - Create your own container — returns 0.18.0 documentation
     #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
     def create(self, input_row_data: WaonRowData) -> WaonRow:  # type: ignore
-        if input_row_data.use_kind in (WaonRowData.UseKind.CHARGE, WaonRowData.UseKind.AUTO_CHARGE):
+        if input_row_data.use_kind in (UseKind.CHARGE, UseKind.AUTO_CHARGE):
             return WaonChargeRow(input_row_data)
         return WaonRow(input_row_data)

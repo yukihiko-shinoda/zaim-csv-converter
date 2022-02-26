@@ -21,14 +21,14 @@ class InstanceResource:
     PATH_PROJECT_HOME_DIRECTORY = Path(__file__).parent.parent.parent
     ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI = WaonRowData("2018/8/7", "ファミリーマートかぶと町永代", "129円", "支払", "-")
     ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO = WaonRowData("2018/8/30", "板橋前野町", "1,489円", "支払", "-")
-    ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND = WaonRowData("2018/8/7", "ファミリーマートかぶと町永代", "129円", "支払", "クレジットカード")
+    ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND = ["2018/8/7", "ファミリーマートかぶと町永代", "129円", "支払", "クレジットカード"]
     ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO = WaonRowData("2018/10/22", "板橋前野町", "1,504円", "チャージ", "ポイント")
     ROW_DATA_WAON_CHARGE_BANK_ACCOUNT_ITABASHIMAENOCHO = WaonRowData("2018/10/22", "板橋前野町", "10,000円", "チャージ", "銀行口座")
     ROW_DATA_WAON_CHARGE_CASH_ITABASHIMAENOCHO = WaonRowData("2018/10/22", "板橋前野町", "10,000円", "チャージ", "現金")
     ROW_DATA_WAON_CHARGE_DOWNLOAD_VALUE_ITABASHIMAENOCHO = WaonRowData("2021/2/24", "板橋", "39円", "チャージ", "バリューダウンロード")
     ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO = WaonRowData("2018/11/11", "板橋前野町", "5,000円", "オートチャージ", "銀行口座")
     ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO = WaonRowData("2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-")
-    ROW_DATA_WAON_UNSUPPORTED_USE_KIND = WaonRowData("2018/8/7", "ファミリーマートかぶと町永代", "10000円", "入金", "-")
+    ROW_DATA_WAON_UNSUPPORTED_USE_KIND = ["2018/8/7", "ファミリーマートかぶと町永代", "10000円", "入金", "-"]
     ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP = GoldPointCardPlusRowData(
         "2018/7/4", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ", "ご本人", "1回払い", "", "18/8", "3456", "3456", "", "", "", "", ""
     )

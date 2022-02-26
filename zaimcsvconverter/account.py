@@ -174,7 +174,8 @@ class Account(Enum):
     MUFG = AccountContext(
         r".*mufg.*\.csv",
         GodSlayerFactory(
-            header=["日付", "摘要", "摘要内容", "支払い金額", "預かり金額", "差引残高", "メモ", "未資金化区分", "入払区分"], encoding="shift_jis_2004",
+            header=["日付", "摘要", "摘要内容", "支払い金額", "預かり金額", "差引残高", "メモ", "未資金化区分", "入払区分"],
+            encoding="shift_jis_2004",
         ),
         MufgRowData,
         MufgRowFactory(),
@@ -242,7 +243,10 @@ class Account(Enum):
     )
     SBI_SUMISHIN_NET_BANK = AccountContext(
         r".*sbi_sumishin_net_bank.*\.csv",
-        GodSlayerFactory(header=["日付", "内容", "出金金額(円)", "入金金額(円)", "残高(円)", "メモ"], encoding="shift_jis_2004",),
+        GodSlayerFactory(
+            header=["日付", "内容", "出金金額(円)", "入金金額(円)", "残高(円)", "メモ"],
+            encoding="shift_jis_2004",
+        ),
         SBISumishinNetBankRowData,
         SBISumishinNetBankRowFactory(),
         SBISumishinNetBankZaimRowConverterFactory(),

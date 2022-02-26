@@ -39,20 +39,50 @@ class FileCsvConvertContext:
 class FileCsvConvert(Enum):
     """This class implements file name of CSV file for convert table data."""
 
-    WAON = FileCsvConvertContext(FileCsvConvertId.WAON, "waon.csv", ConvertTableType.STORE,)
+    WAON = FileCsvConvertContext(
+        FileCsvConvertId.WAON,
+        "waon.csv",
+        ConvertTableType.STORE,
+    )
     GOLD_POINT_CARD_PLUS = FileCsvConvertContext(
-        FileCsvConvertId.GOLD_POINT_CARD_PLUS, "gold_point_card_plus.csv", ConvertTableType.STORE,
+        FileCsvConvertId.GOLD_POINT_CARD_PLUS,
+        "gold_point_card_plus.csv",
+        ConvertTableType.STORE,
     )
-    MUFG = FileCsvConvertContext(FileCsvConvertId.MUFG, "mufg.csv", ConvertTableType.STORE,)
+    MUFG = FileCsvConvertContext(
+        FileCsvConvertId.MUFG,
+        "mufg.csv",
+        ConvertTableType.STORE,
+    )
     SF_CARD_VIEWER = FileCsvConvertContext(
-        FileCsvConvertId.SF_CARD_VIEWER, "sf_card_viewer.csv", ConvertTableType.STORE,
+        FileCsvConvertId.SF_CARD_VIEWER,
+        "sf_card_viewer.csv",
+        ConvertTableType.STORE,
     )
-    AMAZON = FileCsvConvertContext(FileCsvConvertId.AMAZON, "amazon.csv", ConvertTableType.ITEM,)
-    VIEW_CARD = FileCsvConvertContext(FileCsvConvertId.VIEW_CARD, "view_card.csv", ConvertTableType.STORE,)
-    PAY_PAL_STORE = FileCsvConvertContext(FileCsvConvertId.PAY_PAL, "pay_pal_store.csv", ConvertTableType.STORE,)
-    PAY_PAL_ITEM = FileCsvConvertContext(FileCsvConvertId.PAY_PAL, "pay_pal_item.csv", ConvertTableType.ITEM,)
+    AMAZON = FileCsvConvertContext(
+        FileCsvConvertId.AMAZON,
+        "amazon.csv",
+        ConvertTableType.ITEM,
+    )
+    VIEW_CARD = FileCsvConvertContext(
+        FileCsvConvertId.VIEW_CARD,
+        "view_card.csv",
+        ConvertTableType.STORE,
+    )
+    PAY_PAL_STORE = FileCsvConvertContext(
+        FileCsvConvertId.PAY_PAL,
+        "pay_pal_store.csv",
+        ConvertTableType.STORE,
+    )
+    PAY_PAL_ITEM = FileCsvConvertContext(
+        FileCsvConvertId.PAY_PAL,
+        "pay_pal_item.csv",
+        ConvertTableType.ITEM,
+    )
     SBI_SUMISHIN_NET_BANK = FileCsvConvertContext(
-        FileCsvConvertId.SBI_SUMISHIN_NET_BANK, "sbi_sumishin_net_bank.csv", ConvertTableType.STORE,
+        FileCsvConvertId.SBI_SUMISHIN_NET_BANK,
+        "sbi_sumishin_net_bank.csv",
+        ConvertTableType.STORE,
     )
 
     @DynamicClassAttribute
