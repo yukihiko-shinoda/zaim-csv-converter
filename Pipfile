@@ -37,7 +37,8 @@ invoke = "*"
 isort = "*"
 mypy = "*"
 # To use black
-pipenv-setup = "*"
+pipenv-setup = {version = "*", extras = ["black"]}
+pydantic = "*"
 pydocstyle = "*"
 pylint = "*"
 pytest = "*"

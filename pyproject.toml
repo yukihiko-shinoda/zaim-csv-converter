@@ -38,6 +38,7 @@ min-public-methods = "1"
 [tool.mypy]
 strict = true
 plugins = [
+  "pydantic.mypy",
   "returns.contrib.mypy.returns_plugin"
 ]
 
