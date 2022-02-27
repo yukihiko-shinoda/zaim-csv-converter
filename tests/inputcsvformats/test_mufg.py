@@ -5,6 +5,7 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.mufg import (
+    CashFlowKind,
     MufgIncomeFromSelfRow,
     MufgPaymentToSelfRow,
     MufgRow,
@@ -45,15 +46,28 @@ class TestMufgRowData:
             is_uncapitalized,
             cash_flow_kind,
         )
+        assert len(mufg_row_data.list_error) == 0, mufg_row_data.list_error
         assert mufg_row_data.summary == summary
         assert mufg_row_data.payed_amount == 3628
         assert mufg_row_data.deposit_amount is None
         assert mufg_row_data.balance == balance
         assert mufg_row_data.note == note
         assert mufg_row_data.is_uncapitalized == is_uncapitalized
-        assert mufg_row_data.cash_flow_kind == MufgRowData.CashFlowKind.TRANSFER_PAYMENT
+        assert mufg_row_data.cash_flow_kind == CashFlowKind.TRANSFER_PAYMENT
         assert mufg_row_data.date == datetime(2018, 11, 28, 0, 0)
         assert mufg_row_data.store_name == summary_content
+
+    # pylint: disable=unused-argument
+    @staticmethod
+    @pytest.mark.usefixtures("database_session_stores_mufg")
+    def test_create_fail() -> None:
+        """Method should raise ValueError when note is not defined."""
+        assert (
+            len(InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE.list_error) == 1
+        ), InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE.list_error
+        with pytest.raises(AttributeError):
+            # pylint: disable=protected-access
+            MufgRowFactory().create(InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)
 
 
 class TestMufgIncomeRow:
@@ -170,12 +184,3 @@ class TestMufgRowFactory:
         assert mufg_row.is_payment == expected_is_payment
         assert mufg_row.is_transfer_income == expected_is_transfer_income
         assert mufg_row.is_transfer_payment == expected_is_transfer_payment
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    @pytest.mark.usefixtures("database_session_stores_mufg")
-    def test_create_fail() -> None:
-        """Method should raise ValueError when note is not defined."""
-        with pytest.raises(ValueError):
-            # pylint: disable=protected-access
-            MufgRowFactory().create(InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)

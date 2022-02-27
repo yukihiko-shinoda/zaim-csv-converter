@@ -7,27 +7,52 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
 
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.utility import Utility
+from zaimcsvconverter.inputcsvformats import (
+    AbstractPydantic,
+    InputRow,
+    InputRowFactory,
+    InputStoreRow,
+    InputStoreRowData,
+)
+from zaimcsvconverter.inputcsvformats.custom_data_types import ConstrainedStringToOptionalInt, StringToDateTime
+
+
+class CashFlowKind(Enum):
+    """This class implements constant of cash flow kind in MUFG CSV."""
+
+    INCOME = "入金"
+    PAYMENT = "支払い"
+    TRANSFER_INCOME = "振替入金"
+    TRANSFER_PAYMENT = "振替支払い"
+
+
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class MufgRowDataPydantic(AbstractPydantic):
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+
+    date: StringToDateTime
+    summary: str
+    summary_content: str
+    payed_amount: ConstrainedStringToOptionalInt
+    deposit_amount: ConstrainedStringToOptionalInt
+    balance: str
+    note: str
+    is_uncapitalized: str
+    cash_flow_kind: CashFlowKind
 
 
 @dataclass
-class MufgRowData(InputStoreRowData):
+class MufgRowData(InputStoreRowData[MufgRowDataPydantic]):
     """This class implements data class for wrapping list of MUFG bunk CSV row model."""
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     class Summary(Enum):
         CARD = "カ−ド"
         CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"
-
-    class CashFlowKind(Enum):
-        """This class implements constant of cash flow kind in MUFG CSV."""
-
-        INCOME = "入金"
-        PAYMENT = "支払い"
-        TRANSFER_INCOME = "振替入金"
-        TRANSFER_PAYMENT = "振替支払い"
 
     _date: str
     summary: str
@@ -39,43 +64,43 @@ class MufgRowData(InputStoreRowData):
     is_uncapitalized: str
     _cash_flow_kind: str
 
+    def create_pydantic(self) -> MufgRowDataPydantic:
+        return MufgRowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._date,  # type: ignore
+            self.summary,
+            self._summary_content,
+            self._payed_amount,  # type: ignore
+            self._deposit_amount,  # type: ignore
+            self.balance,
+            self.note,
+            self.is_uncapitalized,
+            self._cash_flow_kind,  # type: ignore
+        )
+
     @property
     def date(self) -> datetime:
-        return datetime.strptime(self._date, "%Y/%m/%d")
+        return self.pydantic.date
 
     @property
     def store_name(self) -> str:
-        return self._summary_content
+        return self.pydantic.summary_content
 
     @property
     def payed_amount(self) -> Optional[int]:
-        return Utility.convert_string_to_int_or_none(self._payed_amount)
+        return self.pydantic.payed_amount
 
     @property
     def deposit_amount(self) -> Optional[int]:
-        return Utility.convert_string_to_int_or_none(self._deposit_amount)
+        return self.pydantic.deposit_amount
 
     @property
-    def cash_flow_kind(self) -> MufgRowData.CashFlowKind:
-        return self.CashFlowKind(self._cash_flow_kind)
+    def cash_flow_kind(self) -> CashFlowKind:
+        return self.pydantic.cash_flow_kind
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid date. Date = {self._date}")
-        # This comment prevents pylint duplicate-code.
-        self.stock_error(lambda: self.payed_amount, f"Invalid payed amount. Payed amount = {self._payed_amount}")
-        self.stock_error(
-            lambda: self.deposit_amount, f"Invalid deposit amount. Deposit amount = {self._deposit_amount}"
-        )
-        self.stock_error(
-            lambda: self.cash_flow_kind,
-            'The value of "Cash flow kind" has not been defined in this code. '
-            f"Cash flow kind = {self._cash_flow_kind}",
-        )
         return super().validate
-
-    def create_pydantic(self) -> None:
-        return None
 
 
 class MufgRow(InputRow[MufgRowData]):
@@ -83,24 +108,24 @@ class MufgRow(InputRow[MufgRowData]):
 
     def __init__(self, input_row_data: MufgRowData, *args: Any, **kwargs: Any):
         super().__init__(input_row_data, *args, **kwargs)
-        self.cash_flow_kind: MufgRowData.CashFlowKind = input_row_data.cash_flow_kind
+        self.cash_flow_kind: CashFlowKind = input_row_data.cash_flow_kind
         self._summary: str = input_row_data.summary
 
     @property
     def is_income(self) -> bool:
-        return self.cash_flow_kind == MufgRowData.CashFlowKind.INCOME
+        return self.cash_flow_kind == CashFlowKind.INCOME
 
     @property
     def is_payment(self) -> bool:
-        return self.cash_flow_kind == MufgRowData.CashFlowKind.PAYMENT
+        return self.cash_flow_kind == CashFlowKind.PAYMENT
 
     @property
     def is_transfer_income(self) -> bool:
-        return self.cash_flow_kind == MufgRowData.CashFlowKind.TRANSFER_INCOME
+        return self.cash_flow_kind == CashFlowKind.TRANSFER_INCOME
 
     @property
     def is_transfer_payment(self) -> bool:
-        return self.cash_flow_kind == MufgRowData.CashFlowKind.TRANSFER_PAYMENT
+        return self.cash_flow_kind == CashFlowKind.TRANSFER_PAYMENT
 
     @property
     def is_by_card(self) -> bool:
@@ -204,18 +229,18 @@ class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
     #   - Create your own container — returns 0.18.0 documentation
     #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
     def create(self, input_row_data: MufgRowData) -> MufgRow:  # type: ignore
-        if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.INCOME:
+        if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == CashFlowKind.INCOME:
             return MufgIncomeFromSelfRow(input_row_data)
-        if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == MufgRowData.CashFlowKind.PAYMENT:
+        if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == CashFlowKind.PAYMENT:
             return MufgPaymentToSelfRow(input_row_data)
         if input_row_data.cash_flow_kind in (
-            MufgRowData.CashFlowKind.PAYMENT,
-            MufgRowData.CashFlowKind.TRANSFER_PAYMENT,
+            CashFlowKind.PAYMENT,
+            CashFlowKind.TRANSFER_PAYMENT,
         ):
             return MufgPaymentToSomeoneRow(input_row_data)
         if input_row_data.cash_flow_kind in (
-            MufgRowData.CashFlowKind.INCOME,
-            MufgRowData.CashFlowKind.TRANSFER_INCOME,
+            CashFlowKind.INCOME,
+            CashFlowKind.TRANSFER_INCOME,
         ):
             return MufgIncomeFromOthersRow(input_row_data)
         raise ValueError(
