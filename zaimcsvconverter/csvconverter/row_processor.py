@@ -1,12 +1,12 @@
 """This module implements convert steps of input CSV row."""
 from typing import cast, Generic, List
 
-from godslayer.exceptions import InvalidRecordError
+from pydantic import ValidationError
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
-from zaimcsvconverter.exceptions import SkipRow
+from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, SkipRow
 from zaimcsvconverter.inputcsvformats import (
     AbstractPydantic,
     InputContentRow,
@@ -23,14 +23,17 @@ class RecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
 
     def __init__(self, account_context: AccountContext[TypeVarInputRowData, TypeVarInputRow]):
         self._account_context = account_context
-        self.list_error: List[InvalidRecordError] = []
+        self.list_error: List[InvalidCellError] = []
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()
 
     def execute(self, list_input_row_standard_type_value: List[str]) -> ZaimRow:
         """This method executes convert steps of input CSV row."""
-        input_row_data = self._account_context.create_input_row_data_instance(list_input_row_standard_type_value)
-        if input_row_data.list_error:
-            self.list_error = input_row_data.list_error
+        try:
+            input_row_data = self._account_context.create_input_row_data_instance(list_input_row_standard_type_value)
+        except ValidationError as exc:
+            self.list_error.extend(
+                [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
+            )
             raise InvalidRecordError()
         input_row = self._account_context.create_input_row_instance(input_row_data)
         dekinded_input_row = cast(InputRow[InputRowData[AbstractPydantic]], input_row)
@@ -44,7 +47,8 @@ class RecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
     def _stock_row_error(
         self, input_row: Kind1[InputRow[InputRowData[AbstractPydantic]], InputRowData[AbstractPydantic]]
     ) -> None:
-        self.list_error = input_row.list_error
+        dekinded_input_row = cast(InputRow[InputRowData[AbstractPydantic]], input_row)
+        self.list_error = dekinded_input_row.list_error
         if not isinstance(input_row, InputContentRow):
             return
         self.undefined_content_error_handler.extend_list(input_row.get_report_undefined_content_error())

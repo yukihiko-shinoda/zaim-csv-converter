@@ -1,6 +1,7 @@
 """Tests for sf_card_viewer.py."""
 from datetime import datetime
 
+from pydantic import ValidationError
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -120,12 +121,15 @@ class TestSFCardViewerExitByWindowRow:
     @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
     def test_create_fail() -> None:
         """Method should raise ValueError when note is not defined."""
-        assert len(InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE.list_error) == 1
-        with pytest.raises(AttributeError):
+        with pytest.raises(ValidationError) as excinfo:
             # pylint: disable=protected-access
-            SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
-                InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE
-            )
+            SFCardViewerRowData(*InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE)
+        assert len(excinfo.value.errors()) == 1
+        error = excinfo.value.errors()[0]
+        assert error["loc"] == ("note",)
+        assert (
+            error["msg"] == "value is not a valid enumeration member; permitted: '', '物販', 'ｵｰﾄﾁｬｰｼﾞ', '窓出', 'ﾊﾞｽ/路面等'"
+        )
 
 
 class TestSFCardViewerRowFactory:

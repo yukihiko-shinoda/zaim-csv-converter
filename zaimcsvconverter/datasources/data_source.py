@@ -2,21 +2,21 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Generator, List
 
-from godslayer.exceptions import InvalidRecordError
+from zaimcsvconverter.exceptions import InvalidCellError
 
 
 class DataSource(ABC):
     """This class implements data source model."""
 
     def __init__(self) -> None:
-        self.dictionary_invalid_record: Dict[int, List[InvalidRecordError]] = {}
+        self.dictionary_invalid_record: Dict[int, List[InvalidCellError]] = {}
 
     @abstractmethod
     def __iter__(self) -> Generator[List[Any], None, None]:
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod
-    def mark_current_record_as_error(self, list_error: List[InvalidRecordError]) -> None:
+    def mark_current_record_as_error(self, list_error: List[InvalidCellError]) -> None:
         """Marks current record as error."""
         raise NotImplementedError()  # pragma: no cover
 

@@ -1,6 +1,7 @@
 """Tests for waon.py."""
 from datetime import datetime
 
+from pydantic import ValidationError
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -43,27 +44,28 @@ class TestWaonRowData:
     @pytest.mark.usefixtures("database_session_with_schema")
     def test_validate() -> None:
         """Validate method should collect errors."""
-        row_data = WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND)
-        assert len(row_data.list_error) == 1
-        assert str(
-            # Reason: Pylint has not support dataclasses. pylint: disable=unsubscriptable-object
-            row_data.list_error[0]
-        ) == (
-            "Invalid use_kind, value is not a valid enumeration member; permitted: "
-            "'支払', '支払取消', 'チャージ', 'オートチャージ', 'ポイントダウンロード', "
-            "'WAON移行（アップロード）', 'WAON移行（ダウンロード）'"
+        with pytest.raises(ValidationError) as excinfo:
+            WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND)
+        errors = excinfo.value.errors()
+        assert len(errors) == 1
+        error = errors[0]
+        assert error["loc"] == ("use_kind",)
+        assert error["msg"] == (
+            "value is not a valid enumeration member; permitted: "
+            "'支払', '支払取消', 'チャージ', 'オートチャージ', "
+            "'ポイントダウンロード', 'WAON移行（アップロード）', 'WAON移行（ダウンロード）'"
         )
 
     @staticmethod
     def test_unsuported_charge_kind() -> None:
-        row_data = WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
-        assert len(row_data.list_error) == 1
-        assert str(
-            # Reason: Pylint has not support dataclasses. pylint: disable=unsubscriptable-object
-            row_data.list_error[0]
-        ) == (
-            "Invalid charge_kind, value is not a valid enumeration member; permitted: "
-            "'銀行口座', 'ポイント', '現金', 'バリューダウンロード', '-'"
+        with pytest.raises(ValidationError) as excinfo:
+            WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
+        errors = excinfo.value.errors()
+        assert len(errors) == 1
+        error = errors[0]
+        assert error["loc"] == ("charge_kind",)
+        assert error["msg"] == (
+            "value is not a valid enumeration member; permitted: " "'銀行口座', 'ポイント', '現金', 'バリューダウンロード', '-'"
         )
 
 

@@ -70,7 +70,7 @@ class InstanceResource:
     ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS = MufgRowData(
         "2018/11/28", "水道", "トウキヨウトスイドウ", "3628", "", "5000000", "", "", "振替支払い"
     )
-    ROW_DATA_MUFG_UNSUPPORTED_NOTE = MufgRowData("2018/11/28", "水道", "トウキヨウトスイドウ", "3628", "", "5000000", "", "", "")
+    ROW_DATA_MUFG_UNSUPPORTED_NOTE = ["2018/11/28", "水道", "トウキヨウトスイドウ", "3628", "", "5000000", "", "", ""]
     ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION = SFCardViewerRowData(
         "2018/11/13", "", "メトロ", "六本木一丁目", "", "メトロ", "後楽園", "195", "3601", ""
     )
@@ -86,9 +86,7 @@ class InstanceResource:
     ROW_DATA_SF_CARD_VIEWER_BUS_TRAM = SFCardViewerRowData(
         "2019/01/27", "", "", "", "", "", "", "195", "2896", "ﾊﾞｽ/路面等"
     )
-    ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE = SFCardViewerRowData(
-        "2018/11/25", "", "東武", "北千住", "", "東武", "北千住", "0", "2621", "ﾁｬｰｼﾞ"
-    )
+    ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE = ["2018/11/25", "", "東武", "北千住", "", "東武", "北千住", "0", "2621", "ﾁｬｰｼﾞ"]
     ROW_DATA_AMAZON_ECHO_DOT = AmazonRowData(
         "2018/10/23",
         "123-4567890-1234567",

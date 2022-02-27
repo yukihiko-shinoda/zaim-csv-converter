@@ -2,14 +2,13 @@
 import csv
 from pathlib import Path
 
-from godslayer.exceptions import InvalidRecordError
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.csvconverter.input_csv import InputData
 from zaimcsvconverter.datasources.csv import Csv
-from zaimcsvconverter.exceptions import InvalidInputCsvError
+from zaimcsvconverter.exceptions import InvalidCellError, InvalidInputCsvError
 
 
 class TestInputCsv:
@@ -47,6 +46,6 @@ class TestInputCsv:
         )
         assert input_data.data_source.is_invalid
         invalid_row_error = input_data.data_source.dictionary_invalid_record[0][0]
-        assert isinstance(invalid_row_error, InvalidRecordError)
+        assert isinstance(invalid_row_error, InvalidCellError)
         assert str(invalid_row_error) == "Charge kind in charge row is required. Charge kind = -"
         assert not input_data.undefined_content_error_handler.is_presented

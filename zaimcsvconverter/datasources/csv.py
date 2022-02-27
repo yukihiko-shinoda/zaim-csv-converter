@@ -2,10 +2,10 @@
 from typing import Any, Generator, List, Optional
 
 from godslayer.csv.god_slayer import GodSlayer
-from godslayer.exceptions import InvalidFooterError, InvalidHeaderError, InvalidRecordError
+from godslayer.exceptions import InvalidFooterError, InvalidHeaderError
 
 from zaimcsvconverter.datasources.data_source import DataSource
-from zaimcsvconverter.exceptions import InvalidInputCsvError, LogicError
+from zaimcsvconverter.exceptions import InvalidCellError, InvalidInputCsvError, LogicError
 
 
 class Csv(DataSource):
@@ -35,7 +35,7 @@ class Csv(DataSource):
             or self.invalid_footer_error is not None
         )
 
-    def mark_current_record_as_error(self, list_error: List[InvalidRecordError]) -> None:
+    def mark_current_record_as_error(self, list_error: List[InvalidCellError]) -> None:
         if self.god_slayer.index is None:
             raise LogicError("This method can't be called before iterate this instance.")  # pragma: no cover
         self.dictionary_invalid_record[self.god_slayer.index] = list_error

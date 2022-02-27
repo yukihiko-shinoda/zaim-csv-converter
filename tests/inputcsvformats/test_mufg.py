@@ -1,6 +1,7 @@
 """Tests for mufg.py."""
 from datetime import datetime
 
+from pydantic import ValidationError
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -62,12 +63,14 @@ class TestMufgRowData:
     @pytest.mark.usefixtures("database_session_stores_mufg")
     def test_create_fail() -> None:
         """Method should raise ValueError when note is not defined."""
-        assert (
-            len(InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE.list_error) == 1
-        ), InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE.list_error
-        with pytest.raises(AttributeError):
+        with pytest.raises(ValidationError) as excinfo:
             # pylint: disable=protected-access
-            MufgRowFactory().create(InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)
+            MufgRowData(*InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)
+        errors = excinfo.value.errors()
+        assert len(errors) == 1
+        error = errors[0]
+        assert error["loc"] == ("cash_flow_kind",)
+        assert error["msg"] == "value is not a valid enumeration member; permitted: '入金', '支払い', '振替入金', '振替支払い'"
 
 
 class TestMufgIncomeRow:

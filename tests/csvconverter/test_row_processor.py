@@ -1,10 +1,10 @@
 """Tests for row_processror.py."""
-from godslayer.exceptions import InvalidRecordError
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.csvconverter.row_processor import RecordProcessor
+from zaimcsvconverter.exceptions import InvalidRecordError
 
 
 class TestRowProcessor:

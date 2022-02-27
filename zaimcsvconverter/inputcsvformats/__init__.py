@@ -7,14 +7,10 @@ from datetime import datetime
 from typing import Any, Callable, Generic, List, Optional, TypeVar
 
 from errorcollector.error_collector import MultipleErrorCollector, SingleErrorCollector
-
-# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
-from godslayer import InvalidRecordError  # type: ignore
 from pydantic.dataclasses import dataclass as pydantic_dataclass
-from pydantic import ValidationError
 from returns.primitives.hkt import Kind1
 
-from zaimcsvconverter.exceptions import UndefinedContentError
+from zaimcsvconverter.exceptions import InvalidCellError, UndefinedContentError
 from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
 from zaimcsvconverter.models import Item, Store
 
@@ -32,16 +28,11 @@ TypeVarPydantic = TypeVar("TypeVarPydantic", bound=AbstractPydantic)
 class InputRowData(Generic[TypeVarPydantic]):
     """This class is abstract class of input CSV row data."""
 
-    list_error: List[InvalidRecordError] = field(default_factory=list, init=False)
+    list_error: List[InvalidCellError] = field(default_factory=list, init=False)
     pydantic: TypeVarPydantic = field(init=False)
 
     def __post_init__(self) -> None:
-        try:
-            self.pydantic = self.create_pydantic()
-        except ValidationError as exc:
-            self.list_error.extend(
-                [InvalidRecordError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
-            )
+        self.pydantic = self.create_pydantic()
 
     @property
     @abstractmethod
@@ -103,7 +94,7 @@ class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
 
     def __init__(self, input_row_data: TypeVarInputRowData):
-        self.list_error: List[InvalidRecordError] = []
+        self.list_error: List[InvalidCellError] = []
         self.date: datetime = input_row_data.date
 
     # Reason: Parent method. pylint: disable=no-self-use
@@ -114,7 +105,7 @@ class InputRow(Generic[TypeVarInputRowData]):
 
     def stock_error(self, method: Callable[[], Any], message: str) -> Any:
         """This method stocks error."""
-        with MultipleErrorCollector(InvalidRecordError, message, self.list_error):
+        with MultipleErrorCollector(InvalidCellError, message, self.list_error):
             return method()
 
     # Reason: Parent method. pylint: disable=no-self-use
