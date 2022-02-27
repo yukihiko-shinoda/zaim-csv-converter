@@ -61,10 +61,6 @@ class GoldPointCardPlus201912RowData(InputStoreRowData[GoldPointCardPlus201912Ro
     def payed_amount(self) -> int:
         return self.pydantic.payed_amount
 
-    @property
-    def validate(self) -> bool:
-        return super().validate
-
 
 class GoldPointCardPlus201912Row(InputStoreRow[GoldPointCardPlus201912RowData]):
     """This class implements row model of GOLD POINT CARD+ CSV."""

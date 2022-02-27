@@ -64,10 +64,6 @@ class SBISumishinNetBankRowData(InputStoreRowData[SBISumishinNetBankRowDataPydan
     def deposit_amount(self) -> Optional[int]:
         return self.pydantic.deposit_amount
 
-    @property
-    def validate(self) -> bool:
-        return super().validate
-
 
 class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
     """This class implements row model of SBI Sumishin net bank CSV."""

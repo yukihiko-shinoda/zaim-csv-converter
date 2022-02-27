@@ -29,7 +29,7 @@ class RecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
     def execute(self, list_input_row_standard_type_value: List[str]) -> ZaimRow:
         """This method executes convert steps of input CSV row."""
         input_row_data = self._account_context.create_input_row_data_instance(list_input_row_standard_type_value)
-        if input_row_data.validate:
+        if input_row_data.list_error:
             self.list_error = input_row_data.list_error
             raise InvalidRecordError()
         input_row = self._account_context.create_input_row_instance(input_row_data)

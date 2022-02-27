@@ -284,10 +284,6 @@ class PayPalRowData(InputStoreItemRowData[PayPalRowDataPydantic]):
     def balance_impact(self) -> BalanceImpact:
         return self.pydantic.balance_impact
 
-    @property
-    def validate(self) -> bool:
-        return super().validate
-
 
 class PayPalRow(InputStoreItemRow[PayPalRowData]):
     """This class implements row model of Amazon.co.jp CSV."""

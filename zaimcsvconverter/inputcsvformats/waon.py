@@ -88,10 +88,6 @@ class WaonRowData(InputStoreRowData[WaonRowDataPydantic]):
     def charge_kind(self) -> ChargeKind:
         return self.pydantic.charge_kind
 
-    @property
-    def validate(self) -> bool:
-        return super().validate
-
 
 class WaonRow(InputStoreRow[WaonRowData]):
     """This class implements row model of WAON CSV."""

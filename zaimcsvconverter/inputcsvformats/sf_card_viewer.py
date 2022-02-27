@@ -95,10 +95,6 @@ class SFCardViewerRowData(InputStoreRowData[SFCardViewerRowDataPydantic]):
         return self.pydantic.note
 
     @property
-    def validate(self) -> bool:
-        return super().validate
-
-    @property
     def is_auto_charge(self) -> bool:
         """This property returns whether this row is auto charge or not."""
         return self.note == Note.AUTO_CHARGE

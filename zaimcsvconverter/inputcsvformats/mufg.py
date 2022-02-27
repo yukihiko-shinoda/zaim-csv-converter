@@ -99,10 +99,6 @@ class MufgRowData(InputStoreRowData[MufgRowDataPydantic]):
     def cash_flow_kind(self) -> CashFlowKind:
         return self.pydantic.cash_flow_kind
 
-    @property
-    def validate(self) -> bool:
-        return super().validate
-
 
 class MufgRow(InputRow[MufgRowData]):
     """This class implements row model of MUFG bank CSV."""

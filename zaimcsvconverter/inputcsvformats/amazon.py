@@ -100,10 +100,6 @@ class AmazonRowData(InputItemRowData[AmazonRowDataPydantic]):
     def number(self) -> int:
         return self.pydantic.number
 
-    @property
-    def validate(self) -> bool:
-        return super().validate
-
 
 # pylint: disable=too-many-instance-attributes
 class AmazonRow(InputItemRow[AmazonRowData]):

@@ -114,10 +114,6 @@ class Amazon201911RowData(InputItemRowData[Amazon201911RowDataPydantic]):
         return self.pydantic.subtotal_price_item
 
     @property
-    def validate(self) -> bool:
-        return super().validate
-
-    @property
     def is_entire_order(self) -> bool:
         return (
             self._item_name == self.ITEM_NAME_ENTIRE_ORDER

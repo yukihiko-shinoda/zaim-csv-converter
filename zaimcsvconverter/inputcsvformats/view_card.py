@@ -80,10 +80,6 @@ class ViewCardRowData(InputStoreRowData[ViewCardRowDataPydantic]):
         """This property returns whether this store is Amazon.co.jp or not."""
         return bool(re.search(r"　オートチャージ$", self.pydantic.used_place))
 
-    @property
-    def validate(self) -> bool:
-        return super().validate
-
 
 class ViewCardRow(InputStoreRow[ViewCardRowData]):
     """This class implements row model of GOLD POINT CARD+ CSV."""

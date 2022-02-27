@@ -33,7 +33,6 @@ class InputRowData(Generic[TypeVarPydantic]):
     """This class is abstract class of input CSV row data."""
 
     list_error: List[InvalidRecordError] = field(default_factory=list, init=False)
-    undefined_content_error: Optional[UndefinedContentError] = field(default=None, init=False)
     pydantic: TypeVarPydantic = field(init=False)
 
     def __post_init__(self) -> None:
@@ -48,17 +47,6 @@ class InputRowData(Generic[TypeVarPydantic]):
     @abstractmethod
     def date(self) -> datetime:
         """This property returns date as datetime."""
-
-    @property
-    @abstractmethod
-    def validate(self) -> bool:
-        """This method validates data."""
-        return bool(self.list_error) or self.undefined_content_error is not None
-
-    def stock_error(self, method: Callable[[], Any], message: str) -> Any:
-        """This method stocks error."""
-        with MultipleErrorCollector(InvalidRecordError, message, self.list_error):
-            return method()
 
     @abstractmethod
     def create_pydantic(self) -> TypeVarPydantic:

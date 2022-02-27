@@ -44,7 +44,6 @@ class TestWaonRowData:
     def test_validate() -> None:
         """Validate method should collect errors."""
         row_data = WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND)
-        assert row_data.validate
         assert len(row_data.list_error) == 1
         assert str(
             # Reason: Pylint has not support dataclasses. pylint: disable=unsubscriptable-object
@@ -58,7 +57,6 @@ class TestWaonRowData:
     @staticmethod
     def test_unsuported_charge_kind() -> None:
         row_data = WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
-        assert row_data.validate
         assert len(row_data.list_error) == 1
         assert str(
             # Reason: Pylint has not support dataclasses. pylint: disable=unsubscriptable-object
