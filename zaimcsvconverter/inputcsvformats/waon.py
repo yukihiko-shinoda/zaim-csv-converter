@@ -1,16 +1,15 @@
 """This module implements row model of WAON CSV."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
-from pydantic.dataclasses import dataclass as pydantic_dataclass
+from pydantic.dataclasses import dataclass
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.inputcsvformats.customdatatypes.yen_string_to_int import StrictYenStringToInt
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
 
 
 class UseKind(str, Enum):
@@ -35,58 +34,24 @@ class ChargeKind(str, Enum):
     NULL = "-"
 
 
-@pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class WaonRowDataPydantic(AbstractPydantic):
+@dataclass
+class WaonRowData(InputStoreRowData):
     """This class implements data class for wrapping list of WAON CSV row model."""
 
-    date: StringToDateTime
+    date_: StringToDateTime
     used_store: str
     used_amount: StrictYenStringToInt
     use_kind: UseKind
     charge_kind: ChargeKind
 
-
-@dataclass
-class WaonRowData(InputStoreRowData[WaonRowDataPydantic]):
-    """This class implements data class for wrapping list of WAON CSV row model."""
-
-    _date: str
-    _used_store: str
-    _used_amount: str
-    _use_kind: str
-    _charge_kind: str
-    pydantic: WaonRowDataPydantic = field(init=False)
-
-    def create_pydantic(self) -> WaonRowDataPydantic:
-        return WaonRowDataPydantic(
-            # Reason: Maybe, there are no way to specify type before converted by pydantic
-            self._date,  # type: ignore
-            self._used_store,
-            self._used_amount,  # type: ignore
-            self._use_kind,  # type: ignore
-            self._charge_kind,  # type: ignore
-        )
-
     @property
     def date(self) -> datetime:
-        return self.pydantic.date
+        return self.date_
 
     @property
     def store_name(self) -> str:
-        return self.pydantic.used_store
-
-    @property
-    def used_amount(self) -> int:
-        return self.pydantic.used_amount
-
-    @property
-    def use_kind(self) -> UseKind:
-        return self.pydantic.use_kind
-
-    @property
-    def charge_kind(self) -> ChargeKind:
-        return self.pydantic.charge_kind
+        return self.used_store
 
 
 class WaonRow(InputStoreRow[WaonRowData]):

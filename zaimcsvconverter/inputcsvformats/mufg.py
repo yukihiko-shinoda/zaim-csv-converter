@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from abc import ABC
-from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
@@ -10,15 +9,9 @@ from typing import Any, Optional
 from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import (
-    AbstractPydantic,
-    InputRow,
-    InputRowFactory,
-    InputStoreRow,
-    InputStoreRowData,
-)
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import ConstrainedStringToOptionalInt
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
 
 
 class CashFlowKind(str, Enum):
@@ -32,10 +25,15 @@ class CashFlowKind(str, Enum):
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class MufgRowDataPydantic(AbstractPydantic):
+class MufgRowData(InputStoreRowData):
     """This class implements data class for wrapping list of MUFG CSV row model."""
 
-    date: StringToDateTime
+    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
+    class Summary(Enum):
+        CARD = "カ−ド"
+        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"
+
+    date_: StringToDateTime
     summary: str
     summary_content: str
     payed_amount: ConstrainedStringToOptionalInt
@@ -45,59 +43,13 @@ class MufgRowDataPydantic(AbstractPydantic):
     is_uncapitalized: str
     cash_flow_kind: CashFlowKind
 
-
-@dataclass
-class MufgRowData(InputStoreRowData[MufgRowDataPydantic]):
-    """This class implements data class for wrapping list of MUFG bunk CSV row model."""
-
-    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-    class Summary(Enum):
-        CARD = "カ−ド"
-        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"
-
-    _date: str
-    summary: str
-    _summary_content: str
-    _payed_amount: str
-    _deposit_amount: str
-    balance: str
-    note: str
-    is_uncapitalized: str
-    _cash_flow_kind: str
-
-    def create_pydantic(self) -> MufgRowDataPydantic:
-        return MufgRowDataPydantic(
-            # Reason: Maybe, there are no way to specify type before converted by pydantic
-            self._date,  # type: ignore
-            self.summary,
-            self._summary_content,
-            self._payed_amount,  # type: ignore
-            self._deposit_amount,  # type: ignore
-            self.balance,
-            self.note,
-            self.is_uncapitalized,
-            self._cash_flow_kind,  # type: ignore
-        )
-
     @property
     def date(self) -> datetime:
-        return self.pydantic.date
+        return self.date_
 
     @property
     def store_name(self) -> str:
-        return self.pydantic.summary_content
-
-    @property
-    def payed_amount(self) -> Optional[int]:
-        return self.pydantic.payed_amount
-
-    @property
-    def deposit_amount(self) -> Optional[int]:
-        return self.pydantic.deposit_amount
-
-    @property
-    def cash_flow_kind(self) -> CashFlowKind:
-        return self.pydantic.cash_flow_kind
+        return self.summary_content
 
 
 class MufgRow(InputRow[MufgRowData]):

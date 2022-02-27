@@ -1,18 +1,17 @@
 """This module implements row model of GOLD POINT CARD+ CSV."""
-from dataclasses import dataclass
 from datetime import datetime
 
 from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
 
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class GoldPointCardPlusRowDataPydantic(AbstractPydantic):
+class GoldPointCardPlusRowData(InputStoreRowData):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
 
     used_date: StringToDateTime
@@ -29,55 +28,13 @@ class GoldPointCardPlusRowDataPydantic(AbstractPydantic):
     unknown_5: str
     unknown_6: str
 
-
-@dataclass
-class GoldPointCardPlusRowData(InputStoreRowData[GoldPointCardPlusRowDataPydantic]):
-    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
-
-    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-    _used_date: str
-    _used_store: str
-    used_card: str
-    payment_kind: str
-    number_of_division: str
-    scheduled_payment_month: str
-    _used_amount: str
-    unknown_1: str
-    unknown_2: str
-    unknown_3: str
-    unknown_4: str
-    unknown_5: str
-    unknown_6: str
-
-    def create_pydantic(self) -> GoldPointCardPlusRowDataPydantic:
-        return GoldPointCardPlusRowDataPydantic(
-            # Reason: Maybe, there are no way to specify type before converted by pydantic
-            self._used_date,  # type: ignore
-            self._used_store,
-            self.used_card,
-            self.payment_kind,
-            self.number_of_division,
-            self.scheduled_payment_month,
-            self._used_amount,  # type: ignore
-            self.unknown_1,
-            self.unknown_2,
-            self.unknown_3,
-            self.unknown_4,
-            self.unknown_5,
-            self.unknown_6,
-        )
-
     @property
     def date(self) -> datetime:
-        return self.pydantic.used_date
+        return self.used_date
 
     @property
     def store_name(self) -> str:
-        return self.pydantic.used_store
-
-    @property
-    def used_amount(self) -> int:
-        return self.pydantic.used_amount
+        return self.used_store
 
 
 class GoldPointCardPlusRow(InputStoreRow[GoldPointCardPlusRowData]):

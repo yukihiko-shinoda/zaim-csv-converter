@@ -8,7 +8,6 @@ from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, SkipRow
 from zaimcsvconverter.inputcsvformats import (
-    AbstractPydantic,
     InputContentRow,
     InputRow,
     InputRowData,
@@ -36,7 +35,7 @@ class RecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
             )
             raise InvalidRecordError()
         input_row = self._account_context.create_input_row_instance(input_row_data)
-        dekinded_input_row = cast(InputRow[InputRowData[AbstractPydantic]], input_row)
+        dekinded_input_row = cast(InputRow[InputRowData], input_row)
         if dekinded_input_row.is_row_to_skip:
             raise SkipRow()
         if dekinded_input_row.validate:
@@ -44,10 +43,8 @@ class RecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
             raise InvalidRecordError()
         return self._account_context.convert_input_row_to_zaim_row(input_row)
 
-    def _stock_row_error(
-        self, input_row: Kind1[InputRow[InputRowData[AbstractPydantic]], InputRowData[AbstractPydantic]]
-    ) -> None:
-        dekinded_input_row = cast(InputRow[InputRowData[AbstractPydantic]], input_row)
+    def _stock_row_error(self, input_row: Kind1[InputRow[InputRowData], InputRowData]) -> None:
+        dekinded_input_row = cast(InputRow[InputRowData], input_row)
         self.list_error = dekinded_input_row.list_error
         if not isinstance(input_row, InputContentRow):
             return

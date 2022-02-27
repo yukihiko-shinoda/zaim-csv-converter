@@ -32,7 +32,6 @@ class TestWaonRowData:
         use_kind = "支払"
         charge_kind = "-"
         waon_row_data = WaonRowData(date, used_store, used_amount, use_kind, charge_kind)
-        assert len(waon_row_data.list_error) == 0, waon_row_data.list_error
         assert waon_row_data.date == datetime(2018, 8, 7, 0, 0)
         assert waon_row_data.store_name == used_store
         assert waon_row_data.used_amount == 129

@@ -9,8 +9,8 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRow, InputRowData, InputRowFactory, TypeVarPydantic
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, InputRowFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
@@ -100,11 +100,9 @@ class TestZaimPaymentRow:
     )
     @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_item")
     def test_all(
-        input_row_factory: InputRowFactory[InputRowData[TypeVarPydantic], InputRow[InputRowData[TypeVarPydantic]]],
-        input_row_data: InputRowData[TypeVarPydantic],
-        zaim_row_converter_factory: ZaimRowConverterFactory[
-            InputRow[InputRowData[TypeVarPydantic]], InputRowData[TypeVarPydantic]
-        ],
+        input_row_factory: InputRowFactory[InputRowData, InputRow[InputRowData]],
+        input_row_data: InputRowData,
+        zaim_row_converter_factory: ZaimRowConverterFactory[InputRow[InputRowData], InputRowData],
         expected_date: str,
         expected_category_large: str,
         expected_category_small: str,
@@ -221,15 +219,13 @@ class TestZaimRowFactory:
         """Factory should raise ValueError when input row is undefined type."""
 
         # Reason: This class is just for test. pylint: disable=too-few-public-methods
-        class UndefinedZaimRowConverter(
-            ZaimRowConverter[InputRow[InputRowData[TypeVarPydantic]], InputRowData[TypeVarPydantic]]
-        ):
+        class UndefinedZaimRowConverter(ZaimRowConverter[InputRow[InputRowData], InputRowData]):
             pass
 
-        class UndefinedInputRow(InputRow[InputRowData[TypeVarPydantic]]):
+        class UndefinedInputRow(InputRow[InputRowData]):
             pass
 
-        class UndefinedInputRowData(InputRowData[TypeVarPydantic]):
+        class UndefinedInputRowData(InputRowData):
             # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             @property
             def date(self) -> datetime:
@@ -247,12 +243,8 @@ class TestZaimRowFactory:
             def validate(self) -> bool:
                 return False
 
-            # Reason: This method is temporary and will remove in future.
-            def create_pydantic(self) -> None:  # type: ignore
-                return None
-
         undefined_input_row = cast(
-            Kind1[InputRow[InputRowData[AbstractPydantic]], InputRowData[AbstractPydantic]],
+            Kind1[InputRow[InputRowData], InputRowData],
             UndefinedInputRow(UndefinedInputRowData()),
         )
         with pytest.raises(ValueError) as error:

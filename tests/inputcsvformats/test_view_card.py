@@ -95,7 +95,7 @@ class TestViewCardRow:
         else:
             assert isinstance(row.store, Store)
             # noinspection PyUnresolvedReferences
-            assert row.store.name == view_card_row_data._used_place
+            assert row.store.name == view_card_row_data.used_place
             assert row.store.name_zaim == expected_store_name_zaim
         assert row.is_row_to_skip == expected_is_row_to_skip
 

@@ -1,7 +1,6 @@
 """This module implements row model of SF Card Viewer CSV."""
 from __future__ import annotations
 
-from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Any, Callable
@@ -10,14 +9,8 @@ from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import (
-    AbstractPydantic,
-    InputRow,
-    InputRowFactory,
-    InputStoreRow,
-    InputStoreRowData,
-)
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
 
 
 # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
@@ -33,7 +26,7 @@ class Note(str, Enum):
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class SFCardViewerRowDataPydantic(AbstractPydantic):
+class SFCardViewerRowData(InputStoreRowData):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
 
     used_date: StringToDateTime
@@ -47,52 +40,13 @@ class SFCardViewerRowDataPydantic(AbstractPydantic):
     balance: str
     note: Note
 
-
-@dataclass
-class SFCardViewerRowData(InputStoreRowData[SFCardViewerRowDataPydantic]):
-    """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
-
-    _used_date: str
-    is_commuter_pass_enter: str
-    railway_company_name_enter: str
-    station_name_enter: str
-    is_commuter_pass_exit: str
-    railway_company_name_exit: str
-    _station_name_exit: str
-    _used_amount: str
-    balance: str
-    _note: str
-
-    def create_pydantic(self) -> SFCardViewerRowDataPydantic:
-        return SFCardViewerRowDataPydantic(
-            # Reason: Maybe, there are no way to specify type before converted by pydantic
-            self._used_date,  # type: ignore
-            self.is_commuter_pass_enter,
-            self.railway_company_name_enter,
-            self.station_name_enter,
-            self.is_commuter_pass_exit,
-            self.railway_company_name_exit,
-            self._station_name_exit,
-            self._used_amount,  # type: ignore
-            self.balance,
-            self._note,  # type: ignore
-        )
-
     @property
     def date(self) -> datetime:
-        return self.pydantic.used_date
+        return self.used_date
 
     @property
     def store_name(self) -> str:
-        return self.pydantic.station_name_enter if self.is_auto_charge else self.pydantic.station_name_exit
-
-    @property
-    def used_amount(self) -> int:
-        return self.pydantic.used_amount
-
-    @property
-    def note(self) -> Note:
-        return self.pydantic.note
+        return self.station_name_enter if self.is_auto_charge else self.station_name_exit
 
     @property
     def is_auto_charge(self) -> bool:

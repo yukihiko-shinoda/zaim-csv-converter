@@ -4,7 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, TypeVarPydantic
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 from zaimcsvconverter.rowconverters.waon import (
     WaonZaimIncomeRowConverter,
@@ -164,7 +164,7 @@ class TestWaonZaimRowConverterConverter:
     @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
     def test_success(
         input_row_data: WaonRowData,
-        expected: type[ZaimRowConverter[InputRow[InputRowData[TypeVarPydantic]], InputRowData[TypeVarPydantic]]],
+        expected: type[ZaimRowConverter[InputRow[InputRowData], InputRowData]],
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.WAON.value

@@ -6,7 +6,7 @@ see:
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import field
 from datetime import datetime
 from enum import Enum
 from typing import ClassVar, List
@@ -14,13 +14,8 @@ from typing import ClassVar, List
 from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import (
-    AbstractPydantic,
-    InputRowFactory,
-    InputStoreItemRow,
-    InputStoreItemRowData,
-)
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreItemRow, InputStoreItemRowData
 
 
 class Status(str, Enum):
@@ -58,10 +53,10 @@ class CURRENCY(str, Enum):
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class PayPalRowDataPydantic(AbstractPydantic):
+class PayPalRowData(InputStoreItemRowData):
     """This class implements data class for wrapping list of PayPal CSV row model."""
 
-    date: StringToDateTime
+    date_: StringToDateTime
     time: str
     time_zone: TIMEZONE
     name: str
@@ -102,12 +97,6 @@ class PayPalRowDataPydantic(AbstractPydantic):
     note: str
     country_code: str
     balance_impact: BalanceImpact
-
-
-@dataclass
-# Reason: Specification. pylint: disable=too-many-instance-attributes
-class PayPalRowData(InputStoreItemRowData[PayPalRowDataPydantic]):
-    """This class implements data class for wrapping list of PayPal CSV row model."""
 
     HEADER: ClassVar[List[str]] = field(
         default=[
@@ -156,133 +145,17 @@ class PayPalRowData(InputStoreItemRowData[PayPalRowDataPydantic]):
         init=False,
     )
 
-    _date: str
-    time: str
-    _time_zone: str
-    _name: str
-    type: str
-    _status: str
-    _currency: str
-    _gross: str
-    _fee: str
-    _net: str
-    from_email_address: str
-    to_email_address: str
-    transaction_id: str
-    shipping_address: str
-    address_status: str
-    item_title: str
-    item_id: str
-    shipping_and_handling_amount: str
-    insurance_amount: str
-    sales_tax: str
-    option_1_name: str
-    option_1_value: str
-    option_2_name: str
-    option_2_value: str
-    reference_transaction_id: str
-    invoice_number: str
-    custom_number: str
-    quantity: str
-    receipt_id: str
-    balance: str
-    address_line_1: str
-    address_line_2_district_neighborhood: str
-    town_city: str
-    state_province_region_county_territory_prefecture_republic: str
-    zip_postal_code: str
-    country: str
-    contract_phone_number: str
-    subject: str
-    note: str
-    country_code: str
-    _balance_impact: str
-
-    def create_pydantic(self) -> PayPalRowDataPydantic:
-        return PayPalRowDataPydantic(
-            # Reason: Maybe, there are no way to specify type before converted by pydantic
-            self._date,  # type: ignore
-            self.time,
-            self._time_zone,  # type: ignore
-            self._name,
-            self.type,
-            self._status,  # type: ignore
-            self._currency,  # type: ignore
-            self._gross,  # type: ignore
-            self._fee,  # type: ignore
-            self._net,  # type: ignore
-            self.from_email_address,
-            self.to_email_address,
-            self.transaction_id,
-            self.shipping_address,
-            self.address_status,
-            self.item_title,
-            self.item_id,
-            self.shipping_and_handling_amount,
-            self.insurance_amount,
-            self.sales_tax,
-            self.option_1_name,
-            self.option_1_value,
-            self.option_2_name,
-            self.option_2_value,
-            self.reference_transaction_id,
-            self.invoice_number,
-            self.custom_number,
-            self.quantity,
-            self.receipt_id,
-            self.balance,
-            self.address_line_1,
-            self.address_line_2_district_neighborhood,
-            self.town_city,
-            self.state_province_region_county_territory_prefecture_republic,
-            self.zip_postal_code,
-            self.country,
-            self.contract_phone_number,
-            self.subject,
-            self.note,
-            self.country_code,
-            self._balance_impact,  # type: ignore
-        )
-
     @property
     def date(self) -> datetime:
-        return self.pydantic.date
-
-    @property
-    def time_zone(self) -> TIMEZONE:
-        return self.pydantic.time_zone
+        return self.date_
 
     @property
     def store_name(self) -> str:
-        return self.pydantic.name
+        return self.name
 
     @property
     def item_name(self) -> str:
-        return self.pydantic.item_title
-
-    @property
-    def status(self) -> Status:
-        return self.pydantic.status
-
-    @property
-    def currency(self) -> CURRENCY:
-        return self.pydantic.currency
-
-    @property
-    def gross(self) -> int:
-        return self.pydantic.gross
-
-    @property
-    def fee(self) -> int:
-        return self.pydantic.fee
-
-    @property
-    def net(self) -> int:
-        return self.pydantic.net
-
-    @property
-    def balance_impact(self) -> BalanceImpact:
-        return self.pydantic.balance_impact
+        return self.item_title
 
 
 class PayPalRow(InputStoreItemRow[PayPalRowData]):

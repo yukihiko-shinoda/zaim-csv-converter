@@ -1,6 +1,5 @@
 """This module implements row model of Amazon.co.jp CSV."""
 
-from dataclasses import dataclass
 from datetime import datetime
 from typing import ClassVar, Optional
 
@@ -8,20 +7,24 @@ from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputItemRow, InputItemRowData, InputRowFactory
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import ConstrainedStringToOptionalInt
+from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData, InputRowFactory
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class Amazon201911RowDataPydantic(AbstractPydantic):
+class Amazon201911RowData(InputItemRowData):
     """This class implements data class for wrapping list of Amazon.co.jp CSV version 201911 row model."""
 
+    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
+    ITEM_NAME_ENTIRE_ORDER: ClassVar[str] = "（注文全体）"
+    ITEM_NAME_BILLING_TO_CREDIT_CARD: ClassVar[str] = "（クレジットカードへの請求）"
+    ITEM_NAME_SHIPPING_HANDLING: ClassVar[str] = "（配送料・手数料）"
     ordered_date: StringToDateTime
     order_id: str
-    item_name: str
+    item_name_: str
     note: str
     price: ConstrainedStringToOptionalInt
     number: ConstrainedStringToOptionalInt
@@ -38,85 +41,18 @@ class Amazon201911RowDataPydantic(AbstractPydantic):
     url_receipt: str
     url_item: str
 
-
-@dataclass
-class Amazon201911RowData(InputItemRowData[Amazon201911RowDataPydantic]):
-    """This class implements data class for wrapping list of Amazon.co.jp CSV version 201911 row model."""
-
-    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-    ITEM_NAME_ENTIRE_ORDER: ClassVar[str] = "（注文全体）"
-    ITEM_NAME_BILLING_TO_CREDIT_CARD: ClassVar[str] = "（クレジットカードへの請求）"
-    ITEM_NAME_SHIPPING_HANDLING: ClassVar[str] = "（配送料・手数料）"
-    _ordered_date: str
-    order_id: str
-    _item_name: str
-    note: str
-    _price: str
-    _number: str
-    _subtotal_price_item: str
-    _total_order: str
-    destination: str
-    status: str
-    billing_address: str
-    billing_amount: str
-    credit_card_billing_date: str
-    credit_card_billing_amount: str
-    credit_card_identity: str
-    url_order_summary: str
-    url_receipt: str
-    url_item: str
-
-    def create_pydantic(self) -> Amazon201911RowDataPydantic:
-        return Amazon201911RowDataPydantic(
-            # Reason: Maybe, there are no way to specify type before converted by pydantic
-            self._ordered_date,  # type: ignore
-            self.order_id,
-            self._item_name,
-            self.note,
-            self._price,  # type: ignore
-            self._number,  # type: ignore
-            self._subtotal_price_item,  # type: ignore
-            self._total_order,  # type: ignore
-            self.destination,
-            self.status,
-            self.billing_address,
-            self.billing_amount,
-            self.credit_card_billing_date,
-            self.credit_card_billing_amount,
-            self.credit_card_identity,
-            self.url_order_summary,
-            self.url_receipt,
-            self.url_item,
-        )
-
     @property
     def date(self) -> datetime:
-        return self.pydantic.ordered_date
+        return self.ordered_date
 
     @property
     def item_name(self) -> str:
-        return self.pydantic.item_name
-
-    @property
-    def price(self) -> Optional[int]:
-        return self.pydantic.price
-
-    @property
-    def number(self) -> Optional[int]:
-        return self.pydantic.number
-
-    @property
-    def total_order(self) -> Optional[int]:
-        return self.pydantic.total_order
-
-    @property
-    def subtotal_price_item(self) -> Optional[int]:
-        return self.pydantic.subtotal_price_item
+        return self.item_name_
 
     @property
     def is_entire_order(self) -> bool:
         return (
-            self._item_name == self.ITEM_NAME_ENTIRE_ORDER
+            self.item_name == self.ITEM_NAME_ENTIRE_ORDER
             and self.price is None
             and self.number is None
             and self.subtotal_price_item is None
@@ -129,7 +65,7 @@ class Amazon201911RowData(InputItemRowData[Amazon201911RowDataPydantic]):
     @property
     def is_billing_to_credit_card(self) -> bool:
         return (
-            self._item_name == self.ITEM_NAME_BILLING_TO_CREDIT_CARD
+            self.item_name == self.ITEM_NAME_BILLING_TO_CREDIT_CARD
             and self.price is None
             and self.number is None
             and self.subtotal_price_item is None
@@ -141,7 +77,7 @@ class Amazon201911RowData(InputItemRowData[Amazon201911RowDataPydantic]):
     @property
     def is_shipping_handling(self) -> bool:
         return (
-            self._item_name == self.ITEM_NAME_SHIPPING_HANDLING
+            self.item_name == self.ITEM_NAME_SHIPPING_HANDLING
             and self.price is None
             and self.number is None
             and self.subtotal_price_item is not None

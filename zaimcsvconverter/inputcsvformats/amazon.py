@@ -1,25 +1,24 @@
 """This module implements row model of Amazon.co.jp CSV."""
 
-from dataclasses import dataclass
 from datetime import datetime
 
 from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputItemRow, InputItemRowData, InputRowFactory
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData, InputRowFactory
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class AmazonRowDataPydantic(AbstractPydantic):
+class AmazonRowData(InputItemRowData):
     """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
 
     ordered_date: StringToDateTime
     order_id: str
-    item_name: str
+    item_name_: str
     note: str
     price: int
     number: int
@@ -36,69 +35,13 @@ class AmazonRowDataPydantic(AbstractPydantic):
     url_receipt: str
     url_item: str
 
-
-@dataclass
-class AmazonRowData(InputItemRowData[AmazonRowDataPydantic]):
-    """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
-
-    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-    _ordered_date: str
-    order_id: str
-    _item_name: str
-    note: str
-    _price: str
-    _number: str
-    subtotal_price_item: str
-    total_order: str
-    destination: str
-    status: str
-    billing_address: str
-    billing_amount: str
-    credit_card_billing_date: str
-    credit_card_billing_amount: str
-    credit_card_identity: str
-    url_order_summary: str
-    url_receipt: str
-    url_item: str
-
-    def create_pydantic(self) -> AmazonRowDataPydantic:
-        return AmazonRowDataPydantic(
-            # Reason: Maybe, there are no way to specify type before converted by pydantic
-            self._ordered_date,  # type: ignore
-            self.order_id,
-            self._item_name,
-            self.note,
-            self._price,  # type: ignore
-            self._number,  # type: ignore
-            self.subtotal_price_item,
-            self.total_order,
-            self.destination,
-            self.status,
-            self.billing_address,
-            self.billing_amount,
-            self.credit_card_billing_date,
-            self.credit_card_billing_amount,
-            self.credit_card_identity,
-            self.url_order_summary,
-            self.url_receipt,
-            self.url_item,
-        )
-
     @property
     def date(self) -> datetime:
-        return self.pydantic.ordered_date
+        return self.ordered_date
 
     @property
     def item_name(self) -> str:
-        return self.pydantic.item_name
-
-    @property
-    def price(self) -> int:
-        return self.pydantic.price
-
-    @property
-    def number(self) -> int:
-        return self.pydantic.number
+        return self.item_name_
 
 
 # pylint: disable=too-many-instance-attributes

@@ -47,7 +47,6 @@ class TestMufgRowData:
             is_uncapitalized,
             cash_flow_kind,
         )
-        assert len(mufg_row_data.list_error) == 0, mufg_row_data.list_error
         assert mufg_row_data.summary == summary
         assert mufg_row_data.payed_amount == 3628
         assert mufg_row_data.deposit_amount is None

@@ -1,68 +1,36 @@
 """This module implements row model of SBI Sumishin net bank CSV."""
-from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import (
     ConstrainedStringWithCommaToOptionalInt,
 )
+from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
 
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
-class SBISumishinNetBankRowDataPydantic(AbstractPydantic):
+class SBISumishinNetBankRowData(InputStoreRowData):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
 
-    date: StringToDateTime
+    date_: StringToDateTime
     content: str
     withdrawal_amount: ConstrainedStringWithCommaToOptionalInt
     deposit_amount: ConstrainedStringWithCommaToOptionalInt
     balance: str
     note: str
 
-
-@dataclass
-class SBISumishinNetBankRowData(InputStoreRowData[SBISumishinNetBankRowDataPydantic]):
-    """This class implements data class for wrapping list of SBI Sumishin net bank CSV row model."""
-
-    _date: str
-    _content: str
-    _withdrawal_amount: str
-    _deposit_amount: str
-    balance: str
-    note: str
-
-    def create_pydantic(self) -> SBISumishinNetBankRowDataPydantic:
-        return SBISumishinNetBankRowDataPydantic(
-            # Reason: Maybe, there are no way to specify type before converted by pydantic
-            self._date,  # type: ignore
-            self._content,
-            self._withdrawal_amount,  # type: ignore
-            self._deposit_amount,  # type: ignore
-            self.balance,
-            self.note,
-        )
-
     @property
     def date(self) -> datetime:
-        return self.pydantic.date
+        return self.date_
 
     @property
     def store_name(self) -> str:
-        return self.pydantic.content
-
-    @property
-    def withdrawal_amount(self) -> Optional[int]:
-        return self.pydantic.withdrawal_amount
-
-    @property
-    def deposit_amount(self) -> Optional[int]:
-        return self.pydantic.deposit_amount
+        return self.content
 
 
 class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):

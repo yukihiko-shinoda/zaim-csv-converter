@@ -91,7 +91,7 @@ class TestGoldPointCardPlus201912Row:
         assert row.date == expected_date
         assert isinstance(row.store, Store)
         # pylint: disable=protected-access
-        assert row.store.name == gold_point_card_plus_201912_row_data._used_store
+        assert row.store.name == gold_point_card_plus_201912_row_data.used_store
         assert row.store.name_zaim == expected_store_name_zaim
         assert row.is_row_to_skip == expected_is_row_to_skip
 

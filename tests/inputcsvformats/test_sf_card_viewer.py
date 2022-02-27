@@ -51,7 +51,6 @@ class TestSFCardViewerRowData:
             balance,
             note,
         )
-        assert len(sf_card_viewer_row_data.list_error) == 0, sf_card_viewer_row_data.list_error
         assert sf_card_viewer_row_data.is_commuter_pass_enter == is_commuter_pass_enter
         assert sf_card_viewer_row_data.railway_company_name_enter == railway_company_name_enter
         assert sf_card_viewer_row_data.station_name_enter == station_name_enter
