@@ -9,7 +9,8 @@ from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.inputcsvformats.custom_data_types import StrictYenStringToInt, StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.yen_string_to_int import StrictYenStringToInt
 
 
 class UseKind(str, Enum):

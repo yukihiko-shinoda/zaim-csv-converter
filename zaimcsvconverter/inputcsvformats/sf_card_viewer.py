@@ -17,7 +17,7 @@ from zaimcsvconverter.inputcsvformats import (
     InputStoreRow,
     InputStoreRowData,
 )
-from zaimcsvconverter.inputcsvformats.custom_data_types import StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 
 
 # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
@@ -34,7 +34,7 @@ class Note(Enum):
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
 class SFCardViewerRowDataPydantic(AbstractPydantic):
-    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+    """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
 
     used_date: StringToDateTime
     is_commuter_pass_enter: str

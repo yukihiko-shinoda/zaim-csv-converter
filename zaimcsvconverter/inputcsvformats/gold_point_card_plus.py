@@ -7,7 +7,7 @@ from pydantic.dataclasses import dataclass as pydantic_dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.inputcsvformats.custom_data_types import StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 
 
 @pydantic_dataclass

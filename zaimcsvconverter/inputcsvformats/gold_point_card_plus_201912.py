@@ -8,13 +8,13 @@ from sqlalchemy.orm.exc import NoResultFound
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.inputcsvformats.custom_data_types import StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
 class GoldPointCardPlus201912RowDataPydantic(AbstractPydantic):
-    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV version 201912 row model."""
 
     used_date: StringToDateTime
     used_store: str

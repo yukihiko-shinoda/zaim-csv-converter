@@ -9,14 +9,15 @@ from pydantic.dataclasses import dataclass as pydantic_dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputItemRow, InputItemRowData, InputRowFactory
-from zaimcsvconverter.inputcsvformats.custom_data_types import ConstrainedStringToOptionalInt, StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import ConstrainedStringToOptionalInt
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
 class Amazon201911RowDataPydantic(AbstractPydantic):
-    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+    """This class implements data class for wrapping list of Amazon.co.jp CSV version 201911 row model."""
 
     ordered_date: StringToDateTime
     order_id: str
@@ -40,7 +41,7 @@ class Amazon201911RowDataPydantic(AbstractPydantic):
 
 @dataclass
 class Amazon201911RowData(InputItemRowData[Amazon201911RowDataPydantic]):
-    """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
+    """This class implements data class for wrapping list of Amazon.co.jp CSV version 201911 row model."""
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     ITEM_NAME_ENTIRE_ORDER: ClassVar[str] = "（注文全体）"

@@ -17,7 +17,8 @@ from zaimcsvconverter.inputcsvformats import (
     InputStoreRow,
     InputStoreRowData,
 )
-from zaimcsvconverter.inputcsvformats.custom_data_types import ConstrainedStringToOptionalInt, StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import ConstrainedStringToOptionalInt
 
 
 class CashFlowKind(Enum):
@@ -32,7 +33,7 @@ class CashFlowKind(Enum):
 @pydantic_dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
 class MufgRowDataPydantic(AbstractPydantic):
-    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+    """This class implements data class for wrapping list of MUFG CSV row model."""
 
     date: StringToDateTime
     summary: str

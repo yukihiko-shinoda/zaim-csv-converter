@@ -1,15 +1,37 @@
-"""This module implements row model of GOLD POINT CARD+ CSV version 201912."""
+"""This module implements row model of VIEW CARD CSV."""
 from dataclasses import dataclass
 from datetime import datetime
 import re
 
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
+from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_with_comma_to_int import StrictStringWithCommaToInt
+
+
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class ViewCardRowDataPydantic(AbstractPydantic):
+    """This class implements data class for wrapping list of VIEW CARD CSV row model."""
+
+    used_date: StringToDateTime
+    used_place: str
+    used_amount: str
+    refund_amount: str
+    billing_amount: str
+    number_of_division: str
+    current_time_of_division: str
+    billing_amount_current_time: StrictStringWithCommaToInt
+    local_currency_amount: str
+    currency_abbreviation: str
+    exchange_rate: str
 
 
 @dataclass
-class ViewCardRowData(InputStoreRowData):
+class ViewCardRowData(InputStoreRowData[ViewCardRowDataPydantic]):
     """This class implements data class for wrapping list of VIEW CARD CSV row model."""
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
@@ -25,35 +47,42 @@ class ViewCardRowData(InputStoreRowData):
     _currency_abbreviation: str
     _exchange_rate: str
 
+    def create_pydantic(self) -> ViewCardRowDataPydantic:
+        return ViewCardRowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._used_date,  # type: ignore
+            self._used_place,
+            self._used_amount,
+            self._refund_amount,
+            self._billing_amount,
+            self._number_of_division,
+            self._current_time_of_division,
+            self._billing_amount_current_time,  # type: ignore
+            self._local_currency_amount,
+            self._currency_abbreviation,
+            self._exchange_rate,
+        )
+
     @property
     def date(self) -> datetime:
-        return datetime.strptime(self._used_date, "%Y/%m/%d")
+        return self.pydantic.used_date
 
     @property
     def store_name(self) -> str:
-        return self._used_place
+        return self.pydantic.used_place
 
     @property
     def billing_amount_current_time(self) -> int:
-        return int(self._billing_amount_current_time.replace(",", ""))
+        return self.pydantic.billing_amount_current_time
 
     @property
     def is_suica(self) -> bool:
         """This property returns whether this store is Amazon.co.jp or not."""
-        return bool(re.search(r"　オートチャージ$", self._used_place))
+        return bool(re.search(r"　オートチャージ$", self.pydantic.used_place))
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid used date. Used date = {self._used_date}")
-        self.stock_error(
-            lambda: self.billing_amount_current_time,
-            f"Invalid billing amount of current time. "
-            f"Billing amount of current time = {self._billing_amount_current_time}",
-        )
         return super().validate
-
-    def create_pydantic(self) -> None:
-        return None
 
 
 class ViewCardRow(InputStoreRow[ViewCardRowData]):
