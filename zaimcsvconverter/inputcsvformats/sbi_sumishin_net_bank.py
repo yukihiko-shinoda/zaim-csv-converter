@@ -3,13 +3,31 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Optional
 
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
-from zaimcsvconverter.utility import Utility
+from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRowFactory, InputStoreRow, InputStoreRowData
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import (
+    ConstrainedStringWithCommaToOptionalInt,
+)
+
+
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class SBISumishinNetBankRowDataPydantic(AbstractPydantic):
+    """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
+
+    date: StringToDateTime
+    content: str
+    withdrawal_amount: ConstrainedStringWithCommaToOptionalInt
+    deposit_amount: ConstrainedStringWithCommaToOptionalInt
+    balance: str
+    note: str
 
 
 @dataclass
-class SBISumishinNetBankRowData(InputStoreRowData):
+class SBISumishinNetBankRowData(InputStoreRowData[SBISumishinNetBankRowDataPydantic]):
     """This class implements data class for wrapping list of SBI Sumishin net bank CSV row model."""
 
     _date: str
@@ -19,35 +37,36 @@ class SBISumishinNetBankRowData(InputStoreRowData):
     balance: str
     note: str
 
+    def create_pydantic(self) -> SBISumishinNetBankRowDataPydantic:
+        return SBISumishinNetBankRowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._date,  # type: ignore
+            self._content,
+            self._withdrawal_amount,  # type: ignore
+            self._deposit_amount,  # type: ignore
+            self.balance,
+            self.note,
+        )
+
     @property
     def date(self) -> datetime:
-        return datetime.strptime(self._date, "%Y/%m/%d")
+        return self.pydantic.date
 
     @property
     def store_name(self) -> str:
-        return self._content
+        return self.pydantic.content
 
     @property
     def withdrawal_amount(self) -> Optional[int]:
-        return Utility.convert_string_to_int_or_none(self._withdrawal_amount)
+        return self.pydantic.withdrawal_amount
 
     @property
     def deposit_amount(self) -> Optional[int]:
-        return Utility.convert_string_to_int_or_none(self._deposit_amount)
+        return self.pydantic.deposit_amount
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid date. Date = {self._date}")
-        self.stock_error(
-            lambda: self.deposit_amount, f"Invalid deposit amount. Deposit amount = {self._deposit_amount}"
-        )
-        self.stock_error(
-            lambda: self.withdrawal_amount, f"Invalid withdrawal amount. Withdrawal amount = {self._withdrawal_amount}"
-        )
         return super().validate
-
-    def create_pydantic(self) -> None:
-        return None
 
 
 class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):

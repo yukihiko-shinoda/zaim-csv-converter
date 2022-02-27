@@ -7,6 +7,8 @@ from pydantic import ConstrainedInt  # pylint: disable=no-name-in-module
 from pydantic.fields import ModelField
 from pydantic.validators import int_validator, number_multiple_validator, number_size_validator, strict_int_validator
 
+from zaimcsvconverter.utility import Utility
+
 Number = Union[int, float, Decimal]
 
 
@@ -74,3 +76,33 @@ if TYPE_CHECKING:
     ConstrainedStringToOptionalInt = Optional[int]
 else:
     ConstrainedStringToOptionalInt = constringtooptionalint()
+
+
+class StringWithCommaToOptionalInt(StringToOptionalInt):
+    @classmethod
+    def optional_integer_must_be_from_str(cls, v: Any) -> Optional[int]:
+        if not isinstance(v, str):
+            raise TypeError("string required")
+        if v == "":
+            return None
+        return Utility.convert_string_with_comma_to_int(v)
+
+
+def constringwithcommatooptionalint(
+    *,
+    strict: bool = False,
+    gt: Optional[int] = None,
+    ge: Optional[int] = None,
+    lt: Optional[int] = None,
+    le: Optional[int] = None,
+    multiple_of: Optional[int] = None
+) -> type[int]:
+    # use kwargs then define conf in a dict to aid with IDE type hinting
+    namespace = dict(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of)
+    return type("ConstrainedStringWithCommaToOptionalIntValue", (StringWithCommaToOptionalInt,), namespace)
+
+
+if TYPE_CHECKING:
+    ConstrainedStringWithCommaToOptionalInt = Optional[int]
+else:
+    ConstrainedStringWithCommaToOptionalInt = constringwithcommatooptionalint()
