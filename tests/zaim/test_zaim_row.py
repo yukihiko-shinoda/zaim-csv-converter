@@ -11,7 +11,7 @@ from zaimcsvconverter.account import Account
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputRow, InputRowData, InputRowFactory, TypeVarPydantic
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
@@ -101,7 +101,7 @@ class TestZaimPaymentRow:
     @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_item")
     def test_all(
         input_row_factory: InputRowFactory[InputRowData[TypeVarPydantic], InputRow[InputRowData[TypeVarPydantic]]],
-        input_row_data: SFCardViewerRowData,
+        input_row_data: InputRowData[TypeVarPydantic],
         zaim_row_converter_factory: ZaimRowConverterFactory[
             InputRow[InputRowData[TypeVarPydantic]], InputRowData[TypeVarPydantic]
         ],

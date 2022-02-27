@@ -6,6 +6,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import (
+    Note,
     SFCardViewerEnterExitRow,
     SFCardViewerEnterRow,
     SFCardViewerRow,
@@ -49,6 +50,7 @@ class TestSFCardViewerRowData:
             balance,
             note,
         )
+        assert len(sf_card_viewer_row_data.list_error) == 0, sf_card_viewer_row_data.list_error
         assert sf_card_viewer_row_data.is_commuter_pass_enter == is_commuter_pass_enter
         assert sf_card_viewer_row_data.railway_company_name_enter == railway_company_name_enter
         assert sf_card_viewer_row_data.station_name_enter == station_name_enter
@@ -56,7 +58,7 @@ class TestSFCardViewerRowData:
         assert sf_card_viewer_row_data.railway_company_name_exit == railway_company_name_exit
         assert sf_card_viewer_row_data.used_amount == 195
         assert sf_card_viewer_row_data.balance == balance
-        assert sf_card_viewer_row_data.note == SFCardViewerRowData.Note.EMPTY
+        assert sf_card_viewer_row_data.note == Note.EMPTY
         assert sf_card_viewer_row_data.date == datetime(2018, 11, 13, 0, 0)
         assert sf_card_viewer_row_data.store_name == station_name_exit
 
@@ -114,6 +116,17 @@ class TestSFCardViewerExitByWindowRow:
         sf_card_viewer_row = SFCardViewerEnterExitRow(sf_card_viewer_row_data, CONFIG.pasmo)
         assert sf_card_viewer_row.is_row_to_skip == expected
 
+    @staticmethod
+    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    def test_create_fail() -> None:
+        """Method should raise ValueError when note is not defined."""
+        assert len(InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE.list_error) == 1
+        with pytest.raises(AttributeError):
+            # pylint: disable=protected-access
+            SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
+                InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE
+            )
+
 
 class TestSFCardViewerRowFactory:
     """Tests for SFCardViewerRowFactory."""
@@ -165,13 +178,3 @@ class TestSFCardViewerRowFactory:
         assert sf_card_viewer_row.is_auto_charge == expected_is_auto_charge
         assert sf_card_viewer_row.is_exit_by_window == expected_is_exit_by_window
         assert sf_card_viewer_row.is_bus_tram == expected_is_bus_tram
-
-    @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
-    def test_create_fail() -> None:
-        """Method should raise ValueError when note is not defined."""
-        with pytest.raises(ValueError):
-            # pylint: disable=protected-access
-            SFCardViewerRowFactory(lambda: CONFIG.pasmo).create(
-                InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE
-            )

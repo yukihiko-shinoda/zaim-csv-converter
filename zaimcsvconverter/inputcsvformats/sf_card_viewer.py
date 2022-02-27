@@ -6,24 +6,51 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Callable
 
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowFactory, InputStoreRow, InputStoreRowData
+from zaimcsvconverter.inputcsvformats import (
+    AbstractPydantic,
+    InputRow,
+    InputRowFactory,
+    InputStoreRow,
+    InputStoreRowData,
+)
+from zaimcsvconverter.inputcsvformats.custom_data_types import StringToDateTime
+
+
+# Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
+class Note(Enum):
+    """This class implements constant of note in SF Card Viewer CSV."""
+
+    EMPTY = ""
+    SALES_GOODS = "物販"
+    AUTO_CHARGE = "ｵｰﾄﾁｬｰｼﾞ"
+    EXIT_BY_WINDOW = "窓出"
+    BUS_TRAM = "ﾊﾞｽ/路面等"
+
+
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class SFCardViewerRowDataPydantic(AbstractPydantic):
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+
+    used_date: StringToDateTime
+    is_commuter_pass_enter: str
+    railway_company_name_enter: str
+    station_name_enter: str
+    is_commuter_pass_exit: str
+    railway_company_name_exit: str
+    station_name_exit: str
+    used_amount: int
+    balance: str
+    note: Note
 
 
 @dataclass
-class SFCardViewerRowData(InputStoreRowData):
+class SFCardViewerRowData(InputStoreRowData[SFCardViewerRowDataPydantic]):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
-
-    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-    class Note(Enum):
-        """This class implements constant of note in SF Card Viewer CSV."""
-
-        EMPTY = ""
-        SALES_GOODS = "物販"
-        AUTO_CHARGE = "ｵｰﾄﾁｬｰｼﾞ"
-        EXIT_BY_WINDOW = "窓出"
-        BUS_TRAM = "ﾊﾞｽ/路面等"
 
     _used_date: str
     is_commuter_pass_enter: str
@@ -36,37 +63,45 @@ class SFCardViewerRowData(InputStoreRowData):
     balance: str
     _note: str
 
+    def create_pydantic(self) -> SFCardViewerRowDataPydantic:
+        return SFCardViewerRowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._used_date,  # type: ignore
+            self.is_commuter_pass_enter,
+            self.railway_company_name_enter,
+            self.station_name_enter,
+            self.is_commuter_pass_exit,
+            self.railway_company_name_exit,
+            self._station_name_exit,
+            self._used_amount,  # type: ignore
+            self.balance,
+            self._note,  # type: ignore
+        )
+
     @property
     def date(self) -> datetime:
-        return datetime.strptime(self._used_date, "%Y/%m/%d")
+        return self.pydantic.used_date
 
     @property
     def store_name(self) -> str:
-        return self.station_name_enter if self.is_auto_charge else self._station_name_exit
+        return self.pydantic.station_name_enter if self.is_auto_charge else self.pydantic.station_name_exit
 
     @property
     def used_amount(self) -> int:
-        return int(self._used_amount)
+        return self.pydantic.used_amount
 
     @property
-    def note(self) -> SFCardViewerRowData.Note:
-        return SFCardViewerRowData.Note(self._note)
+    def note(self) -> Note:
+        return self.pydantic.note
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid used date. Used date = {self._used_date}")
-        # This comment prevents pylint duplicate-code.
-        self.stock_error(lambda: self.used_amount, f"Invalid used amount. Used amount = {self._used_amount}")
-        self.stock_error(lambda: self.note, f"Invalid note. Note = {self._note}")
         return super().validate
 
     @property
     def is_auto_charge(self) -> bool:
         """This property returns whether this row is auto charge or not."""
-        return self.note == SFCardViewerRowData.Note.AUTO_CHARGE
-
-    def create_pydantic(self) -> None:
-        return None
+        return self.note == Note.AUTO_CHARGE
 
 
 # pylint: disable=too-many-instance-attributes
@@ -87,23 +122,23 @@ class SFCardViewerRow(InputRow[SFCardViewerRowData]):
 
     @property
     def is_transportation(self) -> bool:
-        return self.note == SFCardViewerRowData.Note.EMPTY
+        return self.note == Note.EMPTY
 
     @property
     def is_sales_goods(self) -> bool:
-        return self.note == SFCardViewerRowData.Note.SALES_GOODS
+        return self.note == Note.SALES_GOODS
 
     @property
     def is_auto_charge(self) -> bool:
-        return self.note == SFCardViewerRowData.Note.AUTO_CHARGE
+        return self.note == Note.AUTO_CHARGE
 
     @property
     def is_exit_by_window(self) -> bool:
-        return self.note == SFCardViewerRowData.Note.EXIT_BY_WINDOW
+        return self.note == Note.EXIT_BY_WINDOW
 
     @property
     def is_bus_tram(self) -> bool:
-        return self.note == SFCardViewerRowData.Note.BUS_TRAM
+        return self.note == Note.BUS_TRAM
 
 
 class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow[SFCardViewerRowData]):
@@ -143,8 +178,8 @@ class SFCardViewerRowFactory(InputRowFactory[SFCardViewerRowData, SFCardViewerRo
     #   - Create your own container — returns 0.18.0 documentation
     #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
     def create(self, input_row_data: SFCardViewerRowData) -> SFCardViewerRow:  # type: ignore
-        if input_row_data.note in (SFCardViewerRowData.Note.EMPTY, SFCardViewerRowData.Note.EXIT_BY_WINDOW):
+        if input_row_data.note in (Note.EMPTY, Note.EXIT_BY_WINDOW):
             return SFCardViewerEnterExitRow(input_row_data, self._account_config())
-        if input_row_data.note == SFCardViewerRowData.Note.AUTO_CHARGE:
+        if input_row_data.note == Note.AUTO_CHARGE:
             return SFCardViewerEnterRow(input_row_data, self._account_config())
         return SFCardViewerRow(input_row_data, self._account_config())

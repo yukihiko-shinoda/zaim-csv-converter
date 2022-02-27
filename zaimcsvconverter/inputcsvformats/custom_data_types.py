@@ -69,13 +69,13 @@ else:
     StrictYenStringToInt = conyenstringtoint(strict=True)
 
 
-def optional_strict_int_validator(v: Any) -> int:
+def optional_strict_int_validator(v: Any) -> Optional[int]:
     if v is None:
         return None
     return strict_int_validator(v)
 
 
-def optional_int_validator(v: Any) -> int:
+def optional_int_validator(v: Any) -> Optional[int]:
     if v is None:
         return None
     return int_validator(v)
@@ -95,7 +95,7 @@ def optional_number_multiple_validator(v: Optional["Number"], field: "ModelField
 
 class StringToOptionalInt(ConstrainedInt):
     @classmethod
-    def __get_validators__(cls):
+    def __get_validators__(cls) -> "CallableGenerator":
         yield cls.optional_integer_must_be_from_str
         yield optional_strict_int_validator if cls.strict else optional_int_validator
         yield optional_number_size_validator
@@ -107,11 +107,17 @@ class StringToOptionalInt(ConstrainedInt):
             raise TypeError("string required")
         if v == "":
             return None
-        return v
+        return int(v)
 
 
 def constringtooptionalint(
-    *, strict: bool = False, gt: int = None, ge: int = None, lt: int = None, le: int = None, multiple_of: int = None
+    *,
+    strict: bool = False,
+    gt: Optional[int] = None,
+    ge: Optional[int] = None,
+    lt: Optional[int] = None,
+    le: Optional[int] = None,
+    multiple_of: Optional[int] = None
 ) -> type[int]:
     # use kwargs then define conf in a dict to aid with IDE type hinting
     namespace = dict(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of)
