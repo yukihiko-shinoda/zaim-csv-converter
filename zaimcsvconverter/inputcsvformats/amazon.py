@@ -3,14 +3,42 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData, InputRowFactory
+from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputItemRow, InputItemRowData, InputRowFactory
+from zaimcsvconverter.inputcsvformats.custom_data_types import StringToDateTime
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class AmazonRowDataPydantic(AbstractPydantic):
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+
+    ordered_date: StringToDateTime
+    order_id: str
+    item_name: str
+    note: str
+    price: int
+    number: int
+    subtotal_price_item: str
+    total_order: str
+    destination: str
+    status: str
+    billing_address: str
+    billing_amount: str
+    credit_card_billing_date: str
+    credit_card_billing_amount: str
+    credit_card_identity: str
+    url_order_summary: str
+    url_receipt: str
+    url_item: str
+
+
 @dataclass
-class AmazonRowData(InputItemRowData):
+class AmazonRowData(InputItemRowData[AmazonRowDataPydantic]):
     """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
@@ -33,31 +61,48 @@ class AmazonRowData(InputItemRowData):
     url_receipt: str
     url_item: str
 
+    def create_pydantic(self) -> AmazonRowDataPydantic:
+        return AmazonRowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._ordered_date,  # type: ignore
+            self.order_id,
+            self._item_name,
+            self.note,
+            self._price,  # type: ignore
+            self._number,  # type: ignore
+            self.subtotal_price_item,
+            self.total_order,
+            self.destination,
+            self.status,
+            self.billing_address,
+            self.billing_amount,
+            self.credit_card_billing_date,
+            self.credit_card_billing_amount,
+            self.credit_card_identity,
+            self.url_order_summary,
+            self.url_receipt,
+            self.url_item,
+        )
+
     @property
     def date(self) -> datetime:
-        return datetime.strptime(self._ordered_date, "%Y/%m/%d")
+        return self.pydantic.ordered_date
 
     @property
     def item_name(self) -> str:
-        return self._item_name
+        return self.pydantic.item_name
 
     @property
     def price(self) -> int:
-        return int(self._price)
+        return self.pydantic.price
 
     @property
     def number(self) -> int:
-        return int(self._number)
+        return self.pydantic.number
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid ordered date. Ordered date = {self._ordered_date}")
-        self.stock_error(lambda: self.price, f"Invalid price. Price = {self._price}")
-        self.stock_error(lambda: self.number, f"Invalid number. Number = {self._number}")
         return super().validate
-
-    def create_pydantic(self) -> None:
-        return None
 
 
 # pylint: disable=too-many-instance-attributes
