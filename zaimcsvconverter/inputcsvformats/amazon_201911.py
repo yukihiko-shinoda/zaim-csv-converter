@@ -4,14 +4,42 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import ClassVar, Optional
 
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData, InputRowFactory
+from zaimcsvconverter.inputcsvformats import AbstractPydantic, InputItemRow, InputItemRowData, InputRowFactory
+from zaimcsvconverter.inputcsvformats.custom_data_types import ConstrainedStringToOptionalInt, StringToDateTime
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class Amazon201911RowDataPydantic(AbstractPydantic):
+    """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
+
+    ordered_date: StringToDateTime
+    order_id: str
+    item_name: str
+    note: str
+    price: ConstrainedStringToOptionalInt
+    number: ConstrainedStringToOptionalInt
+    subtotal_price_item: ConstrainedStringToOptionalInt
+    total_order: ConstrainedStringToOptionalInt
+    destination: str
+    status: str
+    billing_address: str
+    billing_amount: str
+    credit_card_billing_date: str
+    credit_card_billing_amount: str
+    credit_card_identity: str
+    url_order_summary: str
+    url_receipt: str
+    url_item: str
+
+
 @dataclass
-class Amazon201911RowData(InputItemRowData):
+class Amazon201911RowData(InputItemRowData[Amazon201911RowDataPydantic]):
     """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
@@ -37,36 +65,55 @@ class Amazon201911RowData(InputItemRowData):
     url_receipt: str
     url_item: str
 
+    def create_pydantic(self) -> Amazon201911RowDataPydantic:
+        return Amazon201911RowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._ordered_date,  # type: ignore
+            self.order_id,
+            self._item_name,
+            self.note,
+            self._price,  # type: ignore
+            self._number,  # type: ignore
+            self._subtotal_price_item,  # type: ignore
+            self._total_order,  # type: ignore
+            self.destination,
+            self.status,
+            self.billing_address,
+            self.billing_amount,
+            self.credit_card_billing_date,
+            self.credit_card_billing_amount,
+            self.credit_card_identity,
+            self.url_order_summary,
+            self.url_receipt,
+            self.url_item,
+        )
+
     @property
     def date(self) -> datetime:
-        return datetime.strptime(self._ordered_date, "%Y/%m/%d")
+        return self.pydantic.ordered_date
 
     @property
     def item_name(self) -> str:
-        return self._item_name
+        return self.pydantic.item_name
 
     @property
     def price(self) -> Optional[int]:
-        return None if self._price == "" else int(self._price)
+        return self.pydantic.price
 
     @property
     def number(self) -> Optional[int]:
-        return None if self._number == "" else int(self._number)
+        return self.pydantic.number
 
     @property
     def total_order(self) -> Optional[int]:
-        return None if self._total_order == "" else int(self._total_order)
+        return self.pydantic.total_order
 
     @property
     def subtotal_price_item(self) -> Optional[int]:
-        return None if self._subtotal_price_item == "" else int(self._subtotal_price_item)
+        return self.pydantic.subtotal_price_item
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid ordered date. Ordered date = {self._ordered_date}")
-        self.stock_error(lambda: self.price, f"Invalid price. Price = {self._price}")
-        self.stock_error(lambda: self.number, f"Invalid number. Number = {self._number}")
-        self.stock_error(lambda: self.total_order, f"Invalid total order. Total order = {self._total_order}")
         return super().validate
 
     @property
@@ -143,9 +190,6 @@ class Amazon201911RowData(InputItemRowData):
             and self.credit_card_billing_amount == ""
             and self.credit_card_identity == ""
         )
-
-    def create_pydantic(self) -> None:
-        return None
 
 
 class Amazon201911Row(InputItemRow[Amazon201911RowData]):
