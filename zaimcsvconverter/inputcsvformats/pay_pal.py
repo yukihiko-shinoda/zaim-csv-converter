@@ -11,13 +11,102 @@ from datetime import datetime
 from enum import Enum
 from typing import ClassVar, List
 
+from pydantic.dataclasses import dataclass as pydantic_dataclass
+
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreItemRow, InputStoreItemRowData
+from zaimcsvconverter.inputcsvformats import (
+    AbstractPydantic,
+    InputRowFactory,
+    InputStoreItemRow,
+    InputStoreItemRowData,
+)
+from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
+
+
+class Status(str, Enum):
+    """This class implements constant of status in PayPal CSV."""
+
+    COMPLETED = "完了"
+    PENDING = "保留中"
+    # DENIED
+    # REVERSED
+    # ACTIVE
+    # EXPIRED
+    # REMOVED
+    # UNVERIFIED
+    # VOIDED
+    # PROCESSING
+    # CREATED
+    # CANCELED
+
+
+class BalanceImpact(str, Enum):
+    """This class implements constant of balance impact in PayPal CSV."""
+
+    CREDIT = "入金"
+    DEBIT = "引落し"
+    MEMO = "備考"
+
+
+class TIMEZONE(str, Enum):
+    JST = "JST"
+
+
+class CURRENCY(str, Enum):
+    JPY = "JPY"
+
+
+@pydantic_dataclass
+# Reason: Model. pylint: disable=too-few-public-methods
+class PayPalRowDataPydantic(AbstractPydantic):
+    """This class implements data class for wrapping list of PayPal CSV row model."""
+
+    date: StringToDateTime
+    time: str
+    time_zone: TIMEZONE
+    name: str
+    type: str
+    status: Status
+    currency: CURRENCY
+    gross: int
+    fee: int
+    net: int
+    from_email_address: str
+    to_email_address: str
+    transaction_id: str
+    shipping_address: str
+    address_status: str
+    item_title: str
+    item_id: str
+    shipping_and_handling_amount: str
+    insurance_amount: str
+    sales_tax: str
+    option_1_name: str
+    option_1_value: str
+    option_2_name: str
+    option_2_value: str
+    reference_transaction_id: str
+    invoice_number: str
+    custom_number: str
+    quantity: str
+    receipt_id: str
+    balance: str
+    address_line_1: str
+    address_line_2_district_neighborhood: str
+    town_city: str
+    state_province_region_county_territory_prefecture_republic: str
+    zip_postal_code: str
+    country: str
+    contract_phone_number: str
+    subject: str
+    note: str
+    country_code: str
+    balance_impact: BalanceImpact
 
 
 @dataclass
 # Reason: Specification. pylint: disable=too-many-instance-attributes
-class PayPalRowData(InputStoreItemRowData):
+class PayPalRowData(InputStoreItemRowData[PayPalRowDataPydantic]):
     """This class implements data class for wrapping list of PayPal CSV row model."""
 
     HEADER: ClassVar[List[str]] = field(
@@ -67,29 +156,6 @@ class PayPalRowData(InputStoreItemRowData):
         init=False,
     )
 
-    class Status(Enum):
-        """This class implements constant of status in PayPal CSV."""
-
-        COMPLETED = "完了"
-        PENDING = "保留中"
-        # DENIED
-        # REVERSED
-        # ACTIVE
-        # EXPIRED
-        # REMOVED
-        # UNVERIFIED
-        # VOIDED
-        # PROCESSING
-        # CREATED
-        # CANCELED
-
-    class BalanceImpact(Enum):
-        """This class implements constant of balance impact in PayPal CSV."""
-
-        CREDIT = "入金"
-        DEBIT = "引落し"
-        MEMO = "備考"
-
     _date: str
     time: str
     _time_zone: str
@@ -105,7 +171,7 @@ class PayPalRowData(InputStoreItemRowData):
     transaction_id: str
     shipping_address: str
     address_status: str
-    _item_title: str
+    item_title: str
     item_id: str
     shipping_and_handling_amount: str
     insurance_amount: str
@@ -132,63 +198,95 @@ class PayPalRowData(InputStoreItemRowData):
     country_code: str
     _balance_impact: str
 
-    @property
-    def date(self) -> datetime:
-        return datetime.strptime(self._date, "%Y/%m/%d")
+    def create_pydantic(self) -> PayPalRowDataPydantic:
+        return PayPalRowDataPydantic(
+            # Reason: Maybe, there are no way to specify type before converted by pydantic
+            self._date,  # type: ignore
+            self.time,
+            self._time_zone,  # type: ignore
+            self._name,
+            self.type,
+            self._status,  # type: ignore
+            self._currency,  # type: ignore
+            self._gross,  # type: ignore
+            self._fee,  # type: ignore
+            self._net,  # type: ignore
+            self.from_email_address,
+            self.to_email_address,
+            self.transaction_id,
+            self.shipping_address,
+            self.address_status,
+            self.item_title,
+            self.item_id,
+            self.shipping_and_handling_amount,
+            self.insurance_amount,
+            self.sales_tax,
+            self.option_1_name,
+            self.option_1_value,
+            self.option_2_name,
+            self.option_2_value,
+            self.reference_transaction_id,
+            self.invoice_number,
+            self.custom_number,
+            self.quantity,
+            self.receipt_id,
+            self.balance,
+            self.address_line_1,
+            self.address_line_2_district_neighborhood,
+            self.town_city,
+            self.state_province_region_county_territory_prefecture_republic,
+            self.zip_postal_code,
+            self.country,
+            self.contract_phone_number,
+            self.subject,
+            self.note,
+            self.country_code,
+            self._balance_impact,  # type: ignore
+        )
 
     @property
-    def time_zone(self) -> str:
-        if self._time_zone != "JST":
-            raise ValueError()
-        return self._time_zone
+    def date(self) -> datetime:
+        return self.pydantic.date
+
+    @property
+    def time_zone(self) -> TIMEZONE:
+        return self.pydantic.time_zone
 
     @property
     def store_name(self) -> str:
-        return self._name
+        return self.pydantic.name
 
     @property
     def item_name(self) -> str:
-        return self._item_title
+        return self.pydantic.item_title
 
     @property
-    def status(self) -> PayPalRowData.Status:
-        return self.Status(self._status)
+    def status(self) -> Status:
+        return self.pydantic.status
 
     @property
-    def currency(self) -> str:
-        if self._currency != "JPY":
-            raise ValueError()
-        return self._currency
+    def currency(self) -> CURRENCY:
+        return self.pydantic.currency
 
     @property
     def gross(self) -> int:
-        return int(self._gross)
+        return self.pydantic.gross
 
     @property
     def fee(self) -> int:
-        return int(self._fee)
+        return self.pydantic.fee
 
     @property
     def net(self) -> int:
-        return int(self._net)
+        return self.pydantic.net
 
     @property
-    def balance_impact(self) -> PayPalRowData.BalanceImpact:
-        return self.BalanceImpact(self._balance_impact)
+    def balance_impact(self) -> BalanceImpact:
+        return self.pydantic.balance_impact
 
     @property
     def validate(self) -> bool:
-        self.stock_error(lambda: self.date, f"Invalid date. Date = {self._date}")
-        self.stock_error(lambda: self.time_zone, f"Only JST is supported. Time zone = {self.time_zone}")
-        self.stock_error(lambda: self.status, f"Invalid status. Status = {self._status}")
-        self.stock_error(lambda: self.currency, f"Invalid currency. Currency = {self._currency}")
-        self.stock_error(
-            lambda: self.balance_impact, f"Invalid balance impact. Balance impact = {self._balance_impact}"
-        )
         return super().validate
-
-    def create_pydantic(self) -> None:
-        return None
 
 
 class PayPalRow(InputStoreItemRow[PayPalRowData]):
@@ -196,11 +294,11 @@ class PayPalRow(InputStoreItemRow[PayPalRowData]):
 
     def __init__(self, row_data: PayPalRowData):
         super().__init__(row_data, FileCsvConvert.PAY_PAL_STORE.value, FileCsvConvert.PAY_PAL_ITEM.value)
-        self.status: PayPalRowData.Status = row_data.status
+        self.status: Status = row_data.status
         self.gross: int = row_data.gross
         self.fee: int = row_data.fee
         self.net: int = row_data.net
-        self.balance_impact: PayPalRowData.BalanceImpact = row_data.balance_impact
+        self.balance_impact: BalanceImpact = row_data.balance_impact
 
     @property
     def validate(self) -> bool:
@@ -220,15 +318,15 @@ class PayPalRow(InputStoreItemRow[PayPalRowData]):
 
     @property
     def is_completed(self) -> bool:
-        return self.status == PayPalRowData.Status.COMPLETED
+        return self.status == Status.COMPLETED
 
     @property
     def is_debit(self) -> bool:
-        return self.balance_impact == PayPalRowData.BalanceImpact.DEBIT
+        return self.balance_impact == BalanceImpact.DEBIT
 
     @property
     def is_memo(self) -> bool:
-        return self.balance_impact == PayPalRowData.BalanceImpact.MEMO
+        return self.balance_impact == BalanceImpact.MEMO
 
 
 class PayPalRowFactory(InputRowFactory[PayPalRowData, PayPalRow]):

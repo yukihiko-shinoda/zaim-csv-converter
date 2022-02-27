@@ -21,7 +21,7 @@ from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import 
 
 
 # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-class Note(Enum):
+class Note(str, Enum):
     """This class implements constant of note in SF Card Viewer CSV."""
 
     EMPTY = ""

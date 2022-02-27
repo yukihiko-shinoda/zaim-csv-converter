@@ -21,7 +21,7 @@ from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import 
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import ConstrainedStringToOptionalInt
 
 
-class CashFlowKind(Enum):
+class CashFlowKind(str, Enum):
     """This class implements constant of cash flow kind in MUFG CSV."""
 
     INCOME = "入金"
