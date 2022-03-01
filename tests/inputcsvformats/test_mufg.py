@@ -14,6 +14,7 @@ from zaimcsvconverter.inputcsvformats.mufg import (
     MufgRowFactory,
     MufgStoreRow,
 )
+from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.models import Store
 
 
@@ -36,16 +37,18 @@ class TestMufgRowData:
         note = ""
         is_uncapitalized = ""
         cash_flow_kind = "振替支払い"
-        mufg_row_data = MufgRowData(
-            date,
-            summary,
-            summary_content,
-            payed_amount,
-            deposit_amount,
-            balance,
-            note,
-            is_uncapitalized,
-            cash_flow_kind,
+        mufg_row_data = RowDataFactory(MufgRowData).create(
+            [
+                date,
+                summary,
+                summary_content,
+                payed_amount,
+                deposit_amount,
+                balance,
+                note,
+                is_uncapitalized,
+                cash_flow_kind,
+            ]
         )
         assert mufg_row_data.summary == summary
         assert mufg_row_data.payed_amount == 3628
@@ -64,7 +67,7 @@ class TestMufgRowData:
         """Method should raise ValueError when note is not defined."""
         with pytest.raises(ValidationError) as excinfo:
             # pylint: disable=protected-access
-            MufgRowData(*InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)
+            RowDataFactory(MufgRowData).create(InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)
         errors = excinfo.value.errors()
         assert len(errors) == 1
         error = errors[0]

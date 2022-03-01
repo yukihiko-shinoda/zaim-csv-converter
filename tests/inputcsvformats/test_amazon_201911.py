@@ -13,6 +13,7 @@ from zaimcsvconverter.inputcsvformats.amazon_201911 import (
     Amazon201911RowToSkip,
     Amazon201911ShippingHandlingRow,
 )
+from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.models import Item, Store
 
 
@@ -50,25 +51,27 @@ class TestAmazon201911RowData:
             "?ie=UTF8&orderID=123-4567890-1234567"
         )
         url_item = "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1"
-        row_data = Amazon201911RowData(
-            ordered_date,
-            order_id,
-            item_name,
-            note,
-            price,
-            number,
-            subtotal_price_item,
-            total_order,
-            destination,
-            status,
-            billing_address,
-            billing_amount,
-            credit_card_billing_date,
-            credit_card_billing_amount,
-            credit_card_identity,
-            url_order_summary,
-            url_receipt,
-            url_item,
+        row_data = RowDataFactory(Amazon201911RowData).create(
+            [
+                ordered_date,
+                order_id,
+                item_name,
+                note,
+                price,
+                number,
+                subtotal_price_item,
+                total_order,
+                destination,
+                status,
+                billing_address,
+                billing_amount,
+                credit_card_billing_date,
+                credit_card_billing_amount,
+                credit_card_identity,
+                url_order_summary,
+                url_receipt,
+                url_item,
+            ]
         )
         assert row_data.order_id == order_id
         assert row_data.note == note

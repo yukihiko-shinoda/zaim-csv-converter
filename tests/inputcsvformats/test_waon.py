@@ -5,6 +5,7 @@ from pydantic import ValidationError
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
+from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.inputcsvformats.waon import (
     ChargeKind,
     UseKind,
@@ -31,7 +32,7 @@ class TestWaonRowData:
         used_amount = "129円"
         use_kind = "支払"
         charge_kind = "-"
-        waon_row_data = WaonRowData(date, used_store, used_amount, use_kind, charge_kind)
+        waon_row_data = RowDataFactory(WaonRowData).create([date, used_store, used_amount, use_kind, charge_kind])
         assert waon_row_data.date == datetime(2018, 8, 7, 0, 0)
         assert waon_row_data.store_name == used_store
         assert waon_row_data.used_amount == 129
@@ -44,7 +45,7 @@ class TestWaonRowData:
     def test_validate() -> None:
         """Validate method should collect errors."""
         with pytest.raises(ValidationError) as excinfo:
-            WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND)
+            RowDataFactory(WaonRowData).create(InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND)
         errors = excinfo.value.errors()
         assert len(errors) == 1
         error = errors[0]
@@ -56,9 +57,10 @@ class TestWaonRowData:
         )
 
     @staticmethod
-    def test_unsuported_charge_kind() -> None:
+    def test_unsupported_charge_kind() -> None:
+        """Unsupported charge kind should raise error."""
         with pytest.raises(ValidationError) as excinfo:
-            WaonRowData(*InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
+            RowDataFactory(WaonRowData).create(InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
         errors = excinfo.value.errors()
         assert len(errors) == 1
         error = errors[0]
@@ -112,9 +114,14 @@ class TestWaonRow:
     @pytest.mark.usefixtures("database_session_basic_store_waon")
     def test_is_row_to_skip() -> None:
         """WaonRow which express download point should be row to skip."""
-        assert WaonRow(WaonRowData("2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-")).is_row_to_skip
-        assert WaonRow(WaonRowData("2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（アップロード）", "-")).is_row_to_skip
-        assert WaonRow(WaonRowData("2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（ダウンロード）", "-")).is_row_to_skip
+        waon_row_data_factory = RowDataFactory(WaonRowData)
+        assert WaonRow(waon_row_data_factory.create(["2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-"])).is_row_to_skip
+        assert WaonRow(
+            waon_row_data_factory.create(["2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（アップロード）", "-"])
+        ).is_row_to_skip
+        assert WaonRow(
+            waon_row_data_factory.create(["2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（ダウンロード）", "-"])
+        ).is_row_to_skip
 
 
 class TestWaonChargeRow:

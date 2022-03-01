@@ -9,6 +9,7 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
     GoldPointCardPlus201912RowFactory,
 )
+from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.models import Store
 
 
@@ -32,8 +33,8 @@ class TestGoldPointCardPlus201912RowData:
         current_time_of_division = "1"
         payed_amount = "66"
         others = "0.60　USD　110.712　11 03"
-        gold_point_card_plus_row_data = GoldPointCardPlus201912RowData(
-            used_date, used_store, used_amount, number_of_division, current_time_of_division, payed_amount, others
+        gold_point_card_plus_row_data = RowDataFactory(GoldPointCardPlus201912RowData).create(
+            [used_date, used_store, used_amount, number_of_division, current_time_of_division, payed_amount, others]
         )
         assert gold_point_card_plus_row_data.date == datetime(2019, 11, 3, 0, 0)
         assert gold_point_card_plus_row_data.store_name == used_store

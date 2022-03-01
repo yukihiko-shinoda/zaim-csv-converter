@@ -1,6 +1,7 @@
 """Custom data type to convert yen string to int."""
 from typing import Any, Optional, TYPE_CHECKING
 
+# Reason: Pylint's bug. pylint: disable=no-name-in-module
 from pydantic import ConstrainedInt
 
 from zaimcsvconverter.utility import Utility

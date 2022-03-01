@@ -63,6 +63,15 @@ TypeVarInputItemRowData = TypeVar("TypeVarInputItemRowData", bound=InputItemRowD
 TypeVarInputStoreItemRowData = TypeVar("TypeVarInputStoreItemRowData", bound=InputStoreItemRowData)
 
 
+class RowDataFactory(Generic[TypeVarInputRowData]):
+    def __init__(self, class_row_data: type[TypeVarInputRowData]) -> None:
+        self.class_row_data = class_row_data
+
+    def create(self, arg: list[str]) -> TypeVarInputRowData:
+        """To seal mypy incompatible type error with pydantic typed dataclass property."""
+        return self.class_row_data(*arg)
+
+
 class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
 

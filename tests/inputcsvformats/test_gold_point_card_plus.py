@@ -9,6 +9,7 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus import (
     GoldPointCardPlusRowData,
     GoldPointCardPlusRowFactory,
 )
+from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.models import Store
 
 
@@ -38,20 +39,22 @@ class TestGoldPointCardPlusRowData:
         unknown_4 = "unknown 4"
         unknown_6 = "unknown 5"
         unknown_5 = "unknown 6"
-        gold_point_card_plus_row_data = GoldPointCardPlusRowData(
-            used_date,
-            used_store,
-            used_card,
-            payment_kind,
-            number_of_division,
-            scheduled_payment_month,
-            used_amount,
-            unknown_1,
-            unknown_2,
-            unknown_3,
-            unknown_4,
-            unknown_5,
-            unknown_6,
+        gold_point_card_plus_row_data = RowDataFactory(GoldPointCardPlusRowData).create(
+            [
+                used_date,
+                used_store,
+                used_card,
+                payment_kind,
+                number_of_division,
+                scheduled_payment_month,
+                used_amount,
+                unknown_1,
+                unknown_2,
+                unknown_3,
+                unknown_4,
+                unknown_5,
+                unknown_6,
+            ]
         )
         assert gold_point_card_plus_row_data.used_card == used_card
         assert gold_point_card_plus_row_data.payment_kind == payment_kind

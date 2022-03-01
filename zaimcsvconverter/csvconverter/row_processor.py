@@ -33,7 +33,7 @@ class RecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
             self.list_error.extend(
                 [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
             )
-            raise InvalidRecordError()
+            raise InvalidRecordError() from exc
         input_row = self._account_context.create_input_row_instance(input_row_data)
         dekinded_input_row = cast(InputRow[InputRowData], input_row)
         if dekinded_input_row.is_row_to_skip:

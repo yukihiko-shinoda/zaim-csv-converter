@@ -6,6 +6,7 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import (
     Note,
     SFCardViewerEnterExitRow,
@@ -39,17 +40,19 @@ class TestSFCardViewerRowData:
         used_amount = "195"
         balance = "3601"
         note = ""
-        sf_card_viewer_row_data = SFCardViewerRowData(
-            used_date,
-            is_commuter_pass_enter,
-            railway_company_name_enter,
-            station_name_enter,
-            is_commuter_pass_exit,
-            railway_company_name_exit,
-            station_name_exit,
-            used_amount,
-            balance,
-            note,
+        sf_card_viewer_row_data = RowDataFactory(SFCardViewerRowData).create(
+            [
+                used_date,
+                is_commuter_pass_enter,
+                railway_company_name_enter,
+                station_name_enter,
+                is_commuter_pass_exit,
+                railway_company_name_exit,
+                station_name_exit,
+                used_amount,
+                balance,
+                note,
+            ]
         )
         assert sf_card_viewer_row_data.is_commuter_pass_enter == is_commuter_pass_enter
         assert sf_card_viewer_row_data.railway_company_name_enter == railway_company_name_enter
@@ -104,9 +107,24 @@ class TestSFCardViewerExitByWindowRow:
     @pytest.mark.parametrize(
         "sf_card_viewer_row_data, expected",
         [
-            (SFCardViewerRowData("2018/11/25", "", "東武", "北千住", "", "JR東", "北千住", "0", "2621", "窓出"), False),
-            (SFCardViewerRowData("2018/11/25", "", "東武", "とうきょうスカイツリー", "", "東武", "北千住", "0", "2621", "窓出"), False),
-            (SFCardViewerRowData("2018/11/25", "", "東武", "北千住", "", "東武", "北千住", "100", "2621", "窓出"), False),
+            (
+                InstanceResource.SF_CARD_VIEWER_ROW_DATA_FACTORY.create(
+                    ["2018/11/25", "", "東武", "北千住", "", "JR東", "北千住", "0", "2621", "窓出"]
+                ),
+                False,
+            ),
+            (
+                InstanceResource.SF_CARD_VIEWER_ROW_DATA_FACTORY.create(
+                    ["2018/11/25", "", "東武", "とうきょうスカイツリー", "", "東武", "北千住", "0", "2621", "窓出"]
+                ),
+                False,
+            ),
+            (
+                InstanceResource.SF_CARD_VIEWER_ROW_DATA_FACTORY.create(
+                    ["2018/11/25", "", "東武", "北千住", "", "東武", "北千住", "100", "2621", "窓出"]
+                ),
+                False,
+            ),
             (InstanceResource.ROW_DATA_SF_CARD_VIEWER_EXIT_BY_WINDOW_KITASENJU_STATION, True),
         ],
     )
@@ -122,7 +140,7 @@ class TestSFCardViewerExitByWindowRow:
         """Method should raise ValueError when note is not defined."""
         with pytest.raises(ValidationError) as excinfo:
             # pylint: disable=protected-access
-            SFCardViewerRowData(*InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE)
+            RowDataFactory(SFCardViewerRowData).create(InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE)
         assert len(excinfo.value.errors()) == 1
         error = excinfo.value.errors()[0]
         assert error["loc"] == ("note",)
