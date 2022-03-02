@@ -5,13 +5,13 @@ from pathlib import Path
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.account import Account
-from zaimcsvconverter.csvconverter.input_csv import InputData
+from zaimcsvconverter.account import Account, AccountContext
+from zaimcsvconverter.csvconverter.input_data import InputData
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions import InvalidCellError, InvalidInputCsvError
 
 
-class TestInputCsv:
+class TestInputData:
     """Tests for InputData."""
 
     # pylint: disable=unused-argument
@@ -33,9 +33,9 @@ class TestInputCsv:
           when there are row having store name which there are no data in convert table.
         - Undefined content error handler should be empty.
         """
-        account = Account.create_by_path_csv_input(path_file_csv_input)
-        csv_reader = Csv(account.value.god_slayer_factory.create(path_file_csv_input))
-        input_data = InputData(csv_reader, account)
+        account_context: AccountContext = Account.create_by_path_csv_input(path_file_csv_input).value
+        csv_reader = Csv(account_context.god_slayer_factory.create(path_file_csv_input))
+        input_data = InputData(csv_reader, account_context)
         with (tmp_path / "test.csv").open("w", encoding="UTF-8", newline="\n") as file_zaim:
             writer_zaim = csv.writer(file_zaim)
             with pytest.raises(InvalidInputCsvError) as error:

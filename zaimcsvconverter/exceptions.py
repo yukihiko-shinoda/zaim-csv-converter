@@ -1,6 +1,11 @@
 """This module implements exceptions for this package."""
 
 
+from typing import Optional
+
+from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
+
+
 class Error(Exception):
     """Base class for exceptions in this module.
 
@@ -12,12 +17,8 @@ class LogicError(Error):
     """This Error indicates programing miss."""
 
 
-class SkipRow(Error):
+class SkipRecord(Error):
     """Target row is invalid."""
-
-
-class InvalidRecordError(Error):
-    """Record is invalid."""
 
 
 class InvalidCellError(Error):
@@ -26,6 +27,24 @@ class InvalidCellError(Error):
 
 class UndefinedContentError(InvalidCellError):
     """Store or item is undefined."""
+
+
+class InvalidRecordError(Error):
+    """Record is invalid."""
+
+    def __init__(
+        self,
+        list_error: list[InvalidCellError],
+        undefined_content_error_handler: Optional[UndefinedContentErrorHandler] = None,
+        *args: object
+    ) -> None:
+        self.list_error = list_error
+        self.undefined_content_error_handler = (
+            UndefinedContentErrorHandler()
+            if undefined_content_error_handler is None
+            else undefined_content_error_handler
+        )
+        super().__init__(*args)
 
 
 class InvalidInputCsvError(Error):

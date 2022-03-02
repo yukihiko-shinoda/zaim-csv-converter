@@ -119,11 +119,6 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
         """This method creates input row instance by input row data instance."""
         return self.input_row_factory.create(input_row_data)
 
-    def convert_input_row_to_zaim_row(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]) -> ZaimRow:
-        """This method converts input row into zaim row."""
-        converter = self.zaim_row_converter_factory.create(input_row)
-        return ZaimRowFactory.create(converter)
-
 
 class Account(Enum):
     """This class implements constant of account in Zaim."""
