@@ -18,14 +18,18 @@ class Csv(DataSource):
         self.invalid_footer_error: Optional[InvalidFooterError] = None
 
     def __iter__(self) -> Generator[List[Any], None, None]:
-        try:
-            yield from self.god_slayer
-        except InvalidHeaderError as error:
-            self.invalid_header_error = error
-            raise InvalidInputCsvError(str(error)) from error
-        except InvalidFooterError as error:
-            self.invalid_footer_error = error
-            raise InvalidInputCsvError(str(error)) from error
+        iterator = self.god_slayer.__iter__()
+        while True:
+            try:
+                yield next(iterator)
+            except InvalidHeaderError as error:
+                self.invalid_header_error = error
+                raise InvalidInputCsvError(str(error)) from error
+            except InvalidFooterError as error:
+                self.invalid_footer_error = error
+                raise InvalidInputCsvError(str(error)) from error
+            except StopIteration:
+                break
 
     @property
     def is_invalid(self) -> bool:
