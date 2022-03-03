@@ -7,13 +7,8 @@ from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.datasources.data_source import DataSource
-from zaimcsvconverter.exceptions import (
-    InvalidCellError,
-    InvalidInputCsvError,
-    InvalidRecordError,
-    LogicError,
-    SkipRecord,
-)
+from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
+from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, LogicError, SkipRecord
 from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 
 
@@ -36,10 +31,10 @@ class Csv(DataSource[TypeVarInputRow, TypeVarInputRowData]):
                 list_input_row_standard_type_value = next(iterator)
             except InvalidHeaderError as error:
                 self.invalid_header_error = error
-                raise InvalidInputCsvError(str(error)) from error
+                raise InvalidInputCsvError(self, str(error)) from error
             except InvalidFooterError as error:
                 self.invalid_footer_error = error
-                raise InvalidInputCsvError(str(error)) from error
+                raise InvalidInputCsvError(self, str(error)) from error
             except StopIteration:
                 break
             try:
@@ -66,6 +61,7 @@ class Csv(DataSource[TypeVarInputRow, TypeVarInputRowData]):
     def raise_error_if_invalid(self) -> None:
         if self.is_invalid:
             raise InvalidInputCsvError(
+                self,
                 f"Undefined store name in convert table CSV exists in {self.god_slayer.path_to_file.name}. "
-                "Please check property AccountCsvConverter.list_undefined_store."
+                "Please check property AccountCsvConverter.list_undefined_store.",
             )

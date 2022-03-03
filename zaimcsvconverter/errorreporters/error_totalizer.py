@@ -3,11 +3,11 @@ from pathlib import Path
 from typing import Any, Generator, List, Union
 
 from zaimcsvconverter.csvconverter.input_csv_converter import InputCsvConverter
-from zaimcsvconverter.csvconverter.input_data import InputData
+from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.errorhandling.error_handler import FileNameForError, UndefinedContentErrorHandler
 from zaimcsvconverter.errorreporters.csv_exporter import CsvExporter
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
-from zaimcsvconverter.exceptions import InvalidInputCsvError
+from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 
 
 class ErrorTotalizer:
@@ -15,12 +15,12 @@ class ErrorTotalizer:
 
     def __init__(self, directory_csv_output: Path) -> None:
         self.directory_csv_output = directory_csv_output
-        self.list_invalid_input_data: List[InputData[Any, Any]] = []
+        self.list_invalid_data_source: List[DataSource[Any, Any]] = []
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()
 
     def __iter__(self) -> Generator[List[Union[int, str]], None, None]:
-        for input_data in self.list_invalid_input_data:
-            data_source_error_reporter = DataSourceErrorReporterFactory.create(input_data.data_source)
+        for data_source in self.list_invalid_data_source:
+            data_source_error_reporter = DataSourceErrorReporterFactory.create(data_source)
             yield from data_source_error_reporter
 
     def convert_csv(self, path_csv_file: Path) -> None:
@@ -29,13 +29,13 @@ class ErrorTotalizer:
         try:
             csv_converter.execute()
         except InvalidInputCsvError:
-            input_data = csv_converter.input_csv
-            self.list_invalid_input_data.append(input_data)
-            self.undefined_content_error_handler.extend(input_data.data_source.undefined_content_error_handler)
+            data_source = csv_converter.zaim_exporter.data_source
+            self.list_invalid_data_source.append(data_source)
+            self.undefined_content_error_handler.extend(data_source.undefined_content_error_handler)
 
     @property
     def is_presented(self) -> bool:
-        return bool(self.list_invalid_input_data)
+        return bool(self.list_invalid_data_source)
 
     def export_to_csv(self) -> None:
         """This method exports invalid input CSV errors into CSV."""

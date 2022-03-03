@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from zaimcsvconverter.errorreporters.error_totalizer import ErrorTotalizer
-from zaimcsvconverter.exceptions import InvalidInputCsvError
+from zaimcsvconverter.exceptions import SomeInvalidInputCsvError
 
 
 class InputCsvConverterIterator:
@@ -18,4 +18,4 @@ class InputCsvConverterIterator:
             self.error_totalizer.convert_csv(path_csv_file)
         if self.error_totalizer.is_presented:
             self.error_totalizer.export_to_csv()
-            raise InvalidInputCsvError(self.error_totalizer.message)
+            raise SomeInvalidInputCsvError(self.error_totalizer.message)

@@ -6,7 +6,7 @@ import pytest
 
 from tests.testlibraries.error_row_data_for_test import ErrorRowDataForTest
 from zaimcsvconverter.csvconverter.input_csv_converter_iterator import InputCsvConverterIterator
-from zaimcsvconverter.exceptions import InvalidInputCsvError
+from zaimcsvconverter.exceptions import SomeInvalidInputCsvError
 
 
 class TestInputCsvConverterIterator:
@@ -34,7 +34,7 @@ class TestInputCsvConverterIterator:
         - Same content should be unified.
         """
         input_csv_converter_iterator = InputCsvConverterIterator(resource_path, tmp_path)
-        with pytest.raises(InvalidInputCsvError):
+        with pytest.raises(SomeInvalidInputCsvError):
             input_csv_converter_iterator.execute()
         files = sorted(tmp_path.rglob("*[!.gitkeep]"))
         assert len(files) == 4, f"files = {files}"

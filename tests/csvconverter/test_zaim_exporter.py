@@ -1,5 +1,4 @@
 """Tests for input_csv.py."""
-import csv
 from pathlib import Path
 from typing import Any
 
@@ -8,12 +7,13 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.csvconverter.input_data import InputData
+from zaimcsvconverter.csvconverter.zaim_exporter import ZaimCsvExportOperator, ZaimExporter
 from zaimcsvconverter.datasources.csv import Csv
-from zaimcsvconverter.exceptions import InvalidCellError, InvalidInputCsvError
+from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
+from zaimcsvconverter.exceptions import InvalidCellError
 
 
-class TestInputData:
+class TestZaimExporter:
     """Tests for InputData."""
 
     # pylint: disable=unused-argument
@@ -38,11 +38,10 @@ class TestInputData:
         account_context: AccountContext[Any, Any] = Account.create_by_path_csv_input(path_file_csv_input).value
         god_slayer = account_context.god_slayer_factory.create(path_file_csv_input)
         csv_reader = Csv(god_slayer, CsvRecordProcessor(account_context))
-        input_data = InputData(csv_reader, account_context)
+        input_data = ZaimExporter(csv_reader, account_context)
         with (tmp_path / "test.csv").open("w", encoding="UTF-8", newline="\n") as file_zaim:
-            writer_zaim = csv.writer(file_zaim)
             with pytest.raises(InvalidInputCsvError) as error:
-                input_data.export_as_zaim_csv(writer_zaim)
+                input_data.export(ZaimCsvExportOperator(file_zaim))
         assert str(error.value) == (
             "Undefined store name in convert table CSV exists in test_waon.csv. "
             "Please check property AccountCsvConverter.list_undefined_store."

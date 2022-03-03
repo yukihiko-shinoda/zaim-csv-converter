@@ -1,19 +1,23 @@
 """This module implements data source model."""
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Dict, Generator, Generic, List
+from typing import Dict, Generator, Generic, List, TYPE_CHECKING
 
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
-from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
+
+if TYPE_CHECKING:
+    from zaimcsvconverter.exceptions import InvalidCellError
 
 
 class DataSource(Generic[TypeVarInputRow, TypeVarInputRowData], ABC):
     """This class implements data source model."""
 
     def __init__(self) -> None:
-        self.dictionary_invalid_record: Dict[int, List[InvalidCellError]] = {}
+        self.dictionary_invalid_record: Dict[int, List["InvalidCellError"]] = {}
         self.undefined_content_error_handler = UndefinedContentErrorHandler()
 
     @abstractmethod
@@ -21,7 +25,7 @@ class DataSource(Generic[TypeVarInputRow, TypeVarInputRowData], ABC):
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod
-    def mark_current_record_as_error(self, list_error: List[InvalidCellError]) -> None:
+    def mark_current_record_as_error(self, list_error: List["InvalidCellError"]) -> None:
         """Marks current record as error."""
         raise NotImplementedError()  # pragma: no cover
 

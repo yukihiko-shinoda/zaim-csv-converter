@@ -3,9 +3,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Callable, Generic, List, Optional, TypeVar
+from typing import Any, Callable, Generic, Optional, TypeVar
 
-from errorcollector.error_collector import MultipleErrorCollector, SingleErrorCollector
+# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
+from errorcollector import MultipleErrorCollector, SingleErrorCollector  # type: ignore
 from pydantic.dataclasses import dataclass
 from returns.primitives.hkt import Kind1
 
@@ -76,7 +77,7 @@ class InputRow(Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
 
     def __init__(self, input_row_data: TypeVarInputRowData):
-        self.list_error: List[InvalidCellError] = []
+        self.list_error: list[InvalidCellError] = []
         self.date: datetime = input_row_data.date
 
     # Reason: Parent method. pylint: disable=no-self-use
@@ -101,7 +102,7 @@ class InputContentRow(InputRow[TypeVarInputRowData]):
     """Row model of CSV including at least either store or item name data."""
 
     @abstractmethod
-    def get_report_undefined_content_error(self) -> List[List[str]]:
+    def get_report_undefined_content_error(self) -> list[list[str]]:
         raise NotImplementedError()
 
 
@@ -143,7 +144,7 @@ class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
         )
         return super().validate or self.undefined_content_error_store is not None
 
-    def get_report_undefined_content_error(self) -> List[List[str]]:
+    def get_report_undefined_content_error(self) -> list[list[str]]:
         """This method returns report of undefined content error."""
         return (
             []
@@ -194,7 +195,7 @@ class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
         )
         return super().validate or self.undefined_content_error_item is not None
 
-    def get_report_undefined_content_error(self) -> List[List[str]]:
+    def get_report_undefined_content_error(self) -> list[list[str]]:
         """This method returns report of undefined content error."""
         return (
             []
@@ -245,7 +246,7 @@ class InputStoreItemRow(InputStoreRow[TypeVarInputStoreItemRowData]):
         )
         return super().validate or self.undefined_content_error_item is not None
 
-    def get_report_undefined_content_error(self) -> List[List[str]]:
+    def get_report_undefined_content_error(self) -> list[list[str]]:
         """This method returns report of undefined content error."""
         report_undefined_content_error = super().get_report_undefined_content_error()
         if self.undefined_content_error_item is not None:

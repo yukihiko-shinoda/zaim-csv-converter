@@ -9,7 +9,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.csvconverter.input_csv_converter import InputCsvConverter
-from zaimcsvconverter.exceptions import InvalidInputCsvError
+from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 
 
 class TestInputCsvConverterForStore:
@@ -26,7 +26,7 @@ class TestInputCsvConverterForStore:
         - First line should be header.
         """
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.input_csv.data_source.undefined_content_error_handler.list_error == []
+        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
         input_csv_converter.execute()
         with (tmp_path / path_file_csv_input.name).open("r", encoding="UTF-8", newline="\n") as file_zaim:
             # noinspection PyUnusedLocal
@@ -59,7 +59,7 @@ class TestInputCsvConverterForStore:
     def test_stop_iteration_header(path_file_csv_input: Path, tmp_path: Path) -> None:
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.input_csv.data_source.undefined_content_error_handler.list_error == []
+        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
 
@@ -70,7 +70,7 @@ class TestInputCsvConverterForStore:
     def test_stop_iteration_footer(path_file_csv_input: Path, tmp_path: Path) -> None:
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.input_csv.data_source.undefined_content_error_handler.list_error == []
+        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
 
@@ -90,10 +90,10 @@ class TestInputCsvConverterForStore:
         - Undefined store is listed up on property.
         """
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.input_csv.data_source.undefined_content_error_handler.list_error == []
+        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
-        assert input_csv_converter.input_csv.data_source.undefined_content_error_handler.list_error == [
+        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == [
             ["waon.csv", "マクドナルド津田沼駅前店", ""]
         ]
 
@@ -112,9 +112,9 @@ class TestInputCsvConverterForItem:
         - Undefined item is listed up on property.
         """
         input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.input_csv.data_source.undefined_content_error_handler.list_error == []
+        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
-        assert input_csv_converter.input_csv.data_source.undefined_content_error_handler.list_error == [
+        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == [
             ["amazon.csv", "", "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"]
         ]

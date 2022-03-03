@@ -47,8 +47,5 @@ class InvalidRecordError(Error):
         super().__init__(*args)
 
 
-class InvalidInputCsvError(Error):
-    """Target input CSV is invalid.
-
-    This error is only for processing control and display to standard error. Not for write error CSV.
-    """
+class SomeInvalidInputCsvError(Error):
+    pass

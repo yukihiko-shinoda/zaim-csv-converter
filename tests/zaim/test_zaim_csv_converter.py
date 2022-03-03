@@ -29,7 +29,8 @@ from tests.testlibraries.integration_test_expected_factory import (
 )
 from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, ZaimCsvFileChecker
 from tests.testlibraries.row_data import InvalidRowErrorRowData
-from zaimcsvconverter.exceptions import InvalidInputCsvError
+from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
+from zaimcsvconverter.exceptions import SomeInvalidInputCsvError
 from zaimcsvconverter.zaim.zaim_csv_converter import ZaimCsvConverter
 
 
@@ -108,7 +109,7 @@ class TestZaimCsvConverter:
         - Correct input CSV files should be converted into Zaim format CSV file.
         - Incorrect input CSV files should be reported on error_undefined_content.csv.
         """
-        with pytest.raises(InvalidInputCsvError) as error:
+        with pytest.raises(SomeInvalidInputCsvError) as error:
             ZaimCsvConverter.execute()
         assert str(error.value) == "Some invalid input CSV file exists. Please check error_invalid_row.csv."
         zaim_csv_file_checker = ZaimCsvFileChecker(directory_csv_output)
