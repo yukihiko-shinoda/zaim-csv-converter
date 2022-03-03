@@ -1,6 +1,6 @@
 """This module implements totalize process of error."""
 from pathlib import Path
-from typing import Generator, List, Union
+from typing import Any, Generator, List, Union
 
 from zaimcsvconverter.csvconverter.input_csv_converter import InputCsvConverter
 from zaimcsvconverter.csvconverter.input_data import InputData
@@ -15,7 +15,7 @@ class ErrorTotalizer:
 
     def __init__(self, directory_csv_output: Path) -> None:
         self.directory_csv_output = directory_csv_output
-        self.list_invalid_input_data: List[InputData] = []
+        self.list_invalid_input_data: List[InputData[Any, Any]] = []
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()
 
     def __iter__(self) -> Generator[List[Union[int, str]], None, None]:
@@ -24,13 +24,14 @@ class ErrorTotalizer:
             yield from data_source_error_reporter
 
     def convert_csv(self, path_csv_file: Path) -> None:
+        """To seal complexity in for loop."""
         csv_converter = InputCsvConverter(path_csv_file, self.directory_csv_output)
         try:
             csv_converter.execute()
         except InvalidInputCsvError:
             input_data = csv_converter.input_csv
             self.list_invalid_input_data.append(input_data)
-            self.undefined_content_error_handler.extend(input_data.undefined_content_error_handler)
+            self.undefined_content_error_handler.extend(input_data.data_source.undefined_content_error_handler)
 
     @property
     def is_presented(self) -> bool:

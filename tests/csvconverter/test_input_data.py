@@ -1,11 +1,13 @@
 """Tests for input_csv.py."""
 import csv
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account, AccountContext
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.csvconverter.input_data import InputData
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions import InvalidCellError, InvalidInputCsvError
@@ -33,8 +35,9 @@ class TestInputData:
           when there are row having store name which there are no data in convert table.
         - Undefined content error handler should be empty.
         """
-        account_context: AccountContext = Account.create_by_path_csv_input(path_file_csv_input).value
-        csv_reader = Csv(account_context.god_slayer_factory.create(path_file_csv_input))
+        account_context: AccountContext[Any, Any] = Account.create_by_path_csv_input(path_file_csv_input).value
+        god_slayer = account_context.god_slayer_factory.create(path_file_csv_input)
+        csv_reader = Csv(god_slayer, CsvRecordProcessor(account_context))
         input_data = InputData(csv_reader, account_context)
         with (tmp_path / "test.csv").open("w", encoding="UTF-8", newline="\n") as file_zaim:
             writer_zaim = csv.writer(file_zaim)
@@ -48,4 +51,4 @@ class TestInputData:
         invalid_row_error = input_data.data_source.dictionary_invalid_record[0][0]
         assert isinstance(invalid_row_error, InvalidCellError)
         assert str(invalid_row_error) == "Charge kind in charge row is required. Charge kind = -"
-        assert not input_data.undefined_content_error_handler.is_presented
+        assert not input_data.data_source.undefined_content_error_handler.is_presented

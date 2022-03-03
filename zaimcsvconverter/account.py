@@ -39,7 +39,6 @@ from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowCon
 from zaimcsvconverter.rowconverters.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
 from zaimcsvconverter.rowconverters import ZaimRowConverterFactory
-from zaimcsvconverter.zaim.zaim_row import ZaimRow, ZaimRowFactory
 
 
 @dataclass

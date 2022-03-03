@@ -1,27 +1,39 @@
 """This module implements CSV Datasource."""
-from typing import Any, Generator, List, Optional
+from typing import Generator, List, Optional
 
 from godslayer.csv.god_slayer import GodSlayer
 from godslayer.exceptions import InvalidFooterError, InvalidHeaderError
+from returns.primitives.hkt import Kind1
 
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.datasources.data_source import DataSource
-from zaimcsvconverter.exceptions import InvalidCellError, InvalidInputCsvError, LogicError
+from zaimcsvconverter.exceptions import (
+    InvalidCellError,
+    InvalidInputCsvError,
+    InvalidRecordError,
+    LogicError,
+    SkipRecord,
+)
+from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 
 
-class Csv(DataSource):
+class Csv(DataSource[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements abstract CSV Datasource."""
 
-    def __init__(self, god_slayer: GodSlayer):
+    def __init__(
+        self, god_slayer: GodSlayer, csv_record_processor: CsvRecordProcessor[TypeVarInputRowData, TypeVarInputRow]
+    ) -> None:
         super().__init__()
         self.god_slayer = god_slayer
+        self.csv_record_processor = csv_record_processor
         self.invalid_header_error: Optional[InvalidHeaderError] = None
         self.invalid_footer_error: Optional[InvalidFooterError] = None
 
-    def __iter__(self) -> Generator[List[Any], None, None]:
+    def __iter__(self) -> Generator[Kind1[TypeVarInputRow, TypeVarInputRowData], None, None]:
         iterator = self.god_slayer.__iter__()
         while True:
             try:
-                yield next(iterator)
+                list_input_row_standard_type_value = next(iterator)
             except InvalidHeaderError as error:
                 self.invalid_header_error = error
                 raise InvalidInputCsvError(str(error)) from error
@@ -30,6 +42,13 @@ class Csv(DataSource):
                 raise InvalidInputCsvError(str(error)) from error
             except StopIteration:
                 break
+            try:
+                yield self.csv_record_processor.execute(list_input_row_standard_type_value)
+            except InvalidRecordError as exc:
+                self.mark_current_record_as_error(exc.list_error)
+                self.undefined_content_error_handler.extend(exc.undefined_content_error_handler)
+            except SkipRecord:
+                pass
 
     @property
     def is_invalid(self) -> bool:

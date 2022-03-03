@@ -1,14 +1,15 @@
 """This module implements error report process for input CSV."""
-from typing import Generator, List, Union
+from typing import Generator, Generic, List, Union
 
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.datasources.data_source import DataSource
+from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 
 
-class InputCsvErrorReporter:
+class InputCsvErrorReporter(Generic[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements error report process for input CSV."""
 
-    def __init__(self, csv: Csv):
+    def __init__(self, csv: Csv[TypeVarInputRow, TypeVarInputRowData]):
         self.csv = csv
 
     def __iter__(self) -> Generator[List[Union[int, str]], None, None]:
@@ -25,7 +26,9 @@ class DataSourceErrorReporterFactory:
     """This class creates ImputCsvErrorReporter instance."""
 
     @staticmethod
-    def create(data_source: DataSource) -> InputCsvErrorReporter:
+    def create(
+        data_source: DataSource[TypeVarInputRow, TypeVarInputRowData]
+    ) -> InputCsvErrorReporter[TypeVarInputRow, TypeVarInputRowData]:
         """Creates InputCsvErrorReporter instance."""
         if isinstance(data_source, Csv):
             return InputCsvErrorReporter(data_source)

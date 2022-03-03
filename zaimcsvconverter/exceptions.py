@@ -35,8 +35,8 @@ class InvalidRecordError(Error):
     def __init__(
         self,
         list_error: list[InvalidCellError],
+        *args: object,
         undefined_content_error_handler: Optional[UndefinedContentErrorHandler] = None,
-        *args: object
     ) -> None:
         self.list_error = list_error
         self.undefined_content_error_handler = (

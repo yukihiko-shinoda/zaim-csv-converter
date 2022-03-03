@@ -3,9 +3,11 @@ import csv
 from pathlib import Path
 
 from zaimcsvconverter.account import Account, AccountContext
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.csvconverter.input_data import InputData
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter import DirectoryCsv
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 
 
@@ -13,8 +15,11 @@ class InputCsvConverter:
     """This class implements abstract converting steps for CSV."""
 
     def __init__(self, path_csv_file: Path, directory_csv_output: Path = DirectoryCsv.OUTPUT.value):
-        account_context: AccountContext = Account.create_by_path_csv_input(path_csv_file).value
-        data_source_csv = Csv(account_context.god_slayer_factory.create(path_csv_file))
+        account_context: AccountContext[InputRowData, InputRow[InputRowData]] = Account.create_by_path_csv_input(
+            path_csv_file
+        ).value
+        god_slayer = account_context.god_slayer_factory.create(path_csv_file)
+        data_source_csv = Csv(god_slayer, CsvRecordProcessor(account_context))
         self.input_csv = InputData(data_source_csv, account_context)
         self.path_to_output = directory_csv_output / path_csv_file.name
 
