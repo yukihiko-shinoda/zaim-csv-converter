@@ -7,10 +7,12 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.csvconverter.zaim_exporter import ZaimCsvExportOperator, ZaimExporter
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError
+from zaimcsvconverter.inputtooutput.record_converter import RecordConverter
+from zaimcsvconverter.zaim.zaim_exporter import ZaimCsvExportOperator, ZaimExporter
+from zaimcsvconverter.zaim.zaim_row import ZaimRowFactory
 
 
 class TestZaimExporter:
@@ -37,8 +39,9 @@ class TestZaimExporter:
         """
         account_context: AccountContext[Any, Any] = Account.create_by_path_csv_input(path_file_csv_input).value
         god_slayer = account_context.god_slayer_factory.create(path_file_csv_input)
-        csv_reader = Csv(god_slayer, CsvRecordProcessor(account_context))
-        input_data = ZaimExporter(csv_reader, account_context)
+        data_source = Csv(god_slayer, CsvRecordProcessor(account_context))
+        record_converter = RecordConverter(account_context.zaim_row_converter_factory, ZaimRowFactory)
+        input_data = ZaimExporter(data_source, record_converter)
         with (tmp_path / "test.csv").open("w", encoding="UTF-8", newline="\n") as file_zaim:
             with pytest.raises(InvalidInputCsvError) as error:
                 input_data.export(ZaimCsvExportOperator(file_zaim))
@@ -46,8 +49,8 @@ class TestZaimExporter:
             "Undefined store name in convert table CSV exists in test_waon.csv. "
             "Please check property AccountCsvConverter.list_undefined_store."
         )
-        assert input_data.data_source.is_invalid
-        invalid_row_error = input_data.data_source.dictionary_invalid_record[0][0]
+        assert data_source.is_invalid
+        invalid_row_error = data_source.dictionary_invalid_record[0][0]
         assert isinstance(invalid_row_error, InvalidCellError)
         assert str(invalid_row_error) == "Charge kind in charge row is required. Charge kind = -"
-        assert not input_data.data_source.undefined_content_error_handler.is_presented
+        assert not data_source.undefined_content_error_handler.is_presented

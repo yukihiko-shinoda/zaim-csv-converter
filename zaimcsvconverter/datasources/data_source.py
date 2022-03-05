@@ -2,18 +2,19 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Dict, Generator, Generic, List, TYPE_CHECKING
-
-from returns.primitives.hkt import Kind1
+from typing import Dict, Generator, List, TYPE_CHECKING
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
-from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 
 if TYPE_CHECKING:
     from zaimcsvconverter.exceptions import InvalidCellError
 
 
-class DataSource(Generic[TypeVarInputRow, TypeVarInputRowData], ABC):
+class AbstractInputRecord(ABC):
+    """This class implements input record model."""
+
+
+class DataSource(ABC):
     """This class implements data source model."""
 
     def __init__(self) -> None:
@@ -21,7 +22,7 @@ class DataSource(Generic[TypeVarInputRow, TypeVarInputRowData], ABC):
         self.undefined_content_error_handler = UndefinedContentErrorHandler()
 
     @abstractmethod
-    def __iter__(self) -> Generator[Kind1[TypeVarInputRow, TypeVarInputRowData], None, None]:
+    def __iter__(self) -> Generator[AbstractInputRecord, None, None]:
         raise NotImplementedError()  # pragma: no cover
 
     @abstractmethod

@@ -36,7 +36,7 @@ class InstanceResource:
         ["2018/10/22", "板橋前野町", "10,000円", "チャージ", "現金"]
     )
     ROW_DATA_WAON_CHARGE_DOWNLOAD_VALUE_ITABASHIMAENOCHO = WAON_ROW_DATA_FACTORY.create(
-        ["2021/2/24", "板橋", "39円", "チャージ", "バリューダウンロード"]
+        ["2021/2/24", "板橋前野町", "39円", "チャージ", "バリューダウンロード"]
     )
     ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO = WAON_ROW_DATA_FACTORY.create(
         ["2018/11/11", "板橋前野町", "5,000円", "オートチャージ", "銀行口座"]

@@ -11,10 +11,10 @@ from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import (
     SBISumishinNetBankWithdrawalRow,
 )
 from zaimcsvconverter.rowconverters import (
+    CsvRecordToZaimRowConverterFactory,
     ZaimIncomeRowStoreConverter,
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
-    ZaimRowConverterFactory,
     ZaimTransferRowConverter,
 )
 
@@ -88,7 +88,7 @@ class SBISumishinNetBankDepositZaimTransferRowConverter(
 
 
 class SBISumishinNetBankZaimRowConverterFactory(
-    ZaimRowConverterFactory[SBISumishinNetBankRow, SBISumishinNetBankRowData]
+    CsvRecordToZaimRowConverterFactory[SBISumishinNetBankRow, SBISumishinNetBankRowData]
 ):
     """This class implements select steps from MUFG input row to Zaim row converter."""
 
@@ -97,7 +97,9 @@ class SBISumishinNetBankZaimRowConverterFactory(
     KEY_TRANSACTION_TYPE_TRANSACTION_WITH_OTHERS = "transaction_with_others"
     KEY_TRANSACTION_TYPE_TRANSFER = "transfer"
 
-    def create(
+    # Reason: Maybe, there are no way to resolve.
+    # The nearest issues: https://github.com/dry-python/returns/issues/708
+    def create(  # type: ignore
         self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]
     ) -> ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData]:
         dictionary: dict[

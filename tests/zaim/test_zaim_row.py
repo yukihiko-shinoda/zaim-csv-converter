@@ -14,13 +14,13 @@ from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, InputRowFac
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
+from zaimcsvconverter.rowconverters import CsvRecordToZaimRowConverterFactory, ZaimRowConverter
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import (
     WaonZaimIncomeRowConverter,
     WaonZaimPaymentRowConverter,
     WaonZaimTransferRowConverter,
 )
-from zaimcsvconverter.rowconverters import ZaimRowConverter, ZaimRowConverterFactory
 from zaimcsvconverter.zaim.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRow, ZaimRowFactory, ZaimTransferRow
 
 
@@ -102,7 +102,7 @@ class TestZaimPaymentRow:
     def test_all(
         input_row_factory: InputRowFactory[InputRowData, InputRow[InputRowData]],
         input_row_data: InputRowData,
-        zaim_row_converter_factory: ZaimRowConverterFactory[InputRow[InputRowData], InputRowData],
+        zaim_row_converter_factory: CsvRecordToZaimRowConverterFactory[InputRow[InputRowData], InputRowData],
         expected_date: str,
         expected_category_large: str,
         expected_category_small: str,

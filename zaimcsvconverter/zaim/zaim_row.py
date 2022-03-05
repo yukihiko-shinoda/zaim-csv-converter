@@ -1,10 +1,11 @@
 """This module implements abstract row model of Zaim CSV."""
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any, List, Optional, Union
 
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, TypeVarInputRow, TypeVarInputRowData
+from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.rowconverters import (
+    AbstractZaimRowConverter,
     ZaimIncomeRowConverter,
     ZaimPaymentRowConverter,
     ZaimRowConverter,
@@ -129,7 +130,14 @@ class ZaimTransferRow(ZaimRow):
         ]
 
 
-class ZaimRowFactory:
+class AbstractZaimRowFactory(ABC):
+    @staticmethod
+    @abstractmethod
+    def create(zaim_row_converter: AbstractZaimRowConverter) -> ZaimRow:
+        raise NotImplementedError
+
+
+class ZaimRowFactory(AbstractZaimRowFactory):
     """This class implements factory to create zaim format CSV row instance.
 
     Why factory class is independent from input row data class is because we can't achieve 100% coverage without this
@@ -143,7 +151,7 @@ class ZaimRowFactory:
     """
 
     @staticmethod
-    def create(zaim_row_converter: ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]) -> ZaimRow:
+    def create(zaim_row_converter: AbstractZaimRowConverter) -> ZaimRow:
         """This method creates Zaim row."""
         if isinstance(zaim_row_converter, ZaimIncomeRowConverter):
             return ZaimIncomeRow(zaim_row_converter)

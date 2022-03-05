@@ -1,10 +1,9 @@
 """Tests for zaimcsvconverter.errorreporters.input_csv_error_reporter."""
-from typing import Generator, List
+from typing import Generator, Generic, List
 
 import pytest
-from returns.primitives.hkt import Kind1
 
-from zaimcsvconverter.datasources.data_source import DataSource
+from zaimcsvconverter.datasources.data_source import AbstractInputRecord, DataSource
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
@@ -17,10 +16,10 @@ class TestInputCsvErrorReporter:
     def test_error() -> None:
         """Method create() should raise appropriate error."""
 
-        class Unexpected(DataSource[TypeVarInputRow, TypeVarInputRowData]):
+        class Unexpected(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
             """Unexpected class."""
 
-            def __iter__(self) -> Generator[Kind1[TypeVarInputRow, TypeVarInputRowData], None, None]:
+            def __iter__(self) -> Generator[AbstractInputRecord, None, None]:
                 pass
 
             def mark_current_record_as_error(self, list_error: List[InvalidCellError]) -> None:

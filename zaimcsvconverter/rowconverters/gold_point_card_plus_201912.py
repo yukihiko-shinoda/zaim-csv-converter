@@ -6,7 +6,11 @@ from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912Row,
     GoldPointCardPlus201912RowData,
 )
-from zaimcsvconverter.rowconverters import ZaimPaymentRowStoreConverter, ZaimRowConverter, ZaimRowConverterFactory
+from zaimcsvconverter.rowconverters import (
+    CsvRecordToZaimRowConverterFactory,
+    ZaimPaymentRowStoreConverter,
+    ZaimRowConverter,
+)
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
@@ -26,11 +30,13 @@ class GoldPointCardPlus201912ZaimPaymentRowConverter(
 
 
 class GoldPointCardPlus201912ZaimRowConverterFactory(
-    ZaimRowConverterFactory[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
+    CsvRecordToZaimRowConverterFactory[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
 ):
     """This class implements select steps from GOLD POINT CARD + Viewer input row to Zaim row converter."""
 
-    def create(
+    # Reason: Maybe, there are no way to resolve.
+    # The nearest issues: https://github.com/dry-python/returns/issues/708
+    def create(  # type: ignore
         self, input_row: Kind1[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
     ) -> ZaimRowConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]:
         return GoldPointCardPlus201912ZaimPaymentRowConverter(input_row)

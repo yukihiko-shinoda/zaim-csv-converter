@@ -1,18 +1,25 @@
 """This module implements error report process for input CSV."""
-from typing import Generator, Generic, List, Union
+from abc import ABC, abstractmethod
+from typing import Generator, Generic, Union
 
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 
 
-class InputCsvErrorReporter(Generic[TypeVarInputRow, TypeVarInputRowData]):
+class DataSourceErrorReporter(ABC):
+    @abstractmethod
+    def __iter__(self) -> Generator[list[Union[int, str]], None, None]:
+        raise NotImplementedError
+
+
+class InputCsvErrorReporter(Generic[TypeVarInputRow, TypeVarInputRowData], DataSourceErrorReporter):
     """This class implements error report process for input CSV."""
 
     def __init__(self, csv: Csv[TypeVarInputRow, TypeVarInputRowData]):
         self.csv = csv
 
-    def __iter__(self) -> Generator[List[Union[int, str]], None, None]:
+    def __iter__(self) -> Generator[list[Union[int, str]], None, None]:
         if self.csv.invalid_header_error is not None:
             yield [self.csv.god_slayer.path_to_file.name, "", str(self.csv.invalid_header_error)]
         if self.csv.invalid_footer_error is not None:
@@ -23,13 +30,10 @@ class InputCsvErrorReporter(Generic[TypeVarInputRow, TypeVarInputRowData]):
 
 
 class DataSourceErrorReporterFactory:
-    """This class creates ImputCsvErrorReporter instance."""
+    """Creates DataSourceErrorReporter instance."""
 
     @staticmethod
-    def create(
-        data_source: DataSource[TypeVarInputRow, TypeVarInputRowData]
-    ) -> InputCsvErrorReporter[TypeVarInputRow, TypeVarInputRowData]:
-        """Creates InputCsvErrorReporter instance."""
+    def create(data_source: DataSource) -> DataSourceErrorReporter:
         if isinstance(data_source, Csv):
             return InputCsvErrorReporter(data_source)
         raise TypeError()

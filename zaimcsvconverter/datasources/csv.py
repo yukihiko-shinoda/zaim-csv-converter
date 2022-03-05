@@ -1,18 +1,17 @@
 """This module implements CSV Datasource."""
-from typing import Generator, List, Optional
+from typing import cast, Generator, Generic, List, Optional
 
 from godslayer.csv.god_slayer import GodSlayer
 from godslayer.exceptions import InvalidFooterError, InvalidHeaderError
-from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.datasources.data_source import DataSource
+from zaimcsvconverter.datasources.data_source import AbstractInputRecord, DataSource
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, LogicError, SkipRecord
 from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 
 
-class Csv(DataSource[TypeVarInputRow, TypeVarInputRowData]):
+class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
     """This class implements abstract CSV Datasource."""
 
     def __init__(
@@ -24,7 +23,7 @@ class Csv(DataSource[TypeVarInputRow, TypeVarInputRowData]):
         self.invalid_header_error: Optional[InvalidHeaderError] = None
         self.invalid_footer_error: Optional[InvalidFooterError] = None
 
-    def __iter__(self) -> Generator[Kind1[TypeVarInputRow, TypeVarInputRowData], None, None]:
+    def __iter__(self) -> Generator[AbstractInputRecord, None, None]:
         iterator = self.god_slayer.__iter__()
         while True:
             try:
@@ -38,7 +37,7 @@ class Csv(DataSource[TypeVarInputRow, TypeVarInputRowData]):
             except StopIteration:
                 break
             try:
-                yield self.csv_record_processor.execute(list_input_row_standard_type_value)
+                yield cast(AbstractInputRecord, self.csv_record_processor.execute(list_input_row_standard_type_value))
             except InvalidRecordError as exc:
                 self.mark_current_record_as_error(exc.list_error)
                 self.undefined_content_error_handler.extend(exc.undefined_content_error_handler)

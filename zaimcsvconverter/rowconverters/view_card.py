@@ -3,7 +3,11 @@ from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRow, ViewCardRowData
-from zaimcsvconverter.rowconverters import ZaimPaymentRowStoreConverter, ZaimRowConverter, ZaimRowConverterFactory
+from zaimcsvconverter.rowconverters import (
+    CsvRecordToZaimRowConverterFactory,
+    ZaimPaymentRowStoreConverter,
+    ZaimRowConverter,
+)
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
@@ -20,8 +24,12 @@ class ViewCardZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[ViewCardRow, 
         return self.input_row.billing_amount_current_time
 
 
-class ViewCardZaimRowConverterFactory(ZaimRowConverterFactory[ViewCardRow, ViewCardRowData]):
+class ViewCardZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[ViewCardRow, ViewCardRowData]):
     """This class implements select steps from GOLD POINT CARD + Viewer input row to Zaim row converter."""
 
-    def create(self, input_row: Kind1[ViewCardRow, ViewCardRowData]) -> ZaimRowConverter[ViewCardRow, ViewCardRowData]:
+    # Reason: Maybe, there are no way to resolve.
+    # The nearest issues: https://github.com/dry-python/returns/issues/708
+    def create(  # type: ignore
+        self, input_row: Kind1[ViewCardRow, ViewCardRowData]
+    ) -> ZaimRowConverter[ViewCardRow, ViewCardRowData]:
         return ViewCardZaimPaymentRowConverter(input_row)

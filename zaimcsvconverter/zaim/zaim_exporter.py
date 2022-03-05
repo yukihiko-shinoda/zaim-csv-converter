@@ -1,11 +1,9 @@
 """This module implements model of input CSV."""
 from abc import ABC, abstractmethod
 import csv
-from typing import Generic, TextIO
+from typing import TextIO
 
-from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter.datasources.data_source import DataSource
-from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.record_converter import RecordConverter
 from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 from zaimcsvconverter.zaim.zaim_row import ZaimRow
@@ -19,6 +17,7 @@ class ZaimExportOperator(ABC):
 
 class ZaimCsvExportOperator(ZaimExportOperator):
     """Export operation of Zaim CSV."""
+
     def __init__(self, file_zaim: TextIO) -> None:
         writer_zaim = csv.writer(file_zaim)
         writer_zaim.writerow(ZaimCsvFormat.HEADER)
@@ -28,15 +27,15 @@ class ZaimCsvExportOperator(ZaimExportOperator):
         self.writer_zaim.writerow(zaim_row.convert_to_list())
 
 
-class ZaimExporter(Generic[TypeVarInputRowData, TypeVarInputRow]):
+class ZaimExporter:
     """This class implements model of input CSV."""
 
     def __init__(
         self,
-        datasource: DataSource[TypeVarInputRow, TypeVarInputRowData],
-        account_context: AccountContext[TypeVarInputRowData, TypeVarInputRow],
+        datasource: DataSource,
+        record_converter: RecordConverter,
     ) -> None:
-        self.record_converter = RecordConverter(account_context.zaim_row_converter_factory)
+        self.record_converter = record_converter
         self.data_source = datasource
 
     def export(self, zaim_exporter: ZaimExportOperator) -> None:

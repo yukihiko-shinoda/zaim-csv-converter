@@ -1,9 +1,10 @@
 """This module implements convert steps from input row to Zaim row."""
 from abc import ABC, abstractmethod
-from typing import cast, Generic, Optional
+from typing import cast, Generic, Optional, TypeVar
 
 from returns.primitives.hkt import Kind1, kinded
 
+from zaimcsvconverter.datasources.data_source import AbstractInputRecord
 from zaimcsvconverter.inputcsvformats import (
     TypeVarInputItemRow,
     TypeVarInputItemRowData,
@@ -17,8 +18,15 @@ from zaimcsvconverter.inputcsvformats import (
 from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 
 
+class AbstractZaimRowConverter(ABC):
+    pass
+
+
+TypeVarAbstractZaimRowConverter = TypeVar("TypeVarAbstractZaimRowConverter", bound=AbstractZaimRowConverter)
+
+
 # Reason: Abstract class. pylint: disable=too-few-public-methods
-class ZaimRowConverter(Generic[TypeVarInputRow, TypeVarInputRowData], ABC):
+class ZaimRowConverter(Generic[TypeVarInputRow, TypeVarInputRowData], AbstractZaimRowConverter, ABC):
     """This class implements convert steps from input row to Zaim row."""
 
     def __init__(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]):
@@ -203,7 +211,7 @@ class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRow
         """This property returns amount transfer."""
 
 
-class ZaimRowConverterFactory(Generic[TypeVarInputRow, TypeVarInputRowData]):
+class ZaimRowConverterFactory:
     """This class implements factory of Zaim row converter.
 
     Why factory class is independent from input row data class is because we can't achieve 100% coverage without this
@@ -216,8 +224,29 @@ class ZaimRowConverterFactory(Generic[TypeVarInputRow, TypeVarInputRowData]):
     @see https://github.com/python/mypy/issues/6101
     """
 
-    def create(
-        self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]
+    def create(self, input_row: AbstractInputRecord) -> AbstractZaimRowConverter:
+        """This method selects Zaim row converter."""
+        raise NotImplementedError
+
+
+class CsvRecordToZaimRowConverterFactory(Generic[TypeVarInputRow, TypeVarInputRowData], ZaimRowConverterFactory):
+    """This class implements factory of Zaim row converter.
+
+    Why factory class is independent from input row data class is because we can't achieve 100% coverage without this
+    factory. When model instance on post process depend on pre process, In nature, best practice to generate model
+    instance on post process is to implement create method into each model on pre process. Then, pre process will
+    depend on post process. And when add type hint to argument of __init__ method on model on post process, circular
+    dependency occurs. To resolve it, we need to use TYPE_CHECKING, however, pytest-cov detect import line only for
+    TYPE_CHECKING as uncovered row.
+
+    @see https://github.com/python/mypy/issues/6101
+    """
+
+    # Reason: Maybe, there are no way to resolve.
+    # The nearest issues: https://github.com/dry-python/returns/issues/708
+    def create(  # type: ignore
+        self,
+        input_row: Kind1[TypeVarInputRow, TypeVarInputRowData],
     ) -> ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]:
         """This method selects Zaim row converter."""
         raise NotImplementedError

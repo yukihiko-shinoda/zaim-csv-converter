@@ -3,7 +3,11 @@ from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRow, PayPalRowData
-from zaimcsvconverter.rowconverters import ZaimPaymentRowStoreItemConverter, ZaimRowConverter, ZaimRowConverterFactory
+from zaimcsvconverter.rowconverters import (
+    CsvRecordToZaimRowConverterFactory,
+    ZaimPaymentRowStoreItemConverter,
+    ZaimRowConverter,
+)
 
 
 class PayPalZaimPaymentRowConverter(ZaimPaymentRowStoreItemConverter[PayPalRow, PayPalRowData]):
@@ -19,8 +23,12 @@ class PayPalZaimPaymentRowConverter(ZaimPaymentRowStoreItemConverter[PayPalRow, 
         return self.input_row.net
 
 
-class PayPalZaimRowConverterFactory(ZaimRowConverterFactory[PayPalRow, PayPalRowData]):
+class PayPalZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[PayPalRow, PayPalRowData]):
     """This class implements select steps from Amazon input row to Zaim row converter."""
 
-    def create(self, input_row: Kind1[PayPalRow, PayPalRowData]) -> ZaimRowConverter[PayPalRow, PayPalRowData]:
+    # Reason: Maybe, there are no way to resolve.
+    # The nearest issues: https://github.com/dry-python/returns/issues/708
+    def create(  # type: ignore
+        self, input_row: Kind1[PayPalRow, PayPalRowData]
+    ) -> ZaimRowConverter[PayPalRow, PayPalRowData]:
         return PayPalZaimPaymentRowConverter(input_row)

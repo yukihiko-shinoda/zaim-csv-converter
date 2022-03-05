@@ -30,6 +30,7 @@ from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCard
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
 from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.amazon_201911 import Amazon201911ZaimRowConverterFactory
+from zaimcsvconverter.rowconverters import CsvRecordToZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
@@ -38,7 +39,6 @@ from zaimcsvconverter.rowconverters.sbi_sumishin_net_bank import SBISumishinNetB
 from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
-from zaimcsvconverter.rowconverters import ZaimRowConverterFactory
 
 
 @dataclass
@@ -105,7 +105,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     god_slayer_factory: GodSlayerFactory
     input_row_data_class: Type[TypeVarInputRowData]
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
-    zaim_row_converter_factory: ZaimRowConverterFactory[TypeVarInputRow, TypeVarInputRowData]
+    zaim_row_converter_factory: CsvRecordToZaimRowConverterFactory[TypeVarInputRow, TypeVarInputRowData]
 
     def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> TypeVarInputRowData:
         """This method creates input row data instance by list data of input row."""

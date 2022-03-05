@@ -6,10 +6,10 @@ from returns.primitives.hkt import Kind1
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
 from zaimcsvconverter.rowconverters import (
+    CsvRecordToZaimRowConverterFactory,
     ZaimIncomeRowStoreConverter,
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
-    ZaimRowConverterFactory,
     ZaimTransferRowConverter,
 )
 
@@ -59,10 +59,12 @@ class WaonZaimTransferRowConverter(ZaimTransferRowConverter[WaonRow, WaonRowData
         return self.input_row.used_amount
 
 
-class WaonZaimRowConverterFactory(ZaimRowConverterFactory[WaonRow, WaonRowData]):
+class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, WaonRowData]):
     """This class implements select steps from WAON input row to Zaim row converter."""
 
-    def create(self, input_row: Kind1[WaonRow, WaonRowData]) -> ZaimRowConverter[WaonRow, WaonRowData]:
+    # Reason: Maybe, there are no way to resolve.
+    # The nearest issues: https://github.com/dry-python/returns/issues/708
+    def create(self, input_row: Kind1[WaonRow, WaonRowData]) -> ZaimRowConverter[WaonRow, WaonRowData]:  # type: ignore
         if isinstance(input_row, WaonChargeRow) and (
             input_row.is_charge_by_point or input_row.is_charge_by_download_value
         ):

@@ -11,10 +11,10 @@ from zaimcsvconverter.inputcsvformats.sf_card_viewer import (
     SFCardViewerRowData,
 )
 from zaimcsvconverter.rowconverters import (
+    CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowConverter,
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
-    ZaimRowConverterFactory,
     ZaimTransferRowConverter,
 )
 from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
@@ -98,13 +98,15 @@ class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewer
         return -1 * self.input_row.used_amount
 
 
-class SFCardViewerZaimRowConverterFactory(ZaimRowConverterFactory[SFCardViewerRow, SFCardViewerRowData]):
+class SFCardViewerZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[SFCardViewerRow, SFCardViewerRowData]):
     """This class implements select steps from SFCard Viewer input row to Zaim row converter."""
 
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config
 
-    def create(
+    # Reason: Maybe, there are no way to resolve.
+    # The nearest issues: https://github.com/dry-python/returns/issues/708
+    def create(  # type: ignore
         self, input_row: Kind1[SFCardViewerRow, SFCardViewerRowData]
     ) -> ZaimRowConverter[SFCardViewerRow, SFCardViewerRowData]:
         if isinstance(input_row, SFCardViewerEnterExitRow):

@@ -10,6 +10,7 @@ from errorcollector import MultipleErrorCollector, SingleErrorCollector  # type:
 from pydantic.dataclasses import dataclass
 from returns.primitives.hkt import Kind1
 
+from zaimcsvconverter.datasources.data_source import AbstractInputRecord
 from zaimcsvconverter.exceptions import InvalidCellError, UndefinedContentError
 from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
 from zaimcsvconverter.models import Item, Store
@@ -73,7 +74,7 @@ class RowDataFactory(Generic[TypeVarInputRowData]):
         return self.class_row_data(*arg)
 
 
-class InputRow(Generic[TypeVarInputRowData]):
+class InputRow(Generic[TypeVarInputRowData], AbstractInputRecord):
     """This class implements row model of CSV."""
 
     def __init__(self, input_row_data: TypeVarInputRowData):
