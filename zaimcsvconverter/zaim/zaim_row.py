@@ -1,7 +1,7 @@
 """This module implements abstract row model of Zaim CSV."""
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, TypeVar, Union
 
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.rowconverters import (
@@ -14,7 +14,11 @@ from zaimcsvconverter.rowconverters import (
 from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 
 
-class ZaimRow:
+class OutputRecord(ABC):
+    pass
+
+
+class ZaimRow(OutputRecord):
     """This class implements abstract row model of Zaim CSV."""
 
     def __init__(self, zaim_row_converter: ZaimRowConverter[InputRow[Any], InputRowData]):
@@ -160,3 +164,6 @@ class ZaimRowFactory(AbstractZaimRowFactory):
         if isinstance(zaim_row_converter, ZaimTransferRowConverter):
             return ZaimTransferRow(zaim_row_converter)
         raise ValueError(f"Undefined Zaim row converter. Zaim row converter = {zaim_row_converter.__class__.__name__}")
+
+
+TypeVarAbstractOutputRow = TypeVar("TypeVarAbstractOutputRow", bound=OutputRecord)

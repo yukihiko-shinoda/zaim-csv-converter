@@ -8,11 +8,11 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
-from zaimcsvconverter.csvconverter.input_csv_converter import InputCsvConverter
+from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 
 
-class TestInputCsvConverterForStore:
+class TestCsvToCsvConverterForStore:
     """Tests for AccountCsvConverter for store based CSV."""
 
     # pylint: disable=unused-argument
@@ -25,9 +25,9 @@ class TestInputCsvConverterForStore:
         - The row to skip should be skipped.
         - First line should be header.
         """
-        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
-        input_csv_converter.execute()
+        csv_to_csv_converter = CsvToCsvConverter(path_file_csv_input, tmp_path)
+        assert csv_to_csv_converter.convert_workflow.data_source.undefined_content_error_handler.list_error == []
+        csv_to_csv_converter.execute()
         with (tmp_path / path_file_csv_input.name).open("r", encoding="UTF-8", newline="\n") as file_zaim:
             # noinspection PyUnusedLocal
             assert sum(1 for row in file_zaim) == 2
@@ -58,8 +58,8 @@ class TestInputCsvConverterForStore:
     @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
     def test_stop_iteration_header(path_file_csv_input: Path, tmp_path: Path) -> None:
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
-        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
+        input_csv_converter = CsvToCsvConverter(path_file_csv_input, tmp_path)
+        assert input_csv_converter.convert_workflow.data_source.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
 
@@ -69,8 +69,8 @@ class TestInputCsvConverterForStore:
     @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_gold_point_card_plus")
     def test_stop_iteration_footer(path_file_csv_input: Path, tmp_path: Path) -> None:
         """Method should raise error when header is defined in Account Enum and CSV doesn't include header."""
-        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
+        input_csv_converter = CsvToCsvConverter(path_file_csv_input, tmp_path)
+        assert input_csv_converter.convert_workflow.data_source.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
 
@@ -89,11 +89,11 @@ class TestInputCsvConverterForStore:
         - Method should raise error when store isn't be find on database.
         - Undefined store is listed up on property.
         """
-        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
+        input_csv_converter = CsvToCsvConverter(path_file_csv_input, tmp_path)
+        assert input_csv_converter.convert_workflow.data_source.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
-        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == [
+        assert input_csv_converter.convert_workflow.data_source.undefined_content_error_handler.list_error == [
             ["waon.csv", "マクドナルド津田沼駅前店", ""]
         ]
 
@@ -111,10 +111,10 @@ class TestInputCsvConverterForItem:
         - Method should raise error when store isn't be find on database.
         - Undefined item is listed up on property.
         """
-        input_csv_converter = InputCsvConverter(path_file_csv_input, tmp_path)
-        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == []
+        input_csv_converter = CsvToCsvConverter(path_file_csv_input, tmp_path)
+        assert input_csv_converter.convert_workflow.data_source.undefined_content_error_handler.list_error == []
         with pytest.raises(InvalidInputCsvError):
             input_csv_converter.execute()
-        assert input_csv_converter.zaim_exporter.data_source.undefined_content_error_handler.list_error == [
+        assert input_csv_converter.convert_workflow.data_source.undefined_content_error_handler.list_error == [
             ["amazon.csv", "", "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"]
         ]

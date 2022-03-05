@@ -1,21 +1,25 @@
 """Tests for input_csv.py."""
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.csvconverter.record_to_zaim_converter import RecordToZaimConverter
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError
-from zaimcsvconverter.inputtooutput.record_converter import RecordConverter
-from zaimcsvconverter.zaim.zaim_exporter import ZaimCsvExportOperator, ZaimExporter
-from zaimcsvconverter.zaim.zaim_row import ZaimRowFactory
+from zaimcsvconverter.inputtooutput.convert_workflow import (
+    ConvertWorkflow,
+    OutputModelExporter,
+    ZaimCsvOutputModelExporter,
+)
+from zaimcsvconverter.zaim.zaim_row import OutputRecord, ZaimRowFactory
 
 
-class TestZaimExporter:
+class TestConvertWorkflow:
     """Tests for InputData."""
 
     # pylint: disable=unused-argument
@@ -43,11 +47,11 @@ class TestZaimExporter:
             account_context.input_row_data_class, account_context.input_row_factory
         )
         data_source = Csv(god_slayer, csv_record_processor)
-        record_converter = RecordConverter(account_context.zaim_row_converter_factory, ZaimRowFactory)
-        input_data = ZaimExporter(data_source, record_converter)
+        record_converter = RecordToZaimConverter(account_context.zaim_row_converter_factory, ZaimRowFactory)
+        convert_workflow = ConvertWorkflow(data_source, record_converter)
         with (tmp_path / "test.csv").open("w", encoding="UTF-8", newline="\n") as file_zaim:
             with pytest.raises(InvalidInputCsvError) as error:
-                input_data.export(ZaimCsvExportOperator(file_zaim))
+                convert_workflow.export(cast(OutputModelExporter[OutputRecord], ZaimCsvOutputModelExporter(file_zaim)))
         assert str(error.value) == (
             "Undefined store name in convert table CSV exists in test_waon.csv. "
             "Please check property AccountCsvConverter.list_undefined_store."

@@ -2,7 +2,7 @@
 from pathlib import Path
 from typing import Generator, List, Union
 
-from zaimcsvconverter.csvconverter.input_csv_converter import InputCsvConverter
+from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
 from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.errorhandling.error_handler import FileNameForError, UndefinedContentErrorHandler
 from zaimcsvconverter.errorreporters.csv_exporter import CsvExporter
@@ -25,9 +25,9 @@ class ErrorTotalizer:
 
     def convert_csv(self, path_csv_file: Path) -> None:
         """To seal complexity in for loop."""
-        csv_converter = InputCsvConverter(path_csv_file, self.directory_csv_output)
+        csv_to_csv_converter = CsvToCsvConverter(path_csv_file, self.directory_csv_output)
         try:
-            csv_converter.execute()
+            csv_to_csv_converter.execute()
         except InvalidInputCsvError as exc:
             self.list_invalid_data_source.append(exc.data_source)
             self.undefined_content_error_handler.extend(exc.data_source.undefined_content_error_handler)
