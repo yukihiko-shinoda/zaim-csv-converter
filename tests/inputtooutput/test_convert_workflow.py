@@ -1,6 +1,6 @@
 """Tests for input_csv.py."""
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import pytest
 
@@ -11,10 +11,9 @@ from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
-from zaimcsvconverter.inputtooutput.output_model_exporter import OutputModelExporter
 from zaimcsvconverter.zaim.record_to_zaim_converter import RecordToZaimConverter
 from zaimcsvconverter.zaim.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
-from zaimcsvconverter.zaim.zaim_row import OutputRecord, ZaimRowFactory
+from zaimcsvconverter.zaim.zaim_row import ZaimRowFactory
 
 
 class TestConvertWorkflow:
@@ -49,7 +48,7 @@ class TestConvertWorkflow:
         output_model_exporter = ZaimCsvOutputModelExporter(tmp_path / "test.csv")
         convert_workflow = ConvertWorkflow(data_source, record_converter, output_model_exporter)
         with pytest.raises(InvalidInputCsvError) as error:
-            convert_workflow.export()
+            convert_workflow.execute()
         assert str(error.value) == (
             "Undefined store name in convert table CSV exists in test_waon.csv. "
             "Please check property AccountCsvConverter.list_undefined_store."

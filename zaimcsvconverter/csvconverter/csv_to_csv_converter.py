@@ -30,4 +30,4 @@ class CsvToCsvConverter:
 
     def execute(self) -> None:
         """This method executes CSV convert steps."""
-        self.convert_workflow.export()
+        self.convert_workflow.execute()

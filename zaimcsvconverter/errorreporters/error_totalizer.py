@@ -1,13 +1,19 @@
 """This module implements totalize process of error."""
+from enum import Enum
 from pathlib import Path
 from typing import Generator, List, Union
 
 from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
 from zaimcsvconverter.datasources.data_source import DataSource
-from zaimcsvconverter.errorhandling.error_handler import FileNameForError, UndefinedContentErrorHandler
+from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.errorreporters.csv_exporter import CsvExporter
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
+
+
+class FileNameForError(Enum):
+    INVALID_ROW: str = "error_invalid_row.csv"
+    UNDEFINED_CONTENT: str = "error_undefined_content.csv"
 
 
 class ErrorTotalizer:
@@ -36,7 +42,7 @@ class ErrorTotalizer:
     def is_presented(self) -> bool:
         return bool(self.list_invalid_data_source)
 
-    def export_to_csv(self) -> None:
+    def report_to_csv(self) -> None:
         """This method exports invalid input CSV errors into CSV."""
         csv_exporter = CsvExporter(self.directory_csv_output)
         csv_exporter.export(self, FileNameForError.INVALID_ROW.value)

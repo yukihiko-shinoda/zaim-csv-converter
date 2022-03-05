@@ -5,8 +5,7 @@ from pathlib import Path
 import pytest
 
 from tests.testlibraries.error_row_data_for_test import ErrorRowDataForTest
-from zaimcsvconverter.csvconverter.input_csv_converter_iterator import InputCsvConverterIterator
-from zaimcsvconverter.exceptions import SomeInvalidInputCsvError
+from zaimcsvconverter.errorreporters.error_totalizer import ErrorTotalizer
 
 
 class TestInputCsvConverterIterator:
@@ -17,8 +16,10 @@ class TestInputCsvConverterIterator:
     @pytest.mark.usefixtures("yaml_config_load", "database_session_store_item")
     def test_success(resource_path: Path, tmp_path: Path) -> None:
         """Method processes all csv files in specified diretory."""
-        input_csv_converter_iterator = InputCsvConverterIterator(resource_path, tmp_path)
-        input_csv_converter_iterator.execute()
+        error_totalizer = ErrorTotalizer(tmp_path)
+        for path_csv_file in sorted(resource_path.glob("*.csv")):
+            error_totalizer.convert_csv(path_csv_file)
+        assert not error_totalizer.is_presented
         files = sorted(tmp_path.rglob("*[!.gitkeep]"))
         assert len(files) == 2
         assert files[0].name == "test_amazon.csv"
@@ -33,9 +34,11 @@ class TestInputCsvConverterIterator:
         - Method exports error csv files in specified diretory.
         - Same content should be unified.
         """
-        input_csv_converter_iterator = InputCsvConverterIterator(resource_path, tmp_path)
-        with pytest.raises(SomeInvalidInputCsvError):
-            input_csv_converter_iterator.execute()
+        error_totalizer = ErrorTotalizer(tmp_path)
+        for path_csv_file in sorted(resource_path.glob("*.csv")):
+            error_totalizer.convert_csv(path_csv_file)
+        assert error_totalizer.is_presented
+        error_totalizer.report_to_csv()
         files = sorted(tmp_path.rglob("*[!.gitkeep]"))
         assert len(files) == 4, f"files = {files}"
         assert files[0].name == "error_invalid_row.csv"

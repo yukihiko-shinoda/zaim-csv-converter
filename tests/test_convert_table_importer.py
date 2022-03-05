@@ -1,4 +1,5 @@
 """Tests for convert_table_importer.py."""
+from pathlib import Path
 from typing import Any, List
 
 import pytest
@@ -14,11 +15,10 @@ class TestConvertTableImporter:
     def _prepare_fixture(self) -> None:
         pass
 
-    def test_success(
-        self, database_session_with_schema: SQLAlchemySession, fixture_convert_table_importer: ConvertTableImporter
-    ) -> None:
+    def test_success(self, database_session_with_schema: SQLAlchemySession, resource_path: Path) -> None:
         """CSV should import into appropriate table."""
-        fixture_convert_table_importer.execute()
+        for path in sorted(resource_path.glob("*.csv")):
+            ConvertTableImporter.execute(path)
         self.assert_store_equal(
             [
                 [1, 3, "", None, None, None, None, "お財布"],
@@ -84,7 +84,8 @@ class TestConvertTableImporter:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.usefixtures("database_session_with_schema")
-    def test_fail(fixture_convert_table_importer: ConvertTableImporter) -> None:
+    def test_fail(resource_path: Path) -> None:
         """Method should raise error when the file which name is not correct is included."""
         with pytest.raises(ValueError):
-            fixture_convert_table_importer.execute()
+            for path in sorted(resource_path.glob("*.csv")):
+                ConvertTableImporter.execute(path)
