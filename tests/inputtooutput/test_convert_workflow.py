@@ -7,15 +7,13 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.csvconverter.record_to_zaim_converter import RecordToZaimConverter
 from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError
-from zaimcsvconverter.inputtooutput.convert_workflow import (
-    ConvertWorkflow,
-    OutputModelExporter,
-    ZaimCsvOutputModelExporter,
-)
+from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
+from zaimcsvconverter.inputtooutput.output_model_exporter import OutputModelExporter
+from zaimcsvconverter.zaim.record_to_zaim_converter import RecordToZaimConverter
+from zaimcsvconverter.zaim.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
 from zaimcsvconverter.zaim.zaim_row import OutputRecord, ZaimRowFactory
 
 
@@ -48,10 +46,10 @@ class TestConvertWorkflow:
         )
         data_source = Csv(god_slayer, csv_record_processor)
         record_converter = RecordToZaimConverter(account_context.zaim_row_converter_factory, ZaimRowFactory)
-        convert_workflow = ConvertWorkflow(data_source, record_converter)
-        with (tmp_path / "test.csv").open("w", encoding="UTF-8", newline="\n") as file_zaim:
-            with pytest.raises(InvalidInputCsvError) as error:
-                convert_workflow.export(cast(OutputModelExporter[OutputRecord], ZaimCsvOutputModelExporter(file_zaim)))
+        output_model_exporter = ZaimCsvOutputModelExporter(tmp_path / "test.csv")
+        convert_workflow = ConvertWorkflow(data_source, record_converter, output_model_exporter)
+        with pytest.raises(InvalidInputCsvError) as error:
+            convert_workflow.export()
         assert str(error.value) == (
             "Undefined store name in convert table CSV exists in test_waon.csv. "
             "Please check property AccountCsvConverter.list_undefined_store."

@@ -1,30 +1,8 @@
 """This module implements model of input CSV."""
-from abc import ABC, abstractmethod
-import csv
-from typing import Generic, TextIO
-
 from zaimcsvconverter.datasources.data_source import DataSource
+from zaimcsvconverter.inputtooutput.output_model_exporter import OutputModelExporter
 from zaimcsvconverter.inputtooutput.record_converter import RecordConverter
-from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
-from zaimcsvconverter.zaim.zaim_row import OutputRecord, TypeVarAbstractOutputRow, ZaimRow
-
-
-class OutputModelExporter(Generic[TypeVarAbstractOutputRow], ABC):
-    @abstractmethod
-    def execute(self, output_row: TypeVarAbstractOutputRow) -> None:
-        raise NotImplementedError
-
-
-class ZaimCsvOutputModelExporter(OutputModelExporter[ZaimRow]):
-    """Export operation of Zaim CSV."""
-
-    def __init__(self, file_zaim: TextIO) -> None:
-        writer_zaim = csv.writer(file_zaim)
-        writer_zaim.writerow(ZaimCsvFormat.HEADER)
-        self.writer_zaim = writer_zaim
-
-    def execute(self, output_row: ZaimRow) -> None:
-        self.writer_zaim.writerow(output_row.convert_to_list())
+from zaimcsvconverter.zaim.zaim_row import OutputRecord
 
 
 class ConvertWorkflow:
@@ -34,13 +12,16 @@ class ConvertWorkflow:
         self,
         datasource: DataSource,
         record_converter: RecordConverter,
+        output_model_exporter: OutputModelExporter[OutputRecord],
     ) -> None:
-        self.record_converter = record_converter
         self.data_source = datasource
+        self.record_converter = record_converter
+        self.output_model_exporter = output_model_exporter
 
-    def export(self, output_model_exporter: OutputModelExporter[OutputRecord]) -> None:
+    def execute(self) -> None:
         """This method convert this csv into Zaim format CSV."""
-        for input_record in self.data_source:
-            output_row = self.record_converter.convert(input_record)
-            output_model_exporter.execute(output_row)
+        with self.output_model_exporter:
+            for input_record in self.data_source:
+                output_record = self.record_converter.convert(input_record)
+                self.output_model_exporter.execute(output_record)
         self.data_source.raise_error_if_invalid()
