@@ -39,7 +39,10 @@ class TestZaimExporter:
         """
         account_context: AccountContext[Any, Any] = Account.create_by_path_csv_input(path_file_csv_input).value
         god_slayer = account_context.god_slayer_factory.create(path_file_csv_input)
-        data_source = Csv(god_slayer, CsvRecordProcessor(account_context))
+        csv_record_processor = CsvRecordProcessor(
+            account_context.input_row_data_class, account_context.input_row_factory
+        )
+        data_source = Csv(god_slayer, csv_record_processor)
         record_converter = RecordConverter(account_context.zaim_row_converter_factory, ZaimRowFactory)
         input_data = ZaimExporter(data_source, record_converter)
         with (tmp_path / "test.csv").open("w", encoding="UTF-8", newline="\n") as file_zaim:

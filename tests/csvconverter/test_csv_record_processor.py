@@ -24,9 +24,12 @@ class TestCsvRecordProcessor:
         - RecordProcessor should raise error when input row is invalid.
         - RecordProcessor should collect error when input row is invalid.
         """
-        record_processor = CsvRecordProcessor(Account.WAON.value)
+        account_context = Account.WAON.value
+        csv_record_processor = CsvRecordProcessor(
+            account_context.input_row_data_class, account_context.input_row_factory
+        )
         with pytest.raises(InvalidRecordError) as excinfo:
-            record_processor.execute(["2018/11/11", "板橋前野町", "5,000円", "オートチャージ", "-"])
+            csv_record_processor.execute(["2018/11/11", "板橋前野町", "5,000円", "オートチャージ", "-"])
         exception = excinfo.value
         assert len(exception.list_error) == 1
         assert str(exception.list_error[0]) == "Charge kind in charge row is required. Charge kind = -"

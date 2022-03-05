@@ -19,7 +19,10 @@ class InputCsvConverter:
             path_csv_file
         ).value
         god_slayer = account_context.god_slayer_factory.create(path_csv_file)
-        data_source_csv = Csv(god_slayer, CsvRecordProcessor(account_context))
+        csv_record_processor = CsvRecordProcessor(
+            account_context.input_row_data_class, account_context.input_row_factory
+        )
+        data_source_csv = Csv(god_slayer, csv_record_processor)
         record_converter = RecordConverter(account_context.zaim_row_converter_factory, ZaimRowFactory)
         self.zaim_exporter = ZaimExporter(data_source_csv, record_converter)
         self.path_to_output = directory_csv_output / path_csv_file.name

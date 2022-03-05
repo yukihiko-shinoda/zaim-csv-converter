@@ -4,13 +4,13 @@ from typing import cast, Generic, List, Optional
 from pydantic import ValidationError
 from returns.primitives.hkt import Kind1
 
-from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, SkipRecord
 from zaimcsvconverter.inputcsvformats import (
     InputContentRow,
     InputRow,
     InputRowData,
+    InputRowFactory,
     TypeVarInputRow,
     TypeVarInputRowData,
 )
@@ -19,9 +19,13 @@ from zaimcsvconverter.inputcsvformats import (
 class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
     """This class implements convert steps of input CSV row."""
 
-    def __init__(self, account_context: AccountContext[TypeVarInputRowData, TypeVarInputRow]):
-        self.input_row_data_class = account_context.input_row_data_class
-        self.input_row_factory = account_context.input_row_factory
+    def __init__(
+        self,
+        input_row_data_class: type[TypeVarInputRowData],
+        input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow],
+    ):
+        self.input_row_data_class = input_row_data_class
+        self.input_row_factory = input_row_factory
 
     def execute(self, list_input_row_standard_type_value: List[str]) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
         """This method executes convert steps of input CSV row."""

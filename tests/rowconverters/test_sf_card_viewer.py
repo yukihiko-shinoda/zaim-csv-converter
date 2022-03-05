@@ -27,7 +27,9 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
         expected_amount = 195
         config_account_name = "PASMO"
         account_context = Account.PASMO.value
-        csv_record_processor = CsvRecordProcessor(account_context)
+        csv_record_processor = CsvRecordProcessor(
+            account_context.input_row_data_class, account_context.input_row_factory
+        )
         sf_card_viewer_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION
         )
@@ -56,7 +58,9 @@ class TestSFCardViewerZaimTransferRowConverter:
         config_account_name = "PASMO"
         config_auto_charge_source = "TOKYU CARD"
         account_context = Account.PASMO.value
-        csv_record_processor = CsvRecordProcessor(account_context)
+        csv_record_processor = CsvRecordProcessor(
+            account_context.input_row_data_class, account_context.input_row_factory
+        )
         sf_card_viewer_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION
         )
@@ -120,7 +124,9 @@ class TestSFCardViewerZaimRowConverterFactory:
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.PASMO.value
-        csv_record_processor = CsvRecordProcessor(account_context)
+        csv_record_processor = CsvRecordProcessor(
+            account_context.input_row_data_class, account_context.input_row_factory
+        )
         sf_card_viewer_row = csv_record_processor.create_input_row_instance(input_row_data)
         factory = account_context.zaim_row_converter_factory.create(sf_card_viewer_row)
         # noinspection PyTypeChecker
