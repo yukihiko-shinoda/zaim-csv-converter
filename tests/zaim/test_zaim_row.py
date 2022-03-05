@@ -9,6 +9,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowFactory
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData, InputRowFactory
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowFactory
@@ -33,7 +34,8 @@ class TestZaimIncomeRow:
     def test_all() -> None:
         """Argument should set into properties."""
         account_context = Account.MUFG.value
-        mufg_row = account_context.create_input_row_instance(
+        csv_record_processor = CsvRecordProcessor(account_context)
+        mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT
         )
         # Reason: Pylint's bug. pylint: disable=no-member
@@ -144,7 +146,8 @@ class TestZaimTransferRow:
     def test_all() -> None:
         """Argument should set into properties."""
         account_context = Account.WAON.value
-        waon_auto_charge_row = account_context.create_input_row_instance(
+        csv_record_processor = CsvRecordProcessor(account_context)
+        waon_auto_charge_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO
         )
         zaim_low = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_auto_charge_row))
@@ -209,7 +212,8 @@ class TestZaimRowFactory:
     ) -> None:
         """Factory should create appropriate type of Zaim row."""
         account_context = Account.WAON.value
-        input_row = account_context.create_input_row_instance(waon_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        input_row = csv_record_processor.create_input_row_instance(waon_row_data)
         assert isinstance(
             ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(input_row)), expected
         )

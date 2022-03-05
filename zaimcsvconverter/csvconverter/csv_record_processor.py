@@ -20,19 +20,18 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
     """This class implements convert steps of input CSV row."""
 
     def __init__(self, account_context: AccountContext[TypeVarInputRowData, TypeVarInputRow]):
-        self._account_context = account_context
+        self.input_row_data_class = account_context.input_row_data_class
+        self.input_row_factory = account_context.input_row_factory
 
     def execute(self, list_input_row_standard_type_value: List[str]) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
         """This method executes convert steps of input CSV row."""
         try:
-            input_record_data = self._account_context.create_input_row_data_instance(
-                list_input_row_standard_type_value
-            )
+            input_record_data = self.input_row_data_class(*list_input_row_standard_type_value)
         except ValidationError as exc:
             raise InvalidRecordError(
                 [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
             ) from exc
-        input_record = self._account_context.create_input_row_instance(input_record_data)
+        input_record = self.create_input_row_instance(input_record_data)
         dekinded_input_record = cast(InputRow[InputRowData], input_record)
         if dekinded_input_record.is_row_to_skip:
             raise SkipRecord()
@@ -54,3 +53,9 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
         undefined_content_error_handler = UndefinedContentErrorHandler()
         undefined_content_error_handler.extend_list(dekinded_input_row.get_report_undefined_content_error())
         return undefined_content_error_handler
+
+    def create_input_row_instance(
+        self, input_row_data: TypeVarInputRowData
+    ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
+        """This method creates input row instance by input row data instance."""
+        return self.input_row_factory.create(input_row_data)

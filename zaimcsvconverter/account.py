@@ -5,10 +5,9 @@ from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 import re
-from typing import Generic, List, Type
+from typing import Generic, Type
 
 from godslayer.god_slayer_factory import GodSlayerFactory
-from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData, AmazonRowFactory
@@ -106,17 +105,6 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     input_row_data_class: Type[TypeVarInputRowData]
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
     zaim_row_converter_factory: CsvRecordToZaimRowConverterFactory[TypeVarInputRow, TypeVarInputRowData]
-
-    def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> TypeVarInputRowData:
-        """This method creates input row data instance by list data of input row."""
-        # noinspection PyArgumentList
-        return self.input_row_data_class(*list_input_row_standard_type_value)
-
-    def create_input_row_instance(
-        self, input_row_data: TypeVarInputRowData
-    ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
-        """This method creates input row instance by input row data instance."""
-        return self.input_row_factory.create(input_row_data)
 
 
 class Account(Enum):

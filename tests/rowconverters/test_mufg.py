@@ -4,6 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputcsvformats.mufg import MufgRowData
 from zaimcsvconverter.rowconverters.mufg import (
@@ -52,7 +53,8 @@ class TestMufgZaimIncomeRowConverter:
     ) -> None:
         """Arguments should set into properties."""
         account_context = Account.MUFG.value
-        mufg_row = account_context.create_input_row_instance(mufg_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        mufg_row = csv_record_processor.create_input_row_instance(mufg_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
         assert isinstance(zaim_row, ZaimIncomeRow)
@@ -77,7 +79,8 @@ class TestMufgZaimPaymentRowConverter:
         config_account_name = "三菱UFJ銀行"
         store_name = "東京都水道局　経理部管理課"
         account_context = Account.MUFG.value
-        mufg_row = account_context.create_input_row_instance(
+        csv_record_processor = CsvRecordProcessor(account_context)
+        mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS
         )
         # Reason: Pylint's bug. pylint: disable=no-member
@@ -112,7 +115,8 @@ class TestMufgZaimTransferRowConverter:
     ) -> None:
         """Arguments should set into properties."""
         account_context = Account.MUFG.value
-        mufg_row = account_context.create_input_row_instance(mufg_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        mufg_row = csv_record_processor.create_input_row_instance(mufg_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
         assert isinstance(zaim_row, ZaimTransferRow)
@@ -135,7 +139,8 @@ class TestMufgZaimTransferRowConverter:
         config_transfer_account_name = "お財布"
         # Reason: Pylint's bug. pylint: disable=no-member
         account_context = Account.MUFG.value
-        mufg_row = account_context.create_input_row_instance(InstanceResource.ROW_DATA_MUFG_PAYMENT)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        mufg_row = csv_record_processor.create_input_row_instance(InstanceResource.ROW_DATA_MUFG_PAYMENT)
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
@@ -156,7 +161,8 @@ class TestMufgZaimTransferRowConverter:
         transfer_target = "三菱UFJ銀行"
         # Reason: Pylint's bug. pylint: disable=no-member
         account_context = Account.MUFG.value
-        mufg_row = account_context.create_input_row_instance(
+        csv_record_processor = CsvRecordProcessor(account_context)
+        mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_OWN_ACCOUNT
         )
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
@@ -179,7 +185,8 @@ class TestMufgZaimTransferRowConverter:
         config_account_name = "三菱UFJ銀行"
         # Reason: Pylint's bug. pylint: disable=no-member
         account_context = Account.MUFG.value
-        mufg_row = account_context.create_input_row_instance(
+        csv_record_processor = CsvRecordProcessor(account_context)
+        mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_GOLD_POINT_MARKETING
         )
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
@@ -254,6 +261,7 @@ class TestMufgZaimRowConverterFactory:
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.MUFG.value
-        input_row = account_context.create_input_row_instance(input_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        input_row = csv_record_processor.create_input_row_instance(input_row_data)
         actual = account_context.zaim_row_converter_factory.create(input_row)
         assert isinstance(actual, expected)

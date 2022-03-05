@@ -4,6 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911Row, Amazon201911RowData
 from zaimcsvconverter.rowconverters.amazon_201911 import (
     Amazon201911DiscountZaimPaymentRowConverter,
@@ -26,7 +27,10 @@ class TestAmazon201911DiscountZaimPaymentRowConverter:
         store_name = "Amazon Japan G.K."
         item_name = "（Amazon ポイント）"
         account_context = Account.AMAZON_201911.value
-        amazon_row = account_context.create_input_row_instance(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        amazon_row = csv_record_processor.create_input_row_instance(
+            InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT
+        )
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
@@ -53,7 +57,8 @@ class TestAmazon201911PaymentZaimPaymentRowConverter:
         store_name = "Amazon Japan G.K."
         item_name = "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"
         account_context = Account.AMAZON_201911.value
-        amazon_row = account_context.create_input_row_instance(InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        amazon_row = csv_record_processor.create_input_row_instance(InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(amazon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
@@ -96,6 +101,7 @@ class TestAmazon201911ZaimRowConverterFactory:
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.AMAZON_201911.value
-        amazon_row = account_context.create_input_row_instance(input_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        amazon_row = csv_record_processor.create_input_row_instance(input_row_data)
         actual = account_context.zaim_row_converter_factory.create(amazon_row)
         assert isinstance(actual, expected)

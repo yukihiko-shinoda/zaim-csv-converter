@@ -4,6 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 from zaimcsvconverter.rowconverters.waon import (
@@ -33,7 +34,8 @@ class TestWaonZaimIncomeRowConverter:
     ) -> None:
         """Arguments should set into properties."""
         account_context = Account.WAON.value
-        waon_row = account_context.create_input_row_instance(waon_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        waon_row = csv_record_processor.create_input_row_instance(waon_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
         assert isinstance(zaim_row, ZaimIncomeRow)
@@ -72,7 +74,8 @@ class TestWaonZaimPaymentRowConverter:
     ) -> None:
         """Arguments should set into properties."""
         account_context = Account.WAON.value
-        waon_row = account_context.create_input_row_instance(waon_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        waon_row = csv_record_processor.create_input_row_instance(waon_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
         assert isinstance(zaim_row, ZaimPaymentRow)
@@ -103,7 +106,8 @@ class TestWaonZaimTransferRowConverter:
     def test(waon_row_data: WaonRowData, expected_date: str, expected_amount_payment: int) -> None:
         """Arguments should set into properties."""
         account_context = Account.WAON.value
-        waon_row = account_context.create_input_row_instance(waon_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        waon_row = csv_record_processor.create_input_row_instance(waon_row_data)
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
@@ -168,7 +172,8 @@ class TestWaonZaimRowConverterConverter:
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.WAON.value
-        input_row = account_context.create_input_row_instance(input_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        input_row = csv_record_processor.create_input_row_instance(input_row_data)
         actual = account_context.zaim_row_converter_factory.create(input_row)
         assert isinstance(actual, expected)
 
@@ -182,7 +187,8 @@ class TestWaonZaimRowConverterConverter:
     def test_fail() -> None:
         """Create method should raise ValueError when input row is undefined type."""
         account_context = Account.WAON.value
-        input_row = account_context.create_input_row_instance(
+        csv_record_processor = CsvRecordProcessor(account_context)
+        input_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO
         )
         with pytest.raises(ValueError) as error:

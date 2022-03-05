@@ -4,6 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.rowconverters.sf_card_viewer import (
@@ -26,7 +27,8 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
         expected_amount = 195
         config_account_name = "PASMO"
         account_context = Account.PASMO.value
-        sf_card_viewer_row = account_context.create_input_row_instance(
+        csv_record_processor = CsvRecordProcessor(account_context)
+        sf_card_viewer_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION
         )
         # Reason: Pylint's bug. pylint: disable=no-member
@@ -54,7 +56,8 @@ class TestSFCardViewerZaimTransferRowConverter:
         config_account_name = "PASMO"
         config_auto_charge_source = "TOKYU CARD"
         account_context = Account.PASMO.value
-        sf_card_viewer_row = account_context.create_input_row_instance(
+        csv_record_processor = CsvRecordProcessor(account_context)
+        sf_card_viewer_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION
         )
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row))
@@ -117,7 +120,8 @@ class TestSFCardViewerZaimRowConverterFactory:
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.PASMO.value
-        sf_card_viewer_row = account_context.create_input_row_instance(input_row_data)
+        csv_record_processor = CsvRecordProcessor(account_context)
+        sf_card_viewer_row = csv_record_processor.create_input_row_instance(input_row_data)
         factory = account_context.zaim_row_converter_factory.create(sf_card_viewer_row)
         # noinspection PyTypeChecker
         assert isinstance(factory, expected)

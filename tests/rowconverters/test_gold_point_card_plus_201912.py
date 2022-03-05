@@ -4,6 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
+from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPointCardPlus201912RowData
 from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimPaymentRowConverter
 from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
@@ -41,10 +42,11 @@ class TestGoldPointCardPlus201912ZaimPaymentRowConverter:
         expected_use_amount: int,
     ) -> None:
         """Arguments should set into properties."""
-        accout_context = Account.GOLD_POINT_CARD_PLUS_201912.value
-        row = accout_context.create_input_row_instance(gold_point_card_plus_201912_row_data)
+        account_context = Account.GOLD_POINT_CARD_PLUS_201912.value
+        csv_record_processor = CsvRecordProcessor(account_context)
+        row = csv_record_processor.create_input_row_instance(gold_point_card_plus_201912_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(accout_context.zaim_row_converter_factory.create(row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(row))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -77,7 +79,8 @@ class TestGoldPointCardPlus201912ZaimRowConverterFactory:
         input_row_data: GoldPointCardPlus201912RowData, expected: type[GoldPointCardPlus201912ZaimPaymentRowConverter]
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
-        accout_context = Account.GOLD_POINT_CARD_PLUS_201912.value
-        input_row = accout_context.create_input_row_instance(input_row_data)
-        actual = accout_context.zaim_row_converter_factory.create(input_row)
+        account_context = Account.GOLD_POINT_CARD_PLUS_201912.value
+        csv_record_processor = CsvRecordProcessor(account_context)
+        input_row = csv_record_processor.create_input_row_instance(input_row_data)
+        actual = account_context.zaim_row_converter_factory.create(input_row)
         assert isinstance(actual, expected)
