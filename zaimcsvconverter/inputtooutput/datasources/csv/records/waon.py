@@ -1,57 +1,10 @@
 """This module implements row model of WAON CSV."""
 from __future__ import annotations
 
-from datetime import datetime
-from enum import Enum
-
-from pydantic.dataclasses import dataclass
-
+from zaimcsvconverter.data.waon import ChargeKind, UseKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
-from zaimcsvconverter.inputcsvformats.customdatatypes.yen_string_to_int import StrictYenStringToInt
-from zaimcsvconverter.inputcsvformats import InputStoreRow, InputStoreRowData
-
-
-class UseKind(str, Enum):
-    """This class implements constant of user kind in WAON CSV."""
-
-    PAYMENT = "支払"
-    PAYMENT_CANCEL = "支払取消"
-    CHARGE = "チャージ"
-    AUTO_CHARGE = "オートチャージ"
-    DOWNLOAD_POINT = "ポイントダウンロード"
-    TRANSFER_WAON_UPLOAD = "WAON移行（アップロード）"
-    TRANSFER_WAON_DOWNLOAD = "WAON移行（ダウンロード）"
-
-
-class ChargeKind(str, Enum):
-    """This class implements constant of charge kind in WAON CSV."""
-
-    BANK_ACCOUNT = "銀行口座"
-    POINT = "ポイント"
-    CASH = "現金"
-    DOWNLOAD_VALUE = "バリューダウンロード"
-    NULL = "-"
-
-
-# Reason: Model. pylint: disable=too-few-public-methods
-@dataclass
-class WaonRowData(InputStoreRowData):
-    """This class implements data class for wrapping list of WAON CSV row model."""
-
-    date_: StringToDateTime
-    used_store: str
-    used_amount: StrictYenStringToInt
-    use_kind: UseKind
-    charge_kind: ChargeKind
-
-    @property
-    def date(self) -> datetime:
-        return self.date_
-
-    @property
-    def store_name(self) -> str:
-        return self.used_store
+from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputStoreRow
 
 
 class WaonRow(InputStoreRow[WaonRowData]):

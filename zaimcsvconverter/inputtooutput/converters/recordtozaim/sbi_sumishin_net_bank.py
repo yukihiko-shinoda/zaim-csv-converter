@@ -4,18 +4,18 @@ from typing import cast, Union
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import (
-    SBISumishinNetBankDepositRow,
-    SBISumishinNetBankRow,
-    SBISumishinNetBankRowData,
-    SBISumishinNetBankWithdrawalRow,
-)
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimIncomeRowStoreConverter,
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
     ZaimTransferRowConverter,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.sbi_sumishin_net_bank import (
+    SBISumishinNetBankDepositRow,
+    SBISumishinNetBankRow,
+    SBISumishinNetBankWithdrawalRow,
 )
 
 

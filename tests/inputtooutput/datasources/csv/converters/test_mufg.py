@@ -1,8 +1,9 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.mufg import MufgRow, MufgRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.mufg import MufgRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.mufg import MufgRow
 
 
 class TestMufgRowFactory:

@@ -1,14 +1,14 @@
 """Converter from MUFG CSV data to record model."""
-from zaimcsvconverter.inputcsvformats.mufg import (
-    CashFlowKind,
+from zaimcsvconverter.data.mufg import CashFlowKind
+from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.mufg import (
     MufgIncomeFromOthersRow,
     MufgIncomeFromSelfRow,
     MufgPaymentToSelfRow,
     MufgPaymentToSomeoneRow,
     MufgRow,
-    MufgRowData,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 
 
 class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):

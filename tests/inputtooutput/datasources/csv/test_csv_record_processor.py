@@ -4,8 +4,8 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.exceptions import InvalidRecordError
-from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
 
 
 class TestCsvRecordProcessor:

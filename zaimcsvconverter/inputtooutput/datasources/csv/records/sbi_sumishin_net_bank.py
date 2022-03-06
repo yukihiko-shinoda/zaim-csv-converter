@@ -1,36 +1,9 @@
 """This module implements row model of SBI Sumishin net bank CSV."""
-from datetime import datetime
 from typing import Any
 
-from pydantic.dataclasses import dataclass as pydantic_dataclass
-
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import (
-    ConstrainedStringWithCommaToOptionalInt,
-)
-from zaimcsvconverter.inputcsvformats import InputStoreRow, InputStoreRowData
-
-
-@pydantic_dataclass
-# Reason: Model. pylint: disable=too-few-public-methods
-class SBISumishinNetBankRowData(InputStoreRowData):
-    """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
-
-    date_: StringToDateTime
-    content: str
-    withdrawal_amount: ConstrainedStringWithCommaToOptionalInt
-    deposit_amount: ConstrainedStringWithCommaToOptionalInt
-    balance: str
-    note: str
-
-    @property
-    def date(self) -> datetime:
-        return self.date_
-
-    @property
-    def store_name(self) -> str:
-        return self.content
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputStoreRow
 
 
 class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):

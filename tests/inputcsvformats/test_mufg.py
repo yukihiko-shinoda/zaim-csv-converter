@@ -5,14 +5,14 @@ from pydantic import ValidationError
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.mufg import (
-    CashFlowKind,
+from zaimcsvconverter.data.mufg import CashFlowKind
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.records.mufg import (
     MufgIncomeFromSelfRow,
     MufgPaymentToSelfRow,
-    MufgRowData,
     MufgStoreRow,
 )
-from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.models import Store
 
 

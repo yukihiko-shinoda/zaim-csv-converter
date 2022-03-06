@@ -7,9 +7,10 @@ from pydantic import ValidationError
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, LogicError, SkipRecord
 from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
-from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord, DataSource
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
 
 
 class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):

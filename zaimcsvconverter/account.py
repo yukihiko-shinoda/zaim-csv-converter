@@ -10,17 +10,6 @@ from typing import Generic, Type
 from godslayer.god_slayer_factory import GodSlayerFactory
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData
-from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowData
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPointCardPlus201912RowData
-from zaimcsvconverter.inputcsvformats.mufg import MufgRowData
-from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData
-from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import SBISumishinNetBankRowData
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
-from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData
-from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
@@ -53,6 +42,20 @@ from zaimcsvconverter.inputtooutput.datasources.csv.converters.sbi_sumishin_net_
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.view_card import ViewCardRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.waon import WaonRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912RowData,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
 
 
 @dataclass

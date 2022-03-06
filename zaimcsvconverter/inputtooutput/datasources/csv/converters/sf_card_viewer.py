@@ -2,14 +2,14 @@
 from typing import Callable
 
 from zaimcsvconverter.config import SFCardViewerConfig
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import (
-    Note,
+from zaimcsvconverter.data.sf_card_viewer import Note
+from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.sf_card_viewer import (
     SFCardViewerEnterExitRow,
     SFCardViewerEnterRow,
     SFCardViewerRow,
-    SFCardViewerRowData,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 
 
 class SFCardViewerRowFactory(InputRowFactory[SFCardViewerRowData, SFCardViewerRow]):

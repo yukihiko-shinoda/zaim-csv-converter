@@ -2,8 +2,9 @@
 from abc import ABC, abstractmethod
 from typing import Generator, Generic, Union
 
-from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.csv import Csv
+from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
 from zaimcsvconverter.inputtooutput.datasources import DataSource
 
 

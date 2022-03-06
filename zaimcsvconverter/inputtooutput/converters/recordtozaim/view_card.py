@@ -2,12 +2,13 @@
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.view_card import ViewCardRow, ViewCardRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
 )
+from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.view_card import ViewCardRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object

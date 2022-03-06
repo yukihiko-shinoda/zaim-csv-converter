@@ -4,18 +4,18 @@ from typing import Callable, Optional
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.config import SFCardViewerConfig
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import (
-    SFCardViewerEnterExitRow,
-    SFCardViewerEnterRow,
-    SFCardViewerRow,
-    SFCardViewerRowData,
-)
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowConverter,
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
     ZaimTransferRowConverter,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.sf_card_viewer import (
+    SFCardViewerEnterExitRow,
+    SFCardViewerEnterRow,
+    SFCardViewerRow,
 )
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 

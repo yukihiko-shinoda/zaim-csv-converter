@@ -4,11 +4,12 @@ from pathlib import Path
 from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter import DirectoryCsv
 from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.record_to_zaim_converter import RecordToZaimConverter
 from zaimcsvconverter.inputtooutput.datasources.csv.csv import Csv
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
 
 

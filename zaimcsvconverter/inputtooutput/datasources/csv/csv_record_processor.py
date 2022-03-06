@@ -5,14 +5,9 @@ from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.exceptions import InvalidRecordError, SkipRecord
-from zaimcsvconverter.inputcsvformats import (
-    InputContentRow,
-    InputRow,
-    InputRowData,
-    TypeVarInputRow,
-    TypeVarInputRowData,
-)
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData, TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputContentRow, InputRow, TypeVarInputRow
 
 
 class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):

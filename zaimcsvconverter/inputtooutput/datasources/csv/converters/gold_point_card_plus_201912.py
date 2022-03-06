@@ -1,9 +1,11 @@
 """Converter from GOLD POINT CARD+ CSV data to record model version 201912."""
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912Row,
+from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.records.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912Row,
+)
 
 
 class GoldPointCardPlus201912RowFactory(InputRowFactory[GoldPointCardPlus201912RowData, GoldPointCardPlus201912Row]):

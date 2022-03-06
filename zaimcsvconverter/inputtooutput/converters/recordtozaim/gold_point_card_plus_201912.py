@@ -2,14 +2,16 @@
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912Row,
-    GoldPointCardPlus201912RowData,
-)
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912RowData,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.records.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912Row,
 )
 
 

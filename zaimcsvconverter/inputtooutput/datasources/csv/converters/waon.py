@@ -1,6 +1,8 @@
 """Converter from WAON CSV data to record model."""
-from zaimcsvconverter.inputcsvformats.waon import UseKind, WaonChargeRow, WaonRow, WaonRowData
+from zaimcsvconverter.data.waon import UseKind
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow
 
 
 class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):

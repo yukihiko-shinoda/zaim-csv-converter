@@ -4,7 +4,6 @@ from typing import cast
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimIncomeRowStoreConverter,
@@ -12,6 +11,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimRowConverter,
     ZaimTransferRowConverter,
 )
+from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object

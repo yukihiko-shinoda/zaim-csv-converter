@@ -4,8 +4,9 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRow, AmazonRowData
-from zaimcsvconverter.inputcsvformats import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon import AmazonRow
 from zaimcsvconverter.models import Item, Store
 
 

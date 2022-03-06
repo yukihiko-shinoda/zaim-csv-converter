@@ -2,8 +2,9 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRow, SFCardViewerRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.sf_card_viewer import SFCardViewerRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.sf_card_viewer import SFCardViewerRow
 
 
 class TestSFCardViewerRowFactory:

@@ -5,8 +5,10 @@ from pydantic import ValidationError
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats import RowDataFactory
-from zaimcsvconverter.inputcsvformats.waon import ChargeKind, UseKind, WaonChargeRow, WaonRow, WaonRowData
+from zaimcsvconverter.data.waon import ChargeKind, UseKind
+from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow
 from zaimcsvconverter.models import Store
 
 

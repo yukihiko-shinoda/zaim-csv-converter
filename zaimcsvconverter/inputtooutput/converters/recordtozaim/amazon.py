@@ -2,12 +2,13 @@
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRow, AmazonRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowItemConverter,
     ZaimRowConverter,
 )
+from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon import AmazonRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object

@@ -3,7 +3,6 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus import (
     GoldPointCardPlusZaimPaymentRowConverter,
@@ -28,6 +27,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import (
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 
 
 class TestZaimRowConverterFactory:

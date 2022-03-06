@@ -1,11 +1,11 @@
 """Converter from SBI Sumishin net bank CSV data to record model."""
-from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import (
+from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.sbi_sumishin_net_bank import (
     SBISumishinNetBankDepositRow,
     SBISumishinNetBankRow,
-    SBISumishinNetBankRowData,
     SBISumishinNetBankWithdrawalRow,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 
 
 class SBISumishinNetBankRowFactory(InputRowFactory[SBISumishinNetBankRowData, SBISumishinNetBankRow]):

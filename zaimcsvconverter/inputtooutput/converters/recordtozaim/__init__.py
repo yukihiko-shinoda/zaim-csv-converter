@@ -5,17 +5,19 @@ from typing import cast, Generic, Optional, TypeVar
 
 from returns.primitives.hkt import Kind1, kinded
 
-from zaimcsvconverter.inputcsvformats import (
-    TypeVarInputItemRow,
+from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
+from zaimcsvconverter.inputtooutput.datasources.csv.data import (
     TypeVarInputItemRowData,
-    TypeVarInputRow,
     TypeVarInputRowData,
-    TypeVarInputStoreItemRow,
     TypeVarInputStoreItemRowData,
-    TypeVarInputStoreRow,
     TypeVarInputStoreRowData,
 )
-from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
+from zaimcsvconverter.inputtooutput.datasources.csv.records import (
+    TypeVarInputItemRow,
+    TypeVarInputRow,
+    TypeVarInputStoreItemRow,
+    TypeVarInputStoreRow,
+)
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
     ZaimIncomeRow,

@@ -2,54 +2,12 @@
 from __future__ import annotations
 
 from abc import ABC
-from datetime import datetime
-from enum import Enum
 from typing import Any, Optional
 
-from pydantic.dataclasses import dataclass as pydantic_dataclass
-
+from zaimcsvconverter.data.mufg import CashFlowKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import ConstrainedStringToOptionalInt
-from zaimcsvconverter.inputcsvformats import InputRow, InputStoreRow, InputStoreRowData
-
-
-class CashFlowKind(str, Enum):
-    """This class implements constant of cash flow kind in MUFG CSV."""
-
-    INCOME = "入金"
-    PAYMENT = "支払い"
-    TRANSFER_INCOME = "振替入金"
-    TRANSFER_PAYMENT = "振替支払い"
-
-
-@pydantic_dataclass
-# Reason: Model. pylint: disable=too-few-public-methods
-class MufgRowData(InputStoreRowData):
-    """This class implements data class for wrapping list of MUFG CSV row model."""
-
-    # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-    class Summary(Enum):
-        CARD = "カ−ド"
-        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"
-
-    date_: StringToDateTime
-    summary: str
-    summary_content: str
-    payed_amount: ConstrainedStringToOptionalInt
-    deposit_amount: ConstrainedStringToOptionalInt
-    balance: str
-    note: str
-    is_uncapitalized: str
-    cash_flow_kind: CashFlowKind
-
-    @property
-    def date(self) -> datetime:
-        return self.date_
-
-    @property
-    def store_name(self) -> str:
-        return self.summary_content
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow, InputStoreRow
 
 
 class MufgRow(InputRow[MufgRowData]):

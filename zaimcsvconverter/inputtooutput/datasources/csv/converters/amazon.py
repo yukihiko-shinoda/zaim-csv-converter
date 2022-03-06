@@ -1,6 +1,7 @@
 """Converter from Amazon.co.jp CSV data to record model."""
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRow, AmazonRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon import AmazonRow
 
 
 class AmazonRowFactory(InputRowFactory[AmazonRowData, AmazonRow]):

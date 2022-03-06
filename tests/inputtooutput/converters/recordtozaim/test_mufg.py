@@ -4,8 +4,6 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
-from zaimcsvconverter.inputcsvformats.mufg import MufgRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import (
     MufgIncomeZaimTransferRowConverter,
     MufgPaymentZaimTransferRowConverter,
@@ -16,6 +14,9 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import (
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter, ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
 
 

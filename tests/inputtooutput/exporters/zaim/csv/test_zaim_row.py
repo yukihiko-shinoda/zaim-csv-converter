@@ -9,8 +9,6 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
-from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimRowConverter,
@@ -27,6 +25,10 @@ from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon import Ama
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
     ZaimIncomeRow,
     ZaimPaymentRow,

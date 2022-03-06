@@ -1,6 +1,7 @@
 """Converter from VIEW CARD CSV data to record model."""
-from zaimcsvconverter.inputcsvformats.view_card import ViewCardRow, ViewCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.view_card import ViewCardRow
 
 
 class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardRow]):

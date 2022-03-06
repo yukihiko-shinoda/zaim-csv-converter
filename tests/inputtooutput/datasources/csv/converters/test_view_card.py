@@ -1,8 +1,9 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.view_card import ViewCardRow, ViewCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.view_card import ViewCardRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.view_card import ViewCardRow
 
 
 class TestViewCardRowFactory:

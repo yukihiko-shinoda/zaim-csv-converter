@@ -4,7 +4,8 @@ from typing import Generic
 
 from returns.primitives.hkt import Kind1
 
-from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
 
 
 class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):

@@ -4,11 +4,13 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912Row,
+from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
 )
-from zaimcsvconverter.inputcsvformats import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.records.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912Row,
+)
 from zaimcsvconverter.models import Store
 
 

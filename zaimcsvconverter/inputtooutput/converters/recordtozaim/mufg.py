@@ -8,7 +8,15 @@ from typing import cast, TypeVar
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.mufg import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
+    CsvRecordToZaimRowConverterFactory,
+    ZaimIncomeRowStoreConverter,
+    ZaimPaymentRowStoreConverter,
+    ZaimRowConverter,
+    ZaimTransferRowConverter,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.mufg import (
     MufgIncomeFromOthersRow,
     MufgIncomeFromSelfRow,
     MufgIncomeRow,
@@ -16,15 +24,7 @@ from zaimcsvconverter.inputcsvformats.mufg import (
     MufgPaymentToSelfRow,
     MufgPaymentToSomeoneRow,
     MufgRow,
-    MufgRowData,
     MufgStoreRow,
-)
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimIncomeRowStoreConverter,
-    ZaimPaymentRowStoreConverter,
-    ZaimRowConverter,
-    ZaimTransferRowConverter,
 )
 
 TypeVarMufgRow = TypeVar("TypeVarMufgRow", bound=MufgRow)

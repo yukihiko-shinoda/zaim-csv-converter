@@ -1,57 +1,13 @@
 """This module implements row model of SF Card Viewer CSV."""
 from __future__ import annotations
 
-from datetime import datetime
-from enum import Enum
 from typing import Any
 
-from pydantic.dataclasses import dataclass as pydantic_dataclass
-
 from zaimcsvconverter.config import SFCardViewerConfig
+from zaimcsvconverter.data.sf_card_viewer import Note
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
-from zaimcsvconverter.inputcsvformats import InputRow, InputStoreRow, InputStoreRowData
-
-
-# Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-class Note(str, Enum):
-    """This class implements constant of note in SF Card Viewer CSV."""
-
-    EMPTY = ""
-    SALES_GOODS = "物販"
-    AUTO_CHARGE = "ｵｰﾄﾁｬｰｼﾞ"
-    EXIT_BY_WINDOW = "窓出"
-    BUS_TRAM = "ﾊﾞｽ/路面等"
-
-
-@pydantic_dataclass
-# Reason: Model. pylint: disable=too-few-public-methods
-class SFCardViewerRowData(InputStoreRowData):
-    """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
-
-    used_date: StringToDateTime
-    is_commuter_pass_enter: str
-    railway_company_name_enter: str
-    station_name_enter: str
-    is_commuter_pass_exit: str
-    railway_company_name_exit: str
-    station_name_exit: str
-    used_amount: int
-    balance: str
-    note: Note
-
-    @property
-    def date(self) -> datetime:
-        return self.used_date
-
-    @property
-    def store_name(self) -> str:
-        return self.station_name_enter if self.is_auto_charge else self.station_name_exit
-
-    @property
-    def is_auto_charge(self) -> bool:
-        """This property returns whether this row is auto charge or not."""
-        return self.note == Note.AUTO_CHARGE
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow, InputStoreRow
 
 
 # pylint: disable=too-many-instance-attributes

@@ -2,12 +2,13 @@
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRow, PayPalRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowStoreItemConverter,
     ZaimRowConverter,
 )
+from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.pay_pal import PayPalRow
 
 
 class PayPalZaimPaymentRowConverter(ZaimPaymentRowStoreItemConverter[PayPalRow, PayPalRowData]):

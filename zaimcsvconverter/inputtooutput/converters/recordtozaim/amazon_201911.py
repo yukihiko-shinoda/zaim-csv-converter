@@ -2,17 +2,17 @@
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.amazon_201911 import (
-    Amazon201911DiscountRow,
-    Amazon201911PaymentRow,
-    Amazon201911Row,
-    Amazon201911RowData,
-    Amazon201911ShippingHandlingRow,
-)
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowItemConverter,
     ZaimRowConverter,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (
+    Amazon201911DiscountRow,
+    Amazon201911PaymentRow,
+    Amazon201911Row,
+    Amazon201911ShippingHandlingRow,
 )
 
 

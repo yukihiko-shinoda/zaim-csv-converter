@@ -1,8 +1,9 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_plus import GoldPointCardPlusRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.gold_point_card_plus import GoldPointCardPlusRow
 
 
 class TestGoldPointCardPlusRowFactory:
