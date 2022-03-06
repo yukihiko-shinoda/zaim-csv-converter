@@ -10,9 +10,9 @@ from errorcollector import MultipleErrorCollector, SingleErrorCollector  # type:
 from pydantic.dataclasses import dataclass
 from returns.primitives.hkt import Kind1
 
-from zaimcsvconverter.datasources.data_source import AbstractInputRecord
 from zaimcsvconverter.exceptions import InvalidCellError, UndefinedContentError
 from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
+from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.models import Item, Store
 
 

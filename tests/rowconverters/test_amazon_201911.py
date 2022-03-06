@@ -4,14 +4,14 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911Row, Amazon201911RowData
+from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
 from zaimcsvconverter.rowconverters.amazon_201911 import (
     Amazon201911DiscountZaimPaymentRowConverter,
     Amazon201911PaymentZaimPaymentRowConverter,
 )
 from zaimcsvconverter.rowconverters import ZaimPaymentRowItemConverter
-from zaimcsvconverter.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
 
 
 class TestAmazon201911DiscountZaimPaymentRowConverter:

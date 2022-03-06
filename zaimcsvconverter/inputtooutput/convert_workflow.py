@@ -1,9 +1,10 @@
 """This module implements model of input CSV."""
 from typing import Generic
 
-from zaimcsvconverter.datasources.data_source import DataSource
-from zaimcsvconverter.inputtooutput.output_model_exporter import TypeVarOutputModelExporter
-from zaimcsvconverter.inputtooutput.record_converter import RecordConverter
+from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
+from zaimcsvconverter.inputtooutput.converters import RecordConverter
+from zaimcsvconverter.inputtooutput.datasources import DataSource
+from zaimcsvconverter.inputtooutput.exporters import TypeVarOutputModelExporter
 
 
 class ConvertWorkflow(Generic[TypeVarOutputModelExporter]):
@@ -25,4 +26,5 @@ class ConvertWorkflow(Generic[TypeVarOutputModelExporter]):
             for input_record in self.data_source:
                 output_record = self.record_converter.convert(input_record)
                 self.output_model_exporter.execute(output_record)
-        self.data_source.raise_error_if_invalid()
+        if self.data_source.is_invalid:
+            raise InvalidInputCsvError(self.data_source, self.data_source.message)

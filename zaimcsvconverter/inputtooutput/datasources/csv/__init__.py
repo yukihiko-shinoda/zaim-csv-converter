@@ -4,11 +4,11 @@ from typing import cast, Generator, Generic, List, Optional
 from godslayer.csv.god_slayer import GodSlayer
 from godslayer.exceptions import InvalidFooterError, InvalidHeaderError
 
-from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.datasources.data_source import AbstractInputRecord, DataSource
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, LogicError, SkipRecord
 from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord, DataSource
+from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
 
 
 class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
@@ -57,10 +57,9 @@ class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
             raise LogicError("This method can't be called before iterate this instance.")  # pragma: no cover
         self.dictionary_invalid_record[self.god_slayer.index] = list_error
 
-    def raise_error_if_invalid(self) -> None:
-        if self.is_invalid:
-            raise InvalidInputCsvError(
-                self,
-                f"Undefined store name in convert table CSV exists in {self.god_slayer.path_to_file.name}. "
-                "Please check property AccountCsvConverter.list_undefined_store.",
-            )
+    @property
+    def message(self) -> str:
+        return (
+            f"Undefined store or item name in convert table CSV exists in {self.god_slayer.path_to_file.name}. "
+            "Please check property AccountCsvConverter.list_undefined_store."
+        )

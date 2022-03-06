@@ -1,6 +1,6 @@
 """To prevent circular import."""
-from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.exceptions import Error
+from zaimcsvconverter.inputtooutput.datasources import DataSource
 
 
 class InvalidInputCsvError(Error):

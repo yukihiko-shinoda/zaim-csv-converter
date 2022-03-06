@@ -3,10 +3,10 @@ from typing import Generator, Generic, List
 
 import pytest
 
-from zaimcsvconverter.datasources.data_source import AbstractInputRecord, DataSource
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord, DataSource
 
 
 class TestInputCsvErrorReporter:
@@ -29,8 +29,9 @@ class TestInputCsvErrorReporter:
             def is_invalid(self) -> bool:
                 return False
 
-            def raise_error_if_invalid(self) -> None:
-                pass
+            @property
+            def message(self) -> str:
+                return ""
 
         with pytest.raises(TypeError):
             DataSourceErrorReporterFactory.create(Unexpected())

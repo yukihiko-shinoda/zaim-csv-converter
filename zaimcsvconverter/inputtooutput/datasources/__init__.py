@@ -1,4 +1,4 @@
-"""This module implements data source model."""
+"""To handle data source by abstraction for compatibility in future."""
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -36,7 +36,8 @@ class DataSource(ABC):
         """Returns whether this data source is invalid or not."""
         raise NotImplementedError()  # pragma: no cover
 
+    @property
     @abstractmethod
-    def raise_error_if_invalid(self) -> None:
+    def message(self) -> str:
         """Raises error if this data source is invalid."""
         raise NotImplementedError()  # pragma: no cover

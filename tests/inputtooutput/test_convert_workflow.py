@@ -6,14 +6,13 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account, AccountContext
-from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.datasources.csv import Csv
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
-from zaimcsvconverter.zaim.record_to_zaim_converter import RecordToZaimConverter
-from zaimcsvconverter.zaim.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
-from zaimcsvconverter.zaim.zaim_row import ZaimRowFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import RecordToZaimConverter
+from zaimcsvconverter.inputtooutput.datasources.csv import Csv
+from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
 
 
 class TestConvertWorkflow:
@@ -44,13 +43,13 @@ class TestConvertWorkflow:
             account_context.input_row_data_class, account_context.input_row_factory
         )
         data_source = Csv(god_slayer, csv_record_processor)
-        record_converter = RecordToZaimConverter(account_context.zaim_row_converter_factory, ZaimRowFactory)
+        record_converter = RecordToZaimConverter(account_context.zaim_row_converter_factory)
         output_model_exporter = ZaimCsvOutputModelExporter(tmp_path / "test.csv")
         convert_workflow = ConvertWorkflow(data_source, record_converter, output_model_exporter)
         with pytest.raises(InvalidInputCsvError) as error:
             convert_workflow.execute()
         assert str(error.value) == (
-            "Undefined store name in convert table CSV exists in test_waon.csv. "
+            "Undefined store or item name in convert table CSV exists in test_waon.csv. "
             "Please check property AccountCsvConverter.list_undefined_store."
         )
         assert data_source.is_invalid

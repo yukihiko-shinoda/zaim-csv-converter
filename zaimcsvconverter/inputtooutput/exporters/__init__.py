@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
 
 from zaimcsvconverter.context_manager import ContextManager
-from zaimcsvconverter.zaim.zaim_row import TypeVarAbstractOutputRow
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import TypeVarAbstractOutputRow
 
 
 class OutputModelExporter(Generic[TypeVarAbstractOutputRow], ContextManager[Any], ABC):

@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Any, List, Optional, TypeVar, Union
 
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
+from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 from zaimcsvconverter.rowconverters import (
     AbstractZaimRowConverter,
     ZaimIncomeRowConverter,
@@ -11,7 +12,6 @@ from zaimcsvconverter.rowconverters import (
     ZaimRowConverter,
     ZaimTransferRowConverter,
 )
-from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
 
 
 class OutputRecord(ABC):
@@ -134,14 +134,7 @@ class ZaimTransferRow(ZaimRow):
         ]
 
 
-class AbstractZaimRowFactory(ABC):
-    @staticmethod
-    @abstractmethod
-    def create(zaim_row_converter: AbstractZaimRowConverter) -> ZaimRow:
-        raise NotImplementedError
-
-
-class ZaimRowFactory(AbstractZaimRowFactory):
+class ZaimRowFactory:
     """This class implements factory to create zaim format CSV row instance.
 
     Why factory class is independent from input row data class is because we can't achieve 100% coverage without this

@@ -4,16 +4,21 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.csvconverter.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputcsvformats.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
+    ZaimIncomeRow,
+    ZaimPaymentRow,
+    ZaimRowFactory,
+    ZaimTransferRow,
+)
 from zaimcsvconverter.rowconverters.waon import (
     WaonZaimIncomeRowConverter,
     WaonZaimPaymentRowConverter,
     WaonZaimTransferRowConverter,
 )
 from zaimcsvconverter.rowconverters import ZaimRowConverter
-from zaimcsvconverter.zaim.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimRowFactory, ZaimTransferRow
 
 
 class TestWaonZaimIncomeRowConverter:

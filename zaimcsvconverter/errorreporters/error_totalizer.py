@@ -4,11 +4,11 @@ from pathlib import Path
 from typing import Generator, List, Union
 
 from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
-from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.errorreporters.csv_exporter import CsvExporter
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
+from zaimcsvconverter.inputtooutput.datasources import DataSource
 
 
 class FileNameForError(Enum):

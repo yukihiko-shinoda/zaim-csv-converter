@@ -2,9 +2,9 @@
 from abc import ABC, abstractmethod
 from typing import Generator, Generic, Union
 
-from zaimcsvconverter.datasources.csv import Csv
-from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv import Csv
+from zaimcsvconverter.inputtooutput.datasources import DataSource
 
 
 class DataSourceErrorReporter(ABC):

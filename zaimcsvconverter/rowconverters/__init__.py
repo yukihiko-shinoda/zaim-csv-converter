@@ -4,7 +4,6 @@ from typing import cast, Generic, Optional, TypeVar
 
 from returns.primitives.hkt import Kind1, kinded
 
-from zaimcsvconverter.datasources.data_source import AbstractInputRecord
 from zaimcsvconverter.inputcsvformats import (
     TypeVarInputItemRow,
     TypeVarInputItemRowData,
@@ -15,7 +14,8 @@ from zaimcsvconverter.inputcsvformats import (
     TypeVarInputStoreRow,
     TypeVarInputStoreRowData,
 )
-from zaimcsvconverter.zaim.zaim_csv_format import ZaimCsvFormat
+from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
+from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 
 
 class AbstractZaimRowConverter(ABC):

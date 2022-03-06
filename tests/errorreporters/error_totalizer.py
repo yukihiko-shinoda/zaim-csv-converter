@@ -8,7 +8,7 @@ from tests.testlibraries.error_row_data_for_test import ErrorRowDataForTest
 from zaimcsvconverter.errorreporters.error_totalizer import ErrorTotalizer
 
 
-class TestInputCsvConverterIterator:
+class TestErrorTotalizer:
     """Tests for AccountCsvConverterIterator."""
 
     # pylint: disable=unused-argument
