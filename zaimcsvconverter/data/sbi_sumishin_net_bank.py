@@ -1,11 +1,9 @@
 """SBI Sumishin net bank CSV Data model."""
 from pydantic.dataclasses import dataclass
 
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.customdatatypes.string_to_optional_int import ConstrainedStringWithCommaToOptionalInt
 from zaimcsvconverter.first_form_normalizer import CsvRowData
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_optional_int import (
-    ConstrainedStringWithCommaToOptionalInt,
-)
 
 
 @dataclass

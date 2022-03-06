@@ -3,8 +3,8 @@ from enum import Enum
 
 from pydantic.dataclasses import dataclass
 
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 
 
 # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes

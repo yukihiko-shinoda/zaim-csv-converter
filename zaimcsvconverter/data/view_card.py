@@ -1,13 +1,13 @@
 """VIEW CARD CSV Data model."""
 from pydantic.dataclasses import dataclass
 
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.customdatatypes.string_with_comma_to_int import StrictStringWithCommaToInt
 from zaimcsvconverter.first_form_normalizer import CsvRowData
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_with_comma_to_int import StrictStringWithCommaToInt
 
 
 @dataclass
-# Reason: Model. pylint: disable=too-few-public-methods
+# Reason: Model. pylint: disable=too-few-public-methods,too-many-instance-attributes
 class ViewCardRowData(CsvRowData):
     """This class implements data class for wrapping list of VIEW CARD CSV row model."""
 

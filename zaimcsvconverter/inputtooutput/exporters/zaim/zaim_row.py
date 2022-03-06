@@ -3,7 +3,8 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING, Union
 
-from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
+# Reason: Pylint's bug.
+from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData  # pylint: disable=unused-import
 from zaimcsvconverter.inputtooutput.exporters import OutputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 

@@ -1,12 +1,12 @@
 """GOLD POINT CARD+ CSV Data model."""
 from pydantic.dataclasses import dataclass
 
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 
 
 @dataclass
-# Reason: Model. pylint: disable=too-few-public-methods
+# Reason: Model. pylint: disable=too-few-public-methods,too-many-instance-attributes
 class GoldPointCardPlusRowData(CsvRowData):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
 

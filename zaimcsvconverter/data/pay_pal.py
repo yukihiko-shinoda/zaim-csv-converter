@@ -5,8 +5,8 @@ from typing import ClassVar, List
 
 from pydantic.dataclasses import dataclass
 
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
-from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 
 
 class Status(str, Enum):
@@ -43,7 +43,7 @@ class CURRENCY(str, Enum):
 
 
 @dataclass
-# Reason: Model. pylint: disable=too-few-public-methods
+# Reason: Model. pylint: disable=too-few-public-methods,too-many-instance-attributes
 class PayPalRowData(CsvRowData):
     """This class implements data class for wrapping list of PayPal CSV row model."""
 
