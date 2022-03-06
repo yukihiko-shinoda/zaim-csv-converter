@@ -9,10 +9,10 @@ from zaimcsvconverter.inputcsvformats import (
     InputContentRow,
     InputRow,
     InputRowData,
-    InputRowFactory,
     TypeVarInputRow,
     TypeVarInputRowData,
 )
+from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 
 
 class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):

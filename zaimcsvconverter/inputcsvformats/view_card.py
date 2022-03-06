@@ -8,7 +8,7 @@ from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_with_comma_to_int import StrictStringWithCommaToInt
-from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
+from zaimcsvconverter.inputcsvformats import InputStoreRow, InputStoreRowData
 
 
 @pydantic_dataclass
@@ -53,14 +53,3 @@ class ViewCardRow(InputStoreRow[ViewCardRowData]):
     @property
     def is_row_to_skip(self) -> bool:
         return CONFIG.view_card.skip_suica_row and self._is_suica
-
-
-class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardRow]):
-    """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
-
-    # Reason: The example implementation of returns ignore incompatible return type.
-    # see:
-    #   - Create your own container — returns 0.18.0 documentation
-    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
-    def create(self, input_row_data: ViewCardRowData) -> ViewCardRow:  # type: ignore
-        return ViewCardRow(input_row_data)

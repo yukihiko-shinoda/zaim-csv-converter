@@ -4,7 +4,7 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRow, AmazonRowData, AmazonRowFactory
+from zaimcsvconverter.inputcsvformats.amazon import AmazonRow, AmazonRowData
 from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.models import Item, Store
 
@@ -101,17 +101,3 @@ class TestAmazonRow:
         assert amazon_row.store.name_zaim == store_name
         assert isinstance(amazon_row.item, Item)
         assert amazon_row.item.name == item_name
-
-
-class TestAmazonRowFactory:
-    """Tests for AmazonRowFactory."""
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    @pytest.mark.parametrize("argument, expected", [(InstanceResource.ROW_DATA_AMAZON_ECHO_DOT, AmazonRow)])
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
-    def test_create(argument: AmazonRowData, expected: type[AmazonRow]) -> None:
-        """Method should return Store model when note is defined."""
-        # pylint: disable=protected-access
-        gold_point_card_plus_row = AmazonRowFactory().create(argument)
-        assert isinstance(gold_point_card_plus_row, expected)

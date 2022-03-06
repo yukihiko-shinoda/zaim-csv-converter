@@ -2,8 +2,9 @@
 from godslayer.god_slayer_factory import GodSlayerFactory
 
 from zaimcsvconverter.account import AccountContext
-from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
+from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.waon import WaonRowFactory
 
 
 class TestAccount:

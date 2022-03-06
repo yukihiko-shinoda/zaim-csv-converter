@@ -4,11 +4,7 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus import (
-    GoldPointCardPlusRow,
-    GoldPointCardPlusRowData,
-    GoldPointCardPlusRowFactory,
-)
+from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRow, GoldPointCardPlusRowData
 from zaimcsvconverter.inputcsvformats import RowDataFactory
 from zaimcsvconverter.models import Store
 
@@ -119,19 +115,3 @@ class TestGoldPointCardPlusRow:
         assert row.store.name == gold_point_card_plus_row_data.used_store
         assert row.store.name_zaim == expected_store_name_zaim
         assert row.is_row_to_skip == expected_is_row_to_skip
-
-
-class TestGoldPointCardPlusRowFactory:
-    """Tests for GoldPointCardPlusRowFactory."""
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    @pytest.mark.parametrize(
-        "argument, expected", [(InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC, GoldPointCardPlusRow)]
-    )
-    @pytest.mark.usefixtures("database_session_stores_gold_point_card_plus")
-    def test_create(argument: GoldPointCardPlusRowData, expected: type[GoldPointCardPlusRow]) -> None:
-        """Method should return Store model when note is defined."""
-        # pylint: disable=protected-access
-        gold_point_card_plus_row = GoldPointCardPlusRowFactory().create(argument)
-        assert isinstance(gold_point_card_plus_row, expected)

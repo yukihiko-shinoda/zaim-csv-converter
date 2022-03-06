@@ -15,7 +15,7 @@ from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
-from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreItemRow, InputStoreItemRowData
+from zaimcsvconverter.inputcsvformats import InputStoreItemRow, InputStoreItemRowData
 
 
 class Status(str, Enum):
@@ -196,14 +196,3 @@ class PayPalRow(InputStoreItemRow[PayPalRowData]):
     @property
     def is_memo(self) -> bool:
         return self.balance_impact == BalanceImpact.MEMO
-
-
-class PayPalRowFactory(InputRowFactory[PayPalRowData, PayPalRow]):
-    """This class implements factory to create Amazon.co.jp CSV row instance."""
-
-    # Reason: The example implementation of returns ignore incompatible return type.
-    # see:
-    #   - Create your own container — returns 0.18.0 documentation
-    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
-    def create(self, input_row_data: PayPalRowData) -> PayPalRow:  # type: ignore
-        return PayPalRow(input_row_data)

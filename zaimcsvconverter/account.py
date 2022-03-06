@@ -10,23 +10,17 @@ from typing import Generic, Type
 from godslayer.god_slayer_factory import GodSlayerFactory
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData, AmazonRowFactory
-from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowData, Amazon201911RowFactory
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowData, GoldPointCardPlusRowFactory
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,
-    GoldPointCardPlus201912RowFactory,
-)
-from zaimcsvconverter.inputcsvformats import InputRowFactory, TypeVarInputRow, TypeVarInputRowData
-from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
-from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData, PayPalRowFactory
-from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import (
-    SBISumishinNetBankRowData,
-    SBISumishinNetBankRowFactory,
-)
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
-from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRowFactory
-from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
+from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData
+from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowData
+from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import GoldPointCardPlus201912RowData
+from zaimcsvconverter.inputcsvformats.mufg import MufgRowData
+from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData
+from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputcsvformats import TypeVarInputRow, TypeVarInputRowData
+from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData
+from zaimcsvconverter.inputcsvformats.waon import WaonRowData
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
@@ -44,6 +38,21 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.sbi_sumishin_net_ban
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon import AmazonRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon_201911 import Amazon201911RowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_plus import GoldPointCardPlusRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912RowFactory,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.mufg import MufgRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.pay_pal import PayPalRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.sbi_sumishin_net_bank import (
+    SBISumishinNetBankRowFactory,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.sf_card_viewer import SFCardViewerRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.view_card import ViewCardRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.waon import WaonRowFactory
 
 
 @dataclass

@@ -9,7 +9,7 @@ from pydantic.dataclasses import dataclass
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
 from zaimcsvconverter.inputcsvformats.customdatatypes.yen_string_to_int import StrictYenStringToInt
-from zaimcsvconverter.inputcsvformats import InputRowFactory, InputStoreRow, InputStoreRowData
+from zaimcsvconverter.inputcsvformats import InputStoreRow, InputStoreRowData
 
 
 class UseKind(str, Enum):
@@ -131,16 +131,3 @@ class WaonChargeRow(WaonRow):
     @property
     def is_charge_by_download_value(self) -> bool:
         return self.is_charge and self.charge_kind == ChargeKind.DOWNLOAD_VALUE
-
-
-class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
-    """This class implements factory to create WAON CSV row instance."""
-
-    # Reason: The example implementation of returns ignore incompatible return type.
-    # see:
-    #   - Create your own container — returns 0.18.0 documentation
-    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
-    def create(self, input_row_data: WaonRowData) -> WaonRow:  # type: ignore
-        if input_row_data.use_kind in (UseKind.CHARGE, UseKind.AUTO_CHARGE):
-            return WaonChargeRow(input_row_data)
-        return WaonRow(input_row_data)

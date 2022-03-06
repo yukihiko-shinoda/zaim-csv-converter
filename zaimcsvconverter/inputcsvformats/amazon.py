@@ -7,7 +7,7 @@ from pydantic.dataclasses import dataclass as pydantic_dataclass
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputcsvformats.customdatatypes.string_to_datetime import StringToDateTime
-from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData, InputRowFactory
+from zaimcsvconverter.inputcsvformats import InputItemRow, InputItemRowData
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
@@ -59,14 +59,3 @@ class AmazonRow(InputItemRow[AmazonRowData]):
     @property
     def store(self) -> Store:
         return self._store
-
-
-class AmazonRowFactory(InputRowFactory[AmazonRowData, AmazonRow]):
-    """This class implements factory to create Amazon.co.jp CSV row instance."""
-
-    # Reason: The example implementation of returns ignore incompatible return type.
-    # see:
-    #   - Create your own container — returns 0.18.0 documentation
-    #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
-    def create(self, input_row_data: AmazonRowData) -> AmazonRow:  # type: ignore
-        return AmazonRow(input_row_data)

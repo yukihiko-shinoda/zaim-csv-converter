@@ -7,10 +7,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputcsvformats.amazon_201911 import (
     Amazon201911DiscountRow,
     Amazon201911PaymentRow,
-    Amazon201911Row,
     Amazon201911RowData,
-    Amazon201911RowFactory,
-    Amazon201911RowToSkip,
     Amazon201911ShippingHandlingRow,
 )
 from zaimcsvconverter.inputcsvformats import RowDataFactory
@@ -170,25 +167,3 @@ class TestAmazon201911PaymentRow:
             # noinspection PyStatementEffect
             Amazon201911PaymentRow(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT).number
         assert str(error.value) == "Number on payment row is not allowed empty."
-
-
-class TestAmazon201911RowFactory:
-    """Tests for AmazonRowFactory."""
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    @pytest.mark.parametrize(
-        "argument, expected",
-        [
-            (InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT, Amazon201911PaymentRow),
-            (InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT, Amazon201911DiscountRow),
-            (InstanceResource.ROW_DATA_AMAZON_201911_SHIPPING_HANDLING, Amazon201911ShippingHandlingRow),
-            (InstanceResource.ROW_DATA_AMAZON_201911_MS_Learn_IN_MANGA, Amazon201911RowToSkip),
-        ],
-    )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
-    def test_create(argument: Amazon201911RowData, expected: type[Amazon201911Row]) -> None:
-        """Method should return Store model when note is defined."""
-        # pylint: disable=protected-access
-        gold_point_card_plus_row = Amazon201911RowFactory().create(argument)
-        assert isinstance(gold_point_card_plus_row, expected)
