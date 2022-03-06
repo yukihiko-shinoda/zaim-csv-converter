@@ -19,7 +19,7 @@ from zaimcsvconverter.inputcsvformats.mufg import (
     MufgRowData,
     MufgStoreRow,
 )
-from zaimcsvconverter.rowconverters import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimIncomeRowStoreConverter,
     ZaimPaymentRowStoreConverter,

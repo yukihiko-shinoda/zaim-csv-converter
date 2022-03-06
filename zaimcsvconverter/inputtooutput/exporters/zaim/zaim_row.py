@@ -1,28 +1,26 @@
 """This module implements abstract row model of Zaim CSV."""
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from datetime import datetime
-from typing import Any, List, Optional, TypeVar, Union
+from typing import List, Optional, TYPE_CHECKING, Union
 
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
+from zaimcsvconverter.inputtooutput.exporters import OutputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
-from zaimcsvconverter.rowconverters import (
-    AbstractZaimRowConverter,
-    ZaimIncomeRowConverter,
-    ZaimPaymentRowConverter,
-    ZaimRowConverter,
-    ZaimTransferRowConverter,
-)
 
-
-class OutputRecord(ABC):
-    pass
+if TYPE_CHECKING:
+    from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
+        ZaimIncomeRowConverter,
+        ZaimPaymentRowConverter,
+        ZaimRowConverter,
+        ZaimTransferRowConverter,
+    )
 
 
 class ZaimRow(OutputRecord):
     """This class implements abstract row model of Zaim CSV."""
 
-    def __init__(self, zaim_row_converter: ZaimRowConverter[InputRow[Any], InputRowData]):
-        self._date: datetime = zaim_row_converter.input_row.date
+    def __init__(self, zaim_row_converter: "ZaimRowConverter[InputRow[InputRowData], InputRowData]"):
+        self._date: datetime = zaim_row_converter.date
 
     @property
     def _date_string(self) -> str:
@@ -38,7 +36,7 @@ class ZaimIncomeRow(ZaimRow):
 
     METHOD: str = "income"
 
-    def __init__(self, zaim_row_converter: ZaimIncomeRowConverter[InputRow[Any], InputRowData]):
+    def __init__(self, zaim_row_converter: "ZaimIncomeRowConverter[InputRow[InputRowData], InputRowData]"):
         self._category = zaim_row_converter.category
         self._cash_flow_target = zaim_row_converter.cash_flow_target
         self._store_name = zaim_row_converter.store_name
@@ -71,7 +69,7 @@ class ZaimPaymentRow(ZaimRow):
 
     METHOD: str = "payment"
 
-    def __init__(self, zaim_row_converter: ZaimPaymentRowConverter[InputRow[Any], InputRowData]):
+    def __init__(self, zaim_row_converter: "ZaimPaymentRowConverter[InputRow[InputRowData], InputRowData]"):
         self._category_large = zaim_row_converter.category_large
         self._category_small = zaim_row_converter.category_small
         self._cash_flow_source = zaim_row_converter.cash_flow_source
@@ -107,7 +105,7 @@ class ZaimTransferRow(ZaimRow):
 
     METHOD: str = "transfer"
 
-    def __init__(self, zaim_row_converter: ZaimTransferRowConverter[InputRow[Any], InputRowData]):
+    def __init__(self, zaim_row_converter: "ZaimTransferRowConverter[InputRow[InputRowData], InputRowData]"):
         self._cash_flow_source: str = zaim_row_converter.cash_flow_source
         self._cash_flow_target: str = zaim_row_converter.cash_flow_target
         self._amount_transfer: int = zaim_row_converter.amount
@@ -132,31 +130,3 @@ class ZaimTransferRow(ZaimRow):
             ZaimCsvFormat.AMOUNT_BEFORE_CURRENCY_CONVERSION_EMPTY,
             ZaimCsvFormat.SETTING_AGGREGATE_EMPTY,
         ]
-
-
-class ZaimRowFactory:
-    """This class implements factory to create zaim format CSV row instance.
-
-    Why factory class is independent from input row data class is because we can't achieve 100% coverage without this
-    factory. When model instance on post process depend on pre process, In nature, best practice to generate model
-    instance on post process is to implement create method into each model on pre process. Then, pre process will
-    depend on post process. And when add type hint to argument of __init__ method on model on post process, circular
-    dependency occurs. To resolve it, we need to use TYPE_CHECKING, however, pytest-cov detect import line only for
-    TYPE_CHECKING as uncovered row.
-
-    @see https://github.com/python/mypy/issues/6101
-    """
-
-    @staticmethod
-    def create(zaim_row_converter: AbstractZaimRowConverter) -> ZaimRow:
-        """This method creates Zaim row."""
-        if isinstance(zaim_row_converter, ZaimIncomeRowConverter):
-            return ZaimIncomeRow(zaim_row_converter)
-        if isinstance(zaim_row_converter, ZaimPaymentRowConverter):
-            return ZaimPaymentRow(zaim_row_converter)
-        if isinstance(zaim_row_converter, ZaimTransferRowConverter):
-            return ZaimTransferRow(zaim_row_converter)
-        raise ValueError(f"Undefined Zaim row converter. Zaim row converter = {zaim_row_converter.__class__.__name__}")
-
-
-TypeVarAbstractOutputRow = TypeVar("TypeVarAbstractOutputRow", bound=OutputRecord)

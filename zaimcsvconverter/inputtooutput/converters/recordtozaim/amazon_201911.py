@@ -9,7 +9,7 @@ from zaimcsvconverter.inputcsvformats.amazon_201911 import (
     Amazon201911RowData,
     Amazon201911ShippingHandlingRow,
 )
-from zaimcsvconverter.rowconverters import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowItemConverter,
     ZaimRowConverter,

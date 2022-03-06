@@ -4,10 +4,11 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.rowconverters.amazon import AmazonZaimPaymentRowConverter
-from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimPaymentRowConverter
-from zaimcsvconverter.rowconverters.mufg import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimPaymentRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus import (
+    GoldPointCardPlusZaimPaymentRowConverter,
+)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import (
     MufgIncomeZaimTransferRowConverter,
     MufgPaymentZaimTransferRowConverter,
     MufgTransferIncomeZaimTransferRowConverter,
@@ -15,17 +16,18 @@ from zaimcsvconverter.rowconverters.mufg import (
     MufgZaimIncomeRowConverter,
     MufgZaimPaymentRowConverter,
 )
-from zaimcsvconverter.rowconverters.sf_card_viewer import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import (
     SFCardViewerZaimPaymentOnSomewhereRowConverter,
     SFCardViewerZaimPaymentOnStationRowConverter,
     SFCardViewerZaimTransferRowConverter,
 )
-from zaimcsvconverter.rowconverters.waon import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import (
     WaonZaimIncomeRowConverter,
     WaonZaimPaymentRowConverter,
     WaonZaimTransferRowConverter,
 )
-from zaimcsvconverter.rowconverters import ZaimPaymentRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
+from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
 
 
 class TestZaimRowConverterFactory:

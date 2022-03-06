@@ -5,7 +5,7 @@ from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.waon import WaonChargeRow, WaonRow, WaonRowData
-from zaimcsvconverter.rowconverters import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimIncomeRowStoreConverter,
     ZaimPaymentRowStoreConverter,

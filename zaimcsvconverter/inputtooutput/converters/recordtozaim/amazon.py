@@ -3,7 +3,7 @@ from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputcsvformats.amazon import AmazonRow, AmazonRowData
-from zaimcsvconverter.rowconverters import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowItemConverter,
     ZaimRowConverter,

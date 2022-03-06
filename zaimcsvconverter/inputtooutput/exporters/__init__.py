@@ -3,12 +3,18 @@ from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
 
 from zaimcsvconverter.context_manager import ContextManager
-from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import TypeVarAbstractOutputRow
 
 
-class OutputModelExporter(Generic[TypeVarAbstractOutputRow], ContextManager[Any], ABC):
+class OutputRecord(ABC):
+    pass
+
+
+TypeVarOutputRecord = TypeVar("TypeVarOutputRecord", bound=OutputRecord)
+
+
+class OutputModelExporter(Generic[TypeVarOutputRecord], ContextManager[Any], ABC):
     @abstractmethod
-    def execute(self, output_row: TypeVarAbstractOutputRow) -> None:
+    def execute(self, output_row: TypeVarOutputRecord) -> None:
         raise NotImplementedError
 
 

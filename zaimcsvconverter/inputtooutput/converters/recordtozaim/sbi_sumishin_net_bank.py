@@ -10,7 +10,7 @@ from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import (
     SBISumishinNetBankRowData,
     SBISumishinNetBankWithdrawalRow,
 )
-from zaimcsvconverter.rowconverters import (
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimIncomeRowStoreConverter,
     ZaimPaymentRowStoreConverter,

@@ -5,9 +5,12 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus import (
+    GoldPointCardPlusZaimPaymentRowConverter,
+)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
-from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimPaymentRowConverter
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow
 
 
 class TestGoldPointCardPlusZaimPaymentRowConverter:

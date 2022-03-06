@@ -9,7 +9,7 @@ from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import RecordToZaimConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.record_to_zaim_converter import RecordToZaimConverter
 from zaimcsvconverter.inputtooutput.datasources.csv import Csv
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_output_exporter import ZaimCsvOutputModelExporter

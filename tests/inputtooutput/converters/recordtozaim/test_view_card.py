@@ -5,9 +5,10 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.view_card import ViewCardZaimPaymentRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow, ZaimRowFactory
-from zaimcsvconverter.rowconverters.view_card import ViewCardZaimPaymentRowConverter
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow
 
 
 class TestViewCardZaimPaymentRowConverter:
