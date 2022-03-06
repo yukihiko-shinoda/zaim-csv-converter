@@ -6,7 +6,7 @@ from pydantic import ConstrainedInt
 
 from zaimcsvconverter.utility import Utility
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     # Reason: Prioritize typing
     from pydantic.types import CallableGenerator  # type: ignore
 

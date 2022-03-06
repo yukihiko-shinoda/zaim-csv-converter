@@ -12,12 +12,13 @@ from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.exceptions import InvalidCellError, UndefinedContentError
 from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
+from zaimcsvconverter.first_form_normalizer import CsvRowData
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.models import Item, Store
 
 
 @dataclass
-class InputRowData:
+class InputRowData(CsvRowData):
     """This class is abstract class of input CSV row data."""
 
     @property

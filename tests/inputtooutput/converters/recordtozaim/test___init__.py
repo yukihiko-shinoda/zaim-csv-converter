@@ -175,9 +175,7 @@ class TestZaimRowConverterFactory:
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = account.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(input_row_data)
         factory_class = account_context.zaim_row_converter_factory.create(input_row)
         # noinspection PyTypeChecker

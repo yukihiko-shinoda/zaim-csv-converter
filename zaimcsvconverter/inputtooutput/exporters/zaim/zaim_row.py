@@ -3,11 +3,11 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING, Union
 
-from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
 from zaimcsvconverter.inputtooutput.exporters import OutputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
+    from zaimcsvconverter.inputcsvformats import InputRow, InputRowData
     from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
         ZaimIncomeRowConverter,
         ZaimPaymentRowConverter,

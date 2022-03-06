@@ -15,7 +15,6 @@ from zaimcsvconverter.inputcsvformats import (
     TypeVarInputStoreRow,
     TypeVarInputStoreRowData,
 )
-from zaimcsvconverter.inputtooutput.converters import RecordConverter
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
@@ -287,14 +286,3 @@ class ZaimRowFactory:
         if isinstance(zaim_row_converter, ZaimTransferRowConverter):
             return ZaimTransferRow(zaim_row_converter)
         raise ValueError(f"Undefined Zaim row converter. Zaim row converter = {zaim_row_converter.__class__.__name__}")
-
-
-class RecordToZaimConverter(RecordConverter):
-    """Converts input record to output record."""
-
-    def __init__(self, zaim_row_converter_factory: ZaimRowConverterFactory) -> None:
-        self.zaim_row_converter_factory = zaim_row_converter_factory
-
-    def convert(self, input_record: AbstractInputRecord) -> ZaimRow:
-        converter = self.zaim_row_converter_factory.create(input_record)
-        return ZaimRowFactory.create(converter)

@@ -43,9 +43,7 @@ class TestZaimIncomeRow:
     def test_all() -> None:
         """Argument should set into properties."""
         account_context = Account.MUFG.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT
         )
@@ -157,9 +155,7 @@ class TestZaimTransferRow:
     def test_all() -> None:
         """Argument should set into properties."""
         account_context = Account.WAON.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         waon_auto_charge_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO
         )
@@ -225,9 +221,7 @@ class TestZaimRowFactory:
     ) -> None:
         """Factory should create appropriate type of Zaim row."""
         account_context = Account.WAON.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(waon_row_data)
         assert isinstance(input_row, input_row_class)
         zaim_row_converter = account_context.zaim_row_converter_factory.create(input_row)

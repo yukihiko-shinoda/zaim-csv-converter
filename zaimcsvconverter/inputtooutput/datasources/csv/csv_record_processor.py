@@ -1,11 +1,10 @@
 """This module implements convert steps of input CSV row."""
-from typing import cast, Generic, List, Optional
+from typing import cast, Generic, Optional
 
-from pydantic import ValidationError
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
-from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, SkipRecord
+from zaimcsvconverter.exceptions import InvalidRecordError, SkipRecord
 from zaimcsvconverter.inputcsvformats import (
     InputContentRow,
     InputRow,
@@ -21,20 +20,12 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
 
     def __init__(
         self,
-        input_row_data_class: type[TypeVarInputRowData],
         input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow],
     ):
-        self.input_row_data_class = input_row_data_class
         self.input_row_factory = input_row_factory
 
-    def execute(self, list_input_row_standard_type_value: List[str]) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
+    def execute(self, input_record_data: TypeVarInputRowData) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
         """This method executes convert steps of input CSV row."""
-        try:
-            input_record_data = self.input_row_data_class(*list_input_row_standard_type_value)
-        except ValidationError as exc:
-            raise InvalidRecordError(
-                [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
-            ) from exc
         input_record = self.create_input_row_instance(input_record_data)
         dekinded_input_record = cast(InputRow[InputRowData], input_record)
         if dekinded_input_record.is_row_to_skip:

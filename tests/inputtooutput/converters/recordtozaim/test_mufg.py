@@ -53,9 +53,7 @@ class TestMufgZaimIncomeRowConverter:
     ) -> None:
         """Arguments should set into properties."""
         account_context = Account.MUFG.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(mufg_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
@@ -81,9 +79,7 @@ class TestMufgZaimPaymentRowConverter:
         config_account_name = "三菱UFJ銀行"
         store_name = "東京都水道局　経理部管理課"
         account_context = Account.MUFG.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS
         )
@@ -119,9 +115,7 @@ class TestMufgZaimTransferRowConverter:
     ) -> None:
         """Arguments should set into properties."""
         account_context = Account.MUFG.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(mufg_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
@@ -145,9 +139,7 @@ class TestMufgZaimTransferRowConverter:
         config_transfer_account_name = "お財布"
         # Reason: Pylint's bug. pylint: disable=no-member
         account_context = Account.MUFG.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(InstanceResource.ROW_DATA_MUFG_PAYMENT)
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
         assert isinstance(zaim_row, ZaimTransferRow)
@@ -169,9 +161,7 @@ class TestMufgZaimTransferRowConverter:
         transfer_target = "三菱UFJ銀行"
         # Reason: Pylint's bug. pylint: disable=no-member
         account_context = Account.MUFG.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_OWN_ACCOUNT
         )
@@ -195,9 +185,7 @@ class TestMufgZaimTransferRowConverter:
         config_account_name = "三菱UFJ銀行"
         # Reason: Pylint's bug. pylint: disable=no-member
         account_context = Account.MUFG.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_GOLD_POINT_MARKETING
         )
@@ -273,9 +261,7 @@ class TestMufgZaimRowConverterFactory:
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.MUFG.value
-        csv_record_processor = CsvRecordProcessor(
-            account_context.input_row_data_class, account_context.input_row_factory
-        )
+        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(input_row_data)
         actual = account_context.zaim_row_converter_factory.create(input_row)
         assert isinstance(actual, expected)
