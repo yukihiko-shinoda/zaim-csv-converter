@@ -146,29 +146,26 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(self, input_row: Kind1[MufgRow, MufgRowData]) -> ZaimRowConverter[MufgRow, MufgRowData]:  # type: ignore
         dekinded_input_row = cast(MufgRow, input_row)
-        converter = None
         if isinstance(input_row, MufgPaymentToSelfRow) and dekinded_input_row.is_payment:
             # Because, for now, payment row looks only for express withdrawing cash by ATM.
             # Reason: The returns can't detect correct type limited by if instance block.
-            converter = MufgPaymentZaimTransferRowConverter(input_row)  # type: ignore
-        elif isinstance(input_row, MufgIncomeFromSelfRow) and dekinded_input_row.is_income_from_other_own_account:
+            return MufgPaymentZaimTransferRowConverter(input_row)  # type: ignore
+        if isinstance(input_row, MufgIncomeFromSelfRow) and dekinded_input_row.is_income_from_other_own_account:
             # Reason: The returns can't detect correct type limited by if instance block.
-            converter = MufgIncomeZaimTransferRowConverter(input_row)  # type: ignore
-        elif isinstance(input_row, MufgIncomeFromOthersRow) and input_row.is_transfer_income_from_other_own_account:
+            return MufgIncomeZaimTransferRowConverter(input_row)  # type: ignore
+        if isinstance(input_row, MufgIncomeFromOthersRow) and input_row.is_transfer_income_from_other_own_account:
             # Reason: The returns can't detect correct type limited by if instance block.
-            converter = MufgTransferIncomeZaimTransferRowConverter(input_row)  # type: ignore
-        elif isinstance(input_row, MufgIncomeFromOthersRow):
+            return MufgTransferIncomeZaimTransferRowConverter(input_row)  # type: ignore
+        if isinstance(input_row, MufgIncomeFromOthersRow):
             # Reason: The returns can't detect correct type limited by if instance block.
-            converter = MufgZaimIncomeRowConverter(input_row)  # type: ignore
-        elif isinstance(input_row, MufgPaymentToSomeoneRow) and input_row.is_transfer_payment_to_other_own_account:
+            return MufgZaimIncomeRowConverter(input_row)  # type: ignore
+        if isinstance(input_row, MufgPaymentToSomeoneRow) and input_row.is_transfer_payment_to_other_own_account:
             # Reason: The returns can't detect correct type limited by if instance block.
-            converter = MufgTransferPaymentZaimTransferRowConverter(input_row)  # type: ignore
-        elif isinstance(input_row, MufgPaymentToSomeoneRow):
+            return MufgTransferPaymentZaimTransferRowConverter(input_row)  # type: ignore
+        if isinstance(input_row, MufgPaymentToSomeoneRow):
             # Reason: The returns can't detect correct type limited by if instance block.
-            converter = MufgZaimPaymentRowConverter(input_row)  # type: ignore
-        else:
-            raise ValueError(self.build_message(input_row))  # pragma: no cover
-        return cast(ZaimRowConverter[MufgRow, MufgRowData], converter)
+            return MufgZaimPaymentRowConverter(input_row)  # type: ignore
+        raise ValueError(self.build_message(input_row))  # pragma: no cover
         # Reason: This line is insurance for future development so process must be not able to reach
 
     @staticmethod

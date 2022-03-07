@@ -39,14 +39,12 @@ class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
                 self.invalid_footer_error = error
                 raise InvalidInputCsvError(self, str(error)) from error
             except ValidationError as exc:
-                try:
-                    raise InvalidRecordError(
-                        [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
-                    ) from exc
-                except InvalidRecordError as exc:
-                    self.mark_current_record_as_error(exc.list_error)
-                    self.undefined_content_error_handler.extend(exc.undefined_content_error_handler)
-                    continue
+                exception = InvalidRecordError(
+                    [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
+                )
+                self.mark_current_record_as_error(exception.list_error)
+                self.undefined_content_error_handler.extend(exception.undefined_content_error_handler)
+                continue
             except StopIteration:
                 break
             try:

@@ -1,5 +1,4 @@
 """This module implements convert steps from WAON input row to Zaim row."""
-from typing import cast
 
 from returns.primitives.hkt import Kind1
 
@@ -70,13 +69,13 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
             input_row.is_charge_by_point or input_row.is_charge_by_download_value
         ):
             # Reason: The returns can't detect correct type limited by if instance block.
-            return WaonZaimIncomeRowConverter(input_row)  # type:ignore
+            return WaonZaimIncomeRowConverter(input_row)  # type: ignore
         if input_row.is_payment or input_row.is_payment_cancel:
-            return cast(ZaimRowConverter[WaonRow, WaonRowData], WaonZaimPaymentRowConverter(input_row))
+            return WaonZaimPaymentRowConverter(input_row)
         if isinstance(input_row, WaonChargeRow) and (
             input_row.is_auto_charge or input_row.is_charge_by_bank_account or input_row.is_charge_by_cash
         ):
-            return cast(ZaimRowConverter[WaonRow, WaonRowData], WaonZaimTransferRowConverter(input_row))
+            return WaonZaimTransferRowConverter(input_row)
         raise ValueError(self.build_message(input_row))
 
     @staticmethod

@@ -1,9 +1,9 @@
 """Generator to iterate CSV row data as model instance."""
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Generator, Generic, TypeVar
 
 from godslayer.csv.god_slayer import GodSlayer
+from pydantic.dataclasses import dataclass
 
 
 @dataclass
