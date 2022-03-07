@@ -31,7 +31,7 @@ from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, Zai
 from tests.testlibraries.row_data import InvalidRowErrorRowData
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import SomeInvalidInputCsvError
-from zaimcsvconverter.zaim.zaim_csv_converter import ZaimCsvConverter
+from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 
 
 def create_relative_deploy_file_path(
