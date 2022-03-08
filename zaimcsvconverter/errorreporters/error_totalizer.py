@@ -1,37 +1,50 @@
 """This module implements totalize process of error."""
+from enum import Enum
 from pathlib import Path
 from typing import Generator, List, Union
 
-from zaimcsvconverter.csvconverter.input_csv import InputData
-from zaimcsvconverter.errorhandling.error_handler import FileNameForError, UndefinedContentErrorHandler
+from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
+from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.errorreporters.csv_exporter import CsvExporter
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
+from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
+from zaimcsvconverter.inputtooutput.datasources import DataSource
+
+
+class FileNameForError(Enum):
+    INVALID_ROW: str = "error_invalid_row.csv"
+    UNDEFINED_CONTENT: str = "error_undefined_content.csv"
 
 
 class ErrorTotalizer:
     """This class implements totalize process of error."""
 
-    def __init__(self) -> None:
-        self.list_invalid_input_data: List[InputData] = []
+    def __init__(self, directory_csv_output: Path) -> None:
+        self.directory_csv_output = directory_csv_output
+        self.list_invalid_data_source: List[DataSource] = []
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()
 
     def __iter__(self) -> Generator[List[Union[int, str]], None, None]:
-        for input_data in self.list_invalid_input_data:
-            data_source_error_reporter = DataSourceErrorReporterFactory.create(input_data.data_source)
+        for data_source in self.list_invalid_data_source:
+            data_source_error_reporter = DataSourceErrorReporterFactory.create(data_source)
             yield from data_source_error_reporter
 
-    def append(self, input_data: InputData) -> None:
-        """This method appends argument as invalid CSV."""
-        self.list_invalid_input_data.append(input_data)
-        self.undefined_content_error_handler.extend(input_data.undefined_content_error_handler)
+    def convert_csv(self, path_csv_file: Path) -> None:
+        """To seal complexity in for loop."""
+        csv_to_csv_converter = CsvToCsvConverter(path_csv_file, self.directory_csv_output)
+        try:
+            csv_to_csv_converter.execute()
+        except InvalidInputCsvError as exc:
+            self.list_invalid_data_source.append(exc.data_source)
+            self.undefined_content_error_handler.extend(exc.data_source.undefined_content_error_handler)
 
     @property
     def is_presented(self) -> bool:
-        return bool(self.list_invalid_input_data)
+        return bool(self.list_invalid_data_source)
 
-    def export_to_csv(self, directory_csv_output: Path) -> None:
+    def report_to_csv(self) -> None:
         """This method exports invalid input CSV errors into CSV."""
-        csv_exporter = CsvExporter(directory_csv_output)
+        csv_exporter = CsvExporter(self.directory_csv_output)
         csv_exporter.export(self, FileNameForError.INVALID_ROW.value)
         if self.undefined_content_error_handler.is_presented:
             csv_exporter.export(

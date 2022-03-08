@@ -1,11 +1,13 @@
 """Tests for zaimcsvconverter.errorreporters.input_csv_error_reporter."""
-from typing import Any, Generator, List
+from typing import Generator, Generic, List
 
-from godslayer.exceptions import InvalidRecordError
 import pytest
 
-from zaimcsvconverter.datasources.data_source import DataSource
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
+from zaimcsvconverter.exceptions import InvalidCellError
+from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord, DataSource
+from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
 
 
 class TestInputCsvErrorReporter:
@@ -15,21 +17,22 @@ class TestInputCsvErrorReporter:
     def test_error() -> None:
         """Method create() should raise appropriate error."""
 
-        class Unexpected(DataSource):
+        class Unexpected(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
             """Unexpected class."""
 
-            def __iter__(self) -> Generator[List[Any], None, None]:
+            def __iter__(self) -> Generator[AbstractInputRecord, None, None]:
                 pass
 
-            def mark_current_record_as_error(self, list_error: List[InvalidRecordError]) -> None:
+            def mark_current_record_as_error(self, list_error: List[InvalidCellError]) -> None:
                 pass
 
             @property
             def is_invalid(self) -> bool:
                 return False
 
-            def raise_error_if_invalid(self) -> None:
-                pass
+            @property
+            def message(self) -> str:
+                return ""
 
         with pytest.raises(TypeError):
             DataSourceErrorReporterFactory.create(Unexpected())

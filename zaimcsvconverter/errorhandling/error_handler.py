@@ -1,15 +1,9 @@
 """This module implements error handler."""
 from __future__ import annotations
 
-from enum import Enum
 from typing import Iterator, List
 
 import numpy
-
-
-class FileNameForError(Enum):
-    INVALID_ROW: str = "error_invalid_row.csv"
-    UNDEFINED_CONTENT: str = "error_undefined_content.csv"
 
 
 class UndefinedContentErrorHandler:

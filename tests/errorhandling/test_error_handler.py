@@ -3,8 +3,8 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRow
-from zaimcsvconverter.inputcsvformats.waon import WaonRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon import AmazonRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonRow
 
 
 class TestErrorHandler:

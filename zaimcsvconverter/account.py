@@ -5,48 +5,57 @@ from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 import re
-from types import DynamicClassAttribute
-from typing import cast, Generic, List, Type
+from typing import Generic, Type
 
 from godslayer.god_slayer_factory import GodSlayerFactory
-from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputcsvformats import (
-    InputRow,
-    InputRowData,
-    InputRowFactory,
-    TypeVarInputRow,
-    TypeVarInputRowData,
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import Amazon201911ZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus import (
+    GoldPointCardPlusZaimRowConverterFactory,
 )
-from zaimcsvconverter.inputcsvformats.amazon import AmazonRowData, AmazonRowFactory
-from zaimcsvconverter.inputcsvformats.amazon_201911 import Amazon201911RowData, Amazon201911RowFactory
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus import GoldPointCardPlusRowData, GoldPointCardPlusRowFactory
-from zaimcsvconverter.inputcsvformats.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912ZaimRowConverterFactory,
+)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pal import PayPalZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.sbi_sumishin_net_bank import (
+    SBISumishinNetBankZaimRowConverterFactory,
+)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import SFCardViewerZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.view_card import ViewCardZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon import AmazonRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon_201911 import Amazon201911RowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_plus import GoldPointCardPlusRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowFactory,
 )
-from zaimcsvconverter.inputcsvformats.mufg import MufgRowData, MufgRowFactory
-from zaimcsvconverter.inputcsvformats.pay_pal import PayPalRowData, PayPalRowFactory
-from zaimcsvconverter.inputcsvformats.sbi_sumishin_net_bank import (
-    SBISumishinNetBankRowData,
+from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.mufg import MufgRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.pay_pal import PayPalRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.sbi_sumishin_net_bank import (
     SBISumishinNetBankRowFactory,
 )
-from zaimcsvconverter.inputcsvformats.sf_card_viewer import SFCardViewerRowData, SFCardViewerRowFactory
-from zaimcsvconverter.inputcsvformats.view_card import ViewCardRowData, ViewCardRowFactory
-from zaimcsvconverter.inputcsvformats.waon import WaonRowData, WaonRowFactory
-from zaimcsvconverter.rowconverters.amazon import AmazonZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.amazon_201911 import Amazon201911ZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.gold_point_card_plus import GoldPointCardPlusZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.gold_point_card_plus_201912 import GoldPointCardPlus201912ZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.mufg import MufgZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.pay_pal import PayPalZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.sbi_sumishin_net_bank import SBISumishinNetBankZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.sf_card_viewer import SFCardViewerZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.view_card import ViewCardZaimRowConverterFactory
-from zaimcsvconverter.rowconverters.waon import WaonZaimRowConverterFactory
-from zaimcsvconverter.rowconverters import ZaimRowConverterFactory
-from zaimcsvconverter.zaim.zaim_row import ZaimRow, ZaimRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.sf_card_viewer import SFCardViewerRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.view_card import ViewCardRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.waon import WaonRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912RowData,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
 
 
 @dataclass
@@ -113,23 +122,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     god_slayer_factory: GodSlayerFactory
     input_row_data_class: Type[TypeVarInputRowData]
     input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
-    zaim_row_converter_factory: ZaimRowConverterFactory[TypeVarInputRow, TypeVarInputRowData]
-
-    def create_input_row_data_instance(self, list_input_row_standard_type_value: List[str]) -> InputRowData:
-        """This method creates input row data instance by list data of input row."""
-        # noinspection PyArgumentList
-        return self.input_row_data_class(*list_input_row_standard_type_value)
-
-    def create_input_row_instance(
-        self, input_row_data: TypeVarInputRowData
-    ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
-        """This method creates input row instance by input row data instance."""
-        return self.input_row_factory.create(input_row_data)
-
-    def convert_input_row_to_zaim_row(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]) -> ZaimRow:
-        """This method converts input row into zaim row."""
-        converter = self.zaim_row_converter_factory.create(input_row)
-        return ZaimRowFactory.create(converter)
+    zaim_row_converter_factory: CsvRecordToZaimRowConverterFactory[TypeVarInputRow, TypeVarInputRowData]
 
 
 class Account(Enum):
@@ -174,7 +167,8 @@ class Account(Enum):
     MUFG = AccountContext(
         r".*mufg.*\.csv",
         GodSlayerFactory(
-            header=["日付", "摘要", "摘要内容", "支払い金額", "預かり金額", "差引残高", "メモ", "未資金化区分", "入払区分"], encoding="shift_jis_2004",
+            header=["日付", "摘要", "摘要内容", "支払い金額", "預かり金額", "差引残高", "メモ", "未資金化区分", "入払区分"],
+            encoding="shift_jis_2004",
         ),
         MufgRowData,
         MufgRowFactory(),
@@ -242,16 +236,14 @@ class Account(Enum):
     )
     SBI_SUMISHIN_NET_BANK = AccountContext(
         r".*sbi_sumishin_net_bank.*\.csv",
-        GodSlayerFactory(header=["日付", "内容", "出金金額(円)", "入金金額(円)", "残高(円)", "メモ"], encoding="shift_jis_2004",),
+        GodSlayerFactory(
+            header=["日付", "内容", "出金金額(円)", "入金金額(円)", "残高(円)", "メモ"],
+            encoding="shift_jis_2004",
+        ),
         SBISumishinNetBankRowData,
         SBISumishinNetBankRowFactory(),
         SBISumishinNetBankZaimRowConverterFactory(),
     )
-
-    @DynamicClassAttribute
-    def value(self) -> AccountContext[InputRowData, InputRow[InputRowData]]:
-        """This method overwrite super method for type hint."""
-        return cast(AccountContext[InputRowData, InputRow[InputRowData]], super().value)
 
     @staticmethod
     def create_by_path_csv_input(path: Path) -> Account:

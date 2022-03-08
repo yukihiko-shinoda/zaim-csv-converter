@@ -11,11 +11,10 @@ import pytest
 from pytest import FixtureRequest
 from sqlalchemy.orm.session import Session as SQLAlchemySession
 
+from tests.test_zaim_csv_converter import create_relative_deploy_file_path
 from tests.testlibraries.database_for_test import DatabaseForTest
 from tests.testlibraries.instance_resource import InstanceResource
-from tests.zaim.test_zaim_csv_converter import create_relative_deploy_file_path
 from zaimcsvconverter import CONFIG, Session
-from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 
 
 @pytest.fixture
@@ -170,12 +169,6 @@ def get_input_csv_file_path(request: FixtureRequest, resource_path: Path) -> Pat
         suffix = f"_{suffix}"
     file_name = f"{request.function.__name__}{suffix}.csv"
     return resource_path.parent / file_name
-
-
-@pytest.fixture
-def fixture_convert_table_importer(resource_path: Path) -> ConvertTableImporter:
-    """This fixture prepares ConvertTableImporter instance."""
-    return ConvertTableImporter(resource_path)
 
 
 @pytest.fixture

@@ -88,27 +88,19 @@ class SBISumishinNetBankConfig(DataClassJsonMixin):
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
 
-    waon: WaonConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": WaonConfig}}
-    )
+    waon: WaonConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": WaonConfig}})  # type: ignore
     gold_point_card_plus: GoldPointCardPlusConfig = field(  # type: ignore
         default=None, metadata={"dataclasses_json": {"mm_field": GoldPointCardPlusConfig}}
     )
-    mufg: MufgConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": MufgConfig}}
-    )
-    pasmo: PasmoConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": PasmoConfig}}
-    )
+    mufg: MufgConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": MufgConfig}})  # type: ignore
+    pasmo: PasmoConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": PasmoConfig}})  # type: ignore
     amazon: AmazonConfig = field(  # type: ignore
         default=None, metadata={"dataclasses_json": {"mm_field": AmazonConfig}}
     )
     view_card: ViewCardConfig = field(  # type: ignore
         default=None, metadata={"dataclasses_json": {"mm_field": ViewCardConfig}}
     )
-    suica: PasmoConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": SuicaConfig}}
-    )
+    suica: PasmoConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": SuicaConfig}})  # type: ignore
     pay_pal: PayPalConfig = field(  # type: ignore
         default=None, metadata={"dataclasses_json": {"mm_field": PayPalConfig}}
     )

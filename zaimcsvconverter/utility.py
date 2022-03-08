@@ -22,3 +22,7 @@ class Utility:
         if matches is None:
             raise ValueError(f"Invalid yen string. Yen string = {yen_string}")
         return int(matches.group(1).replace(",", ""))
+
+    @staticmethod
+    def convert_string_with_comma_to_int(string_with_comma: str) -> int:
+        return int(string_with_comma.replace(",", ""))
