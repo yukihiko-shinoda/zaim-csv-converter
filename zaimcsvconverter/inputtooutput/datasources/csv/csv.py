@@ -39,22 +39,26 @@ class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
                 self.invalid_footer_error = error
                 raise InvalidInputCsvError(self, str(error)) from error
             except ValidationError as exc:
-                exception = InvalidRecordError(
-                    [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
-                )
+                exception = self.build_invalid_record_error(exc)
                 self.mark_current_record_as_error(exception.list_error)
                 self.undefined_content_error_handler.extend(exception.undefined_content_error_handler)
                 continue
             except StopIteration:
                 break
-            try:
-                yield cast(AbstractInputRecord, self.csv_record_processor.execute(input_record_data))
-            except InvalidRecordError as exc:
-                self.mark_current_record_as_error(exc.list_error)
-                self.undefined_content_error_handler.extend(exc.undefined_content_error_handler)
-                continue
-            except SkipRecord:
-                pass
+            yield from self.convert_to_record(input_record_data)
+
+    def convert_to_record(self, input_record_data: TypeVarInputRowData) -> Generator[AbstractInputRecord, None, None]:
+        try:
+            yield cast(AbstractInputRecord, self.csv_record_processor.execute(input_record_data))
+        except InvalidRecordError as exc:
+            self.mark_current_record_as_error(exc.list_error)
+            self.undefined_content_error_handler.extend(exc.undefined_content_error_handler)
+        except SkipRecord:
+            pass
+
+    def build_invalid_record_error(self, exc: ValidationError) -> InvalidRecordError:
+        list_error = [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
+        return InvalidRecordError(list_error)
 
     @property
     def is_invalid(self) -> bool:

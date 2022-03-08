@@ -1,5 +1,7 @@
 """This module implements convert steps from WAON input row to Zaim row."""
 
+from typing import cast
+
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
@@ -65,21 +67,24 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(self, input_row: Kind1[WaonRow, WaonRowData]) -> ZaimRowConverter[WaonRow, WaonRowData]:  # type: ignore
-        if isinstance(input_row, WaonChargeRow) and (
-            input_row.is_charge_by_point or input_row.is_charge_by_download_value
-        ):
+        if isinstance(input_row, WaonChargeRow):
+            return self._create(input_row)
+        dekinded_input_row = cast(WaonRow, input_row)
+        if dekinded_input_row.is_payment or dekinded_input_row.is_payment_cancel:
+            return WaonZaimPaymentRowConverter(input_row)
+        raise ValueError(self.build_message(dekinded_input_row))
+
+    def _create(self, input_row: WaonChargeRow) -> ZaimRowConverter[WaonRow, WaonRowData]:
+        if input_row.is_charge_by_point or input_row.is_charge_by_download_value:
             # Reason: The returns can't detect correct type limited by if instance block.
             return WaonZaimIncomeRowConverter(input_row)  # type: ignore
-        if input_row.is_payment or input_row.is_payment_cancel:
-            return WaonZaimPaymentRowConverter(input_row)
-        if isinstance(input_row, WaonChargeRow) and (
-            input_row.is_auto_charge or input_row.is_charge_by_bank_account or input_row.is_charge_by_cash
-        ):
-            return WaonZaimTransferRowConverter(input_row)
+        if input_row.is_auto_charge or input_row.is_charge_by_bank_account or input_row.is_charge_by_cash:
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return WaonZaimTransferRowConverter(input_row)  # type: ignore
         raise ValueError(self.build_message(input_row))
 
     @staticmethod
-    def build_message(input_row: Kind1[WaonRow, WaonRowData]) -> str:
+    def build_message(input_row: WaonRow) -> str:
         """This method builds error message."""
         message = f"Unsupported row. Input row = {input_row.__class__.__name__}, {input_row.use_kind}"
         if isinstance(input_row, WaonChargeRow):  # pragma: no cover

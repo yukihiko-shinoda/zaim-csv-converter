@@ -31,8 +31,11 @@ class ContextManager(Generic[TypeVarCovariant], ABC):
         return self.__cm.__enter__()
 
     def __exit__(
-        self, exc_type: type[BaseException] | None, exc_value: BaseException | None, traceback: TracebackType | None
-    ) -> bool | None:
+        self,
+        exc_type: Optional[type[BaseException]],
+        exc_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Optional[bool]:
         if self.__cm is None:
             return None
         return self.__cm.__exit__(exc_type, exc_value, traceback)
