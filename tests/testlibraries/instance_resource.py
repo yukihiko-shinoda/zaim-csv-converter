@@ -61,6 +61,9 @@ class InstanceResource:
     ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS = GOLD_POINT_CARD_PLUS_201912_ROW_DATA_FACTORY.create(
         ["2019/11/09", "Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ", "1969", "１", "１", "1969", ""]
     )
+    ROW_DATA_GOLD_POINT_CARD_PLUS_201912_KYASH = GOLD_POINT_CARD_PLUS_201912_ROW_DATA_FACTORY.create(
+        ["2022/07/14", "ＫＹＡＳＨ", "250", "１", "１", "250", ""]
+    )
     ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_RETURN = GOLD_POINT_CARD_PLUS_201912_ROW_DATA_FACTORY.create(
         ["2020/12/18", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ", "-7500", "１", "１", "-7500", "返品"]
     )
@@ -282,6 +285,9 @@ class InstanceResource:
     )
     FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_DOWNLOADS = FixtureRecord(
         FileCsvConvertId.GOLD_POINT_CARD_PLUS, StoreRowData("Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ", "Amazon Japan G.K.")
+    )
+    FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_KYASH = FixtureRecord(
+        FileCsvConvertId.GOLD_POINT_CARD_PLUS, StoreRowData("ＫＹＡＳＨ", "Kyash", "", "", "", "Kyash")
     )
     FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AWS = FixtureRecord(
         FileCsvConvertId.GOLD_POINT_CARD_PLUS,
