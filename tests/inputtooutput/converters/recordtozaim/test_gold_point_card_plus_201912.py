@@ -6,6 +6,7 @@ from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912ZaimPaymentRowConverter,
+    GoldPointCardPlus201912ZaimTransferRowConverter,
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
@@ -72,9 +73,15 @@ class TestGoldPointCardPlus201912ZaimRowConverterFactory:
         [
             # Case when Gold Point Card Plus payment
             (
-                [InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP],
+                [InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_DOWNLOADS],
                 InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS,
                 GoldPointCardPlus201912ZaimPaymentRowConverter,
+            ),
+            # Case when Gold Point Card Plus transfer
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_KYASH],
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_KYASH,
+                GoldPointCardPlus201912ZaimTransferRowConverter,
             ),
         ],
         indirect=["database_session_with_schema"],

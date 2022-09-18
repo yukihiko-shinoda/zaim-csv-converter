@@ -1,4 +1,6 @@
 """This module implements convert steps from GOLD POINT CARD + input row to Zaim row."""
+from typing import cast
+
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
@@ -6,6 +8,7 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     CsvRecordToZaimRowConverterFactory,
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
+    ZaimTransferRowConverter,
 )
 from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
@@ -13,6 +16,24 @@ from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_20
 from zaimcsvconverter.inputtooutput.datasources.csv.records.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912Row,
 )
+
+
+class GoldPointCardPlus201912ZaimTransferRowConverter(
+    ZaimTransferRowConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
+):
+    """This class implements convert steps from GOLD POINT CARD + input row to Zaim transfer row."""
+
+    @property
+    def cash_flow_source(self) -> str:
+        return CONFIG.gold_point_card_plus.account_name
+
+    @property
+    def cash_flow_target(self) -> str:
+        return self.input_row.store.transfer_target
+
+    @property
+    def amount(self) -> int:
+        return self.input_row.payed_amount
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
@@ -41,4 +62,7 @@ class GoldPointCardPlus201912ZaimRowConverterFactory(
     def create(  # type: ignore
         self, input_row: Kind1[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
     ) -> ZaimRowConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]:
+        dekinded_input_row = cast(GoldPointCardPlus201912Row, input_row)
+        if dekinded_input_row.store.transfer_target:
+            return GoldPointCardPlus201912ZaimTransferRowConverter(input_row)
         return GoldPointCardPlus201912ZaimPaymentRowConverter(input_row)

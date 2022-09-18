@@ -23,6 +23,7 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-python.vscode-pylance",
+		"bungcip.better-toml",
 		"grapecity.gc-excelviewer",
 		"streetsidesoftware.code-spell-checker"
 	]

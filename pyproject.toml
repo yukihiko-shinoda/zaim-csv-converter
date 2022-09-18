@@ -24,8 +24,13 @@ line-length = 119
 [tool.coverage.run]
 source = ["zaimcsvconverter"]
 
+[tool.docformatter]
+recursive = true
+wrap-descriptions = 119
+wrap-summaries = 119
+
 [tool.pylint.format]
-max-line-length = "119"
+max-line-length = 119
 
 [tool.pylint.basic]
 docstring-min-length = "7"
