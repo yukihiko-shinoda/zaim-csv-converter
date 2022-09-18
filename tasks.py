@@ -3,16 +3,21 @@
 
 Execute 'invoke --list' for guidance on using Invoke
 """
+from dataclasses import dataclass
+
 # Reason: invoke doesn't seem to support type hint, otherwise commands cause error:
 # ValueError: Function has keyword-only parameters or annotations,
 # use inspect.signature() API which can support them
 from pathlib import Path
 import platform
 import shutil
+from typing import Any
 import webbrowser
 
-from invoke.runners import Failure, Result
+from invoke.exceptions import Failure
+from invoke.runners import Result
 from invoke import task
+import tomli
 
 ROOT_DIR = Path(__file__).parent
 TEST_DIR = ROOT_DIR.joinpath("tests")
@@ -57,13 +62,34 @@ def docformatter(context, check=False):
     - Add pyproject.toml support for config (Issue #10) by weibullguy · Pull Request #77 · PyCQA/docformatter
       https://github.com/PyCQA/docformatter/pull/77
     """
-    list_options = ["--recursive", "--wrap-summaries", "119", "--wrap-descriptions", "119"]
-    if check:
-        list_options.append("--check")
-    else:
-        list_options.append("--in-place")
+    parsed_toml = tomli.loads(Path("pyproject.toml").read_text("UTF-8"))
+    config = parsed_toml["tool"]["docformatter"]
+    list_options = build_list_options_docformatter(config, check)
     docformatter_options = f"{' '.join(list_options)}"
     return context.run(f"docformatter {docformatter_options} {' '.join(PYTHON_DIRS)}", warn=True)
+
+
+@dataclass
+class DocformatterOption:
+    list_str: list[str]
+    enable: bool
+
+
+def build_list_options_docformatter(config: dict[str, Any], check: bool) -> list[str]:
+    """Builds list of docformatter options."""
+    docformatter_options = (
+        DocformatterOption(["--recursive"], "recursive" in config and config["recursive"]),
+        DocformatterOption(["--wrap-summaries", str(config["wrap-summaries"])], "wrap-summaries" in config),
+        DocformatterOption(["--wrap-descriptions", str(config["wrap-descriptions"])], "wrap-descriptions" in config),
+        DocformatterOption(["--check"], check),
+        DocformatterOption(["--in-place"], not check),
+    )
+    return [
+        item
+        for docformatter_option in docformatter_options
+        if docformatter_option.enable
+        for item in docformatter_option.list_str
+    ]
 
 
 def autoflake(context, check=False) -> Result:
