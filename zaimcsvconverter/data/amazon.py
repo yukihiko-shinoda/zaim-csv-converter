@@ -6,7 +6,8 @@ from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 
 @dataclass
-# Reason: Model. pylint: disable=too-few-public-methods,too-many-instance-attributes
+# Reason: Model, has similar designed versions.
+# pylint: disable=too-few-public-methods,too-many-instance-attributes,duplicate-code
 class AmazonRowData(CsvRowData):
     """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
 

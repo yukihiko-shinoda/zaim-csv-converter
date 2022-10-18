@@ -59,7 +59,7 @@ class ZaimCsvFileChecker(OutputCsvFileChecker[ZaimRowData]):
     output_row_data_class: Type[ZaimRowData] = field(default=ZaimRowData, init=False)
 
     def assert_header_and_skip(self, csv_reader: CSVReader) -> None:
-        assert csv_reader.__next__() == ZaimCsvFormat.HEADER
+        assert next(csv_reader) == ZaimCsvFormat.HEADER
 
 
 @dataclass

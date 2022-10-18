@@ -26,7 +26,6 @@ class InputRow(Generic[TypeVarInputRowData], AbstractInputRecord):
         self.list_error: list[InvalidCellError] = []
         self.date: datetime = input_row_data.date
 
-    # Reason: Parent method. pylint: disable=no-self-use
     @property
     def validate(self) -> bool:
         """This method validates data."""
@@ -37,7 +36,6 @@ class InputRow(Generic[TypeVarInputRowData], AbstractInputRecord):
         with MultipleErrorCollector(InvalidCellError, message, self.list_error):
             return method()
 
-    # Reason: Parent method. pylint: disable=no-self-use
     @property
     def is_row_to_skip(self) -> bool:
         """This property returns whether this row should be skipped or not."""

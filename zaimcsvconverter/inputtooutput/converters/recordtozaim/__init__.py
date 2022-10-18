@@ -27,6 +27,7 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
 )
 
 
+# Reason: Abstract class. pylint: disable=too-few-public-methods
 class AbstractZaimRowConverter(ABC):
     pass
 
