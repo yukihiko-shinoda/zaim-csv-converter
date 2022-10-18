@@ -10,6 +10,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from zaimcsvconverter.exceptions import InvalidCellError
 
 
+# Reason: Abstract class. pylint: disable=too-few-public-methods
 class AbstractInputRecord(ABC):
     """This class implements input record model."""
 

@@ -5,8 +5,7 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import Any, Callable, Generic, Optional, TypeVar
 
-# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
-from errorcollector import MultipleErrorCollector, SingleErrorCollector  # type: ignore
+from errorcollector import MultipleErrorCollector, SingleErrorCollector
 
 from zaimcsvconverter.exceptions import InvalidCellError, UndefinedContentError
 from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
@@ -27,7 +26,6 @@ class InputRow(Generic[TypeVarInputRowData], AbstractInputRecord):
         self.list_error: list[InvalidCellError] = []
         self.date: datetime = input_row_data.date
 
-    # Reason: Parent method. pylint: disable=no-self-use
     @property
     def validate(self) -> bool:
         """This method validates data."""
@@ -38,7 +36,6 @@ class InputRow(Generic[TypeVarInputRowData], AbstractInputRecord):
         with MultipleErrorCollector(InvalidCellError, message, self.list_error):
             return method()
 
-    # Reason: Parent method. pylint: disable=no-self-use
     @property
     def is_row_to_skip(self) -> bool:
         """This property returns whether this row should be skipped or not."""

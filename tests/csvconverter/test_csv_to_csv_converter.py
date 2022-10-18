@@ -33,7 +33,7 @@ class TestCsvToCsvConverterForStore:
             assert sum(1 for row in file_zaim) == 2
             file_zaim.seek(0)
             reader_zaim = csv.reader(file_zaim)
-            list_zaim_row = reader_zaim.__next__()
+            list_zaim_row = next(reader_zaim)
             zaim_row_data = ZaimRowData(*list_zaim_row)
             assert zaim_row_data.date == "日付"
             assert zaim_row_data.method == "方法"

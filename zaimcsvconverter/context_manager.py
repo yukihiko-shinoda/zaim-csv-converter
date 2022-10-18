@@ -8,14 +8,14 @@ import contextlib
 from types import TracebackType
 from typing import Generic, Optional, TypeVar
 
-TypeVarCovariant = TypeVar("TypeVarCovariant", covariant=True)
+TypeVarCovariant_co = TypeVar("TypeVarCovariant_co", covariant=True)
 
 
-class ContextManager(Generic[TypeVarCovariant], ABC):
+class ContextManager(Generic[TypeVarCovariant_co], ABC):
     """Class which can be used as `contextmanager`."""
 
     def __init__(self) -> None:
-        self.__cm: Optional[contextlib._GeneratorContextManager[TypeVarCovariant]] = None
+        self.__cm: Optional[contextlib._GeneratorContextManager[TypeVarCovariant_co]] = None
 
     # Reason: Maybe, there are no way to fix.
     # error: Argument 1 to "contextmanager" has incompatible type
@@ -23,10 +23,10 @@ class ContextManager(Generic[TypeVarCovariant], ABC):
     #   expected "Callable[[ContextManager[T_co]], Iterator[<nothing>]]"
     @abstractmethod  # type: ignore
     @contextlib.contextmanager
-    def contextmanager(self) -> contextlib._GeneratorContextManager[TypeVarCovariant]:
+    def contextmanager(self) -> contextlib._GeneratorContextManager[TypeVarCovariant_co]:
         raise NotImplementedError("Abstract method")
 
-    def __enter__(self) -> TypeVarCovariant:
+    def __enter__(self) -> TypeVarCovariant_co:
         self.__cm = self.contextmanager()
         return self.__cm.__enter__()
 

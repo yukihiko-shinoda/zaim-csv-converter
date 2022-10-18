@@ -47,13 +47,13 @@ class TestErrorTotalizer:
         assert files[3].name == "test_waon.csv"
         with files[1].open("r", encoding="UTF-8", newline="\n") as file_error:
             reader_error = csv.reader(file_error)
-            error_row_data = ErrorRowDataForTest(*(reader_error.__next__()))
+            error_row_data = ErrorRowDataForTest(*(next(reader_error)))
             assert error_row_data.convert_table == "amazon.csv"
             assert error_row_data.store_name == ""
             assert error_row_data.item_name == (
                 "LITTLE TREEチェアマット 120×90cm厚1.5mm 床を保護 机の擦り傷防止滑り止め カート可能 透明大型デスク足元マット フローリング/畳/床暖房対応 (120×90cm)"
             )
-            error_row_data = ErrorRowDataForTest(*(reader_error.__next__()))
+            error_row_data = ErrorRowDataForTest(*(next(reader_error)))
             assert error_row_data.convert_table == "waon.csv"
             assert error_row_data.store_name == "板橋前野町"
             assert error_row_data.item_name == ""

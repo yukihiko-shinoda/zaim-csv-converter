@@ -4,9 +4,7 @@ from typing import Generator
 
 from fixturefilehandler.factories import DeployerFactory
 from fixturefilehandler.file_paths import YamlConfigFilePathBuilder
-
-# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
-from fixturefilehandler import RelativeDeployFilePath, ResourceFileDeployer  # type: ignore
+from fixturefilehandler import RelativeDeployFilePath, ResourceFileDeployer
 import pytest
 from pytest import FixtureRequest
 from sqlalchemy.orm.session import Session as SQLAlchemySession

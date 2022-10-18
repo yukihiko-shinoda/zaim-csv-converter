@@ -13,8 +13,7 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import Za
 TypeVarOutputRowData = TypeVar("TypeVarOutputRowData")
 
 
-# @see https://github.com/python/mypy/issues/5374
-@dataclass  # type: ignore
+@dataclass
 class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):
     """This class helps to check output CSV file."""
 
@@ -60,7 +59,7 @@ class ZaimCsvFileChecker(OutputCsvFileChecker[ZaimRowData]):
     output_row_data_class: Type[ZaimRowData] = field(default=ZaimRowData, init=False)
 
     def assert_header_and_skip(self, csv_reader: CSVReader) -> None:
-        assert csv_reader.__next__() == ZaimCsvFormat.HEADER
+        assert next(csv_reader) == ZaimCsvFormat.HEADER
 
 
 @dataclass

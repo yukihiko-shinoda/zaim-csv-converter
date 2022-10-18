@@ -1,6 +1,8 @@
 # Slim image can't install numpy
 FROM python:3.10.7-bullseye as production
 WORKDIR /workspace
+# setuptools 65.3.0 can't lock package defined its dependencies by pyproject.toml
+RUN pip install --upgrade setuptools>=65.4.0
 COPY Pipfile Pipfile.lock /workspace/
 RUN pip --no-cache-dir install pipenv \
  && pipenv install --deploy --system \

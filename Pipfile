@@ -32,7 +32,9 @@ fixturefilehandler = "*"
 flake8 = "*"
 # To use flake8 --radon-show-closures
 flake8-polyfill = "*"
-hacking = "*"
+# Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
+# When unpin hacking, it has possibility to install too legacy version of hacking.
+hacking = ">=5.0.0"
 invoke = "*"
 isort = "*"
 mypy = "*"
