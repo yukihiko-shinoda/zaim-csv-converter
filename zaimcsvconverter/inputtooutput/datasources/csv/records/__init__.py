@@ -5,8 +5,7 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import Any, Callable, Generic, Optional, TypeVar
 
-# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
-from errorcollector import MultipleErrorCollector, SingleErrorCollector  # type: ignore
+from errorcollector import MultipleErrorCollector, SingleErrorCollector
 
 from zaimcsvconverter.exceptions import InvalidCellError, UndefinedContentError
 from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
