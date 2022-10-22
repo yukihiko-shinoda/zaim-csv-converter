@@ -23,6 +23,7 @@ Zaim で口座連携をするために
 - Suica
 - PayPal (experimental)
 - 住信 SBI ネット銀行 (experimental)
+- PayPay カード
 
 ※ [対応口座追加のための開発手順](docs/CONTRIBUTING.md)をまとめました、プルリクエストをお待ちしています。
 
@@ -70,6 +71,7 @@ Amazon.co.jp|amazon.csv|品目単位
 ビューカード|view_card.csv|お店単位
 PayPal|pay_pal_store.csv, pay_pal_item.csv|お店単位、品目単位
 住信 SBI ネット銀行|sbi_sumishin_net_bank.csv|お店単位
+PayPay カード|pay_pay_card.csv|お店単位
 
 ※ 文字コードは UTF-8 で準備してください。
 
@@ -104,6 +106,7 @@ Amazon.co.jp 2019 年 12 月以降の形式|amazon_201911
 Suica|suica
 PayPal|pay_pal_store, pay_pal_item
 住信 SBI ネット銀行|sbi_sumishin_net_bank
+PayPay カード|pay_pay_card
 
 変換対象CSVの準備方法の詳細は[変換対象 CSV の準備方法](#変換対象-CSV-の準備方法)を参照してください。
 
@@ -376,3 +379,34 @@ Chrome 拡張の[アマゾン注文履歴フィルタ](https://chrome.google.com
 4\.
 
 [CSV でダウンロード] ボタンをクリックします。
+
+### PayPay カード
+
+1\.
+
+[PayPay カード](https://www.paypay-card.co.jp/member) にログインします。
+
+2\.
+
+画面上部 [利用明細] をクリック
+
+3\.
+
+該当月の [◯月] をクリック
+
+4\.
+
+画面を下にスクロールしていくとある [ご利用明細の印刷] ボタンをクリック
+
+5\.
+
+[回数指定払い] の HTML テーブルを Google スプレッドシートにコピーします。
+
+Chrome の場合は [Table Capture](https://chrome.google.com/webstore/detail/table-capture/iebpjdmgckacbodjpijphcplhebcmeop) という拡張機能を使います。
+
+6\.
+
+最上段の [回数指定払い] の行と最下段の [回数指定払い小計] の行を削除します。
+
+7\.
+該当月のスプレッドシートを開いた状態で [ファイル] -> [形式を指定してダウンロード] -> [カンマ区切りの値(.csv、現在のシート)]

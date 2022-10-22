@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 
@@ -23,7 +23,7 @@ class Note(str, Enum):
 class SFCardViewerRowData(CsvRowData):
     """This class implements data class for wrapping list of SF Card Viewer CSV row model."""
 
-    used_date: StringToDateTime
+    used_date: StringSlashToDateTime
     is_commuter_pass_enter: str
     railway_company_name_enter: str
     station_name_enter: str

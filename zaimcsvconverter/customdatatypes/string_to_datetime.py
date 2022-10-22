@@ -1,4 +1,5 @@
 """Custom data type to convert string to datetime."""
+from abc import abstractmethod
 from datetime import datetime
 from typing import Any, TYPE_CHECKING
 
@@ -18,4 +19,25 @@ class StringToDateTime(datetime):
     def parse_date(cls, value: Any) -> datetime:
         if not isinstance(value, str):
             raise TypeError("string required")
-        return datetime.strptime(value, "%Y/%m/%d")
+        return datetime.strptime(value, cls.get_format())
+
+    @classmethod
+    @abstractmethod
+    def get_format(cls) -> str:
+        raise NotImplementedError
+
+
+class StringSlashToDateTime(StringToDateTime):
+    """Type that converts string to datetime."""
+
+    @classmethod
+    def get_format(cls) -> str:
+        return "%Y/%m/%d"
+
+
+class StringNumberOnlyToDateTime(StringToDateTime):
+    """Type that converts string to datetime."""
+
+    @classmethod
+    def get_format(cls) -> str:
+        return "%Y%m%d"

@@ -21,6 +21,7 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pal import PayPalZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pay_card import PayPayCardZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sbi_sumishin_net_bank import (
     SBISumishinNetBankZaimRowConverterFactory,
 )
@@ -36,6 +37,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_p
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.mufg import MufgRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.pay_pal import PayPalRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.pay_pay_card import PayPayCardRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.sbi_sumishin_net_bank import (
     SBISumishinNetBankRowFactory,
 )
@@ -50,6 +52,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_20
 )
 from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pay_card import PayPayCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
@@ -75,44 +78,16 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     GOD_SLAYER_FACTORY_AMAZON: GodSlayerFactory = field(
         default=GodSlayerFactory(
             header=[
-                "注文日",
-                "注文番号",
-                "商品名",
-                "付帯情報",
-                "価格",
-                "個数",
-                "商品小計",
-                "注文合計",
-                "お届け先",
-                "状態",
-                "請求先",
-                "請求額",
-                "クレカ請求日",
-                "クレカ請求額",
-                "クレカ種類",
-                "注文概要URL",
-                "領収書URL",
-                "商品URL",
+                # fmt: off
+                "注文日", "注文番号", "商品名", "付帯情報", "価格", "個数", "商品小計", "注文合計", "お届け先", "状態", "請求先", "請求額", "クレカ請求日",
+                "クレカ請求額", "クレカ種類", "注文概要URL", "領収書URL", "商品URL",
+                # fmt: on
             ],
             partition=[
-                r"\d{4}/\d{1,2}/\d{1,2}",
-                r".*",
-                "（注文全体）",
-                "",
-                "",
-                "",
-                "",
-                r"\d*",
-                "",
-                "",
-                r".*",
-                r"\d*",
-                "",
-                "",
-                r".*",
-                r".*",
-                r".*",
-                "",
+                # fmt: off
+                r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",
+                r".*", r".*", r".*", "",
+                # fmt: on
             ],
             encoding="utf-8-sig",
         ),
@@ -243,6 +218,15 @@ class Account(Enum):
         SBISumishinNetBankRowData,
         SBISumishinNetBankRowFactory(),
         SBISumishinNetBankZaimRowConverterFactory(),
+    )
+    PAY_PAY_CARD = AccountContext(
+        r".*pay_pay_card.*\.csv",
+        GodSlayerFactory(
+            header=["利用日", "利用店名・商品名", "利用者 ※1", "支払 区分 ※2", "利用金額", "手数料", "支払総額", "当月支払 金額", "翌月以降 繰越残高"]
+        ),
+        PayPayCardRowData,
+        PayPayCardRowFactory(),
+        PayPayCardZaimRowConverterFactory(),
     )
 
     @staticmethod

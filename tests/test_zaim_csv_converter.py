@@ -19,6 +19,7 @@ from tests.testlibraries.integration_test_expected_factory import (
     create_zaim_row_data_pasmo_201811,
     create_zaim_row_data_pasmo_201901,
     create_zaim_row_data_pay_pal_201810,
+    create_zaim_row_data_pay_pay_card_202208,
     create_zaim_row_data_sbi_sumishin_net_bank_202201,
     create_zaim_row_data_suica_202003,
     create_zaim_row_data_view_card_202005,
@@ -67,7 +68,7 @@ class TestZaimCsvConverter:
             raise error
         files = sorted(directory_csv_output.target.rglob("*[!.gitkeep]"))
 
-        assert len(files) == 18
+        assert len(files) == 19
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file("waon201807.csv", create_zaim_row_data_waon_201807())
         checker.assert_file("waon201808.csv", create_zaim_row_data_waon_201808())
@@ -90,6 +91,7 @@ class TestZaimCsvConverter:
         checker.assert_file("suica202003.csv", create_zaim_row_data_suica_202003())
         checker.assert_file("pay_pal201810.csv", create_zaim_row_data_pay_pal_201810())
         checker.assert_file("sbi_sumishin_net_bank202201.csv", create_zaim_row_data_sbi_sumishin_net_bank_202201())
+        checker.assert_file("pay_pay_card_202208.csv", create_zaim_row_data_pay_pay_card_202208())
 
     @staticmethod
     def debug_csv(csv_file_name: str, directory_csv_output: RelativeDeployFilePath) -> None:

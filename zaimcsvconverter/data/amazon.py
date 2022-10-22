@@ -1,7 +1,7 @@
 """Amazon.co.jp CSV Data model."""
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 
@@ -11,7 +11,7 @@ from zaimcsvconverter.first_form_normalizer import CsvRowData
 class AmazonRowData(CsvRowData):
     """This class implements data class for wrapping list of Amazon.co.jp CSV row model."""
 
-    ordered_date: StringToDateTime
+    ordered_date: StringSlashToDateTime
     order_id: str
     item_name_: str
     note: str

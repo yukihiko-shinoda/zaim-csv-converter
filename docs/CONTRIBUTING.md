@@ -31,7 +31,7 @@ convert_table_type|入力 CSV ファイルの各行がお店単位の場合は `
 
 ### 3. 入力 CSV ファイルのフォーマットに依存する処理を追加する開発
 
-inputcsvformats 配下に新規対応口座の入力 CSV モデル module を作成します。
+新規対応口座の入力 CSV モデル module を作成します。
 
 #### 3-1. 入力 CSV の行の各列のプロパティを定義した dataclass の実装
 
