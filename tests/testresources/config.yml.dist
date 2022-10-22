@@ -28,3 +28,5 @@ pay_pal:
 sbi_sumishin_net_bank:
   account_name: '住信 SBI ネット銀行'
   transfer_account_name: 'お財布'
+pay_pay_card:
+  account_name: 'PayPay カード'

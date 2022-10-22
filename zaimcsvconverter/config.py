@@ -84,6 +84,13 @@ class SBISumishinNetBankConfig(DataClassJsonMixin):
 
 
 @dataclass
+class PayPayCardConfig(DataClassJsonMixin):
+    """This class implements configuration for PayPay Card."""
+
+    account_name: str
+
+
+@dataclass
 # Reason: Specification. pylint: disable=too-many-instance-attributes
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
@@ -106,4 +113,7 @@ class Config(YamlDataClassConfig):
     )
     sbi_sumishin_net_bank: SBISumishinNetBankConfig = field(  # type: ignore
         default=None, metadata={"dataclasses_json": {"mm_field": SBISumishinNetBankConfig}}
+    )
+    pay_pay_card: PayPayCardConfig = field(  # type: ignore
+        default=None, metadata={"dataclasses_json": {"mm_field": PayPayCardConfig}}
     )

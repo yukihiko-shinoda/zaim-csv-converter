@@ -3,7 +3,7 @@ from typing import ClassVar
 
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
 from zaimcsvconverter.customdatatypes.string_to_optional_int import ConstrainedStringToOptionalInt
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
@@ -17,7 +17,7 @@ class Amazon201911RowData(CsvRowData):
     ITEM_NAME_ENTIRE_ORDER: ClassVar[str] = "（注文全体）"
     ITEM_NAME_BILLING_TO_CREDIT_CARD: ClassVar[str] = "（クレジットカードへの請求）"
     ITEM_NAME_SHIPPING_HANDLING: ClassVar[str] = "（配送料・手数料）"
-    ordered_date: StringToDateTime
+    ordered_date: StringSlashToDateTime
     order_id: str
     item_name_: str
     note: str

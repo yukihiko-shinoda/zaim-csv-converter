@@ -54,3 +54,6 @@ sbi_sumishin_net_bank:
   account_name: '住信 SBI ネット銀行'
   # ↓ 入出金時に振替先となる、Zaim上で登録している口座名を設定します。
   transfer_account_name: 'お財布'
+pay_pay_card:
+  # ↓ Zaim上で PayPay カードとして登録している口座名を設定します。
+  account_name: 'PayPay カード'

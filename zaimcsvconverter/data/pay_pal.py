@@ -5,7 +5,7 @@ from typing import ClassVar, List
 
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 
@@ -47,7 +47,7 @@ class CURRENCY(str, Enum):
 class PayPalRowData(CsvRowData):
     """This class implements data class for wrapping list of PayPal CSV row model."""
 
-    date_: StringToDateTime
+    date_: StringSlashToDateTime
     time: str
     time_zone: TIMEZONE
     name: str

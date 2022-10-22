@@ -1,7 +1,7 @@
 """GOLD POINT CARD+ CSV Data model."""
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 
@@ -10,7 +10,7 @@ from zaimcsvconverter.first_form_normalizer import CsvRowData
 class GoldPointCardPlusRowData(CsvRowData):
     """This class implements data class for wrapping list of GOLD POINT CARD+ CSV row model."""
 
-    used_date: StringToDateTime
+    used_date: StringSlashToDateTime
     used_store: str
     used_card: str
     payment_kind: str

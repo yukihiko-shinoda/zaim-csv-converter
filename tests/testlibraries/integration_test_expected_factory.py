@@ -253,3 +253,10 @@ def create_zaim_row_data_sbi_sumishin_net_bank_202201() -> list[ZaimRowData]:
         "2021-12-30", "transfer", "-", "-", "お財布", "住信 SBI ネット銀行", "", "", "", "", "0", "0", "200000", "", "", ""
     )
     return [zaim_row_data_01, zaim_row_data_02, zaim_row_data_03]
+
+
+def create_zaim_row_data_pay_pay_card_202208() -> list[ZaimRowData]:
+    zaim_row_data_01 = ZaimRowData(
+        "2022-07-03", "payment", "食費", "食料品", "PayPay カード", "", "", "", "ビッグ・エー", "", "0", "292", "0", "", "", ""
+    )
+    return [zaim_row_data_01]

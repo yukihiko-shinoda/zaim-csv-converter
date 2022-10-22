@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringToDateTime
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
 from zaimcsvconverter.customdatatypes.yen_string_to_int import StrictYenStringToInt
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
@@ -35,7 +35,7 @@ class ChargeKind(str, Enum):
 class WaonRowData(CsvRowData):
     """This class implements data class for wrapping list of WAON CSV row model."""
 
-    date_: StringToDateTime
+    date_: StringSlashToDateTime
     used_store: str
     used_amount: StrictYenStringToInt
     use_kind: UseKind
