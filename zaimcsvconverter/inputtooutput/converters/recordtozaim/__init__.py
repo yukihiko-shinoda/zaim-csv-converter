@@ -60,12 +60,12 @@ class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRowDa
 
     @property
     @abstractmethod
-    def category(self) -> str:
+    def category(self) -> Optional[str]:
         """This property returns category on Zaim income row."""
 
     @property
     @abstractmethod
-    def store_name(self) -> str:
+    def store_name(self) -> Optional[str]:
         """This property returns store name."""
 
     @property
@@ -84,12 +84,12 @@ class ZaimIncomeRowStoreConverter(ZaimIncomeRowConverter[TypeVarInputStoreRow, T
     """This class implements convert steps from input store row to Zaim income row."""
 
     @property
-    def category(self) -> str:
+    def category(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.category_income
 
     @property
-    def store_name(self) -> str:
+    def store_name(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.name_zaim
 
@@ -114,7 +114,7 @@ class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRowD
 
     @property
     @abstractmethod
-    def store_name(self) -> str:
+    def store_name(self) -> Optional[str]:
         """This property returns store name."""
 
     @property
@@ -151,7 +151,7 @@ class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow,
         return ZaimCsvFormat.ITEM_NAME_EMPTY
 
     @property
-    def store_name(self) -> str:
+    def store_name(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.name_zaim
 
@@ -175,7 +175,7 @@ class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow, T
         return self.input_row.item.name
 
     @property
-    def store_name(self) -> str:
+    def store_name(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.name_zaim
 
@@ -201,7 +201,7 @@ class ZaimPaymentRowStoreItemConverter(
         return self.input_row.item.name
 
     @property
-    def store_name(self) -> str:
+    def store_name(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.name_zaim
 
@@ -211,12 +211,12 @@ class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRow
 
     @property
     @abstractmethod
-    def cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> Optional[str]:
         """This property returns cash flow source."""
 
     @property
     @abstractmethod
-    def cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> Optional[str]:
         """This property returns cash flow target."""
 
     @property

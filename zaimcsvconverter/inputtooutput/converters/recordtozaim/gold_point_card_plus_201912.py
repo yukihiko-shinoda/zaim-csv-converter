@@ -1,5 +1,5 @@
 """This module implements convert steps from GOLD POINT CARD + input row to Zaim row."""
-from typing import cast
+from typing import cast, Optional
 
 from returns.primitives.hkt import Kind1
 
@@ -28,7 +28,7 @@ class GoldPointCardPlus201912ZaimTransferRowConverter(
         return CONFIG.gold_point_card_plus.account_name
 
     @property
-    def cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> Optional[str]:
         return self.input_row.store.transfer_target
 
     @property

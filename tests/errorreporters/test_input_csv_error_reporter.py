@@ -21,7 +21,7 @@ class TestInputCsvErrorReporter:
             """Unexpected class."""
 
             def __iter__(self) -> Generator[AbstractInputRecord, None, None]:
-                pass
+                raise NotImplementedError
 
             def mark_current_record_as_error(self, list_error: List[InvalidCellError]) -> None:
                 pass

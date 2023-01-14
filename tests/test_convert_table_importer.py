@@ -51,7 +51,10 @@ class TestConvertTableImporter:
     @staticmethod
     def assert_store_equal(expected_stores: list[Any], database_session_with_schema: SQLAlchemySession) -> None:
         """This method asserts Store table."""
-        stores: List[Store] = database_session_with_schema.query(Store).order_by(Store.id.asc()).all()
+        # Reeason: SQLAlchemy 2 Stubs' issue:
+        # - any, has on column attribute · Issue #207 · sqlalchemy/sqlalchemy2-stubs
+        #   https://github.com/sqlalchemy/sqlalchemy2-stubs/issues/207
+        stores: List[Store] = database_session_with_schema.query(Store).order_by(Store.id.asc()).all()  # type: ignore
         assert len(stores) == len(expected_stores)
         index = 0
         for store in stores:
@@ -69,7 +72,10 @@ class TestConvertTableImporter:
     @staticmethod
     def assert_item_equal(expected_items: list[Any], database_session_with_schema: SQLAlchemySession) -> None:
         """This method asserts Store table."""
-        items: List[Item] = database_session_with_schema.query(Item).order_by(Item.id.asc()).all()
+        # Reeason: SQLAlchemy 2 Stubs' issue:
+        # - any, has on column attribute · Issue #207 · sqlalchemy/sqlalchemy2-stubs
+        #   https://github.com/sqlalchemy/sqlalchemy2-stubs/issues/207
+        items: List[Item] = database_session_with_schema.query(Item).order_by(Item.id.asc()).all()  # type: ignore
         assert len(items) == len(expected_items)
         index = 0
         for item in items:

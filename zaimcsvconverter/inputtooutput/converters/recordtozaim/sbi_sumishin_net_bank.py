@@ -1,5 +1,5 @@
 """This module implements convert steps from SBI Sumishin net bank input row to Zaim row."""
-from typing import cast, Union
+from typing import cast, Optional, Union
 
 from returns.primitives.hkt import Kind1
 
@@ -44,7 +44,7 @@ class SBISumishinNetBankWithdrawalZaimTransferRowConverter(
         return CONFIG.sbi_sumishin_net_bank.account_name
 
     @property
-    def cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> Optional[str]:
         return self.input_row.store.transfer_target
 
     @property
@@ -74,7 +74,7 @@ class SBISumishinNetBankDepositZaimTransferRowConverter(
     """This class implements convert steps from MUFG income input row to Zaim transfer row."""
 
     @property
-    def cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> Optional[str]:
         return self.input_row.store.transfer_target
 
     @property

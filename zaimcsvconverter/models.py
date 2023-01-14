@@ -12,9 +12,7 @@ import warnings
 from inflector import Inflector
 from sqlalchemy import Column, exc, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declared_attr
-
-# Reason: Since stub for SQLAlchemy lacks.
-from sqlalchemy.orm.decl_api import DeclarativeMeta, registry  # type: ignore
+from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
 from sqlalchemy.orm.exc import NoResultFound
 
 from zaimcsvconverter import Session
@@ -102,29 +100,28 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
     #   https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/mixins.html
     # pylint: disable=no-self-argument
     def __tablename__(cls) -> str:
-        # Reason: The mypy doesn't check @declared_attr.
-        class_name = cls.__name__  # type: ignore
+        class_name = cls.__name__
         return str(Inflector().pluralize(class_name.lower()))
 
-    id = Column(Integer, primary_key=True)
-    file_csv_convert_id = Column(Integer)
-    name = Column(String(255))
-    category_payment_large = Column(String(255))
-    category_payment_small = Column(String(255))
+    # The types are by default always considered to be Optional,
+    # even for the primary key and non-nullable column.
+    # The types of the above columns can be stated explicitly,
+    # providing the two advantages of clearer self-documentation
+    # as well as being able to control which types are optional.
+    # - Mypy / Pep-484 Support for ORM Mappings — SQLAlchemy 1.4 Documentation
+    #   https://docs.sqlalchemy.org/en/14/orm/extensions/mypy.html#introspection-of-columns-based-on-typeengine
+    id: int = Column(Integer, primary_key=True)
+    file_csv_convert_id: int = Column(Integer)
+    name: str = Column(String(255))
+    category_payment_large: Optional[str] = Column(String(255))
+    category_payment_small: Optional[str] = Column(String(255))
 
     __table_args__ = (UniqueConstraint("file_csv_convert_id", "name", name="_name_on_each_account_uc"),)
 
     @abstractmethod
     def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: TypeVarConvertTableRowData):
-        # Reason: The mypy reports following error:
-        #   Attribute "****" already defined on line **
-        # see:
-        # - Constructors and Object Initialization — SQLAlchemy 1.4 Documentation
-        #   https://docs.sqlalchemy.org/en/14/orm/constructors.html
-        # - "Already defined" + "not defined" errors with SQLAlchemy 1.2 hybrid_property · Issue #4430 · python/mypy
-        #   https://github.com/python/mypy/issues/4430
-        self.file_csv_convert_id: int = file_csv_convert_id.value  # type: ignore
-        self.name: str = row_data.name  # type: ignore
+        self.file_csv_convert_id = file_csv_convert_id.value
+        self.name = row_data.name
 
     @staticmethod
     def _get_str_or_none(value: Optional[str]) -> Optional[str]:
@@ -168,27 +165,26 @@ with warnings.catch_warnings():
     class Store(Base, ConvertTableRecordMixin["Store", StoreRowData]):
         """This class implements Store model to convert from account CSV to Zaim CSV."""
 
-        name_zaim = Column(String(255))
-        category_income = Column(String(255))
-        transfer_target = Column(String(255))
+        # The types are by default always considered to be Optional,
+        # even for the primary key and non-nullable column.
+        # The types of the above columns can be stated explicitly,
+        # providing the two advantages of clearer self-documentation
+        # as well as being able to control which types are optional.
+        # - Mypy / Pep-484 Support for ORM Mappings — SQLAlchemy 1.4 Documentation
+        #   https://docs.sqlalchemy.org/en/14/orm/extensions/mypy.html#introspection-of-columns-based-on-typeengine
+        name_zaim: Optional[str] = Column(String(255))
+        category_income: Optional[str] = Column(String(255))
+        transfer_target: Optional[str] = Column(String(255))
 
         def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: StoreRowData):
             ConvertTableRecordMixin.__init__(self, file_csv_convert_id, row_data)
-            # Reason: The mypy reports following error:
-            #   Attribute "****" already defined on line **
-            # see:
-            # - Constructors and Object Initialization — SQLAlchemy 1.4 Documentation
-            #   https://docs.sqlalchemy.org/en/14/orm/constructors.html
-            # - "Already defined" + "not defined" errors with SQLAlchemy 1.2 hybrid_property
-            #   · Issue #4430 · python/mypy
-            #   https://github.com/python/mypy/issues/4430
-            self.name_zaim: Optional[str] = self._get_str_or_none(row_data.name_zaim)  # type: ignore
+            self.name_zaim = self._get_str_or_none(row_data.name_zaim)
             category_payment_large = self._get_str_or_none(row_data.category_payment_large)
-            self.category_payment_large: Optional[str] = category_payment_large  # type: ignore
+            self.category_payment_large = category_payment_large
             category_payment_small = self._get_str_or_none(row_data.category_payment_small)
-            self.category_payment_small: Optional[str] = category_payment_small  # type: ignore
-            self.category_income: Optional[str] = self._get_str_or_none(row_data.category_income)  # type: ignore
-            self.transfer_target: Optional[str] = self._get_str_or_none(row_data.transfer_account)  # type: ignore
+            self.category_payment_small = category_payment_small
+            self.category_income = self._get_str_or_none(row_data.category_income)
+            self.transfer_target = self._get_str_or_none(row_data.transfer_account)
 
         @property
         def is_amazon(self) -> bool:
@@ -205,18 +201,10 @@ with warnings.catch_warnings():
 
         def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: ItemRowData):
             ConvertTableRecordMixin.__init__(self, file_csv_convert_id, row_data)
-            # Reason: The mypy reports following error:
-            #   Attribute "****" already defined on line **
-            # see:
-            # - Constructors and Object Initialization — SQLAlchemy 1.4 Documentation
-            #   https://docs.sqlalchemy.org/en/14/orm/constructors.html
-            # - "Already defined" + "not defined" errors with SQLAlchemy 1.2 hybrid_property
-            #   · Issue #4430 · python/mypy
-            #   https://github.com/python/mypy/issues/4430
             category_payment_large = self._get_str_or_none(row_data.category_payment_large)
-            self.category_payment_large: Optional[str] = category_payment_large  # type: ignore
+            self.category_payment_large = category_payment_large
             category_payment_small = self._get_str_or_none(row_data.category_payment_small)
-            self.category_payment_small: Optional[str] = category_payment_small  # type: ignore
+            self.category_payment_small = category_payment_small
 
 
 def initialize_database() -> None:

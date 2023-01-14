@@ -174,8 +174,7 @@ def database_session_remove() -> Generator[None, None, None]:
     """This fixture remove created session after test."""
     yield
     # Remove it, so that the next test gets a new Session()
-    # Reason: Since stub for SQLAlchemy lacks.
-    Session.remove()  # type: ignore
+    Session.remove()
 
 
 @pytest.fixture
