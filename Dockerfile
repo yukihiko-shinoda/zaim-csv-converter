@@ -4,7 +4,10 @@ WORKDIR /workspace
 # setuptools 65.3.0 can't lock package defined its dependencies by pyproject.toml
 RUN pip install --upgrade setuptools>=65.4.0
 COPY Pipfile Pipfile.lock /workspace/
-RUN pip --no-cache-dir install pipenv \
+# see:
+# - Fail to pipenv update due to MetadataGenerationFailed · Issue #5377 · pypa/pipenv
+#   https://github.com/pypa/pipenv/issues/5377
+RUN pip --no-cache-dir install pipenv==2022.8.5 \
  && pipenv install --deploy --system \
  && pip uninstall -y pipenv virtualenv-clone virtualenv
 COPY . /workspace
@@ -14,7 +17,10 @@ ENTRYPOINT [ "python3", "convert.py" ]
 FROM production as development
 # see: https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 ENV PIPENV_VENV_IN_PROJECT=1
-RUN pip --no-cache-dir install pipenv \
+# see:
+# - Fail to pipenv update due to MetadataGenerationFailed · Issue #5377 · pypa/pipenv
+#   https://github.com/pypa/pipenv/issues/5377
+RUN pip --no-cache-dir install pipenv==2022.8.5 \
  && pipenv sync --dev
 ENTRYPOINT [ "pipenv", "run" ]
 CMD ["pytest"]
