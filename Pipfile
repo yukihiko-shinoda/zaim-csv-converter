@@ -48,7 +48,7 @@ pytest-resource-path = "*"
 pyvelocity = "*"
 radon = "*"
 returns = "*"
-sqlalchemy-stubs = "*"
+sqlalchemy2-stubs = "*"
 xenon = "*"
 
 [scripts]

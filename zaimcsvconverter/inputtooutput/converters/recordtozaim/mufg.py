@@ -3,7 +3,7 @@
 @see https://faq01.bk.mufg.jp/usr/file/attachment/main_contents_0401.pdf
 """
 from abc import ABC, abstractmethod
-from typing import cast, TypeVar
+from typing import cast, Optional, TypeVar
 
 from returns.primitives.hkt import Kind1
 
@@ -72,11 +72,11 @@ class MufgAbstractIncomeZaimTransferRowConverter(MufgZaimTransferRowConverter[Ty
 
     @property
     @abstractmethod
-    def cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> Optional[str]:
         """This property returns cash flow source."""
 
     @property
-    def cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> Optional[str]:
         return CONFIG.mufg.account_name
 
     @property
@@ -89,12 +89,12 @@ class MufgAbstractPaymentZaimTransferRowConverter(MufgZaimTransferRowConverter[T
     """This class implements convert steps from MUFG payment input row [MufgPaymentRow]to Zaim transfer row."""
 
     @property
-    def cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> Optional[str]:
         return CONFIG.mufg.account_name
 
     @property
     @abstractmethod
-    def cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> Optional[str]:
         """This property returns cash flow target."""
 
     @property
@@ -123,7 +123,7 @@ class MufgTransferIncomeZaimTransferRowConverter(MufgAbstractIncomeZaimTransferR
     """This class implements convert steps from MUFG transfer income input row to Zaim transfer row."""
 
     @property
-    def cash_flow_source(self) -> str:
+    def cash_flow_source(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.transfer_target
 
@@ -134,7 +134,7 @@ class MufgTransferPaymentZaimTransferRowConverter(
     """This class implements convert steps from MUFG transfer payment input row to Zaim transfer row."""
 
     @property
-    def cash_flow_target(self) -> str:
+    def cash_flow_target(self) -> Optional[str]:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.transfer_target
 

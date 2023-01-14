@@ -46,7 +46,7 @@ class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
 
     @property
     def is_atm(self) -> bool:
-        return self.store.name.startswith(self.CONTENT_PREFIX_ATM)
+        return self.store.name is not None and self.store.name.startswith(self.CONTENT_PREFIX_ATM)
 
 
 class SBISumishinNetBankWithdrawalRow(SBISumishinNetBankRow):

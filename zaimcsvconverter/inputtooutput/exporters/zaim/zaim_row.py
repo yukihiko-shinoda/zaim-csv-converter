@@ -108,9 +108,9 @@ class ZaimTransferRow(ZaimRow):
     METHOD: str = "transfer"
 
     def __init__(self, zaim_row_converter: "ZaimTransferRowConverter[InputRow[InputRowData], InputRowData]"):
-        self._cash_flow_source: str = zaim_row_converter.cash_flow_source
-        self._cash_flow_target: str = zaim_row_converter.cash_flow_target
-        self._amount_transfer: int = zaim_row_converter.amount
+        self._cash_flow_source = zaim_row_converter.cash_flow_source
+        self._cash_flow_target = zaim_row_converter.cash_flow_target
+        self._amount_transfer = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
     def convert_to_list(self) -> List[Optional[Union[str, int]]]:

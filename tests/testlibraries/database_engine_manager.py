@@ -21,8 +21,7 @@ class DatabaseEngineManager(contextlib.AbstractContextManager[Engine]):
         self.engine = sqlalchemy.create_engine("sqlite://")
 
     def __enter__(self) -> Engine:
-        # Reason: Since stub for SQLAlchemy lacks.
-        self.scoped_session.configure(bind=self.engine)  # type: ignore
+        self.scoped_session.configure(bind=self.engine)
         return self.engine
 
     def __exit__(
@@ -32,5 +31,4 @@ class DatabaseEngineManager(contextlib.AbstractContextManager[Engine]):
         traceback: Optional[TracebackType],
     ) -> None:
         # Remove it, so that the next test gets a new Session()
-        # Reason: Since stub for SQLAlchemy lacks.
-        self.scoped_session.remove()  # type: ignore
+        self.scoped_session.remove()
