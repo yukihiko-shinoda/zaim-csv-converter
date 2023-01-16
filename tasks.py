@@ -128,7 +128,7 @@ def lint_pylint(context):
 
 @task
 def lint_mypy(context):
-    """Lints code with pylint."""
+    """Lints code with mypy."""
     space = " "
     context.run(f"mypy {space.join(PYTHON_DIRS)}")
 
