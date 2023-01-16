@@ -25,4 +25,10 @@ class GoldPointCardPlus201912Row(InputStoreRow[GoldPointCardPlus201912RowData]):
             store = self.store
         except NoResultFound:
             return False
-        return CONFIG.gold_point_card_plus.skip_amazon_row and store.is_amazon and self.others != self.OTHERS_RETURN
+        return (
+            CONFIG.gold_point_card_plus.skip_amazon_row
+            and store.is_amazon
+            and self.others != self.OTHERS_RETURN
+            or CONFIG.gold_point_card_plus.skip_pay_pal_row
+            and self.store.is_pay_pal
+        )
