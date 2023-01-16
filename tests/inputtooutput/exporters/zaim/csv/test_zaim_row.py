@@ -1,5 +1,6 @@
 """Tests for zaim_row.py."""
 from datetime import datetime
+from pathlib import Path
 from typing import cast, Type
 
 import pytest
@@ -51,7 +52,7 @@ class TestZaimIncomeRow:
             InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT
         )
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_low = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
+        zaim_low = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-08-20"
@@ -128,7 +129,7 @@ class TestZaimPaymentRow:
     ) -> None:
         """Argument should set into properties."""
         input_row = input_row_factory.create(input_row_data)
-        zaim_low = ZaimRowFactory.create(zaim_row_converter_factory.create(input_row))
+        zaim_low = ZaimRowFactory.create(zaim_row_converter_factory.create(input_row, Path()))
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
@@ -162,7 +163,9 @@ class TestZaimTransferRow:
         waon_auto_charge_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO
         )
-        zaim_low = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_auto_charge_row))
+        zaim_low = ZaimRowFactory.create(
+            account_context.zaim_row_converter_factory.create(waon_auto_charge_row, Path())
+        )
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-11-11"
@@ -227,7 +230,7 @@ class TestZaimRowFactory:
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(waon_row_data)
         assert isinstance(input_row, input_row_class)
-        zaim_row_converter = account_context.zaim_row_converter_factory.create(input_row)
+        zaim_row_converter = account_context.zaim_row_converter_factory.create(input_row, Path())
         assert isinstance(zaim_row_converter, zaim_row_converter_class)
         assert isinstance(ZaimRowFactory.create(zaim_row_converter), expected)
 

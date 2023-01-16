@@ -31,6 +31,7 @@ class FileCsvConvertId(Enum):
     PAY_PAL = 7
     SBI_SUMISHIN_NET_BANK = 8
     PAY_PAY_CARD = 9
+    MOBILE_SUICA = 10
 
     @DynamicClassAttribute
     def value(self) -> int:

@@ -1,6 +1,7 @@
 """This module implements convert steps from input row to Zaim row."""
 from abc import ABC, abstractmethod
 from datetime import datetime
+from pathlib import Path
 from typing import cast, Generic, Optional, TypeVar
 
 from returns.primitives.hkt import Kind1, kinded
@@ -238,7 +239,7 @@ class ZaimRowConverterFactory:
     @see https://github.com/python/mypy/issues/6101
     """
 
-    def create(self, input_row: AbstractInputRecord) -> AbstractZaimRowConverter:
+    def create(self, input_row: AbstractInputRecord, path_csv_file: Path) -> AbstractZaimRowConverter:
         """This method selects Zaim row converter."""
         raise NotImplementedError
 
@@ -259,8 +260,7 @@ class CsvRecordToZaimRowConverterFactory(Generic[TypeVarInputRow, TypeVarInputRo
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self,
-        input_row: Kind1[TypeVarInputRow, TypeVarInputRowData],
+        self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData], path_csv_file: Path
     ) -> ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]:
         """This method selects Zaim row converter."""
         raise NotImplementedError

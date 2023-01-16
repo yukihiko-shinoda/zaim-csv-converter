@@ -2,7 +2,7 @@
 from pydantic.dataclasses import dataclass
 
 from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
-from zaimcsvconverter.customdatatypes.string_to_optional_int import ConstrainedStringWithCommaToOptionalInt
+from zaimcsvconverter.customdatatypes.string_with_comma_to_optional_int import StrictStringWithCommaToOptionalInt
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 
@@ -13,7 +13,7 @@ class SBISumishinNetBankRowData(CsvRowData):
 
     date_: StringSlashToDateTime
     content: str
-    withdrawal_amount: ConstrainedStringWithCommaToOptionalInt
-    deposit_amount: ConstrainedStringWithCommaToOptionalInt
+    withdrawal_amount: StrictStringWithCommaToOptionalInt
+    deposit_amount: StrictStringWithCommaToOptionalInt
     balance: str
     note: str

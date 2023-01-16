@@ -1,4 +1,5 @@
 """This module implements convert steps from SFCard Viewer input row to Zaim row."""
+from pathlib import Path
 from typing import Callable, Optional
 
 from returns.primitives.hkt import Kind1
@@ -20,7 +21,11 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records.sf_card_viewer impor
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 
 
-class SFCardViewerZaimPaymentOnSomewhereRowConverter(ZaimPaymentRowConverter[SFCardViewerRow, SFCardViewerRowData]):
+# Reason: SFCardViewer and Mobile Suica requires same specification
+#         and having common ancestor generates extra complexity.
+class SFCardViewerZaimPaymentOnSomewhereRowConverter(
+    ZaimPaymentRowConverter[SFCardViewerRow, SFCardViewerRowData]
+):  # pylint: disable=duplicate-code
     """This class implements convert steps from SFCard Viewer row to Zaim payment row."""
 
     account_config: SFCardViewerConfig
@@ -107,7 +112,7 @@ class SFCardViewerZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[SFC
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[SFCardViewerRow, SFCardViewerRowData]
+        self, input_row: Kind1[SFCardViewerRow, SFCardViewerRowData], path_csv_file: Path
     ) -> ZaimRowConverter[SFCardViewerRow, SFCardViewerRowData]:
         if isinstance(input_row, SFCardViewerEnterExitRow):
 

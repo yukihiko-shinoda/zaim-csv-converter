@@ -18,9 +18,9 @@ class SFCardViewerRow(InputRow[SFCardViewerRowData]):
         self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig, *args: Any, **kwargs: Any
     ) -> None:
         super().__init__(row_data, *args, **kwargs)
-        self.used_amount: int = row_data.used_amount
+        self.used_amount = row_data.used_amount
         self.note = row_data.note
-        self._account_config: SFCardViewerConfig = account_config
+        self._account_config = account_config
 
     @property
     def is_row_to_skip(self) -> bool:

@@ -1,4 +1,5 @@
 """This module implements convert steps from GOLD POINT CARD + input row to Zaim row."""
+from pathlib import Path
 from typing import cast, Optional
 
 from returns.primitives.hkt import Kind1
@@ -60,7 +61,7 @@ class GoldPointCardPlus201912ZaimRowConverterFactory(
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
+        self, input_row: Kind1[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData], path_csv_file: Path
     ) -> ZaimRowConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]:
         dekinded_input_row = cast(GoldPointCardPlus201912Row, input_row)
         if dekinded_input_row.store.transfer_target:

@@ -1,4 +1,6 @@
 """Tests for waon.py."""
+from pathlib import Path
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -38,7 +40,7 @@ class TestWaonZaimIncomeRowConverter:
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         waon_row = csv_record_processor.create_input_row_instance(waon_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row, Path()))
         assert isinstance(zaim_row, ZaimIncomeRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -78,7 +80,7 @@ class TestWaonZaimPaymentRowConverter:
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         waon_row = csv_record_processor.create_input_row_instance(waon_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row, Path()))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -109,7 +111,7 @@ class TestWaonZaimTransferRowConverter:
         account_context = Account.WAON.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         waon_row = csv_record_processor.create_input_row_instance(waon_row_data)
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(waon_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -175,7 +177,7 @@ class TestWaonZaimRowConverterConverter:
         account_context = Account.WAON.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(input_row_data)
-        actual = account_context.zaim_row_converter_factory.create(input_row)
+        actual = account_context.zaim_row_converter_factory.create(input_row, Path())
         assert isinstance(actual, expected)
 
     @staticmethod
@@ -193,5 +195,5 @@ class TestWaonZaimRowConverterConverter:
             InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO
         )
         with pytest.raises(ValueError) as error:
-            account_context.zaim_row_converter_factory.create(input_row)
+            account_context.zaim_row_converter_factory.create(input_row, Path())
         assert str(error.value) == "Unsupported row. Input row = WaonRow, ポイントダウンロード"

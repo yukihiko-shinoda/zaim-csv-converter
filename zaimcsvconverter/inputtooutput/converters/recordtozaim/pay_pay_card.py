@@ -1,6 +1,8 @@
 """This module implements convert steps from PayPay Card input row to Zaim row."""
 
 
+from pathlib import Path
+
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
@@ -33,6 +35,6 @@ class PayPayCardZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[PayPa
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[PayPayCardRow, PayPayCardRowData]
+        self, input_row: Kind1[PayPayCardRow, PayPayCardRowData], path_csv_file: Path
     ) -> ZaimRowConverter[PayPayCardRow, PayPayCardRowData]:
         return PayPayCardZaimPaymentRowConverter(input_row)

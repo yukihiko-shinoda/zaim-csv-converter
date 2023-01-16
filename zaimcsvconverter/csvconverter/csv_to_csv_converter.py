@@ -23,7 +23,7 @@ class CsvToCsvConverter:
         god_slayer = account_context.god_slayer_factory.create(path_csv_file)
         first_form_normalizer = FirstFormNormalizer(god_slayer, account_context.input_row_data_class)
         data_source_csv = Csv(first_form_normalizer, CsvRecordProcessor(account_context.input_row_factory))
-        record_converter = RecordToZaimConverter(account_context.zaim_row_converter_factory)
+        record_converter = RecordToZaimConverter(account_context.zaim_row_converter_factory, path_csv_file)
         output_model_exporter = ZaimCsvOutputModelExporter(directory_csv_output / path_csv_file.name)
         self.convert_workflow = ConvertWorkflow(data_source_csv, record_converter, output_model_exporter)
 

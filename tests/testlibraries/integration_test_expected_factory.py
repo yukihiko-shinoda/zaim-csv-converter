@@ -260,3 +260,36 @@ def create_zaim_row_data_pay_pay_card_202208() -> list[ZaimRowData]:
         "2022-07-03", "payment", "食費", "食料品", "PayPay カード", "", "", "", "ビッグ・エー", "", "0", "292", "0", "", "", ""
     )
     return [zaim_row_data_01]
+
+
+def create_zaim_row_data_mobile_suica_202210() -> list[ZaimRowData]:
+    """Creates expected zaim row data for Mobile Suica 202210."""
+    zaim_row_data_01 = ZaimRowData(
+        "2022-10-28", "transfer", "-", "-", "ビューカード", "Suica", "", "", "", "", "0", "0", "10000", "", "", ""
+    )
+    zaim_row_data_02 = ZaimRowData(
+        "2022-10-28", "payment", "交通", "電車", "Suica", "", "", "板橋 → 恵比寿", "恵比寿", "", "0", "220", "0", "", "", ""
+    )
+    zaim_row_data_03 = ZaimRowData(
+        "2022-10-23", "transfer", "-", "-", "ビューカード", "Suica", "", "", "", "", "0", "0", "1000", "", "", ""
+    )
+    return [zaim_row_data_01, zaim_row_data_02, zaim_row_data_03]
+
+
+def create_zaim_row_data_mobile_suica_202211() -> list[ZaimRowData]:
+    """Creates expected zaim row data for Mobile Suica 202211."""
+    zaim_row_data_01 = ZaimRowData(
+        "2022-11-03", "payment", "-", "-", "Suica", "", "", "", "", "", "0", "-1019", "0", "", "", ""
+    )
+    return [zaim_row_data_01]
+
+
+def create_zaim_row_data_mobile_suica_202212() -> list[ZaimRowData]:
+    """Creates expected zaim row data for Mobile Suica 202212."""
+    zaim_row_data_01 = ZaimRowData(
+        # fmt: off
+        "2022-12-25", "payment", "交通", "電車", "Suica", "",
+        "", "地日比谷 → 地東銀座", "東京地下鉄株式会社　日比谷線東銀座駅", "", "0", "46", "0", "", "", ""
+        # fmt: on
+    )
+    return [zaim_row_data_01]

@@ -3,6 +3,7 @@
 @see https://faq01.bk.mufg.jp/usr/file/attachment/main_contents_0401.pdf
 """
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import cast, Optional, TypeVar
 
 from returns.primitives.hkt import Kind1
@@ -144,7 +145,9 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
 
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(self, input_row: Kind1[MufgRow, MufgRowData]) -> ZaimRowConverter[MufgRow, MufgRowData]:  # type: ignore
+    def create(  # type: ignore
+        self, input_row: Kind1[MufgRow, MufgRowData], path_csv_file: Path
+    ) -> ZaimRowConverter[MufgRow, MufgRowData]:
         dekinded_input_row = cast(MufgRow, input_row)
         if isinstance(input_row, MufgIncomeFromOthersRow):
             return self._create_for_income_from_other(input_row)

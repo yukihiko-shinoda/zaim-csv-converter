@@ -1,4 +1,6 @@
 """Tests for view_card.py."""
+from pathlib import Path
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -34,7 +36,7 @@ class TestViewCardZaimPaymentRowConverter:
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         row = csv_record_processor.create_input_row_instance(view_card_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(row, Path()))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -68,5 +70,5 @@ class TestGoldPointCardPlus201912ZaimRowConverterFactory:
         account_context = Account.VIEW_CARD.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(input_row_data)
-        actual = account_context.zaim_row_converter_factory.create(input_row)
+        actual = account_context.zaim_row_converter_factory.create(input_row, Path())
         assert isinstance(actual, expected)

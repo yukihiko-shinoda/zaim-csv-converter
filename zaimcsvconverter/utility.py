@@ -14,11 +14,21 @@ class Utility:
         return int(string.replace(",", ""))
 
     @staticmethod
-    def convert_yen_string_to_int(yen_string: str) -> int:
+    def convert_kanji_yen_string_to_int(yen_string: str) -> int:
         """This method convert YEN string to int."""
         if "." in yen_string:
             raise ValueError(f"Decimal is unsupported. Yen string = {yen_string}")
         matches = re.search(r"([\d,]+)\s*円", yen_string)
+        if matches is None:
+            raise ValueError(f"Invalid yen string. Yen string = {yen_string}")
+        return int(matches.group(1).replace(",", ""))
+
+    @staticmethod
+    def convert_symbol_yen_string_to_int(yen_string: str) -> int:
+        """This method convert YEN string to int."""
+        if "." in yen_string:
+            raise ValueError(f"Decimal is unsupported. Yen string = {yen_string}")
+        matches = re.search(r"\\([\d,]+)", yen_string)
         if matches is None:
             raise ValueError(f"Invalid yen string. Yen string = {yen_string}")
         return int(matches.group(1).replace(",", ""))

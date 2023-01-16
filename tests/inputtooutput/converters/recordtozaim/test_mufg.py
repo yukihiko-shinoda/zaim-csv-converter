@@ -1,4 +1,6 @@
 """Tests for mufg.py."""
+from pathlib import Path
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -57,7 +59,7 @@ class TestMufgZaimIncomeRowConverter:
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(mufg_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         assert isinstance(zaim_row, ZaimIncomeRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -85,7 +87,7 @@ class TestMufgZaimPaymentRowConverter:
             InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS
         )
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -119,7 +121,7 @@ class TestMufgZaimTransferRowConverter:
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(mufg_row_data)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -142,7 +144,7 @@ class TestMufgZaimTransferRowConverter:
         account_context = Account.MUFG.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(InstanceResource.ROW_DATA_MUFG_PAYMENT)
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -166,7 +168,7 @@ class TestMufgZaimTransferRowConverter:
         mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_OWN_ACCOUNT
         )
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -190,7 +192,7 @@ class TestMufgZaimTransferRowConverter:
         mufg_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_GOLD_POINT_MARKETING
         )
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -264,5 +266,5 @@ class TestMufgZaimRowConverterFactory:
         account_context = Account.MUFG.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(input_row_data)
-        actual = account_context.zaim_row_converter_factory.create(input_row)
+        actual = account_context.zaim_row_converter_factory.create(input_row, Path())
         assert isinstance(actual, expected)

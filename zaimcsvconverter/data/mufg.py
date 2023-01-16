@@ -4,7 +4,7 @@ from enum import Enum
 from pydantic.dataclasses import dataclass
 
 from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
-from zaimcsvconverter.customdatatypes.string_to_optional_int import ConstrainedStringWithCommaToOptionalInt
+from zaimcsvconverter.customdatatypes.string_with_comma_to_optional_int import StrictStringWithCommaToOptionalInt
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 
@@ -30,8 +30,8 @@ class MufgRowData(CsvRowData):
     date_: StringSlashToDateTime
     summary: str
     summary_content: str
-    payed_amount: ConstrainedStringWithCommaToOptionalInt
-    deposit_amount: ConstrainedStringWithCommaToOptionalInt
+    payed_amount: StrictStringWithCommaToOptionalInt
+    deposit_amount: StrictStringWithCommaToOptionalInt
     balance: str
     note: str
     is_uncapitalized: str

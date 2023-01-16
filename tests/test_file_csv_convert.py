@@ -20,6 +20,7 @@ class FilePathConvertTable(Enum):
     PAY_PAL_ITEM = Path("pay_pal_item.csv")
     SBI_SUMISHIN_NET_BANK = Path("sbi_sumishin_net_bank.csv")
     PAY_PAY_CARD = Path("pay_pay_card.csv")
+    MOBILE_SUICA = Path("mobile_suica.csv")
 
     @DynamicClassAttribute
     def value(self) -> Path:

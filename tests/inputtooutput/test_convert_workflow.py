@@ -31,11 +31,11 @@ class TestConvertWorkflow:
         """Tests following:
 
         - InvalidInputCsvError should be raised
-          when there are row having store name which there are no data in convert table.
+          when there are record having store name which there are no data in convert table.
         - Input CSV should be invalid
-          when there are row having store name which there are no data in convert table.
-        - Invalid row dictionary should store InvalidRowError
-          when there are row having store name which there are no data in convert table.
+          when there are record having store name which there are no data in convert table.
+        - Invalid record dictionary should store InvalidCellError
+          when there are record having store name which there are no data in convert table.
         - Undefined content error handler should be empty.
         """
         account_context: AccountContext[Any, Any] = Account.create_by_path_csv_input(path_file_csv_input).value
@@ -43,7 +43,7 @@ class TestConvertWorkflow:
         first_form_normalizer = FirstFormNormalizer(god_slayer, account_context.input_row_data_class)
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         data_source = Csv(first_form_normalizer, csv_record_processor)
-        record_converter = RecordToZaimConverter(account_context.zaim_row_converter_factory)
+        record_converter = RecordToZaimConverter(account_context.zaim_row_converter_factory, path_file_csv_input)
         output_model_exporter = ZaimCsvOutputModelExporter(tmp_path / "test.csv")
         convert_workflow = ConvertWorkflow(data_source, record_converter, output_model_exporter)
         with pytest.raises(InvalidInputCsvError) as error:
@@ -53,7 +53,7 @@ class TestConvertWorkflow:
             "Please check property AccountCsvConverter.list_undefined_store."
         )
         assert data_source.is_invalid
-        invalid_row_error = data_source.dictionary_invalid_record[0][0]
-        assert isinstance(invalid_row_error, InvalidCellError)
-        assert str(invalid_row_error) == "Charge kind in charge row is required. Charge kind = -"
+        invalid_cell_error = data_source.dictionary_invalid_record[0][0]
+        assert isinstance(invalid_cell_error, InvalidCellError)
+        assert str(invalid_cell_error) == "Charge kind in charge row is required. Charge kind = -"
         assert not data_source.undefined_content_error_handler.is_presented

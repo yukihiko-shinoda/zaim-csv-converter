@@ -1,0 +1,190 @@
+"""This module implements convert steps from SFCard Viewer input row to Zaim row."""
+from datetime import datetime
+from pathlib import Path
+import re
+from typing import Callable, Optional
+
+from returns.primitives.hkt import Kind1
+
+from zaimcsvconverter.config import SFCardViewerConfig
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
+    CsvRecordToZaimRowConverterFactory,
+    ZaimPaymentRowConverter,
+    ZaimPaymentRowStoreConverter,
+    ZaimRowConverter,
+    ZaimTransferRowConverter,
+)
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mobile_suica import MobileSuicaRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records.mobile_suica import (
+    MobileSuicaEnterExitRow,
+    MobileSuicaFirstRow,
+    MobileSuicaRow,
+    MobileSuicaStoreRow,
+)
+from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
+
+
+# Reason: SFCardViewer and Mobile Suica requires same specification
+#         and having common ancestor generates extra complexity.
+class MobileSuicaZaimPaymentOnSomewhereRowConverter(
+    ZaimPaymentRowConverter[MobileSuicaRow, MobileSuicaRowData]
+):  # pylint: disable=duplicate-code
+    """This class implements convert steps from SFCard Viewer row to Zaim payment row."""
+
+    account_config: SFCardViewerConfig
+    year: int
+
+    @property
+    def date(self) -> datetime:
+        return self.input_row.date.replace(year=self.year)
+
+    @property
+    def category_large(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return "交通" if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
+
+    @property
+    def category_small(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return "バス" if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
+
+    @property
+    def item_name(self) -> str:
+        return ZaimCsvFormat.ITEM_NAME_EMPTY
+
+    @property
+    def store_name(self) -> str:
+        return ZaimCsvFormat.STORE_NAME_EMPTY
+
+    @property
+    def cash_flow_source(self) -> str:
+        return self.account_config.account_name
+
+    @property
+    def amount(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return -1 * self.input_row.deposit_used_amount
+
+
+# Reason: Pylint's bug. pylint: disable=unsubscriptable-object
+class MobileSuicaZaimPaymentOnStationRowConverter(
+    ZaimPaymentRowStoreConverter[MobileSuicaEnterExitRow, MobileSuicaRowData]
+):
+    """This class implements convert steps from SFCard Viewer enter row to Zaim payment row."""
+
+    account_config: SFCardViewerConfig
+    year: int
+
+    @property
+    def date(self) -> datetime:
+        return self.input_row.date.replace(year=self.year)
+
+    @property
+    def cash_flow_source(self) -> str:
+        return self.account_config.account_name
+
+    @property
+    def note(self) -> str:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return f"{self.input_row.used_place_1} → {self.input_row.store.name}"
+
+    @property
+    def amount(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return -1 * self.input_row.deposit_used_amount
+
+
+class MobileSuicaZaimTransferRowConverter(ZaimTransferRowConverter[MobileSuicaStoreRow, MobileSuicaRowData]):
+    """This class implements convert steps from SFCard Viewer enter row to Zaim transfer row."""
+
+    account_config: SFCardViewerConfig
+    year: int
+
+    @property
+    def date(self) -> datetime:
+        return self.input_row.date.replace(year=self.year)
+
+    @property
+    def cash_flow_source(self) -> str:
+        return self.account_config.auto_charge_source
+
+    @property
+    def cash_flow_target(self) -> str:
+        return self.account_config.account_name
+
+    @property
+    def amount(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.deposit_used_amount
+
+
+class MobileSuicaZaimTransferFirstRowConverter(ZaimTransferRowConverter[MobileSuicaFirstRow, MobileSuicaRowData]):
+    """This class implements convert steps from SFCard Viewer enter row to Zaim transfer row."""
+
+    account_config: SFCardViewerConfig
+    year: int
+
+    @property
+    def date(self) -> datetime:
+        return self.input_row.date.replace(year=self.year)
+
+    @property
+    def cash_flow_source(self) -> str:
+        return self.account_config.auto_charge_source
+
+    @property
+    def cash_flow_target(self) -> str:
+        return self.account_config.account_name
+
+    @property
+    def amount(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return self.input_row.balance
+
+
+class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MobileSuicaRow, MobileSuicaRowData]):
+    """This class implements select steps from SFCard Viewer input row to Zaim row converter."""
+
+    def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
+        self._account_config = account_config
+        self.year: int = 0
+
+    # Reason: Maybe, there are no way to resolve.
+    # The nearest issues: https://github.com/dry-python/returns/issues/708
+    def create(  # type: ignore
+        self, input_row: Kind1[MobileSuicaRow, MobileSuicaRowData], path_csv_file: Path
+    ) -> ZaimRowConverter[MobileSuicaRow, MobileSuicaRowData]:
+        self.year = datetime.strptime(re.findall(r"_(\d{4,6})", path_csv_file.stem)[-1][0:4], "%Y").year
+        if isinstance(input_row, MobileSuicaFirstRow):
+
+            class ConcreteMobileSuicaZaimTransferFirstRowConverter(MobileSuicaZaimTransferFirstRowConverter):
+                account_config = self._account_config()
+                year = self.year
+
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return ConcreteMobileSuicaZaimTransferFirstRowConverter(input_row)  # type: ignore
+        if isinstance(input_row, MobileSuicaEnterExitRow):
+
+            class ConcreteMobileSuicaZaimPaymentOnStationRowConverter(MobileSuicaZaimPaymentOnStationRowConverter):
+                account_config = self._account_config()
+                year = self.year
+
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return ConcreteMobileSuicaZaimPaymentOnStationRowConverter(input_row)  # type: ignore
+        if isinstance(input_row, MobileSuicaStoreRow):
+
+            class ConcreteMobileSuicaZaimTransferRowConverter(MobileSuicaZaimTransferRowConverter):
+                account_config = self._account_config()
+                year = self.year
+
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return ConcreteMobileSuicaZaimTransferRowConverter(input_row)  # type: ignore
+        if isinstance(input_row, MobileSuicaRow):
+
+            class ConcreteMobileSuicaZaimPaymentOnSomewhereRowConverter(MobileSuicaZaimPaymentOnSomewhereRowConverter):
+                account_config = self._account_config()
+                year = self.year
+
+            return ConcreteMobileSuicaZaimPaymentOnSomewhereRowConverter(input_row)
+        raise ValueError(f"Unsupported row. class = {type(input_row)}")  # pragma: no cover
+        # Reason: This line is insurance for future development so process must be not able to reach

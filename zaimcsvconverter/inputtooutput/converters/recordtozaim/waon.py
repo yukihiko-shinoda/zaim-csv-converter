@@ -1,5 +1,6 @@
 """This module implements convert steps from WAON input row to Zaim row."""
 
+from pathlib import Path
 from typing import cast
 
 from returns.primitives.hkt import Kind1
@@ -66,7 +67,9 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
 
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(self, input_row: Kind1[WaonRow, WaonRowData]) -> ZaimRowConverter[WaonRow, WaonRowData]:  # type: ignore
+    def create(  # type: ignore
+        self, input_row: Kind1[WaonRow, WaonRowData], path_csv_file: Path
+    ) -> ZaimRowConverter[WaonRow, WaonRowData]:
         if isinstance(input_row, WaonChargeRow):
             return self._create(input_row)
         dekinded_input_row = cast(WaonRow, input_row)
