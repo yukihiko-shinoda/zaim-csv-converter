@@ -194,8 +194,13 @@ with warnings.catch_warnings():
 
         @property
         def is_pay_pal(self) -> bool:
-            """This property returns whether this store is Amazon.co.jp or not."""
+            """This property returns whether this store is PayPal or not."""
             return self.name in ["ＰａｙＰａｌ決済"] or re.search(r"PAYPAL\s*", self.name) is not None
+
+        @property
+        def is_kyash(self) -> bool:
+            """This property returns whether this store is Kyash or not."""
+            return self.name == "ＫＹＡＳＨ"
 
     class Item(Base, ConvertTableRecordMixin["Item", ItemRowData]):
         """This class implements Store model to convert from account CSV to Zaim CSV."""

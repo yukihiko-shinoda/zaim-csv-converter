@@ -20,4 +20,6 @@ class GoldPointCardPlusRow(InputStoreRow[GoldPointCardPlusRowData]):
             and self.store.is_amazon
             or CONFIG.gold_point_card_plus.skip_pay_pal_row
             and self.store.is_pay_pal
+            or CONFIG.gold_point_card_plus.skip_kyash_row
+            and self.store.is_kyash
         ) and self.used_amount >= 0

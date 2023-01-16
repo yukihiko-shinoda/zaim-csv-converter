@@ -10,6 +10,8 @@ gold_point_card_plus:
   skip_amazon_row: true
   # ↓ PayPalからの引き落としの履歴を省くかどうかを設定します。PayPalのCSVをインポートする場合、2重登録を防ぐため true にします。
   skip_pay_pal_row: true
+  # ↓ Kyash への入金の履歴を省くかどうかを設定します。Kyash を API 連携し、API 連携側の振替の履歴を集計に含める場合、true にします。
+  skip_kyash_row: true
 mufg:
   # ↓ Zaim上で三菱UFJ銀行用として登録している口座名を設定します。
   account_name: '三菱UFJ銀行'
