@@ -279,7 +279,7 @@ def create_zaim_row_data_mobile_suica_202210() -> list[ZaimRowData]:
 def create_zaim_row_data_mobile_suica_202211() -> list[ZaimRowData]:
     """Creates expected zaim row data for Mobile Suica 202211."""
     zaim_row_data_01 = ZaimRowData(
-        "2022-11-03", "payment", "-", "-", "Suica", "", "", "", "", "", "0", "-1019", "0", "", "", ""
+        "2022-11-03", "payment", "", "", "Suica", "", "", "", "", "", "0", "-1019", "0", "", "", ""
     )
     return [zaim_row_data_01]
 
