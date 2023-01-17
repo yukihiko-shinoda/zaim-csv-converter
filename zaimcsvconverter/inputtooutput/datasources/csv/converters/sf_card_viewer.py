@@ -13,7 +13,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records.sf_card_viewer impor
 
 
 class SFCardViewerRowFactory(InputRowFactory[SFCardViewerRowData, SFCardViewerRow]):
-    """This class implements factory to create WAON CSV row instance."""
+    """This class implements factory to create SF Card Viewer CSV row instance."""
 
     def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
         self._account_config = account_config

@@ -19,6 +19,7 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912ZaimRowConverterFactory,
 )
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.mobile_suica import MobileSuicaZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pal import PayPalZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pay_card import PayPayCardZaimRowConverterFactory
@@ -35,6 +36,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_p
     GoldPointCardPlus201912RowFactory,
 )
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.converters.mobile_suica import MobileSuicaRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.mufg import MufgRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.pay_pal import PayPalRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.pay_pay_card import PayPayCardRowFactory
@@ -50,6 +52,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus im
 from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
 )
+from zaimcsvconverter.inputtooutput.datasources.csv.data.mobile_suica import MobileSuicaRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pay_card import PayPayCardRowData
@@ -227,6 +230,14 @@ class Account(Enum):
         PayPayCardRowData,
         PayPayCardRowFactory(),
         PayPayCardZaimRowConverterFactory(),
+    )
+    MOBILE_SUICA = AccountContext(
+        r".*mobile_suica.*\.csv",
+        GodSlayerFactory(header=["月日", "種別", "利用場所", "種別", "利用場所", "残高", "入金・利用額"]),
+        MobileSuicaRowData,
+        # On this timing, CONFIG is not loaded. So we wrap CONFIG by lambda.
+        MobileSuicaRowFactory(lambda: CONFIG.suica),
+        MobileSuicaZaimRowConverterFactory(lambda: CONFIG.suica),
     )
 
     @staticmethod

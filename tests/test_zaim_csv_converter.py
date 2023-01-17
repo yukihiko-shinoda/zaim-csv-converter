@@ -13,6 +13,9 @@ from tests.testlibraries.integration_test_expected_factory import (
     create_zaim_row_data_amazon_201911_202004,
     create_zaim_row_data_gold_point_card_plus_201807,
     create_zaim_row_data_gold_point_card_plus_201912_201807,
+    create_zaim_row_data_mobile_suica_202210,
+    create_zaim_row_data_mobile_suica_202211,
+    create_zaim_row_data_mobile_suica_202212,
     create_zaim_row_data_mufg_201808,
     create_zaim_row_data_mufg_201810,
     create_zaim_row_data_mufg_201811,
@@ -30,7 +33,6 @@ from tests.testlibraries.integration_test_expected_factory import (
 )
 from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, ZaimCsvFileChecker
 from tests.testlibraries.row_data import InvalidRowErrorRowData
-from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import SomeInvalidInputCsvError
 from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 
@@ -61,14 +63,14 @@ class TestZaimCsvConverter:
         """Input CSV files should be converted into Zaim format CSV file."""
         try:
             ZaimCsvConverter.execute()
-        except InvalidInputCsvError as error:
+        except SomeInvalidInputCsvError as error:
             if (directory_csv_output.target / "error_undefined_content.csv").exists():
                 TestZaimCsvConverter.debug_csv("error_undefined_content.csv", directory_csv_output)
             TestZaimCsvConverter.debug_csv("error_invalid_row.csv", directory_csv_output)
             raise error
         files = sorted(directory_csv_output.target.rglob("*[!.gitkeep]"))
 
-        assert len(files) == 19
+        assert len(files) == 22
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file("waon201807.csv", create_zaim_row_data_waon_201807())
         checker.assert_file("waon201808.csv", create_zaim_row_data_waon_201808())
@@ -92,6 +94,9 @@ class TestZaimCsvConverter:
         checker.assert_file("pay_pal201810.csv", create_zaim_row_data_pay_pal_201810())
         checker.assert_file("sbi_sumishin_net_bank202201.csv", create_zaim_row_data_sbi_sumishin_net_bank_202201())
         checker.assert_file("pay_pay_card_202208.csv", create_zaim_row_data_pay_pay_card_202208())
+        checker.assert_file("mobile_suica_202210.csv", create_zaim_row_data_mobile_suica_202210())
+        checker.assert_file("mobile_suica_202211.csv", create_zaim_row_data_mobile_suica_202211())
+        checker.assert_file("mobile_suica_202212.csv", create_zaim_row_data_mobile_suica_202212())
 
     @staticmethod
     def debug_csv(csv_file_name: str, directory_csv_output: RelativeDeployFilePath) -> None:

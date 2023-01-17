@@ -20,7 +20,7 @@ Zaim で口座連携をするために
 - PASMO
 - Amazon.co.jp
 - ビューカード
-- Suica
+- Suica・モバイル Suica
 - PayPal (experimental)
 - 住信 SBI ネット銀行 (experimental)
 - PayPay カード
@@ -67,6 +67,7 @@ WAON|waon.csv|お店単位
 ヨドバシゴールドポイントカード・プラス|gold_point_card_plus.csv|お店単位
 三菱 UFJ 銀行|mufg.csv|お店単位
 Suica,PASMO|sf_card_viewer.csv|お店単位
+モバイル Suica|mobile_suica.csb|お店単位
 Amazon.co.jp|amazon.csv|品目単位
 ビューカード|view_card.csv|お店単位
 PayPal|pay_pal_store.csv, pay_pal_item.csv|お店単位、品目単位
@@ -104,6 +105,7 @@ Amazon.co.jp 2019 年 11 月以前の形式|amazon
 Amazon.co.jp 2019 年 12 月以降の形式|amazon_201911
 ビューカード|view_card
 Suica|suica
+モバイル Suica|mobile_suica + 西暦年を表す半角数字 4 ~ 6 桁 (後述)
 PayPal|pay_pal_store, pay_pal_item
 住信 SBI ネット銀行|sbi_sumishin_net_bank
 PayPay カード|pay_pay_card
@@ -281,6 +283,37 @@ SFCard Viewer 2 を起動し、「NFC ポート/パソリ」に Suica, PASMO を
 
 ※ Suica, PASMO には 20 件までしか履歴が残らないので、
 　 定期的に CSV を取得し続ける必要があります。
+
+### モバイル Suica
+
+1\.
+
+[www.mobilesuica.com](https://www.mobilesuica.com/) にログインします。
+
+2\.
+
+[SF (電子マネー) 利用履歴] をクリック
+
+3\.
+
+履歴から該当月の HTML テーブルを Google スプレッドシートにコピーします。
+
+Chrome の場合は [Table Capture](https://chrome.google.com/webstore/detail/table-capture/iebpjdmgckacbodjpijphcplhebcmeop) という拡張機能を使います。
+
+4\.
+
+該当月のスプレッドシートを開いた状態で [ファイル] -> [形式を指定してダウンロード] -> [カンマ区切りの値(.csv、現在のシート)]
+
+モバイル Suica の履歴は日付の情報が年を含まないので、履歴の日付に年の情報を付加するために、
+用意したファイル名には西暦年を表す 4 ~ 6 桁の半角数字を含めます。
+
+例: mobile_suica_202210.csv
+
+ファイル名の中で、最後に半角数字が 4 ~ 6 桁並んでいる部分の内、最初の 4 桁を西暦年として扱います。
+(5 ~ 6 桁の場合の最後の 2 桁は、月別にファイルを分けることを想定して、月が付与できるようにしています。)
+
+上記のファイル名の例の場合、西暦年は `2022` となります。
+この西暦年と CSV の履歴の日付から Zaim 形式の CSV の履歴の日付を計算します。
 
 ### Amazon
 

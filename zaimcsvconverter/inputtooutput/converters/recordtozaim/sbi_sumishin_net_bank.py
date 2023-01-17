@@ -1,4 +1,5 @@
 """This module implements convert steps from SBI Sumishin net bank input row to Zaim row."""
+from pathlib import Path
 from typing import cast, Optional, Union
 
 from returns.primitives.hkt import Kind1
@@ -100,7 +101,7 @@ class SBISumishinNetBankZaimRowConverterFactory(
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]
+        self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData], path_csv_file: Path
     ) -> ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData]:
         dictionary: dict[
             str,

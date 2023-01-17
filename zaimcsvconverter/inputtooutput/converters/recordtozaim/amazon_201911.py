@@ -1,4 +1,6 @@
 """This module implements convert steps from Amazon input row to Zaim row."""
+from pathlib import Path
+
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
@@ -69,7 +71,7 @@ class Amazon201911ZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Ama
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[Amazon201911Row, Amazon201911RowData]
+        self, input_row: Kind1[Amazon201911Row, Amazon201911RowData], path_csv_file: Path
     ) -> ZaimRowConverter[Amazon201911Row, Amazon201911RowData]:
         if isinstance(input_row, Amazon201911DiscountRow):
             # Reason: The returns can't detect correct type limited by if instance block.

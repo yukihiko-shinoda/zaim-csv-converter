@@ -22,6 +22,7 @@ class GoldPointCardPlusConfig(DataClassJsonMixin):
     account_name: str
     skip_amazon_row: bool
     skip_pay_pal_row: bool
+    skip_kyash_row: bool
 
 
 @dataclass

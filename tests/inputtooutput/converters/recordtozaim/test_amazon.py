@@ -1,4 +1,6 @@
 """Tests for amazon.py."""
+from pathlib import Path
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -27,7 +29,7 @@ class TestAmazonZaimPaymentRowConverter:
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         amazon_row = csv_record_processor.create_input_row_instance(InstanceResource.ROW_DATA_AMAZON_ECHO_DOT)
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(amazon_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(amazon_row, Path()))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -62,5 +64,5 @@ class TestAmazonZaimRowConverterFactory:
         account_context = Account.AMAZON.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         amazon_row = csv_record_processor.create_input_row_instance(input_row_data)
-        actual = account_context.zaim_row_converter_factory.create(amazon_row)
+        actual = account_context.zaim_row_converter_factory.create(amazon_row, Path())
         assert isinstance(actual, expected)

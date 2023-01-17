@@ -1,4 +1,6 @@
 """Tests for __init__.py."""
+from pathlib import Path
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -178,6 +180,6 @@ class TestZaimRowConverterFactory:
         account_context = account.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(input_row_data)
-        factory_class = account_context.zaim_row_converter_factory.create(input_row)
+        factory_class = account_context.zaim_row_converter_factory.create(input_row, Path())
         # noinspection PyTypeChecker
         assert isinstance(factory_class, expected)

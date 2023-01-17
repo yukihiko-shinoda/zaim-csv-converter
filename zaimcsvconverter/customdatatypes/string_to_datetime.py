@@ -41,3 +41,17 @@ class StringNumberOnlyToDateTime(StringToDateTime):
     @classmethod
     def get_format(cls) -> str:
         return "%Y%m%d"
+
+
+class StringSlashMonthDayOnlyToDatetime(datetime):
+    """Type that converts string to datetime."""
+
+    @classmethod
+    def __get_validators__(cls) -> "CallableGenerator":
+        yield cls.parse_date
+
+    @classmethod
+    def parse_date(cls, value: Any) -> datetime:
+        if not isinstance(value, str):
+            raise TypeError("string required")
+        return datetime.strptime(f"1904/{value}", "%Y/%m/%d")

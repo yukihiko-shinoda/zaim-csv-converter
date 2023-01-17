@@ -73,7 +73,7 @@ class TestGoldPointCardPlus201912Row:
     def test_is_row_to_skip() -> None:
         assert (
             GoldPointCardPlus201912Row(
-                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_YAHOO_JAPAN
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC
             ).is_row_to_skip
             is False
         )

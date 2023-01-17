@@ -55,6 +55,7 @@ class FileCsvConvert(Enum):
         FileCsvConvertId.SBI_SUMISHIN_NET_BANK, "sbi_sumishin_net_bank.csv", ConvertTableType.STORE
     )
     PAY_PAY_CARD = FileCsvConvertContext(FileCsvConvertId.PAY_PAY_CARD, "pay_pay_card.csv", ConvertTableType.STORE)
+    MOBILE_SUICA = FileCsvConvertContext(FileCsvConvertId.MOBILE_SUICA, "mobile_suica.csv", ConvertTableType.STORE)
 
     @DynamicClassAttribute
     def value(self) -> FileCsvConvertContext:

@@ -24,8 +24,10 @@ class ZaimCsvFormat:
         "通貨変換前の金額",
         "集計の設定",
     ]
-    CATEGORY_LARGE_EMPTY = "-"
-    CATEGORY_SMALL_EMPTY = "-"
+    CATEGORY_LARGE_EMPTY = ""
+    CATEGORY_SMALL_EMPTY = ""
+    CATEGORY_LARGE_NOT_USE = "-"
+    CATEGORY_SMALL_NOT_USE = "-"
     CASH_FLOW_SOURCE_EMPTY = ""
     CASH_FLOW_TARGET_EMPTY = ""
     AMOUNT_INCOME_EMPTY = 0

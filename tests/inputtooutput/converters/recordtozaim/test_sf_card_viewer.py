@@ -1,4 +1,6 @@
 """Tests for sf_card_viewer.py."""
+from pathlib import Path
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -33,7 +35,7 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION
         )
         # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row, Path()))
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -61,7 +63,7 @@ class TestSFCardViewerZaimTransferRowConverter:
         sf_card_viewer_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION
         )
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row))
+        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -123,6 +125,6 @@ class TestSFCardViewerZaimRowConverterFactory:
         account_context = Account.PASMO.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         sf_card_viewer_row = csv_record_processor.create_input_row_instance(input_row_data)
-        factory = account_context.zaim_row_converter_factory.create(sf_card_viewer_row)
+        factory = account_context.zaim_row_converter_factory.create(sf_card_viewer_row, Path())
         # noinspection PyTypeChecker
         assert isinstance(factory, expected)

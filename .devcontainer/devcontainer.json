@@ -20,10 +20,16 @@
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		"python.formatting.provider":"black",
-		"python.testing.pytestEnabled": true,
-		"python.linting.pylintEnabled": true,
+		"python.linting.enabled": true,
+		"python.linting.lintOnSave": true,
+		"python.linting.banditEnabled": true,
 		"python.linting.flake8Enabled": true,
 		"python.linting.mypyEnabled": true,
+		"python.linting.pydocstyleEnabled": true,
+		// VS Code displays Pylint warning: import-error that not reported in Pylint by executing CLI.
+		// "python.linting.pylintEnabled": true,
+		// This setting forcibly generate __pycache__.
+		// "python.testing.pytestEnabled": true,
 		"[python]": {
 			"editor.formatOnSave": true
 		}
