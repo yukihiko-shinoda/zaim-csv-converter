@@ -23,6 +23,7 @@
 			"extensions": [
 				"GitHub.copilot",
 				"ms-python.python",
+				"charliermarsh.ruff",
 				"ms-python.flake8",
 				"ms-python.pylint",
 				"bungcip.better-toml",
@@ -54,6 +55,19 @@
 					"source.fixAll": true,
 					"source.organizeImports": true
 				}
+			},
+			"ruff.organizeImports": false,
+			"emeraldwalk.runonsave": {
+				"commands": [
+					{
+						"match": ".*\\.py",
+						"cmd": "pipenv run autoflake --in-place ${file}"
+					},
+					{
+						"match": ".*\\.py",
+						"cmd": "pipenv run docformatter --in-place ${file}"
+					}
+				]
 			},
 			"cSpell.customDictionaries": {
 				"project-words": {
