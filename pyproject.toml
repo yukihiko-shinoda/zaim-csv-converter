@@ -161,13 +161,17 @@ select = [
 ignore = [
     "UP032",  # [*] Use f-string instead of `format` call
     "ANN101",  # Missing type annotation for `self` in method
+    "ANN102",  # Missing type annotation for `cls` in classmethod
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed, These warnings are disabled by default
 ]
 fixable = [
     "COM812",  # Trailing comma missing
+    "EM102",  # Exception must not use an f-string literal, assign to variable first
     "PT001",  # Use `@pytest.fixture()` over `@pytest.fixture`
     "PT006",  # Wrong name(s) type in `@pytest.mark.parametrize`, expected `tuple`
     "SIM108",  # Use ternary operator `extra_context = {} if extra_context is None else request.param` instead of `if`-`else`-block
+    "UP006",  # Use {} instead of {} for type annotations
+    "UP007",  # Use X | Y for type annotations
     "UP015",  # Unnecessary open mode parameters
     "UP037",  # Remove quotes from type annotation
 ]
