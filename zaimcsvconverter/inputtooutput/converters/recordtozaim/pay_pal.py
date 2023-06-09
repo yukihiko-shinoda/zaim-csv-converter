@@ -32,6 +32,8 @@ class PayPalZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[PayPalRow
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[PayPalRow, PayPalRowData], path_csv_file: Path
+        self,
+        input_row: Kind1[PayPalRow, PayPalRowData],
+        path_csv_file: Path,
     ) -> ZaimRowConverter[PayPalRow, PayPalRowData]:
         return PayPalZaimPaymentRowConverter(input_row)

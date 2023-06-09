@@ -15,7 +15,11 @@ class MobileSuicaRow(InputRow[MobileSuicaRowData]):
     """This class implements row model of Mobile Suica CSV."""
 
     def __init__(
-        self, row_data: MobileSuicaRowData, account_config: SFCardViewerConfig, *args: Any, **kwargs: Any
+        self,
+        row_data: MobileSuicaRowData,
+        account_config: SFCardViewerConfig,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(row_data, *args, **kwargs)
         self.kind_1 = row_data.kind_1

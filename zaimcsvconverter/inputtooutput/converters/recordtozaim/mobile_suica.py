@@ -27,7 +27,7 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import Za
 # Reason: SFCardViewer and Mobile Suica requires same specification
 #         and having common ancestor generates extra complexity.
 class MobileSuicaZaimPaymentOnSomewhereRowConverter(
-    ZaimPaymentRowConverter[MobileSuicaRow, MobileSuicaRowData]
+    ZaimPaymentRowConverter[MobileSuicaRow, MobileSuicaRowData],
 ):  # pylint: disable=duplicate-code
     """This class implements convert steps from SFCard Viewer row to Zaim payment row."""
 
@@ -68,7 +68,7 @@ class MobileSuicaZaimPaymentOnSomewhereRowConverter(
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
 class MobileSuicaZaimPaymentOnStationRowConverter(
-    ZaimPaymentRowStoreConverter[MobileSuicaEnterExitRow, MobileSuicaRowData]
+    ZaimPaymentRowStoreConverter[MobileSuicaEnterExitRow, MobileSuicaRowData],
 ):
     """This class implements convert steps from SFCard Viewer enter row to Zaim payment row."""
 
@@ -152,7 +152,9 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[MobileSuicaRow, MobileSuicaRowData], path_csv_file: Path
+        self,
+        input_row: Kind1[MobileSuicaRow, MobileSuicaRowData],
+        path_csv_file: Path,
     ) -> ZaimRowConverter[MobileSuicaRow, MobileSuicaRowData]:
         self.year = datetime.strptime(re.findall(r"_(\d{4,6})", path_csv_file.stem)[-1][0:4], "%Y").year
         if isinstance(input_row, MobileSuicaFirstRow):
@@ -186,5 +188,6 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
                 year = self.year
 
             return ConcreteMobileSuicaZaimPaymentOnSomewhereRowConverter(input_row)
-        raise ValueError(f"Unsupported row. class = {type(input_row)}")  # pragma: no cover
+        msg = f"Unsupported row. class = {type(input_row)}"
+        raise ValueError(msg)  # pragma: no cover
         # Reason: This line is insurance for future development so process must be not able to reach

@@ -15,7 +15,8 @@ class Kind1(str, Enum):
 
     SALES_GOODS = "物販"
     ENTER = "入"
-    LAYOVER = "＊入"
+    # Reason: Specification.
+    LAYOVER = "＊入"  # noqa: RUF001
     AUTO_CHARGE = "ｵｰﾄ"
     BUS_ETC = "ﾊﾞｽ等"
     VIEW = "VIEW"

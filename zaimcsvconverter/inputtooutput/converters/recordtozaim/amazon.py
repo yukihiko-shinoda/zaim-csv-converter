@@ -33,6 +33,8 @@ class AmazonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[AmazonRow
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[AmazonRow, AmazonRowData], path_csv_file: Path
+        self,
+        input_row: Kind1[AmazonRow, AmazonRowData],
+        path_csv_file: Path,
     ) -> ZaimRowConverter[AmazonRow, AmazonRowData]:
         return AmazonZaimPaymentRowConverter(input_row)

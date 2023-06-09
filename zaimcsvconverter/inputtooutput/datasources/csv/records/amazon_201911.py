@@ -15,7 +15,8 @@ class Amazon201911Row(InputItemRow[Amazon201911RowData]):
     def __init__(self, row_data: Amazon201911RowData):
         super().__init__(FileCsvConvert.AMAZON.value, row_data)
         self._store: Store = Store(
-            FileCsvConvertId.AMAZON, StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim)
+            FileCsvConvertId.AMAZON,
+            StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim),
         )
 
     @property
@@ -45,7 +46,8 @@ class Amazon201911DiscountRow(Amazon201911Row):
     @property
     def validate(self) -> bool:
         self.stock_error(
-            lambda: self.total_order, f"Total order in discount row is required. Total order = {self._total_order}"
+            lambda: self.total_order,
+            f"Total order in discount row is required. Total order = {self._total_order}",
         )
         return super().validate
 

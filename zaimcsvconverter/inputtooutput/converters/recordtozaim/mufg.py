@@ -130,7 +130,7 @@ class MufgTransferIncomeZaimTransferRowConverter(MufgAbstractIncomeZaimTransferR
 
 
 class MufgTransferPaymentZaimTransferRowConverter(
-    MufgAbstractPaymentZaimTransferRowConverter[MufgPaymentToSomeoneRow]
+    MufgAbstractPaymentZaimTransferRowConverter[MufgPaymentToSomeoneRow],
 ):
     """This class implements convert steps from MUFG transfer payment input row to Zaim transfer row."""
 
@@ -146,7 +146,9 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[MufgRow, MufgRowData], path_csv_file: Path
+        self,
+        input_row: Kind1[MufgRow, MufgRowData],
+        path_csv_file: Path,
     ) -> ZaimRowConverter[MufgRow, MufgRowData]:
         dekinded_input_row = cast(MufgRow, input_row)
         if isinstance(input_row, MufgIncomeFromOthersRow):
@@ -164,7 +166,8 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
         # Reason: This line is insurance for future development so process must be not able to reach
 
     def _create_for_income_from_other(
-        self, input_row: MufgIncomeFromOthersRow
+        self,
+        input_row: MufgIncomeFromOthersRow,
     ) -> ZaimRowConverter[MufgRow, MufgRowData]:
         if input_row.is_transfer_income_from_other_own_account:
             # Reason: The returns can't detect correct type limited by if instance block.
@@ -173,7 +176,8 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
         return MufgZaimIncomeRowConverter(input_row)  # type: ignore
 
     def _create_for_payment_to_someone(
-        self, input_row: MufgPaymentToSomeoneRow
+        self,
+        input_row: MufgPaymentToSomeoneRow,
     ) -> ZaimRowConverter[MufgRow, MufgRowData]:
         if input_row.is_transfer_payment_to_other_own_account:
             # Reason: The returns can't detect correct type limited by if instance block.

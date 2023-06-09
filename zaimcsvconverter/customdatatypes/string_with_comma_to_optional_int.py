@@ -26,7 +26,7 @@ def constringwithcommatooptionalint(
     ge: Optional[int] = None,  # pylint: disable=invalid-name
     lt: Optional[int] = None,  # pylint: disable=invalid-name
     le: Optional[int] = None,  # pylint: disable=invalid-name
-    multiple_of: Optional[int] = None
+    multiple_of: Optional[int] = None,
 ) -> type[int]:
     """Creates constrained type for converting string with comma to int value."""
     # use kwargs then define conf in a dict to aid with IDE type hinting
@@ -34,7 +34,4 @@ def constringwithcommatooptionalint(
     return type("ConstrainedStringWithCommaToIntValue", (StringWithCommaToOptionalInt,), namespace)
 
 
-if TYPE_CHECKING:
-    StrictStringWithCommaToOptionalInt = Optional[int]
-else:
-    StrictStringWithCommaToOptionalInt = constringwithcommatooptionalint(strict=True)
+StrictStringWithCommaToOptionalInt = Optional[int] if TYPE_CHECKING else constringwithcommatooptionalint(strict=True)

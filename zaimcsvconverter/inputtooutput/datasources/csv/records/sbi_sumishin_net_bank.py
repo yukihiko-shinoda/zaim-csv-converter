@@ -10,10 +10,13 @@ class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
     """This class implements row model of SBI Sumishin net bank CSV."""
 
     CONTENT_ORDINARY_PRIMARY_ACCOUNT = "普通　代表口座"
-    CONTENT_SBI_HYBRID_DEPOSIT = "ＳＢＩハイブリッド預金"
+    # Reason: Specification.
+    CONTENT_SBI_HYBRID_DEPOSIT = "ＳＢＩハイブリッド預金"  # noqa: RUF001
     CONTENT_INTEREST = "利息"
-    CONTENT_TRANSFER_SBI_SECURITIES = "振替　ＳＢＩ証券"
-    CONTENT_PREFIX_ATM = "ＡＴＭ"
+    # Reason: Specification.
+    CONTENT_TRANSFER_SBI_SECURITIES = "振替　ＳＢＩ証券"  # noqa: RUF001
+    # Reason: Specification.
+    CONTENT_PREFIX_ATM = "ＡＴＭ"  # noqa: RUF001
 
     @property
     def is_row_to_skip(self) -> bool:
@@ -52,7 +55,7 @@ class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
 class SBISumishinNetBankWithdrawalRow(SBISumishinNetBankRow):
     """This class implements row model of SBI Sumishin net bank CSV."""
 
-    def __init__(self, input_row_data: SBISumishinNetBankRowData, *args: Any, **kwargs: Any):
+    def __init__(self, input_row_data: SBISumishinNetBankRowData, *args: Any, **kwargs: Any) -> None:
         super().__init__(input_row_data, FileCsvConvert.SBI_SUMISHIN_NET_BANK.value, *args, **kwargs)
         if input_row_data.withdrawal_amount is None:
             raise TypeError
@@ -62,7 +65,7 @@ class SBISumishinNetBankWithdrawalRow(SBISumishinNetBankRow):
 class SBISumishinNetBankDepositRow(SBISumishinNetBankRow):
     """This class implements row model of SBI Sumishin net bank CSV."""
 
-    def __init__(self, input_row_data: SBISumishinNetBankRowData, *args: Any, **kwargs: Any):
+    def __init__(self, input_row_data: SBISumishinNetBankRowData, *args: Any, **kwargs: Any) -> None:
         super().__init__(input_row_data, FileCsvConvert.SBI_SUMISHIN_NET_BANK.value, *args, **kwargs)
         if input_row_data.deposit_amount is None:
             raise TypeError

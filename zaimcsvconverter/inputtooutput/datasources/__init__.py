@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Dict, Generator, List, TYPE_CHECKING
+from typing import Generator, TYPE_CHECKING
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 
@@ -19,7 +19,7 @@ class DataSource(ABC):
     """This class implements data source model."""
 
     def __init__(self) -> None:
-        self.dictionary_invalid_record: Dict[int, List["InvalidCellError"]] = {}
+        self.dictionary_invalid_record: dict[int, list[InvalidCellError]] = {}
         self.undefined_content_error_handler = UndefinedContentErrorHandler()
 
     @abstractmethod
@@ -27,7 +27,7 @@ class DataSource(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def mark_current_record_as_error(self, list_error: List["InvalidCellError"]) -> None:
+    def mark_current_record_as_error(self, list_error: list[InvalidCellError]) -> None:
         """Marks current record as error."""
         raise NotImplementedError()
 

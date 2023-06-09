@@ -8,7 +8,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records import InputStoreRow
 class ViewCardRow(InputStoreRow[ViewCardRowData]):
     """This class implements row model of GOLD POINT CARD+ CSV."""
 
-    def __init__(self, row_data: ViewCardRowData):
+    def __init__(self, row_data: ViewCardRowData) -> None:
         super().__init__(row_data, FileCsvConvert.VIEW_CARD.value)
         self.billing_amount_current_time: int = row_data.billing_amount_current_time
         self._is_suica: bool = row_data.is_suica

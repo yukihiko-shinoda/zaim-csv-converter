@@ -98,23 +98,29 @@ class Config(YamlDataClassConfig):
 
     waon: WaonConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": WaonConfig}})  # type: ignore
     gold_point_card_plus: GoldPointCardPlusConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": GoldPointCardPlusConfig}}
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": GoldPointCardPlusConfig}},
     )
     mufg: MufgConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": MufgConfig}})  # type: ignore
     pasmo: PasmoConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": PasmoConfig}})  # type: ignore
     amazon: AmazonConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": AmazonConfig}}
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": AmazonConfig}},
     )
     view_card: ViewCardConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": ViewCardConfig}}
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": ViewCardConfig}},
     )
     suica: PasmoConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": SuicaConfig}})  # type: ignore
     pay_pal: PayPalConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": PayPalConfig}}
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": PayPalConfig}},
     )
     sbi_sumishin_net_bank: SBISumishinNetBankConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": SBISumishinNetBankConfig}}
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": SBISumishinNetBankConfig}},
     )
     pay_pay_card: PayPayCardConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": PayPayCardConfig}}
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": PayPayCardConfig}},
     )

@@ -24,4 +24,6 @@ class ViewCardRowData(view_card.ViewCardRowData, InputStoreRowData):
     @property
     def is_suica(self) -> bool:
         """This property returns whether this store is Amazon.co.jp or not."""
-        return bool(re.search(r"　オートチャージ(（モバイル）)?$", self.used_place)) or self.used_place.startswith("Ｓｕｉｃａ（携帯決済）")
+        # Reason: Specification.
+        is_auto_charge_mobile = bool(re.search(r"　オートチャージ(（モバイル）)?$", self.used_place))  # noqa: RUF001
+        return is_auto_charge_mobile or self.used_place.startswith("Ｓｕｉｃａ（携帯決済）")  # noqa: RUF001

@@ -68,7 +68,9 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[WaonRow, WaonRowData], path_csv_file: Path
+        self,
+        input_row: Kind1[WaonRow, WaonRowData],
+        path_csv_file: Path,
     ) -> ZaimRowConverter[WaonRow, WaonRowData]:
         if isinstance(input_row, WaonChargeRow):
             return self._create(input_row)

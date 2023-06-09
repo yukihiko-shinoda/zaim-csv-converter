@@ -46,7 +46,8 @@ class ZaimRowConverter(Generic[TypeVarInputRow, TypeVarInputRowData], AbstractZa
     @kinded
     @classmethod
     def to_container(
-        cls, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]
+        cls,
+        input_row: Kind1[TypeVarInputRow, TypeVarInputRowData],
     ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
         # To check type of TypeVarInputRowData (probably...)
         return input_row
@@ -182,7 +183,8 @@ class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow, T
 
 
 class ZaimPaymentRowStoreItemConverter(
-    ZaimPaymentRowConverter[TypeVarInputStoreItemRow, TypeVarInputStoreItemRowData], ABC
+    ZaimPaymentRowConverter[TypeVarInputStoreItemRow, TypeVarInputStoreItemRowData],
+    ABC,
 ):
     """This class implements convert steps from input store item row to Zaim payment row."""
 
@@ -236,7 +238,8 @@ class ZaimRowConverterFactory:
     dependency occurs. To resolve it, we need to use TYPE_CHECKING, however, pytest-cov detect import line only for
     TYPE_CHECKING as uncovered row.
 
-    @see https://github.com/python/mypy/issues/6101
+    @see
+    https://github.com/python/mypy/issues/6101
     """
 
     def create(self, input_row: AbstractInputRecord, path_csv_file: Path) -> AbstractZaimRowConverter:
@@ -254,13 +257,16 @@ class CsvRecordToZaimRowConverterFactory(Generic[TypeVarInputRow, TypeVarInputRo
     dependency occurs. To resolve it, we need to use TYPE_CHECKING, however, pytest-cov detect import line only for
     TYPE_CHECKING as uncovered row.
 
-    @see https://github.com/python/mypy/issues/6101
+    @see
+    https://github.com/python/mypy/issues/6101
     """
 
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData], path_csv_file: Path
+        self,
+        input_row: Kind1[TypeVarInputRow, TypeVarInputRowData],
+        path_csv_file: Path,
     ) -> ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]:
         """This method selects Zaim row converter."""
         raise NotImplementedError
@@ -276,7 +282,8 @@ class ZaimRowFactory:
     dependency occurs. To resolve it, we need to use TYPE_CHECKING, however, pytest-cov detect import line only for
     TYPE_CHECKING as uncovered row.
 
-    @see https://github.com/python/mypy/issues/6101
+    @see
+    https://github.com/python/mypy/issues/6101
     """
 
     @staticmethod
@@ -288,4 +295,5 @@ class ZaimRowFactory:
             return ZaimPaymentRow(zaim_row_converter)
         if isinstance(zaim_row_converter, ZaimTransferRowConverter):
             return ZaimTransferRow(zaim_row_converter)
-        raise ValueError(f"Undefined Zaim row converter. Zaim row converter = {zaim_row_converter.__class__.__name__}")
+        msg = f"Undefined Zaim row converter. Zaim row converter = {zaim_row_converter.__class__.__name__}"
+        raise ValueError(msg)

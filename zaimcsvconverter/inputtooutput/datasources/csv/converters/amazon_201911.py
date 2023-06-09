@@ -27,9 +27,8 @@ class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911Ro
             return Amazon201911ShippingHandlingRow(input_row_data)
         if input_row_data.is_payment:
             return Amazon201911PaymentRow(input_row_data)
+        msg = f'Cash flow kind is not supported. "Order date = {input_row_data.date}, ""item name = {input_row_data.item_name}'
         raise ValueError(
-            'Cash flow kind is not supported. "'
-            f'Order date = {input_row_data.date}, "'
-            f'"item name = {input_row_data.item_name}'
+            msg,
         )  # pragma: no cover
         # Reason: This line is insurance for future development so process must be not able to reach

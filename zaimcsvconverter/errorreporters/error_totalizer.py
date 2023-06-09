@@ -1,7 +1,7 @@
 """This module implements totalize process of error."""
 from enum import Enum
 from pathlib import Path
-from typing import Generator, List, Union
+from typing import Generator, Union
 
 from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
@@ -21,10 +21,10 @@ class ErrorTotalizer:
 
     def __init__(self, directory_csv_output: Path) -> None:
         self.directory_csv_output = directory_csv_output
-        self.list_invalid_data_source: List[DataSource] = []
+        self.list_invalid_data_source: list[DataSource] = []
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()
 
-    def __iter__(self) -> Generator[List[Union[int, str]], None, None]:
+    def __iter__(self) -> Generator[list[Union[int, str]], None, None]:
         for data_source in self.list_invalid_data_source:
             data_source_error_reporter = DataSourceErrorReporterFactory.create(data_source)
             yield from data_source_error_reporter

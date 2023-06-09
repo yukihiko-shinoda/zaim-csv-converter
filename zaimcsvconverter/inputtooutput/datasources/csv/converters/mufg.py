@@ -33,7 +33,8 @@ class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
             CashFlowKind.TRANSFER_INCOME,
         ):
             return MufgIncomeFromOthersRow(input_row_data)
+        msg = f"Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}"
         raise ValueError(
-            f"Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}"
+            msg,
         )  # pragma: no cover
         # Reason: This line is insurance for future development so process must be not able to reach

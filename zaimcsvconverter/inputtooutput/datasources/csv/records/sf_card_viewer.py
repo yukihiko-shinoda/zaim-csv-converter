@@ -15,7 +15,11 @@ class SFCardViewerRow(InputRow[SFCardViewerRowData]):
     """This class implements row model of SF Card Viewer CSV."""
 
     def __init__(
-        self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig, *args: Any, **kwargs: Any
+        self,
+        row_data: SFCardViewerRowData,
+        account_config: SFCardViewerConfig,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(row_data, *args, **kwargs)
         self.used_amount = row_data.used_amount
@@ -50,7 +54,7 @@ class SFCardViewerRow(InputRow[SFCardViewerRowData]):
 class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow[SFCardViewerRowData]):
     """This class implements enter station row model of SF Card Viewer CSV."""
 
-    def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+    def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig) -> None:
         super().__init__(row_data, account_config, FileCsvConvert.SF_CARD_VIEWER.value)
         self.railway_company_name_enter: str = row_data.railway_company_name_enter
         self.station_name_enter: str = row_data.station_name_enter
@@ -60,7 +64,7 @@ class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow[SFCardViewerRowData]):
 class SFCardViewerEnterExitRow(SFCardViewerEnterRow):
     """This class implements enter and exit station row model of SF Card Viewer CSV."""
 
-    def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig):
+    def __init__(self, row_data: SFCardViewerRowData, account_config: SFCardViewerConfig) -> None:
         super().__init__(row_data, account_config)
         self.railway_company_name_exit: str = row_data.railway_company_name_exit
 

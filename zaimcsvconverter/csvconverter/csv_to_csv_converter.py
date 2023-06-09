@@ -1,5 +1,6 @@
 """This module implements abstract converting steps for CSV."""
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter import DirectoryCsv
@@ -8,17 +9,19 @@ from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.record_to_zaim_converter import RecordToZaimConverter
 from zaimcsvconverter.inputtooutput.datasources.csv.csv import Csv
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
+
+if TYPE_CHECKING:
+    from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
+    from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 
 
 class CsvToCsvConverter:
     """This class implements abstract converting steps for CSV."""
 
-    def __init__(self, path_csv_file: Path, directory_csv_output: Path = DirectoryCsv.OUTPUT.value):
-        account_context: AccountContext[InputRowData, InputRow[InputRowData]] = Account.create_by_path_csv_input(
-            path_csv_file
+    def __init__(self, path_csv_file: Path, directory_csv_output: Path = DirectoryCsv.OUTPUT.value) -> None:
+        account_context: AccountContext["InputRowData", "InputRow[InputRowData]"] = Account.create_by_path_csv_input(
+            path_csv_file,
         ).value
         god_slayer = account_context.god_slayer_factory.create(path_csv_file)
         first_form_normalizer = FirstFormNormalizer(god_slayer, account_context.input_row_data_class)

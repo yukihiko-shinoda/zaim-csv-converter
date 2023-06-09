@@ -47,7 +47,7 @@ def constringtooptionalint(
     ge: Optional[int] = None,  # pylint: disable=invalid-name
     lt: Optional[int] = None,  # pylint: disable=invalid-name
     le: Optional[int] = None,  # pylint: disable=invalid-name
-    multiple_of: Optional[int] = None
+    multiple_of: Optional[int] = None,
 ) -> type[int]:
     """Optional pydantic conint from str."""
     # use kwargs then define conf in a dict to aid with IDE type hinting
@@ -55,7 +55,4 @@ def constringtooptionalint(
     return type("ConstrainedStringToOptionalIntValue", (StringToOptionalInt,), namespace)
 
 
-if TYPE_CHECKING:
-    ConstrainedStringToOptionalInt = Optional[int]
-else:
-    ConstrainedStringToOptionalInt = constringtooptionalint()
+ConstrainedStringToOptionalInt = Optional[int] if TYPE_CHECKING else constringtooptionalint()

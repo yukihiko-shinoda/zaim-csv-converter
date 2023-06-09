@@ -24,8 +24,9 @@ class MufgRowData(CsvRowData):
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     class Summary(Enum):
-        CARD = "カ−ド"
-        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"
+        # Reason: Specification.
+        CARD = "カ−ド"  # noqa: RUF001
+        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"  # noqa: RUF001
 
     date_: StringSlashToDateTime
     summary: str

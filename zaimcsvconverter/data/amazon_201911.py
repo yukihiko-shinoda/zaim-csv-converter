@@ -14,9 +14,10 @@ class Amazon201911RowData(CsvRowData):
     """This class implements data class for wrapping list of Amazon.co.jp CSV version 201911 row model."""
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-    ITEM_NAME_ENTIRE_ORDER: ClassVar[str] = "（注文全体）"
-    ITEM_NAME_BILLING_TO_CREDIT_CARD: ClassVar[str] = "（クレジットカードへの請求）"
-    ITEM_NAME_SHIPPING_HANDLING: ClassVar[str] = "（配送料・手数料）"
+    # Reason: Specification.
+    ITEM_NAME_ENTIRE_ORDER: ClassVar[str] = "（注文全体）"  # noqa: RUF001
+    ITEM_NAME_BILLING_TO_CREDIT_CARD: ClassVar[str] = "（クレジットカードへの請求）"  # noqa: RUF001
+    ITEM_NAME_SHIPPING_HANDLING: ClassVar[str] = "（配送料・手数料）"  # noqa: RUF001
     ordered_date: StringSlashToDateTime
     order_id: str
     item_name_: str

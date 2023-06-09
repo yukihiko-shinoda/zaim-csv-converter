@@ -21,7 +21,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records.sbi_sumishin_net_ban
 
 
 class SBISumishinNetBankZaimPaymentRowConverter(
-    ZaimPaymentRowStoreConverter[SBISumishinNetBankWithdrawalRow, SBISumishinNetBankRowData]
+    ZaimPaymentRowStoreConverter[SBISumishinNetBankWithdrawalRow, SBISumishinNetBankRowData],
 ):
     """This class implements convert steps from MUFG input row to Zaim income row."""
 
@@ -36,7 +36,7 @@ class SBISumishinNetBankZaimPaymentRowConverter(
 
 
 class SBISumishinNetBankWithdrawalZaimTransferRowConverter(
-    ZaimTransferRowConverter[SBISumishinNetBankWithdrawalRow, SBISumishinNetBankRowData]
+    ZaimTransferRowConverter[SBISumishinNetBankWithdrawalRow, SBISumishinNetBankRowData],
 ):
     """This class implements convert steps from MUFG income input row to Zaim transfer row."""
 
@@ -55,7 +55,7 @@ class SBISumishinNetBankWithdrawalZaimTransferRowConverter(
 
 
 class SBISumishinNetBankZaimIncomeRowConverter(
-    ZaimIncomeRowStoreConverter[SBISumishinNetBankDepositRow, SBISumishinNetBankRowData]
+    ZaimIncomeRowStoreConverter[SBISumishinNetBankDepositRow, SBISumishinNetBankRowData],
 ):
     """This class implements convert steps from MUFG input row to Zaim income row."""
 
@@ -70,7 +70,7 @@ class SBISumishinNetBankZaimIncomeRowConverter(
 
 
 class SBISumishinNetBankDepositZaimTransferRowConverter(
-    ZaimTransferRowConverter[SBISumishinNetBankDepositRow, SBISumishinNetBankRowData]
+    ZaimTransferRowConverter[SBISumishinNetBankDepositRow, SBISumishinNetBankRowData],
 ):
     """This class implements convert steps from MUFG income input row to Zaim transfer row."""
 
@@ -89,7 +89,7 @@ class SBISumishinNetBankDepositZaimTransferRowConverter(
 
 
 class SBISumishinNetBankZaimRowConverterFactory(
-    CsvRecordToZaimRowConverterFactory[SBISumishinNetBankRow, SBISumishinNetBankRowData]
+    CsvRecordToZaimRowConverterFactory[SBISumishinNetBankRow, SBISumishinNetBankRowData],
 ):
     """This class implements select steps from MUFG input row to Zaim row converter."""
 
@@ -101,7 +101,9 @@ class SBISumishinNetBankZaimRowConverterFactory(
     # Reason: Maybe, there are no way to resolve.
     # The nearest issues: https://github.com/dry-python/returns/issues/708
     def create(  # type: ignore
-        self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData], path_csv_file: Path
+        self,
+        input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData],
+        path_csv_file: Path,
     ) -> ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData]:
         dictionary: dict[
             str,

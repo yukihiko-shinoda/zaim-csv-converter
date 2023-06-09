@@ -1,5 +1,5 @@
 """CSV datasource."""
-from typing import cast, Generator, Generic, List, Optional
+from typing import cast, Generator, Generic, Optional
 
 from godslayer.exceptions import InvalidFooterError, InvalidHeaderError
 from pydantic import ValidationError
@@ -69,7 +69,7 @@ class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
             or self.invalid_footer_error is not None
         )
 
-    def mark_current_record_as_error(self, list_error: List[InvalidCellError]) -> None:
+    def mark_current_record_as_error(self, list_error: list[InvalidCellError]) -> None:
         if self.first_form_normalizer.index is None:
             raise LogicError("This method can't be called before iterate this instance.")  # pragma: no cover
         self.dictionary_invalid_record[self.first_form_normalizer.index] = list_error

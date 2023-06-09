@@ -34,7 +34,7 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
 
     @staticmethod
     def create_undefined_content_error_handler(
-        input_row: Kind1[InputRow[InputRowData], InputRowData]
+        input_row: Kind1[InputRow[InputRowData], InputRowData],
     ) -> Optional[UndefinedContentErrorHandler]:
         """To simplify instantiate process."""
         dekinded_input_row = cast(InputRow[InputRowData], input_row)
@@ -45,7 +45,8 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
         return undefined_content_error_handler
 
     def create_input_row_instance(
-        self, input_row_data: TypeVarInputRowData
+        self,
+        input_row_data: TypeVarInputRowData,
     ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
         """This method creates input row instance by input row data instance."""
         return self.input_row_factory.create(input_row_data)

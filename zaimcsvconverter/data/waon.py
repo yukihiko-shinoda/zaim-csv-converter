@@ -16,8 +16,9 @@ class UseKind(str, Enum):
     CHARGE = "チャージ"
     AUTO_CHARGE = "オートチャージ"
     DOWNLOAD_POINT = "ポイントダウンロード"
-    TRANSFER_WAON_UPLOAD = "WAON移行（アップロード）"
-    TRANSFER_WAON_DOWNLOAD = "WAON移行（ダウンロード）"
+    # Reason: Specification.
+    TRANSFER_WAON_UPLOAD = "WAON移行（アップロード）"  # noqa: RUF001
+    TRANSFER_WAON_DOWNLOAD = "WAON移行（ダウンロード）"  # noqa: RUF001
 
 
 class ChargeKind(str, Enum):

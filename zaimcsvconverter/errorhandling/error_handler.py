@@ -1,7 +1,7 @@
 """This module implements error handler."""
 from __future__ import annotations
 
-from typing import Iterator, List
+from typing import Iterator
 
 import numpy
 
@@ -10,12 +10,12 @@ class UndefinedContentErrorHandler:
     """This class implements undefined content error handler."""
 
     def __init__(self) -> None:
-        self.list_error: List[List[str]] = []
+        self.list_error: list[list[str]] = []
 
-    def __iter__(self) -> Iterator[List[str]]:
+    def __iter__(self) -> Iterator[list[str]]:
         return self.list_error.__iter__()
 
-    def extend_list(self, error: List[List[str]]) -> None:
+    def extend_list(self, error: list[list[str]]) -> None:
         """This method appends error list argument into error list property."""
         self.list_error.extend(error)
         self.uniquify()

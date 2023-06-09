@@ -20,7 +20,7 @@ class SBISumishinNetBankRowFactory(InputRowFactory[SBISumishinNetBankRowData, SB
             return SBISumishinNetBankWithdrawalRow(input_row_data)
         if input_row_data.deposit_amount is not None and input_row_data.withdrawal_amount is None:
             return SBISumishinNetBankDepositRow(input_row_data)
+        msg = f"Deposit amount and withdrawal amount is not supported. input_row_data.date={input_row_data.date!r}, input_row_data.deposit_amount={input_row_data.deposit_amount!r}, input_row_data.withdrawal_amount={input_row_data.withdrawal_amount!r}"
         raise ValueError(
-            "Deposit amount and withdrawal amount is not supported. "
-            f"{input_row_data.date=}, {input_row_data.deposit_amount=}, {input_row_data.withdrawal_amount=}"
+            msg,
         )  # pragma: no cover
