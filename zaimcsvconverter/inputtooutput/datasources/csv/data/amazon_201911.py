@@ -41,12 +41,8 @@ class Amazon201911RowData(amazon_201911.Amazon201911RowData, InputItemRowData):
             and self.number is None
             and self.subtotal_price_item is None
             and self.total_order is None
-            # Reason:
-            # When fix `return a and b != ""` as `return a and b`, mypy will report warning:
-            #   error: Incompatible return value type
-            #          (got "Union[Literal[False], str]", expected "bool")  [return-value]
-            and self.credit_card_billing_date != ""  # noqa: PLC1901
-            and self.credit_card_billing_amount != ""  # noqa: PLC1901
+            and self.credit_card_billing_date != ""
+            and self.credit_card_billing_amount != ""
         )
 
     @property
