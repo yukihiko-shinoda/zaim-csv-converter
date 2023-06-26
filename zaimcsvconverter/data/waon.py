@@ -20,6 +20,10 @@ class UseKind(str, Enum):
     TRANSFER_WAON_UPLOAD = "WAON移行（アップロード）"  # noqa: RUF001
     TRANSFER_WAON_DOWNLOAD = "WAON移行（ダウンロード）"  # noqa: RUF001
 
+    # Reason: Python 3.11 displays not string of value but name of value. pylint: disable=useless-parent-delegation
+    def __str__(self) -> str:
+        return super().__str__()
+
 
 class ChargeKind(str, Enum):
     """This class implements constant of charge kind in WAON CSV."""
@@ -29,6 +33,10 @@ class ChargeKind(str, Enum):
     CASH = "現金"
     DOWNLOAD_VALUE = "バリューダウンロード"
     NULL = "-"
+
+    # Reason: Python 3.11 displays not string of value but name of value. pylint: disable=useless-parent-delegation
+    def __str__(self) -> str:
+        return super().__str__()
 
 
 # Reason: Model. pylint: disable=too-few-public-methods
