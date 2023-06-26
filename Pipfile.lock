@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "df2bb10c6867127242cbe6f1a03c8db97ba93a6abd606c0cbabcbe30df2050f6"
+            "sha256": "2e0a6efedfec1a4362b99e8062e2b72533d274852328cd033126d67c43597309"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -571,7 +571,7 @@
                 "sha256:a07ffd2351b8c678dfc4a856a3005f8067aea51d6ba6c700796a4d9e280f39f0",
                 "sha256:e5db55f3687856d8fbdab002ed78544e1c4559a130302693d839dfe8f93f2373"
             ],
-            "markers": "python_version < '3.11'",
+            "markers": "python_version >= '3.11'",
             "version": "==0.3.6"
         },
         "dlint": {
@@ -605,7 +605,7 @@
                 "sha256:232c37c63e4f682982c8b6459f33a8981039e5fb8756b2074364e5055c498c9e",
                 "sha256:d484c3090ba2889ae2928419117447a14daf3c1231d5e30d0aae34f354f01785"
             ],
-            "markers": "python_version < '3.11'",
+            "markers": "python_version <= '3.10'",
             "version": "==1.1.1"
         },
         "face": {
@@ -721,12 +721,12 @@
         },
         "invokelint": {
             "hashes": [
-                "sha256:65d7d1ced095a5302679f955ce8c82e74ff4b5f61216da2125f8ff5b2f37935c",
-                "sha256:db3294436af303c0df28fd9eb579860020ddd116102fbb0a2da00de90ed59717"
+                "sha256:4b435c20e2cb0202df61a1a5994c0026d67bef9640ddfaea69ffc811eb8aa451",
+                "sha256:50a42bbd0d5324d3bfbfeb435f8c8b8fd7bf5ec05f3c496500793a9c562fccab"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.7'",
-            "version": "==0.8.0"
+            "version": "==0.8.1"
         },
         "isort": {
             "hashes": [
@@ -1268,7 +1268,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_version < '3.11'",
+            "markers": "python_version >= '3.7'",
             "version": "==2.0.1"
         },
         "tomlkit": {
@@ -1462,7 +1462,7 @@
                 "sha256:fbec11614dba0424ca72f4e8ba3c420dba07b4a7c206c8c8e4e73f2e98f4c559",
                 "sha256:fd69666217b62fa5d7c6aa88e507493a34dec4fa20c5bd925e4bc12fce586639"
             ],
-            "markers": "python_version < '3.11'",
+            "markers": "python_version >= '3.11'",
             "version": "==1.15.0"
         },
         "xenon": {

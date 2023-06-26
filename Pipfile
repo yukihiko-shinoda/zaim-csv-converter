@@ -37,6 +37,7 @@ coverage = ">=3.5.4"
 dlint = ">=0.14.0"
 docformatter = {extras = ["tomli"], version = "*"}
 dodgy = "*"
+exceptiongroup = {version = "*", markers="python_version <= '3.10'"}
 factory_boy = "*"
 fixturefilehandler = "*"
 # Since Pipenv can't lock for too much combinations to attempt lock:
@@ -48,7 +49,7 @@ flake8-polyfill = "*"
 # Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
 # When unpin hacking, it has possibility to install too legacy version of hacking.
 hacking = {version = ">=5.0.0", markers="python_version >= '3.8'"}
-invokelint = {version = "*", markers="python_version >= '3.7'"}
+invokelint = {version = ">=0.8.1", markers="python_version >= '3.7'"}
 isort = "*"
 mypy = "*"
 pydantic = "*"
