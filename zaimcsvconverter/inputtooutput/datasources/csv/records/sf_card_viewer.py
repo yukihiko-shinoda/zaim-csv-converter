@@ -1,13 +1,15 @@
 """This module implements row model of SF Card Viewer CSV."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.data.sf_card_viewer import Note
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow, InputStoreRow
+
+if TYPE_CHECKING:
+    from zaimcsvconverter.config import SFCardViewerConfig
 
 
 # pylint: disable=too-many-instance-attributes

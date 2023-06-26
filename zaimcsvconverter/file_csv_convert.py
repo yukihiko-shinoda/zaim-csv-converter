@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from pathlib import Path
 from types import DynamicClassAttribute
+from typing import TYPE_CHECKING
 
 from zaimcsvconverter.models import (
     Base,
@@ -14,13 +14,16 @@ from zaimcsvconverter.models import (
     FileCsvConvertId,
 )
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 
 @dataclass
 class FileCsvConvertContext:
     """This class implements CSV file for convert table."""
 
     # pylint:disable=invalid-name
-    id: FileCsvConvertId
+    id: FileCsvConvertId  # noqa: A003
     name: str
     convert_table_type: ConvertTableType
 
@@ -75,7 +78,8 @@ class FileCsvConvert(Enum):
         for file_csv_convert in FileCsvConvert:
             if path.name == file_csv_convert.value.name:
                 return file_csv_convert
-        raise ValueError("can't detect account type by csv file name. Please confirm csv file name.")
+        msg = "can't detect account type by csv file name. Please confirm csv file name."
+        raise ValueError(msg)
 
     def create_convert_table_row_instance(
         self,

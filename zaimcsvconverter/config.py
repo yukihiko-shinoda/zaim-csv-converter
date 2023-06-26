@@ -96,31 +96,43 @@ class PayPayCardConfig(DataClassJsonMixin):
 class Config(YamlDataClassConfig):
     """This class implements configuration wrapping."""
 
-    waon: WaonConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": WaonConfig}})  # type: ignore
-    gold_point_card_plus: GoldPointCardPlusConfig = field(  # type: ignore
+    waon: WaonConfig = field(  # type: ignore[assignment]
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": WaonConfig}},
+    )
+    gold_point_card_plus: GoldPointCardPlusConfig = field(  # type: ignore[assignment]
         default=None,
         metadata={"dataclasses_json": {"mm_field": GoldPointCardPlusConfig}},
     )
-    mufg: MufgConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": MufgConfig}})  # type: ignore
-    pasmo: PasmoConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": PasmoConfig}})  # type: ignore
-    amazon: AmazonConfig = field(  # type: ignore
+    mufg: MufgConfig = field(  # type: ignore[assignment]
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": MufgConfig}},
+    )
+    pasmo: PasmoConfig = field(  # type: ignore[assignment]
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": PasmoConfig}},
+    )
+    amazon: AmazonConfig = field(  # type: ignore[assignment]
         default=None,
         metadata={"dataclasses_json": {"mm_field": AmazonConfig}},
     )
-    view_card: ViewCardConfig = field(  # type: ignore
+    view_card: ViewCardConfig = field(  # type: ignore[assignment]
         default=None,
         metadata={"dataclasses_json": {"mm_field": ViewCardConfig}},
     )
-    suica: PasmoConfig = field(default=None, metadata={"dataclasses_json": {"mm_field": SuicaConfig}})  # type: ignore
-    pay_pal: PayPalConfig = field(  # type: ignore
+    suica: PasmoConfig = field(  # type: ignore[assignment]
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": SuicaConfig}},
+    )
+    pay_pal: PayPalConfig = field(  # type: ignore[assignment]
         default=None,
         metadata={"dataclasses_json": {"mm_field": PayPalConfig}},
     )
-    sbi_sumishin_net_bank: SBISumishinNetBankConfig = field(  # type: ignore
+    sbi_sumishin_net_bank: SBISumishinNetBankConfig = field(  # type: ignore[assignment]
         default=None,
         metadata={"dataclasses_json": {"mm_field": SBISumishinNetBankConfig}},
     )
-    pay_pay_card: PayPayCardConfig = field(  # type: ignore
+    pay_pay_card: PayPayCardConfig = field(  # type: ignore[assignment]
         default=None,
         metadata={"dataclasses_json": {"mm_field": PayPayCardConfig}},
     )

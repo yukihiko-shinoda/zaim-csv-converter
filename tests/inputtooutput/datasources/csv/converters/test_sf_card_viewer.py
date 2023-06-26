@@ -1,3 +1,4 @@
+"""Test for SFCardViewerRowFactory."""
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -14,8 +15,12 @@ class TestSFCardViewerRowFactory:
     @staticmethod
     @pytest.mark.parametrize(
         (
-            "argument, expected_is_transportation, expected_is_sales_goods, "
-            "expected_is_auto_charge, expected_is_exit_by_window, expected_is_bus_tram"
+            "argument",
+            "expected_is_transportation",
+            "expected_is_sales_goods",
+            "expected_is_auto_charge",
+            "expected_is_exit_by_window",
+            "expected_is_bus_tram",
         ),
         [
             (
@@ -39,9 +44,10 @@ class TestSFCardViewerRowFactory:
             (InstanceResource.ROW_DATA_SF_CARD_VIEWER_BUS_TRAM, False, False, False, False, True),
         ],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
-    def test_create_success(
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_sf_card_viewer")
+    def test_create_success(  # noqa: PLR0913
         argument: SFCardViewerRowData,
+        *,
         expected_is_transportation: bool,
         expected_is_sales_goods: bool,
         expected_is_auto_charge: bool,

@@ -12,7 +12,7 @@ from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 class Amazon201911Row(InputItemRow[Amazon201911RowData]):
     """This class implements row model of Amazon.co.jp CSV."""
 
-    def __init__(self, row_data: Amazon201911RowData):
+    def __init__(self, row_data: Amazon201911RowData) -> None:
         super().__init__(FileCsvConvert.AMAZON.value, row_data)
         self._store: Store = Store(
             FileCsvConvertId.AMAZON,
@@ -33,14 +33,15 @@ class Amazon201911RowToSkip(Amazon201911Row):
 class Amazon201911DiscountRow(Amazon201911Row):
     """This class implements row model of Amazon.co.jp CSV."""
 
-    def __init__(self, row_data: Amazon201911RowData):
+    def __init__(self, row_data: Amazon201911RowData) -> None:
         super().__init__(row_data)
         self._total_order: Optional[int] = row_data.total_order
 
     @property
     def total_order(self) -> int:
         if self._total_order is None:
-            raise ValueError("Total order on discount row is not allowed empty.")
+            msg = "Total order on discount row is not allowed empty."
+            raise ValueError(msg)
         return self._total_order
 
     @property
@@ -62,7 +63,8 @@ class Amazon201911ShippingHandlingRow(Amazon201911Row):
     @property
     def subtotal_price_item(self) -> int:
         if self._subtotal_price_item is None:
-            raise ValueError("Subtotal price item on shipping handling row is not allowed empty.")
+            msg = "Subtotal price item on shipping handling row is not allowed empty."
+            raise ValueError(msg)
         return self._subtotal_price_item
 
     @property
@@ -78,7 +80,7 @@ class Amazon201911ShippingHandlingRow(Amazon201911Row):
 class Amazon201911PaymentRow(Amazon201911Row):
     """This class implements row model of Amazon.co.jp CSV."""
 
-    def __init__(self, row_data: Amazon201911RowData):
+    def __init__(self, row_data: Amazon201911RowData) -> None:
         super().__init__(row_data)
         self._price: Optional[int] = row_data.price
         self._number: Optional[int] = row_data.number
@@ -86,13 +88,15 @@ class Amazon201911PaymentRow(Amazon201911Row):
     @property
     def price(self) -> int:
         if self._price is None:
-            raise ValueError("Price on payment row is not allowed empty.")
+            msg = "Price on payment row is not allowed empty."
+            raise ValueError(msg)
         return self._price
 
     @property
     def number(self) -> int:
         if self._number is None:
-            raise ValueError("Number on payment row is not allowed empty.")
+            msg = "Number on payment row is not allowed empty."
+            raise ValueError(msg)
         return self._number
 
     @property

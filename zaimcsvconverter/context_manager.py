@@ -22,7 +22,7 @@ class ContextManager(Generic[TypeVarCovariant_co], ABC):
     # error: Argument 1 to "contextmanager" has incompatible type
     #   "Callable[[ContextManager[T_co]], _GeneratorContextManager[T_co]]";  # noqa: ERA001
     #   expected "Callable[[ContextManager[T_co]], Iterator[<nothing>]]"
-    @abstractmethod  # type: ignore
+    @abstractmethod  # type: ignore[arg-type]
     @contextlib.contextmanager
     # Reason: There are no more typing ways.
     def contextmanager(self) -> contextlib._GeneratorContextManager[TypeVarCovariant_co]:  # noqa: SLF001

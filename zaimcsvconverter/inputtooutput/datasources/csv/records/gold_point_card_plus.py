@@ -9,7 +9,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records import InputStoreRow
 class GoldPointCardPlusRow(InputStoreRow[GoldPointCardPlusRowData]):
     """This class implements row model of GOLD POINT CARD+ CSV."""
 
-    def __init__(self, row_data: GoldPointCardPlusRowData):
+    def __init__(self, row_data: GoldPointCardPlusRowData) -> None:
         super().__init__(row_data, FileCsvConvert.GOLD_POINT_CARD_PLUS.value)
         self.used_amount: int = row_data.used_amount
 

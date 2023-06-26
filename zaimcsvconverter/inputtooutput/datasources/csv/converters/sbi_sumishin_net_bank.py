@@ -15,12 +15,15 @@ class SBISumishinNetBankRowFactory(InputRowFactory[SBISumishinNetBankRowData, SB
     # see:
     #   - Create your own container — returns 0.18.0 documentation
     #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
-    def create(self, input_row_data: SBISumishinNetBankRowData) -> SBISumishinNetBankRow:  # type: ignore
+    def create(self, input_row_data: SBISumishinNetBankRowData) -> SBISumishinNetBankRow:  # type: ignore[override]
         if input_row_data.deposit_amount is None and input_row_data.withdrawal_amount is not None:
             return SBISumishinNetBankWithdrawalRow(input_row_data)
         if input_row_data.deposit_amount is not None and input_row_data.withdrawal_amount is None:
             return SBISumishinNetBankDepositRow(input_row_data)
-        msg = f"Deposit amount and withdrawal amount is not supported. input_row_data.date={input_row_data.date!r}, input_row_data.deposit_amount={input_row_data.deposit_amount!r}, input_row_data.withdrawal_amount={input_row_data.withdrawal_amount!r}"
-        raise ValueError(
-            msg,
-        )  # pragma: no cover
+        msg = (  # pragma: no cover
+            "Deposit amount and withdrawal amount is not supported. "
+            f"input_row_data.date={input_row_data.date!r}, "
+            f"input_row_data.deposit_amount={input_row_data.deposit_amount!r}, "
+            f"input_row_data.withdrawal_amount={input_row_data.withdrawal_amount!r}"
+        )
+        raise ValueError(msg)  # pragma: no cover

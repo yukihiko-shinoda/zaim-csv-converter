@@ -15,5 +15,8 @@ class GoldPointCardPlus201912RowFactory(InputRowFactory[GoldPointCardPlus201912R
     # see:
     #   - Create your own container — returns 0.18.0 documentation
     #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
-    def create(self, input_row_data: GoldPointCardPlus201912RowData) -> GoldPointCardPlus201912Row:  # type: ignore
+    def create(  # type: ignore[override]
+        self,
+        input_row_data: GoldPointCardPlus201912RowData,
+    ) -> GoldPointCardPlus201912Row:
         return GoldPointCardPlus201912Row(input_row_data)

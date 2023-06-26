@@ -22,11 +22,11 @@ class TestConvertWorkflow:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, path_file_csv_input",
+        ("database_session_with_schema", "path_file_csv_input"),
         [([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO], "waon")],
         indirect=["database_session_with_schema", "path_file_csv_input"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test(path_file_csv_input: Path, tmp_path: Path) -> None:
         """Tests following:
 

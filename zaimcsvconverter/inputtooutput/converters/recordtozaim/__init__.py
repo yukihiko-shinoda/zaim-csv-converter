@@ -6,6 +6,7 @@ from typing import cast, Generic, Optional, TypeVar
 
 from returns.primitives.hkt import Kind1, kinded
 
+from zaimcsvconverter.exceptions import LogicError
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.inputtooutput.datasources.csv.data import (
     TypeVarInputItemRowData,
@@ -29,7 +30,7 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
 
 
 # Reason: Abstract class. pylint: disable=too-few-public-methods
-class AbstractZaimRowConverter(ABC):
+class AbstractZaimRowConverter(ABC):  # noqa: B024
     pass
 
 
@@ -40,7 +41,7 @@ TypeVarAbstractZaimRowConverter = TypeVar("TypeVarAbstractZaimRowConverter", bou
 class ZaimRowConverter(Generic[TypeVarInputRow, TypeVarInputRowData], AbstractZaimRowConverter, ABC):
     """This class implements convert steps from input row to Zaim row."""
 
-    def __init__(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]):
+    def __init__(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]) -> None:
         self.input_row = cast(TypeVarInputRow, self.to_container(input_row))
 
     @kinded
@@ -49,7 +50,7 @@ class ZaimRowConverter(Generic[TypeVarInputRow, TypeVarInputRowData], AbstractZa
         cls,
         input_row: Kind1[TypeVarInputRow, TypeVarInputRowData],
     ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
-        # To check type of TypeVarInputRowData (probably...)
+        """To check type of TypeVarInputRowData (probably...)"""
         return input_row
 
     @property
@@ -173,6 +174,9 @@ class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow, T
 
     @property
     def item_name(self) -> str:
+        if not self.input_row.item.name:
+            msg = "Item name is empty."
+            raise LogicError(msg)
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.item.name
 
@@ -200,6 +204,9 @@ class ZaimPaymentRowStoreItemConverter(
 
     @property
     def item_name(self) -> str:
+        if not self.input_row.item.name:
+            msg = "Item name is empty."
+            raise LogicError(msg)
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.item.name
 
@@ -261,11 +268,11 @@ class CsvRecordToZaimRowConverterFactory(Generic[TypeVarInputRow, TypeVarInputRo
     https://github.com/python/mypy/issues/6101
     """
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
+    def create(
         self,
-        input_row: Kind1[TypeVarInputRow, TypeVarInputRowData],
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[TypeVarInputRow, TypeVarInputRowData],  # type: ignore[override]
         path_csv_file: Path,
     ) -> ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]:
         """This method selects Zaim row converter."""

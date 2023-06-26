@@ -1,20 +1,22 @@
 """This module implements abstract row model of Zaim CSV."""
 from abc import abstractmethod
-from datetime import datetime
 from typing import Optional, TYPE_CHECKING, Union
 
-# Reason: Pylint's bug.
-from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData  # pylint: disable=unused-import
 from zaimcsvconverter.inputtooutput.exporters import OutputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 
 if TYPE_CHECKING:  # pragma: no cover
+    from datetime import datetime
+
     from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
         ZaimIncomeRowConverter,
         ZaimPaymentRowConverter,
         ZaimRowConverter,
         ZaimTransferRowConverter,
     )
+
+    # Reason: Pylint's bug.
+    from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData  # pylint: disable=unused-import
     from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 
 

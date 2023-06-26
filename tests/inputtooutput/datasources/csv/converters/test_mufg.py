@@ -1,3 +1,4 @@
+"""Tests for MufgRowFactory."""
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -12,7 +13,13 @@ class TestMufgRowFactory:
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        "argument, expected_is_income, expected_is_payment, expected_is_transfer_income, expected_is_transfer_payment",
+        (
+            "argument",
+            "expected_is_income",
+            "expected_is_payment",
+            "expected_is_transfer_income",
+            "expected_is_transfer_payment",
+        ),
         [
             (InstanceResource.ROW_DATA_MUFG_INCOME_CARD, True, False, False, False),
             (InstanceResource.ROW_DATA_MUFG_PAYMENT, False, True, False, False),
@@ -23,6 +30,7 @@ class TestMufgRowFactory:
     @pytest.mark.usefixtures("database_session_stores_mufg")
     def test_create_success(
         argument: MufgRowData,
+        *,
         expected_is_income: bool,
         expected_is_payment: bool,
         expected_is_transfer_income: bool,

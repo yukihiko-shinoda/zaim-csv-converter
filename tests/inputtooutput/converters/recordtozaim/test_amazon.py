@@ -18,7 +18,7 @@ class TestAmazonZaimPaymentRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
     def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 4980
@@ -37,7 +37,7 @@ class TestAmazonZaimPaymentRowConverter:
         assert zaim_row_data.store_name == store_name
         assert zaim_row_data.item_name == item_name
         assert zaim_row_data.cash_flow_source == config_account_name
-        assert zaim_row_data.note == ""
+        assert not zaim_row_data.note
         assert zaim_row_data.amount_payment == expected_amount
 
 
@@ -47,7 +47,7 @@ class TestAmazonZaimRowConverterFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, input_row_data, expected",
+        ("database_session_with_schema", "input_row_data", "expected"),
         [
             # Case when Amazon payment
             (
@@ -58,7 +58,7 @@ class TestAmazonZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test(input_row_data: AmazonRowData, expected: type[AmazonZaimPaymentRowConverter]) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.AMAZON.value

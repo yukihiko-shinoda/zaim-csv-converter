@@ -1,13 +1,15 @@
 """This module implements row model of Mobile Suica CSV."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.data.mobile_suica import Kind1, Kind2
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csv.data.mobile_suica import MobileSuicaRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow, InputStoreRow
+
+if TYPE_CHECKING:
+    from zaimcsvconverter.config import SFCardViewerConfig
 
 
 # pylint: disable=too-many-instance-attributes
@@ -46,7 +48,8 @@ class MobileSuicaRow(InputRow[MobileSuicaRowData]):
     @property
     def deposit_used_amount(self) -> int:
         if self._deposit_used_amount is None:
-            raise ValueError("Deposit / Used Amount excluding in first row is empty.")
+            msg = "Deposit / Used Amount excluding in first row is empty."
+            raise ValueError(msg)
         return self._deposit_used_amount
 
     @property
@@ -62,7 +65,7 @@ class MobileSuicaRow(InputRow[MobileSuicaRowData]):
 class MobileSuicaStoreRow(MobileSuicaRow, InputStoreRow[MobileSuicaRowData]):
     """This class implements enter station row model of SF Card Viewer CSV."""
 
-    def __init__(self, row_data: MobileSuicaRowData, account_config: SFCardViewerConfig):
+    def __init__(self, row_data: MobileSuicaRowData, account_config: SFCardViewerConfig) -> None:
         super().__init__(row_data, account_config, FileCsvConvert.MOBILE_SUICA.value)
 
 
@@ -79,7 +82,7 @@ class MobileSuicaFirstRow(MobileSuicaStoreRow):
 class MobileSuicaEnterExitRow(MobileSuicaStoreRow):
     """This class implements enter and exit station row model of SF Card Viewer CSV."""
 
-    def __init__(self, row_data: MobileSuicaRowData, account_config: SFCardViewerConfig):
+    def __init__(self, row_data: MobileSuicaRowData, account_config: SFCardViewerConfig) -> None:
         super().__init__(row_data, account_config)
         self.used_place_1 = row_data.used_place_1
         self.kind_2 = row_data.kind_2

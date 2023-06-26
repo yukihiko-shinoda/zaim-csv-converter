@@ -5,7 +5,7 @@ from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
     # Reason: Prioritize typing
-    from pydantic.types import CallableGenerator  # type: ignore
+    from pydantic.types import CallableGenerator  # type: ignore[attr-defined]
 
 
 class StringToDateTime(datetime):
@@ -18,8 +18,10 @@ class StringToDateTime(datetime):
     @classmethod
     def parse_date(cls, value: Any) -> datetime:
         if not isinstance(value, str):
-            raise TypeError("string required")
-        return datetime.strptime(value, cls.get_format())
+            msg = "string required"
+            raise TypeError(msg)
+        # Reason: Time is not used in this process.
+        return datetime.strptime(value, cls.get_format())  # noqa: DTZ007
 
     @classmethod
     @abstractmethod
@@ -53,5 +55,7 @@ class StringSlashMonthDayOnlyToDatetime(datetime):
     @classmethod
     def parse_date(cls, value: Any) -> datetime:
         if not isinstance(value, str):
-            raise TypeError("string required")
-        return datetime.strptime(f"1904/{value}", "%Y/%m/%d")
+            msg = "string required"
+            raise TypeError(msg)
+        # Reason: Time is not used in this process.
+        return datetime.strptime(f"1904/{value}", "%Y/%m/%d")  # noqa: DTZ007

@@ -61,7 +61,7 @@ radon = "*"
 returns = "*"
 ruff = {version = "*", markers="python_version >= '3.7'"}
 semgrep = {version = "*", markers="python_version >= '3.6'"}
-sqlalchemy2-stubs = "*"
+types-invoke = "*"
 xenon = "*"
 
 [scripts]

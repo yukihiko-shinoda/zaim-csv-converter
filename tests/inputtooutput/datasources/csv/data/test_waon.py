@@ -20,15 +20,17 @@ class TestWaonRowData:
         - Property date should return datetime object.
         - Property store_date should return used_store.
         """
+        expected_amount = 129
         date = "2018/8/7"
         used_store = "ファミリーマートかぶと町永代"
         used_amount = "129円"
         use_kind = "支払"
         charge_kind = "-"
         waon_row_data = RowDataFactory(WaonRowData).create([date, used_store, used_amount, use_kind, charge_kind])
-        assert waon_row_data.date == datetime(2018, 8, 7, 0, 0)
+        # Reason: Time is not used in this process.
+        assert waon_row_data.date == datetime(2018, 8, 7, 0, 0)  # noqa: DTZ001
         assert waon_row_data.store_name == used_store
-        assert waon_row_data.used_amount == 129
+        assert waon_row_data.used_amount == expected_amount
         assert waon_row_data.use_kind == UseKind.PAYMENT
         assert waon_row_data.charge_kind == ChargeKind.NULL
 
@@ -46,7 +48,7 @@ class TestWaonRowData:
         assert error["msg"] == (
             "value is not a valid enumeration member; permitted: "
             "'支払', '支払取消', 'チャージ', 'オートチャージ', "
-            "'ポイントダウンロード', 'WAON移行（アップロード）', 'WAON移行（ダウンロード）'"
+            "'ポイントダウンロード', 'WAON移行（アップロード）', 'WAON移行（ダウンロード）'"  # noqa: RUF001
         )
 
     @staticmethod
@@ -58,6 +60,9 @@ class TestWaonRowData:
         assert len(errors) == 1
         error = errors[0]
         assert error["loc"] == ("charge_kind",)
-        assert error["msg"] == (
-            "value is not a valid enumeration member; permitted: " "'銀行口座', 'ポイント', '現金', 'バリューダウンロード', '-'"
+        assert error["msg"] == "".join(
+            [
+                "value is not a valid enumeration member; permitted: ",
+                "'銀行口座', 'ポイント', '現金', 'バリューダウンロード', '-'",
+            ],
         )

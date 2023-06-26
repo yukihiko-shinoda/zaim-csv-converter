@@ -7,7 +7,7 @@ from pydantic import ConstrainedInt
 
 if TYPE_CHECKING:
     # Reason: Prioritize typing
-    from pydantic.types import CallableGenerator  # type: ignore
+    from pydantic.types import CallableGenerator  # type: ignore[attr-defined]
 
 
 class ConstrainedStringToInt(ConstrainedInt):
@@ -21,7 +21,8 @@ class ConstrainedStringToInt(ConstrainedInt):
     @classmethod
     def integer_must_be_from_str(cls, value: Any) -> int:
         if not isinstance(value, str):
-            raise TypeError("string required")
+            msg = "string required"
+            raise TypeError(msg)
         return cls.string_to_int(value)
 
     @classmethod
@@ -30,12 +31,12 @@ class ConstrainedStringToInt(ConstrainedInt):
         raise NotImplementedError
 
 
-def constringtoint(
+# Reason: Followed pydantic specification.
+def constringtoint(  # noqa: PLR0913
     type_name: str,
     type_class: type[ConstrainedStringToInt],
     *,
     strict: bool = False,
-    # Reason: Followed pydantic specification.
     gt: Optional[int] = None,  # pylint: disable=invalid-name
     ge: Optional[int] = None,  # pylint: disable=invalid-name
     lt: Optional[int] = None,  # pylint: disable=invalid-name
@@ -44,5 +45,5 @@ def constringtoint(
 ) -> type[int]:
     """Creates constrained type for converting string with comma to int value."""
     # use kwargs then define conf in a dict to aid with IDE type hinting
-    namespace = dict(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of)
+    namespace = {"strict": strict, "gt": gt, "ge": ge, "lt": lt, "le": le, "multiple_of": multiple_of}
     return type(type_name, (type_class,), namespace)

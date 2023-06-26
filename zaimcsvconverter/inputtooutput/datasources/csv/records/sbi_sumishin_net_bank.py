@@ -11,10 +11,10 @@ class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
 
     CONTENT_ORDINARY_PRIMARY_ACCOUNT = "普通　代表口座"
     # Reason: Specification.
-    CONTENT_SBI_HYBRID_DEPOSIT = "ＳＢＩハイブリッド預金"  # noqa: RUF001
+    CONTENT_SBI_HYBRID_DEPOSIT = "ＳＢＩハイブリッド預金"
     CONTENT_INTEREST = "利息"
     # Reason: Specification.
-    CONTENT_TRANSFER_SBI_SECURITIES = "振替　ＳＢＩ証券"  # noqa: RUF001
+    CONTENT_TRANSFER_SBI_SECURITIES = "振替　ＳＢＩ証券"
     # Reason: Specification.
     CONTENT_PREFIX_ATM = "ＡＴＭ"  # noqa: RUF001
 

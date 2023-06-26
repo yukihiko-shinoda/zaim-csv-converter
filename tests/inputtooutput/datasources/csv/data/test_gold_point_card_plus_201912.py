@@ -27,9 +27,11 @@ class TestGoldPointCardPlus201912RowData:
         current_time_of_division = "1"
         payed_amount = "66"
         others = "0.60　USD　110.712　11 03"
+        expected_payed_amount = 66
         gold_point_card_plus_row_data = RowDataFactory(GoldPointCardPlus201912RowData).create(
-            [used_date, used_store, used_amount, number_of_division, current_time_of_division, payed_amount, others]
+            [used_date, used_store, used_amount, number_of_division, current_time_of_division, payed_amount, others],
         )
-        assert gold_point_card_plus_row_data.date == datetime(2019, 11, 3, 0, 0)
+        # Reason: Time is not used in this process.
+        assert gold_point_card_plus_row_data.date == datetime(2019, 11, 3, 0, 0)  # noqa: DTZ001
         assert gold_point_card_plus_row_data.store_name == used_store
-        assert gold_point_card_plus_row_data.payed_amount == 66
+        assert gold_point_card_plus_row_data.payed_amount == expected_payed_amount

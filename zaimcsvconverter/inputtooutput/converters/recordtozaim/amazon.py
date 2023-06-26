@@ -30,11 +30,11 @@ class AmazonZaimPaymentRowConverter(ZaimPaymentRowItemConverter[AmazonRow, Amazo
 class AmazonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[AmazonRow, AmazonRowData]):
     """This class implements select steps from Amazon input row to Zaim row converter."""
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
+    def create(
         self,
-        input_row: Kind1[AmazonRow, AmazonRowData],
-        path_csv_file: Path,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[AmazonRow, AmazonRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[AmazonRow, AmazonRowData]:
         return AmazonZaimPaymentRowConverter(input_row)

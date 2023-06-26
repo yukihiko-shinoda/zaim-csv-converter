@@ -31,8 +31,11 @@ class MufgRowData(CsvRowData):
     date_: StringSlashToDateTime
     summary: str
     summary_content: str
-    payed_amount: StrictStringWithCommaToOptionalInt
-    deposit_amount: StrictStringWithCommaToOptionalInt
+    # Reason: Now we don't have enough time to recreate type class:
+    # - Answer: python - How can mypy accept pydantic's constr() types? - Stack Overflow
+    #   https://stackoverflow.com/a/67871116/12721873
+    payed_amount: StrictStringWithCommaToOptionalInt  # type: ignore[valid-type]
+    deposit_amount: StrictStringWithCommaToOptionalInt  # type: ignore[valid-type]
     balance: str
     note: str
     is_uncapitalized: str

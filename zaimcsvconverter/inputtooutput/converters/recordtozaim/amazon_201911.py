@@ -68,21 +68,23 @@ class Amazon201911ShippingHandlingZaimPaymentRowConverter(
 class Amazon201911ZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Amazon201911Row, Amazon201911RowData]):
     """This class implements select steps from Amazon input row to Zaim row converter."""
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
+    def create(
         self,
-        input_row: Kind1[Amazon201911Row, Amazon201911RowData],
-        path_csv_file: Path,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[Amazon201911Row, Amazon201911RowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[Amazon201911Row, Amazon201911RowData]:
         if isinstance(input_row, Amazon201911DiscountRow):
             # Reason: The returns can't detect correct type limited by if instance block.
-            return Amazon201911DiscountZaimPaymentRowConverter(input_row)  # type: ignore
+            return Amazon201911DiscountZaimPaymentRowConverter(input_row)  # type: ignore[arg-type,return-value]
         if isinstance(input_row, Amazon201911PaymentRow):
             # Reason: The returns can't detect correct type limited by if instance block.
-            return Amazon201911PaymentZaimPaymentRowConverter(input_row)  # type: ignore
+            return Amazon201911PaymentZaimPaymentRowConverter(input_row)  # type: ignore[arg-type,return-value]
         if isinstance(input_row, Amazon201911ShippingHandlingRow):
             # Reason: The returns can't detect correct type limited by if instance block.
-            return Amazon201911ShippingHandlingZaimPaymentRowConverter(input_row)  # type: ignore
+            return Amazon201911ShippingHandlingZaimPaymentRowConverter(
+                input_row,  # type: ignore[arg-type,return-value]
+            )
         msg = f"Unsupported row. class = {type(input_row)}"
         raise ValueError(msg)  # pragma: no cover

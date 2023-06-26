@@ -32,11 +32,11 @@ class PayPayCardZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[PayPayCardR
 class PayPayCardZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[PayPayCardRow, PayPayCardRowData]):
     """This class implements select steps from PayPay Card input row to Zaim row converter."""
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
+    def create(
         self,
-        input_row: Kind1[PayPayCardRow, PayPayCardRowData],
-        path_csv_file: Path,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[PayPayCardRow, PayPayCardRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[PayPayCardRow, PayPayCardRowData]:
         return PayPayCardZaimPaymentRowConverter(input_row)

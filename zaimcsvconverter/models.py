@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from contextlib import suppress
 from dataclasses import dataclass
 from enum import Enum
 import re
@@ -10,13 +11,12 @@ from typing import Any, cast, Generic, TypeVar
 import warnings
 
 from inflector import Inflector
-from sqlalchemy import Column, exc, Integer, String, UniqueConstraint
+from sqlalchemy import Column, exc, Integer, select, String, UniqueConstraint
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
-from sqlalchemy.orm.exc import NoResultFound
 
 from zaimcsvconverter import Session
-from zaimcsvconverter.session_manager import SessionManager
 
 
 class FileCsvConvertId(Enum):
@@ -100,22 +100,16 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
     # - Mixin and Custom Base Classes — SQLAlchemy 1.3 Documentation
     #   https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/mixins.html
     # pylint: disable=no-self-argument
-    def __tablename__(cls) -> str:
+    def __tablename__(cls) -> str:  # noqa: N805
         class_name = cls.__name__
         return str(Inflector().pluralize(class_name.lower()))
 
-    # The types are by default always considered to be Optional,
-    # even for the primary key and non-nullable column.
-    # The types of the above columns can be stated explicitly,
-    # providing the two advantages of clearer self-documentation
-    # as well as being able to control which types are optional.
-    # - Mypy / Pep-484 Support for ORM Mappings — SQLAlchemy 1.4 Documentation
-    #   https://docs.sqlalchemy.org/en/14/orm/extensions/mypy.html#introspection-of-columns-based-on-typeengine
-    id: int = Column(Integer, primary_key=True)
-    file_csv_convert_id: int = Column(Integer)
-    name: str = Column(String(255))
-    category_payment_large: str | None = Column(String(255))
-    category_payment_small: str | None = Column(String(255))
+    # Reason: For database table design.
+    id = Column(Integer, primary_key=True)  # noqa: A003
+    file_csv_convert_id = Column(Integer)
+    name = Column(String(255))
+    category_payment_large = Column(String(255))
+    category_payment_small = Column(String(255))
 
     __table_args__ = (UniqueConstraint("file_csv_convert_id", "name", name="_name_on_each_account_uc"),)
 
@@ -126,7 +120,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
 
     @staticmethod
     def _get_str_or_none(value: str | None) -> str | None:
-        return value if value != "" else None
+        return value if value else None
 
     @classmethod
     def try_to_find(cls, file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
@@ -134,30 +128,28 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
 
         If record is not exist, raise NoResultFound.
         """
-        try:
+        with suppress(NoResultFound):
             return cls.find(file_csv_convert_id, name)
-        except NoResultFound:
-            pass
         # ↓ To support Shift JIS. Reason: Specification.
         return cls.find(file_csv_convert_id, name.replace("−", "ー"))  # noqa: RUF001
 
     @classmethod
     def find(cls, file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
         """This method select Store model from database."""
-        with SessionManager() as session:
+        with Session() as session:
             return cast(
                 TypeVarBase,
-                session.query(cls)
-                .filter(cls.file_csv_convert_id == file_csv_convert_id.value, cls.name == name)
-                .one(),
+                session.execute(
+                    select(cls).where(cls.file_csv_convert_id == file_csv_convert_id.value, cls.name == name),
+                ).scalar_one(),
             )
 
     @classmethod
     def save_all(cls, models: list[TypeVarBase]) -> None:
         """This method insert Store models into database."""
-        with SessionManager() as session:
-            with session.begin():
-                session.add_all(models)
+        with Session() as session:
+            session.add_all(models)
+            session.commit()
 
 
 with warnings.catch_warnings():
@@ -191,13 +183,19 @@ with warnings.catch_warnings():
         def is_amazon(self) -> bool:
             """This property returns whether this store is Amazon.co.jp or not."""
             # Reason: Specification.
-            return self.name in ["Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ", "Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ"]  # noqa: RUF001
+            return self.name in [
+                "Ａｍａｚｏｎ  Ｄｏｗｎｌｏａｄｓ",  # noqa: RUF001
+                "Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ",  # noqa: RUF001
+                "ＡＭＡＺＯＮ．ＣＯ．ＪＰ",  # noqa: RUF001
+            ]
 
         @property
         def is_pay_pal(self) -> bool:
             """This property returns whether this store is PayPal or not."""
             # Reason: Specification.
-            return self.name in ["ＰａｙＰａｌ決済"] or re.search(r"PAYPAL\s*", self.name) is not None  # noqa: RUF001
+            return self.name in ["ＰａｙＰａｌ決済"] or (
+                self.name is not None and re.search(r"PAYPAL\s*", self.name) is not None
+            )
 
         @property
         def is_kyash(self) -> bool:

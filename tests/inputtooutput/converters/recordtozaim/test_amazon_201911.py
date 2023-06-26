@@ -22,17 +22,17 @@ class TestAmazon201911DiscountZaimPaymentRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
     def test() -> None:
         """Arguments should set into properties."""
         expected_amount = -11
         config_account_name = "ヨドバシゴールドポイントカード・プラス"
         store_name = "Amazon Japan G.K."
-        item_name = "（Amazon ポイント）"
+        item_name = "（Amazon ポイント）"  # noqa: RUF001
         account_context = Account.AMAZON_201911.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         amazon_row = csv_record_processor.create_input_row_instance(
-            InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT
+            InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT,
         )
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(amazon_row, Path()))
@@ -43,7 +43,7 @@ class TestAmazon201911DiscountZaimPaymentRowConverter:
         assert zaim_row_data.store_name == store_name
         assert zaim_row_data.item_name == item_name
         assert zaim_row_data.cash_flow_source == config_account_name
-        assert zaim_row_data.note == ""
+        assert not zaim_row_data.note
         assert zaim_row_data.amount_payment == expected_amount
 
 
@@ -52,7 +52,7 @@ class TestAmazon201911PaymentZaimPaymentRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
     def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 4980
@@ -71,7 +71,7 @@ class TestAmazon201911PaymentZaimPaymentRowConverter:
         assert zaim_row_data.store_name == store_name
         assert zaim_row_data.item_name == item_name
         assert zaim_row_data.cash_flow_source == config_account_name
-        assert zaim_row_data.note == ""
+        assert not zaim_row_data.note
         assert zaim_row_data.amount_payment == expected_amount
 
 
@@ -81,7 +81,7 @@ class TestAmazon201911ZaimRowConverterFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, input_row_data, expected",
+        ("database_session_with_schema", "input_row_data", "expected"),
         [
             (
                 [InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT],
@@ -97,7 +97,7 @@ class TestAmazon201911ZaimRowConverterFactory:
         indirect=["database_session_with_schema"],
         ids=["Case when Amazon payment", "Case when Amazon discount"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test(
         input_row_data: Amazon201911RowData,
         expected: type[ZaimPaymentRowItemConverter[Amazon201911Row, Amazon201911RowData]],

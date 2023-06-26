@@ -2,8 +2,9 @@
 from typing import Optional
 
 import pytest
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm.session import Session as SQLAlchemySession
+from sqlalchemy import select
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -18,7 +19,7 @@ class TestModel:
         """Arguments should insert into database."""
         stores = [Store(FileCsvConvertId.WAON, StoreRowData("上尾", "イオンモール　上尾"))]
         Store.save_all(stores)
-        store = database_session_with_schema.query(Store).filter(Store.name == "上尾").one()
+        store = database_session_with_schema.execute(select(Store).where(Store.name == "上尾")).scalar_one()
         assert store.name == "上尾"
         assert store.name_zaim == "イオンモール　上尾"
 
@@ -26,11 +27,11 @@ class TestModel:
     @staticmethod
     @pytest.mark.parametrize(
         (
-            "database_session_with_schema, "
-            "file_csv_convert, "
-            "store_name, "
-            "expected_store_name_zaim, "
-            "expected_transfer_target"
+            "database_session_with_schema",
+            "file_csv_convert",
+            "store_name",
+            "expected_store_name_zaim",
+            "expected_transfer_target",
         ),
         [
             (
@@ -40,7 +41,13 @@ class TestModel:
                 "イオンモール　幕張新都心",
                 None,
             ),
-            ([InstanceResource.FIXTURE_RECORD_STORE_MUFG_TOBU_CARD], FileCsvConvert.MUFG, "カ）トウブカ－ドビ", None, "東武カード"),
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_MUFG_TOBU_CARD],
+                FileCsvConvert.MUFG,
+                "カ）トウブカ－ドビ",  # noqa: RUF001
+                None,
+                "東武カード",
+            ),
         ],
         indirect=["database_session_with_schema"],
     )
@@ -63,4 +70,4 @@ class TestModel:
         """Method should raise KeyError when store name is not exist in database."""
         with pytest.raises(NoResultFound) as error:
             Store.try_to_find(FileCsvConvert.WAON.value.id, "上尾")
-        assert str(error) == "<ExceptionInfo NoResultFound('No row was found when one was required') tblen=6>"
+        assert str(error) == "<ExceptionInfo NoResultFound('No row was found when one was required') tblen=5>"

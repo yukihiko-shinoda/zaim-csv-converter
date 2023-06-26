@@ -16,7 +16,7 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
     def __init__(
         self,
         input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow],
-    ):
+    ) -> None:
         self.input_row_factory = input_row_factory
 
     def execute(self, input_record_data: TypeVarInputRowData) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
@@ -24,7 +24,7 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
         input_record = self.create_input_row_instance(input_record_data)
         dekinded_input_record = cast(InputRow[InputRowData], input_record)
         if dekinded_input_record.is_row_to_skip:
-            raise SkipRecord()
+            raise SkipRecord
         if dekinded_input_record.validate:
             raise InvalidRecordError(
                 dekinded_input_record.list_error,

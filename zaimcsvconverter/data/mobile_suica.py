@@ -33,7 +33,7 @@ class Kind2(str, Enum):
     EXIT = "出"
     EXIT_BY_WINDOW = "精"
     # Reason: This is not password.
-    COMMUTER_PASS = "定"  # nosec
+    COMMUTER_PASS = "定"  # nosec  # noqa: S105
 
 
 @dataclass
@@ -47,4 +47,7 @@ class MobileSuicaRowData(CsvRowData):
     kind_2: Kind2
     used_place_2: str
     balance: StrictSymbolYenStringToInt
-    deposit_used_amount: StrictStringWithCommaToOptionalInt
+    # Reason: Now we don't have enough time to recreate type class:
+    # - Answer: python - How can mypy accept pydantic's constr() types? - Stack Overflow
+    #   https://stackoverflow.com/a/67871116/12721873
+    deposit_used_amount: StrictStringWithCommaToOptionalInt  # type: ignore[valid-type]

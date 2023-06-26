@@ -145,18 +145,21 @@ class MobileSuicaZaimTransferFirstRowConverter(ZaimTransferRowConverter[MobileSu
 class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MobileSuicaRow, MobileSuicaRowData]):
     """This class implements select steps from SFCard Viewer input row to Zaim row converter."""
 
-    def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
+    def __init__(self, account_config: Callable[[], SFCardViewerConfig]) -> None:
         self._account_config = account_config
         self.year: int = 0
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
+    def create(
         self,
-        input_row: Kind1[MobileSuicaRow, MobileSuicaRowData],
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[MobileSuicaRow, MobileSuicaRowData],  # type: ignore[override]
         path_csv_file: Path,
     ) -> ZaimRowConverter[MobileSuicaRow, MobileSuicaRowData]:
-        self.year = datetime.strptime(re.findall(r"_(\d{4,6})", path_csv_file.stem)[-1][0:4], "%Y").year
+        self.year = (
+            # Reason: Time is not used in this process.
+            datetime.strptime(re.findall(r"_(\d{4,6})", path_csv_file.stem)[-1][0:4], "%Y").year  # noqa: DTZ007
+        )
         if isinstance(input_row, MobileSuicaFirstRow):
 
             class ConcreteMobileSuicaZaimTransferFirstRowConverter(MobileSuicaZaimTransferFirstRowConverter):
@@ -164,7 +167,7 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
                 year = self.year
 
             # Reason: The returns can't detect correct type limited by if instance block.
-            return ConcreteMobileSuicaZaimTransferFirstRowConverter(input_row)  # type: ignore
+            return ConcreteMobileSuicaZaimTransferFirstRowConverter(input_row)  # type: ignore[return-value,arg-type]
         if isinstance(input_row, MobileSuicaEnterExitRow):
 
             class ConcreteMobileSuicaZaimPaymentOnStationRowConverter(MobileSuicaZaimPaymentOnStationRowConverter):
@@ -172,7 +175,9 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
                 year = self.year
 
             # Reason: The returns can't detect correct type limited by if instance block.
-            return ConcreteMobileSuicaZaimPaymentOnStationRowConverter(input_row)  # type: ignore
+            return ConcreteMobileSuicaZaimPaymentOnStationRowConverter(
+                input_row,  # type: ignore[return-value,arg-type]
+            )
         if isinstance(input_row, MobileSuicaStoreRow):
 
             class ConcreteMobileSuicaZaimTransferRowConverter(MobileSuicaZaimTransferRowConverter):
@@ -180,7 +185,7 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
                 year = self.year
 
             # Reason: The returns can't detect correct type limited by if instance block.
-            return ConcreteMobileSuicaZaimTransferRowConverter(input_row)  # type: ignore
+            return ConcreteMobileSuicaZaimTransferRowConverter(input_row)  # type: ignore[return-value,arg-type]
         if isinstance(input_row, MobileSuicaRow):
 
             class ConcreteMobileSuicaZaimPaymentOnSomewhereRowConverter(MobileSuicaZaimPaymentOnSomewhereRowConverter):

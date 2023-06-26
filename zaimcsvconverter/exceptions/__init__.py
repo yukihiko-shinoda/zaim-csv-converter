@@ -17,7 +17,8 @@ class LogicError(Error):
     """This Error indicates programing miss."""
 
 
-class SkipRecord(Error):
+# Reason: Intentionally named.
+class SkipRecord(Error):  # noqa: N818
     """Target row is invalid."""
 
 

@@ -1,5 +1,6 @@
 """Tests for zaim_csv_converter.py."""
 import csv
+from logging import getLogger
 from pathlib import Path
 from typing import Optional
 
@@ -38,7 +39,9 @@ from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 
 
 def create_relative_deploy_file_path(
-    resource_path: Path, directory_name: str, directory_name_resource: Optional[str] = None
+    resource_path: Path,
+    directory_name: str,
+    directory_name_resource: Optional[str] = None,
 ) -> RelativeDeployFilePath:
     """This  function creates relative path aggregate instance to deploy."""
     if directory_name_resource is None:
@@ -57,20 +60,23 @@ class TestZaimCsvConverter:
     # pylint: disable=too-many-arguments,too-many-locals,unused-argument
     @staticmethod
     @pytest.mark.usefixtures(
-        "yaml_config_file", "directory_csv_convert_table", "directory_csv_input", "database_session"
+        "_yaml_config_file",
+        "directory_csv_convert_table",
+        "directory_csv_input",
+        "database_session",
     )
     def test_success(directory_csv_output: RelativeDeployFilePath) -> None:
         """Input CSV files should be converted into Zaim format CSV file."""
         try:
             ZaimCsvConverter.execute()
-        except SomeInvalidInputCsvError as error:
+        except SomeInvalidInputCsvError:
             if (directory_csv_output.target / "error_undefined_content.csv").exists():
                 TestZaimCsvConverter.debug_csv("error_undefined_content.csv", directory_csv_output)
             TestZaimCsvConverter.debug_csv("error_invalid_row.csv", directory_csv_output)
-            raise error
+            raise
         files = sorted(directory_csv_output.target.rglob("*[!.gitkeep]"))
-
-        assert len(files) == 22
+        expected_length = 22
+        assert len(files) == expected_length
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file("waon201807.csv", create_zaim_row_data_waon_201807())
         checker.assert_file("waon201808.csv", create_zaim_row_data_waon_201808())
@@ -100,15 +106,19 @@ class TestZaimCsvConverter:
 
     @staticmethod
     def debug_csv(csv_file_name: str, directory_csv_output: RelativeDeployFilePath) -> None:
+        logger = getLogger(__name__)
         with (directory_csv_output.target / csv_file_name).open("r", encoding="UTF-8", newline="\n") as file:
             csv_reader = csv.reader(file)
             for list_row_data in csv_reader:
-                print(list_row_data)
+                logger.info(list_row_data)
 
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.usefixtures(
-        "yaml_config_file", "directory_csv_convert_table", "directory_csv_input", "database_session"
+        "_yaml_config_file",
+        "directory_csv_convert_table",
+        "directory_csv_input",
+        "database_session",
     )
     def test_fail(directory_csv_output: RelativeDeployFilePath) -> None:
         """Tests following:
@@ -145,7 +155,8 @@ class TestZaimCsvConverter:
                     (
                         "CSV file does not contain header row.Confirm CSV file and header again. "
                         "Header = "
-                        "['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', '差引残高', 'メモ', '未資金化区分', '入払区分']"
+                        "['日付', '摘要', '摘要内容', '支払い金額', '預かり金額', "
+                        "'差引残高', 'メモ', '未資金化区分', '入払区分']"
                     ),
                 ),
                 InvalidRowErrorRowData(

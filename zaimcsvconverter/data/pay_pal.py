@@ -51,7 +51,7 @@ class PayPalRowData(CsvRowData):
     time: str
     time_zone: TIMEZONE
     name: str
-    type: str
+    type_: str
     status: Status
     currency: CURRENCY
     gross: int

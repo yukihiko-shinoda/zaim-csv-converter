@@ -106,15 +106,15 @@ class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewer
 class SFCardViewerZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[SFCardViewerRow, SFCardViewerRowData]):
     """This class implements select steps from SFCard Viewer input row to Zaim row converter."""
 
-    def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
+    def __init__(self, account_config: Callable[[], SFCardViewerConfig]) -> None:
         self._account_config = account_config
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
+    def create(
         self,
-        input_row: Kind1[SFCardViewerRow, SFCardViewerRowData],
-        path_csv_file: Path,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[SFCardViewerRow, SFCardViewerRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[SFCardViewerRow, SFCardViewerRowData]:
         if isinstance(input_row, SFCardViewerEnterExitRow):
 
@@ -122,14 +122,16 @@ class SFCardViewerZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[SFC
                 account_config = self._account_config()
 
             # Reason: The returns can't detect correct type limited by if instance block.
-            return ConcreteSFCardViewerZaimPaymentOnStationRowConverter(input_row)  # type: ignore
+            return ConcreteSFCardViewerZaimPaymentOnStationRowConverter(
+                input_row,  # type: ignore[arg-type,return-value]
+            )
         if isinstance(input_row, SFCardViewerEnterRow):
 
             class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
                 account_config = self._account_config()
 
             # Reason: The returns can't detect correct type limited by if instance block.
-            return ConcreteSFCardViewerZaimTransferRowConverter(input_row)  # type: ignore
+            return ConcreteSFCardViewerZaimTransferRowConverter(input_row)  # type: ignore[arg-type,return-value]
         if isinstance(input_row, SFCardViewerRow):
 
             class ConcreteSFCardViewerZaimPaymentOnSomewhereRowConverter(

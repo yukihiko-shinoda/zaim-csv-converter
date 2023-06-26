@@ -29,11 +29,11 @@ class PayPalZaimPaymentRowConverter(ZaimPaymentRowStoreItemConverter[PayPalRow, 
 class PayPalZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[PayPalRow, PayPalRowData]):
     """This class implements select steps from Amazon input row to Zaim row converter."""
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
+    def create(
         self,
-        input_row: Kind1[PayPalRow, PayPalRowData],
-        path_csv_file: Path,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[PayPalRow, PayPalRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[PayPalRow, PayPalRowData]:
         return PayPalZaimPaymentRowConverter(input_row)

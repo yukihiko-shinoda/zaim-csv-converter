@@ -1,5 +1,6 @@
 """Tests for zaimcsvconverter.errorreporters.input_csv_error_reporter."""
-from typing import Generator, Generic, List
+from collections.abc import Generator
+from typing import Generic
 
 import pytest
 
@@ -23,7 +24,7 @@ class TestInputCsvErrorReporter:
             def __iter__(self) -> Generator[AbstractInputRecord, None, None]:
                 raise NotImplementedError
 
-            def mark_current_record_as_error(self, list_error: List[InvalidCellError]) -> None:
+            def mark_current_record_as_error(self, list_error: list[InvalidCellError]) -> None:
                 pass
 
             @property

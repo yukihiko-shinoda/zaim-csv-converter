@@ -1,12 +1,18 @@
 """We'll need a temporary file-like object, so use a tempfile.
 
 see:
-  - python - How to type-annotate object returned by csv.writer? - Stack Overflow
-    https://stackoverflow.com/questions/51264355/how-to-type-annotate-object-returned-by-csv-writer
+- python - How to type-annotate object returned by csv.writer? - Stack Overflow
+  https://stackoverflow.com/questions/51264355/how-to-type-annotate-object-returned-by-csv-writer
 """
-# Reason: For typing.
-import _csv  # noqa F401 pylint: disable=unused-import
-from typing_extensions import TypeAlias
+from __future__ import annotations
 
-CSVReader: TypeAlias = "_csv._reader"
-CSVWriter: TypeAlias = "_csv._writer"
+from typing import TYPE_CHECKING
+
+import _csv
+
+if TYPE_CHECKING:
+    from typing_extensions import TypeAlias
+
+# Reason: To conceal reference error for typing.
+CSVReader: TypeAlias = _csv._reader  # noqa: SLF001 pylint: disable=protected-access,no-member
+CSVWriter: TypeAlias = _csv._writer  # noqa: SLF001 pylint: disable=protected-access,no-member

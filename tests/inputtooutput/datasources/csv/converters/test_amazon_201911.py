@@ -1,3 +1,4 @@
+"""Test for Amazon201911RowFactory."""
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -18,7 +19,7 @@ class TestAmazon201911RowFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "argument, expected",
+        ("argument", "expected"),
         [
             (InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT, Amazon201911PaymentRow),
             (InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT, Amazon201911DiscountRow),
@@ -26,7 +27,7 @@ class TestAmazon201911RowFactory:
             (InstanceResource.ROW_DATA_AMAZON_201911_MS_Learn_IN_MANGA, Amazon201911RowToSkip),
         ],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
     def test_create(argument: Amazon201911RowData, expected: type[Amazon201911Row]) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access

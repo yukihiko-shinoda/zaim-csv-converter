@@ -12,16 +12,17 @@ class StringWithCommaToOptionalInt(StringToOptionalInt):
     @classmethod
     def optional_integer_must_be_from_str(cls, value: Any) -> Optional[int]:
         if not isinstance(value, str):
-            raise TypeError("string required")
-        if value == "":
+            msg = "string required"
+            raise TypeError(msg)
+        if not value:
             return None
         return Utility.convert_string_with_comma_to_int(value)
 
 
-def constringwithcommatooptionalint(
+# Reason: Followed pydantic specification.
+def constringwithcommatooptionalint(  # noqa: PLR0913
     *,
     strict: bool = False,
-    # Reason: Followed pydantic specification.
     gt: Optional[int] = None,  # pylint: disable=invalid-name
     ge: Optional[int] = None,  # pylint: disable=invalid-name
     lt: Optional[int] = None,  # pylint: disable=invalid-name
@@ -30,7 +31,7 @@ def constringwithcommatooptionalint(
 ) -> type[int]:
     """Creates constrained type for converting string with comma to int value."""
     # use kwargs then define conf in a dict to aid with IDE type hinting
-    namespace = dict(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of)
+    namespace = {"strict": strict, "gt": gt, "ge": ge, "lt": lt, "le": le, "multiple_of": multiple_of}
     return type("ConstrainedStringWithCommaToIntValue", (StringWithCommaToOptionalInt,), namespace)
 
 

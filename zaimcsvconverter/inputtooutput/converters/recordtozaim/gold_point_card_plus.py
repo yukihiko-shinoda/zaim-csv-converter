@@ -34,11 +34,11 @@ class GoldPointCardPlusZaimRowConverterFactory(
 ):
     """This class implements select steps from GOLD POINT CARD + Viewer input row to Zaim row converter."""
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
+    def create(
         self,
-        input_row: Kind1[GoldPointCardPlusRow, GoldPointCardPlusRowData],
-        path_csv_file: Path,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[GoldPointCardPlusRow, GoldPointCardPlusRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[GoldPointCardPlusRow, GoldPointCardPlusRowData]:
         return GoldPointCardPlusZaimPaymentRowConverter(input_row)

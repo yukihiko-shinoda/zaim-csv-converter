@@ -1,5 +1,4 @@
 """This module implements fixtures file handler for CSV files."""
-import os
 from pathlib import Path
 from typing import Optional
 
@@ -16,9 +15,11 @@ class CsvFilePathBuilder(RelativeVacateFilePath):
         self,
         target: Path = Path("export.csv"),
         backup: Optional[Path] = None,
-        base: Path = Path(os.getcwd()),
+        base: Path | None = None,
         output: Path = Path("csvoutput"),
-    ):
+    ) -> None:
+        if not base:
+            base = Path.cwd()
         if backup is None:
-            backup = Path(f"{str(target)}.bak")
+            backup = Path(f"{target}.bak")
         super().__init__(target, backup, base / output)

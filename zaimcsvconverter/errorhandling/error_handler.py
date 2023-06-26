@@ -1,9 +1,12 @@
 """This module implements error handler."""
 from __future__ import annotations
 
-from typing import Iterator
+from typing import TYPE_CHECKING
 
-import numpy
+import numpy as np
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 class UndefinedContentErrorHandler:
@@ -36,4 +39,4 @@ class UndefinedContentErrorHandler:
     def uniquify(self) -> None:
         """This method uniquify error list."""
         # noinspection PyTypeChecker
-        self.list_error = numpy.unique(numpy.array(self.list_error), axis=0).tolist()
+        self.list_error = np.unique(np.array(self.list_error), axis=0).tolist()

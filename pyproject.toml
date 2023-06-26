@@ -101,9 +101,9 @@ max-line-length = 119
 min-public-methods = "1"
 
 [tool.pytest.ini_options]
-# log_cli = true
-# log_cli_level = "DEBUG"
-# log_format = "%(asctime)s %(process)d %(levelname)s %(name)s:%(filename)s:%(lineno)d %(message)s"
+log_cli = true
+log_cli_level = "DEBUG"
+log_format = "%(asctime)s %(process)d %(levelname)s %(name)s:%(filename)s:%(lineno)d %(message)s"
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
 ]
@@ -174,6 +174,11 @@ fixable = [
     "UP007",  # Use X | Y for type annotations
     "UP015",  # Unnecessary open mode parameters
     "UP037",  # Remove quotes from type annotation
+]
+unfixable = [
+    # When fix `return a and b != ""` as `return a and b`, mypy will report warning:
+    #   error: Incompatible return value type (got "Union[Literal[False], str]", expected "bool")  [return-value]
+    "PLC1901",
 ]
 target-version = "py39"
 

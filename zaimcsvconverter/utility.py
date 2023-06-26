@@ -9,7 +9,7 @@ class Utility:
     @staticmethod
     def convert_string_to_int_or_none(string: str) -> Optional[int]:
         """This method converts string to int or None."""
-        if string == "":
+        if not string:
             return None
         return int(string.replace(",", ""))
 

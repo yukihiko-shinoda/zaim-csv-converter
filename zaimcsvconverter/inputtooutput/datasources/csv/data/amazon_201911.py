@@ -29,8 +29,8 @@ class Amazon201911RowData(amazon_201911.Amazon201911RowData, InputItemRowData):
             and self.subtotal_price_item is None
             and self.total_order is not None
             and self.total_order > 0
-            and self.credit_card_billing_date == ""
-            and self.credit_card_billing_amount == ""
+            and not self.credit_card_billing_date
+            and not self.credit_card_billing_amount
         )
 
     @property
@@ -41,8 +41,12 @@ class Amazon201911RowData(amazon_201911.Amazon201911RowData, InputItemRowData):
             and self.number is None
             and self.subtotal_price_item is None
             and self.total_order is None
-            and self.credit_card_billing_date != ""
-            and self.credit_card_billing_amount != ""
+            # Reason:
+            # When fix `return a and b != ""` as `return a and b`, mypy will report warning:
+            #   error: Incompatible return value type
+            #          (got "Union[Literal[False], str]", expected "bool")  [return-value]
+            and self.credit_card_billing_date != ""  # noqa: PLC1901
+            and self.credit_card_billing_amount != ""  # noqa: PLC1901
         )
 
     @property
@@ -53,8 +57,8 @@ class Amazon201911RowData(amazon_201911.Amazon201911RowData, InputItemRowData):
             and self.number is None
             and self.subtotal_price_item is not None
             and self.total_order is None
-            and self.credit_card_billing_date == ""
-            and self.credit_card_billing_amount == ""
+            and not self.credit_card_billing_date
+            and not self.credit_card_billing_amount
         )
 
     @property
@@ -87,10 +91,10 @@ class Amazon201911RowData(amazon_201911.Amazon201911RowData, InputItemRowData):
             self.price == 0
             and self.total_order == 0
             and self.subtotal_price_item == 0
-            and self.destination == ""
+            and not self.destination
             and self.status.startswith("デジタル注文:")
             and self.billing_amount == "0"
-            and self.credit_card_billing_date == ""
-            and self.credit_card_billing_amount == ""
-            and self.credit_card_identity == ""
+            and not self.credit_card_billing_date
+            and not self.credit_card_billing_amount
+            and not self.credit_card_identity
         )
