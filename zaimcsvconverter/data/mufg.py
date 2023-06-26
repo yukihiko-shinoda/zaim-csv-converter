@@ -24,14 +24,18 @@ class MufgRowData(CsvRowData):
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
     class Summary(Enum):
-        CARD = "カ−ド"
-        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"
+        # Reason: Specification.
+        CARD = "カ−ド"  # noqa: RUF001
+        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"  # noqa: RUF001
 
     date_: StringSlashToDateTime
     summary: str
     summary_content: str
-    payed_amount: StrictStringWithCommaToOptionalInt
-    deposit_amount: StrictStringWithCommaToOptionalInt
+    # Reason: Now we don't have enough time to recreate type class:
+    # - Answer: python - How can mypy accept pydantic's constr() types? - Stack Overflow
+    #   https://stackoverflow.com/a/67871116/12721873
+    payed_amount: StrictStringWithCommaToOptionalInt  # type: ignore[valid-type]
+    deposit_amount: StrictStringWithCommaToOptionalInt  # type: ignore[valid-type]
     balance: str
     note: str
     is_uncapitalized: str

@@ -31,7 +31,7 @@ class InputStoreRowData(InputRowData, ABC):
     @property
     def is_empty_store_name(self) -> bool:
         """This property returns whether store name is empty or not."""
-        return str.strip(self.store_name) == ""
+        return not str.strip(self.store_name)
 
 
 # Reason: Pylint's Bug. @see https://github.com/PyCQA/pylint/issues/179 pylint: disable=abstract-method

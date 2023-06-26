@@ -18,7 +18,8 @@ class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
     dependency occurs. To resolve it, we need to use TYPE_CHECKING, however, pytest-cov detect import line only for
     TYPE_CHECKING as uncovered row.
 
-    @see https://github.com/python/mypy/issues/6101
+    @see
+    https://github.com/python/mypy/issues/6101
     """
 
     @abstractmethod

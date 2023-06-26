@@ -9,7 +9,7 @@ class Utility:
     @staticmethod
     def convert_string_to_int_or_none(string: str) -> Optional[int]:
         """This method converts string to int or None."""
-        if string == "":
+        if not string:
             return None
         return int(string.replace(",", ""))
 
@@ -17,20 +17,24 @@ class Utility:
     def convert_kanji_yen_string_to_int(yen_string: str) -> int:
         """This method convert YEN string to int."""
         if "." in yen_string:
-            raise ValueError(f"Decimal is unsupported. Yen string = {yen_string}")
+            msg = f"Decimal is unsupported. Yen string = {yen_string}"
+            raise ValueError(msg)
         matches = re.search(r"([\d,]+)\s*円", yen_string)
         if matches is None:
-            raise ValueError(f"Invalid yen string. Yen string = {yen_string}")
+            msg = f"Invalid yen string. Yen string = {yen_string}"
+            raise ValueError(msg)
         return int(matches.group(1).replace(",", ""))
 
     @staticmethod
     def convert_symbol_yen_string_to_int(yen_string: str) -> int:
         """This method convert YEN string to int."""
         if "." in yen_string:
-            raise ValueError(f"Decimal is unsupported. Yen string = {yen_string}")
+            msg = f"Decimal is unsupported. Yen string = {yen_string}"
+            raise ValueError(msg)
         matches = re.search(r"\\([\d,]+)", yen_string)
         if matches is None:
-            raise ValueError(f"Invalid yen string. Yen string = {yen_string}")
+            msg = f"Invalid yen string. Yen string = {yen_string}"
+            raise ValueError(msg)
         return int(matches.group(1).replace(",", ""))
 
     @staticmethod

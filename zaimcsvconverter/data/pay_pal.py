@@ -1,7 +1,7 @@
 """PayPal CSV Data model."""
 from dataclasses import field
 from enum import Enum
-from typing import ClassVar, List
+from typing import ClassVar
 
 from pydantic.dataclasses import dataclass
 
@@ -51,7 +51,7 @@ class PayPalRowData(CsvRowData):
     time: str
     time_zone: TIMEZONE
     name: str
-    type: str
+    type_: str
     status: Status
     currency: CURRENCY
     gross: int
@@ -89,7 +89,7 @@ class PayPalRowData(CsvRowData):
     country_code: str
     balance_impact: BalanceImpact
 
-    HEADER: ClassVar[List[str]] = field(
+    HEADER: ClassVar[list[str]] = field(
         default=[
             "日付",
             "時間",

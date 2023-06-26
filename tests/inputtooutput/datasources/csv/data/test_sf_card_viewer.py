@@ -28,6 +28,7 @@ class TestSFCardViewerRowData:
         used_amount = "195"
         balance = "3601"
         note = ""
+        expected_used_amount = 195
         sf_card_viewer_row_data = RowDataFactory(SFCardViewerRowData).create(
             [
                 used_date,
@@ -40,15 +41,16 @@ class TestSFCardViewerRowData:
                 used_amount,
                 balance,
                 note,
-            ]
+            ],
         )
         assert sf_card_viewer_row_data.is_commuter_pass_enter == is_commuter_pass_enter
         assert sf_card_viewer_row_data.railway_company_name_enter == railway_company_name_enter
         assert sf_card_viewer_row_data.station_name_enter == station_name_enter
         assert sf_card_viewer_row_data.is_commuter_pass_exit == is_commuter_pass_exit
         assert sf_card_viewer_row_data.railway_company_name_exit == railway_company_name_exit
-        assert sf_card_viewer_row_data.used_amount == 195
+        assert sf_card_viewer_row_data.used_amount == expected_used_amount
         assert sf_card_viewer_row_data.balance == balance
         assert sf_card_viewer_row_data.note == Note.EMPTY
-        assert sf_card_viewer_row_data.date == datetime(2018, 11, 13, 0, 0)
+        # Reason: Time is not used in this process.
+        assert sf_card_viewer_row_data.date == datetime(2018, 11, 13, 0, 0)  # noqa: DTZ001
         assert sf_card_viewer_row_data.store_name == station_name_exit

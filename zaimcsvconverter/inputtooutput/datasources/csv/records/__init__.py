@@ -2,13 +2,11 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from datetime import datetime
-from typing import Any, Callable, Generic, Optional, TypeVar
+from typing import Any, Callable, Generic, TYPE_CHECKING, TypeVar
 
 from errorcollector import MultipleErrorCollector, SingleErrorCollector
 
 from zaimcsvconverter.exceptions import InvalidCellError, UndefinedContentError
-from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.inputtooutput.datasources.csv.data import (
     TypeVarInputItemRowData,
@@ -18,11 +16,16 @@ from zaimcsvconverter.inputtooutput.datasources.csv.data import (
 )
 from zaimcsvconverter.models import Item, Store
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
+    from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
+
 
 class InputRow(Generic[TypeVarInputRowData], AbstractInputRecord):
     """This class implements row model of CSV."""
 
-    def __init__(self, input_row_data: TypeVarInputRowData):
+    def __init__(self, input_row_data: TypeVarInputRowData) -> None:
         self.list_error: list[InvalidCellError] = []
         self.date: datetime = input_row_data.date
 
@@ -47,20 +50,22 @@ class InputContentRow(InputRow[TypeVarInputRowData]):
 
     @abstractmethod
     def get_report_undefined_content_error(self) -> list[list[str]]:
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
     """This class implements row model of CSV including store name data (disallow empty)."""
 
     def __init__(
-        self, input_store_row_data: TypeVarInputStoreRowData, file_csv_convert_context_store: FileCsvConvertContext
-    ):
+        self,
+        input_store_row_data: TypeVarInputStoreRowData,
+        file_csv_convert_context_store: FileCsvConvertContext,
+    ) -> None:
         super().__init__(input_store_row_data)
         self._file_csv_convert_store: FileCsvConvertContext = file_csv_convert_context_store
         self.store_name: str = input_store_row_data.store_name
-        self._store: Optional[Store] = None
-        self.undefined_content_error_store: Optional[UndefinedContentError] = None
+        self._store: Store | None = None
+        self.undefined_content_error_store: UndefinedContentError | None = None
 
     @property
     def store(self) -> Store:
@@ -84,7 +89,8 @@ class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
     @property
     def validate(self) -> bool:
         self.stock_undefined_content_error_store(
-            lambda: self.store, f"Store name has not been defined in convert table CSV. Store name = {self.store_name}"
+            lambda: self.store,
+            f"Store name has not been defined in convert table CSV. Store name = {self.store_name}",
         )
         return super().validate or self.undefined_content_error_store is not None
 
@@ -100,13 +106,17 @@ class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
 class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
     """This class implements row model of CSV including item name data (disallow empty)."""
 
-    def __init__(self, file_csv_convert_item: FileCsvConvertContext, input_item_row_data: TypeVarInputItemRowData):
+    def __init__(
+        self,
+        file_csv_convert_item: FileCsvConvertContext,
+        input_item_row_data: TypeVarInputItemRowData,
+    ) -> None:
         super().__init__(input_item_row_data)
         self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_item
         self.store_name: str = ""
         self.item_name: str = input_item_row_data.item_name
-        self._item: Optional[Item] = None
-        self.undefined_content_error_item: Optional[UndefinedContentError] = None
+        self._item: Item | None = None
+        self.undefined_content_error_item: UndefinedContentError | None = None
 
     @property
     @abstractmethod
@@ -135,7 +145,8 @@ class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
     @property
     def validate(self) -> bool:
         self.stock_undefined_content_error_item(
-            lambda: self.item, f"Item name has not been defined in convert table CSV. Item name = {self.item_name}"
+            lambda: self.item,
+            f"Item name has not been defined in convert table CSV. Item name = {self.item_name}",
         )
         return super().validate or self.undefined_content_error_item is not None
 
@@ -156,13 +167,13 @@ class InputStoreItemRow(InputStoreRow[TypeVarInputStoreItemRowData]):
         input_store_item_row_data: TypeVarInputStoreItemRowData,
         file_csv_convert_context_store: FileCsvConvertContext,
         file_csv_convert_context_item: FileCsvConvertContext,
-    ):
+    ) -> None:
         super().__init__(input_store_item_row_data, file_csv_convert_context_store)
         self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_context_item
         self.store_name: str = ""
         self.item_name: str = input_store_item_row_data.item_name
-        self._item: Optional[Item] = None
-        self.undefined_content_error_item: Optional[UndefinedContentError] = None
+        self._item: Item | None = None
+        self.undefined_content_error_item: UndefinedContentError | None = None
 
     @property
     def item(self) -> Item:
@@ -186,7 +197,8 @@ class InputStoreItemRow(InputStoreRow[TypeVarInputStoreItemRowData]):
     @property
     def validate(self) -> bool:
         self.stock_undefined_content_error_item(
-            lambda: self.item, f"Item name has not been defined in convert table CSV. Item name = {self.item_name}"
+            lambda: self.item,
+            f"Item name has not been defined in convert table CSV. Item name = {self.item_name}",
         )
         return super().validate or self.undefined_content_error_item is not None
 

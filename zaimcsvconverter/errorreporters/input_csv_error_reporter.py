@@ -1,6 +1,7 @@
 """This module implements error report process for input CSV."""
 from abc import ABC, abstractmethod
-from typing import Generator, Generic, Union
+from collections.abc import Generator
+from typing import Generic, Union
 
 from zaimcsvconverter.inputtooutput.datasources.csv.csv import Csv
 from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
@@ -17,7 +18,7 @@ class DataSourceErrorReporter(ABC):
 class InputCsvErrorReporter(Generic[TypeVarInputRow, TypeVarInputRowData], DataSourceErrorReporter):
     """This class implements error report process for input CSV."""
 
-    def __init__(self, csv: Csv[TypeVarInputRow, TypeVarInputRowData]):
+    def __init__(self, csv: Csv[TypeVarInputRow, TypeVarInputRowData]) -> None:
         self.csv = csv
 
     def __iter__(self) -> Generator[list[Union[int, str]], None, None]:
@@ -37,4 +38,4 @@ class DataSourceErrorReporterFactory:
     def create(data_source: DataSource) -> DataSourceErrorReporter:
         if isinstance(data_source, Csv):
             return InputCsvErrorReporter(data_source)
-        raise TypeError()
+        raise TypeError

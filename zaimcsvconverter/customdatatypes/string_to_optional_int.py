@@ -17,7 +17,7 @@ Number = Union[int, float, Decimal]
 
 if TYPE_CHECKING:
     # Reason: Prioritize typing
-    from pydantic.types import CallableGenerator  # type: ignore
+    from pydantic.types import CallableGenerator  # type: ignore[attr-defined]
 
 
 class StringToOptionalInt(ConstrainedInt):
@@ -32,30 +32,29 @@ class StringToOptionalInt(ConstrainedInt):
 
     @classmethod
     def optional_integer_must_be_from_str(cls, value: Any) -> Optional[int]:
+        """Optional integer must be from str."""
         if not isinstance(value, str):
-            raise TypeError("string required")
-        if value == "":
+            msg = "string required"
+            raise TypeError(msg)
+        if not value:
             return None
         return int(value)
 
 
-def constringtooptionalint(
+# Reason: To follow pydantic constr interface.
+def constringtooptionalint(  # noqa: PLR0913
     *,
     strict: bool = False,
-    # Reason: To follow pydantic constr interface.
     gt: Optional[int] = None,  # pylint: disable=invalid-name
     ge: Optional[int] = None,  # pylint: disable=invalid-name
     lt: Optional[int] = None,  # pylint: disable=invalid-name
     le: Optional[int] = None,  # pylint: disable=invalid-name
-    multiple_of: Optional[int] = None
+    multiple_of: Optional[int] = None,
 ) -> type[int]:
     """Optional pydantic conint from str."""
     # use kwargs then define conf in a dict to aid with IDE type hinting
-    namespace = dict(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of)
+    namespace = {"strict": strict, "gt": gt, "ge": ge, "lt": lt, "le": le, "multiple_of": multiple_of}
     return type("ConstrainedStringToOptionalIntValue", (StringToOptionalInt,), namespace)
 
 
-if TYPE_CHECKING:
-    ConstrainedStringToOptionalInt = Optional[int]
-else:
-    ConstrainedStringToOptionalInt = constringtooptionalint()
+ConstrainedStringToOptionalInt = Optional[int] if TYPE_CHECKING else constringtooptionalint()

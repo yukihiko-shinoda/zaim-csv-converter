@@ -1,3 +1,4 @@
+"""Test for GoldPointCardPlusRowFactory."""
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -12,7 +13,8 @@ class TestGoldPointCardPlusRowFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "argument, expected", [(InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC, GoldPointCardPlusRow)]
+        ("argument", "expected"),
+        [(InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC, GoldPointCardPlusRow)],
     )
     @pytest.mark.usefixtures("database_session_stores_gold_point_card_plus")
     def test_create(argument: GoldPointCardPlusRowData, expected: type[GoldPointCardPlusRow]) -> None:

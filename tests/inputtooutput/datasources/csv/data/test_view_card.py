@@ -29,6 +29,7 @@ class TestViewCardRowData:
         local_currency_amount = ""
         currency_abbreviation = ""
         exchange_rate = ""
+        expected_billing_amount_current_time = 524
         view_card_row_data = RowDataFactory(ViewCardRowData).create(
             [
                 used_date,
@@ -42,8 +43,9 @@ class TestViewCardRowData:
                 local_currency_amount,
                 currency_abbreviation,
                 exchange_rate,
-            ]
+            ],
         )
-        assert view_card_row_data.date == datetime(2020, 3, 31, 0, 0)
+        # Reason: Time is not used in this process.
+        assert view_card_row_data.date == datetime(2020, 3, 31, 0, 0)  # noqa: DTZ001
         assert view_card_row_data.store_name == used_place
-        assert view_card_row_data.billing_amount_current_time == 524
+        assert view_card_row_data.billing_amount_current_time == expected_billing_amount_current_time

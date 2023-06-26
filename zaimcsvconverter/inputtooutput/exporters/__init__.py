@@ -5,8 +5,8 @@ from typing import Any, Generic, TypeVar
 from zaimcsvconverter.context_manager import ContextManager
 
 
-# Reason: Abstract class. pylint: disable=too-few-public-methods
-class OutputRecord(ABC):
+# Reason: Abstract class to support other application than Zaim pylint: disable=too-few-public-methods
+class OutputRecord(ABC):  # noqa: B024
     pass
 
 

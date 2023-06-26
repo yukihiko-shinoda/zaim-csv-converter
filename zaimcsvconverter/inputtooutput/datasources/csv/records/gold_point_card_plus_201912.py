@@ -1,5 +1,5 @@
 """This module implements row model of GOLD POINT CARD+ CSV version 201912."""
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -14,7 +14,7 @@ class GoldPointCardPlus201912Row(InputStoreRow[GoldPointCardPlus201912RowData]):
 
     OTHERS_RETURN = "返品"
 
-    def __init__(self, row_data: GoldPointCardPlus201912RowData):
+    def __init__(self, row_data: GoldPointCardPlus201912RowData) -> None:
         super().__init__(row_data, FileCsvConvert.GOLD_POINT_CARD_PLUS.value)
         self.payed_amount: int = row_data.payed_amount
         self.others: str = row_data.others

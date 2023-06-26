@@ -30,9 +30,11 @@ class ViewCardZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[ViewCardRow, 
 class ViewCardZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[ViewCardRow, ViewCardRowData]):
     """This class implements select steps from GOLD POINT CARD + Viewer input row to Zaim row converter."""
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
-        self, input_row: Kind1[ViewCardRow, ViewCardRowData], path_csv_file: Path
+    def create(
+        self,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[ViewCardRow, ViewCardRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[ViewCardRow, ViewCardRowData]:
         return ViewCardZaimPaymentRowConverter(input_row)

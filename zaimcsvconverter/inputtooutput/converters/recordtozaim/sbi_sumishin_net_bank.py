@@ -21,7 +21,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records.sbi_sumishin_net_ban
 
 
 class SBISumishinNetBankZaimPaymentRowConverter(
-    ZaimPaymentRowStoreConverter[SBISumishinNetBankWithdrawalRow, SBISumishinNetBankRowData]
+    ZaimPaymentRowStoreConverter[SBISumishinNetBankWithdrawalRow, SBISumishinNetBankRowData],
 ):
     """This class implements convert steps from MUFG input row to Zaim income row."""
 
@@ -32,11 +32,11 @@ class SBISumishinNetBankZaimPaymentRowConverter(
     @property
     def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.withdrawal_amount
+        return self.input_row.withdrawal_amount  # type: ignore[no-any-return, has-type]
 
 
 class SBISumishinNetBankWithdrawalZaimTransferRowConverter(
-    ZaimTransferRowConverter[SBISumishinNetBankWithdrawalRow, SBISumishinNetBankRowData]
+    ZaimTransferRowConverter[SBISumishinNetBankWithdrawalRow, SBISumishinNetBankRowData],
 ):
     """This class implements convert steps from MUFG income input row to Zaim transfer row."""
 
@@ -51,11 +51,11 @@ class SBISumishinNetBankWithdrawalZaimTransferRowConverter(
     @property
     def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.withdrawal_amount
+        return self.input_row.withdrawal_amount  # type: ignore[no-any-return, has-type]
 
 
 class SBISumishinNetBankZaimIncomeRowConverter(
-    ZaimIncomeRowStoreConverter[SBISumishinNetBankDepositRow, SBISumishinNetBankRowData]
+    ZaimIncomeRowStoreConverter[SBISumishinNetBankDepositRow, SBISumishinNetBankRowData],
 ):
     """This class implements convert steps from MUFG input row to Zaim income row."""
 
@@ -66,11 +66,11 @@ class SBISumishinNetBankZaimIncomeRowConverter(
     @property
     def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.deposit_amount
+        return self.input_row.deposit_amount  # type: ignore[no-any-return, has-type]
 
 
 class SBISumishinNetBankDepositZaimTransferRowConverter(
-    ZaimTransferRowConverter[SBISumishinNetBankDepositRow, SBISumishinNetBankRowData]
+    ZaimTransferRowConverter[SBISumishinNetBankDepositRow, SBISumishinNetBankRowData],
 ):
     """This class implements convert steps from MUFG income input row to Zaim transfer row."""
 
@@ -85,11 +85,11 @@ class SBISumishinNetBankDepositZaimTransferRowConverter(
     @property
     def amount(self) -> int:
         # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.deposit_amount
+        return self.input_row.deposit_amount  # type: ignore[no-any-return, has-type]
 
 
 class SBISumishinNetBankZaimRowConverterFactory(
-    CsvRecordToZaimRowConverterFactory[SBISumishinNetBankRow, SBISumishinNetBankRowData]
+    CsvRecordToZaimRowConverterFactory[SBISumishinNetBankRow, SBISumishinNetBankRowData],
 ):
     """This class implements select steps from MUFG input row to Zaim row converter."""
 
@@ -98,10 +98,12 @@ class SBISumishinNetBankZaimRowConverterFactory(
     KEY_TRANSACTION_TYPE_TRANSACTION_WITH_OTHERS = "transaction_with_others"
     KEY_TRANSACTION_TYPE_TRANSFER = "transfer"
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
-        self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData], path_csv_file: Path
+    def create(
+        self,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData]:
         dictionary: dict[
             str,
@@ -129,7 +131,7 @@ class SBISumishinNetBankZaimRowConverterFactory(
         instance_type = self.check_instance_type(input_row)
         transaction_type = self.check_transaction_type(input_row)
         # Reason: The returns can't detect correct type limited by if instance block.
-        converter = dictionary[instance_type][transaction_type](input_row)  # type: ignore
+        converter = dictionary[instance_type][transaction_type](input_row)  # type: ignore[arg-type]
         return cast(ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData], converter)
 
     def check_transaction_type(self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]) -> str:

@@ -13,7 +13,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records import InputStoreIte
 class PayPalRow(InputStoreItemRow[PayPalRowData]):
     """This class implements row model of Amazon.co.jp CSV."""
 
-    def __init__(self, row_data: PayPalRowData):
+    def __init__(self, row_data: PayPalRowData) -> None:
         super().__init__(row_data, FileCsvConvert.PAY_PAL_STORE.value, FileCsvConvert.PAY_PAL_ITEM.value)
         self.status: Status = row_data.status
         self.gross: int = row_data.gross
@@ -31,7 +31,7 @@ class PayPalRow(InputStoreItemRow[PayPalRowData]):
 
     def check_net_is_gross_plus_fee(self) -> None:
         if self.net != self.gross + self.fee:
-            raise ValueError()
+            raise ValueError
 
     @property
     def is_row_to_skip(self) -> bool:

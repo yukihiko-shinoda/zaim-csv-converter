@@ -17,5 +17,7 @@ if TYPE_CHECKING:
     StrictStringWithCommaToInt = int
 else:
     StrictStringWithCommaToInt = constringtoint(
-        "ConstrainedStringWithCommaToIntValue", StringWithCommaToInt, strict=True
+        "ConstrainedStringWithCommaToIntValue",
+        StringWithCommaToInt,
+        strict=True,
     )

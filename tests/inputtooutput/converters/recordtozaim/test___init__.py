@@ -39,7 +39,7 @@ class TestZaimRowConverterFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, account, input_row_data, expected",
+        ("database_session_with_schema", "account", "input_row_data", "expected"),
         [
             # Case when WAON payment
             (
@@ -170,7 +170,7 @@ class TestZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test_select_factory(
         account: Account,
         input_row_data: InputRowData,

@@ -29,12 +29,23 @@ class TestMufgZaimIncomeRowConverter:
     @staticmethod
     @pytest.mark.parametrize(
         (
-            "mufg_row_data, expected_date, expected_store, config_transfer_account_name, expect_cash_flow_target, "
-            "expected_amount"
+            "mufg_row_data",
+            "expected_date",
+            "expected_store",
+            "config_transfer_account_name",
+            "expect_cash_flow_target",
+            "expected_amount",
         ),
         [
             #  1. income and not by card
-            (InstanceResource.ROW_DATA_MUFG_INCOME_NOT_CARD, "2018-10-01", "フリコミモト－アカウント", "お財布", "三菱UFJ銀行", 10000),
+            (
+                InstanceResource.ROW_DATA_MUFG_INCOME_NOT_CARD,
+                "2018-10-01",
+                "フリコミモト－アカウント",  # noqa: RUF001
+                "お財布",
+                "三菱UFJ銀行",
+                10000,
+            ),
             #  2. transfer and not defined transfer target on convert table
             (
                 InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT,
@@ -46,7 +57,7 @@ class TestMufgZaimIncomeRowConverter:
             ),
         ],
     )
-    @pytest.mark.usefixtures("config_transfer_account_name", "yaml_config_load", "database_session_stores_mufg")
+    @pytest.mark.usefixtures("config_transfer_account_name", "_yaml_config_load", "database_session_stores_mufg")
     def test(
         mufg_row_data: MufgRowData,
         expected_date: str,
@@ -65,7 +76,7 @@ class TestMufgZaimIncomeRowConverter:
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
         assert zaim_row_data.store_name == expected_store
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_target == expect_cash_flow_target
         assert zaim_row_data.amount_income == expected_amount
 
@@ -75,7 +86,7 @@ class TestMufgZaimPaymentRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_mufg")
     def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 3628
@@ -84,7 +95,7 @@ class TestMufgZaimPaymentRowConverter:
         account_context = Account.MUFG.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(
-            InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS
+            InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS,
         )
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
@@ -93,9 +104,9 @@ class TestMufgZaimPaymentRowConverter:
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-11-28"
         assert zaim_row_data.store_name == store_name
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_source == config_account_name
-        assert zaim_row_data.note == ""
+        assert not zaim_row_data.note
         assert zaim_row_data.amount_payment == expected_amount
 
 
@@ -105,10 +116,10 @@ class TestMufgZaimTransferRowConverter:
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        "mufg_row_data, expected_date, config_transfer_account_name, config_account_name, expected_amount",
+        ("mufg_row_data", "expected_date", "config_transfer_account_name", "config_account_name", "expected_amount"),
         [(InstanceResource.ROW_DATA_MUFG_INCOME_CARD, "2018-10-01", "お財布", "三菱UFJ銀行", 10000)],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_mufg")
     def test_input_row(
         mufg_row_data: MufgRowData,
         expected_date: str,
@@ -126,15 +137,15 @@ class TestMufgZaimTransferRowConverter:
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
-        assert zaim_row_data.store_name == ""
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.store_name
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_source == config_transfer_account_name
         assert zaim_row_data.cash_flow_target == config_account_name
         assert zaim_row_data.amount_transfer == expected_amount
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_mufg")
     def test_payment_row() -> None:
         """Arguments should set into properties."""
         expected_amount = 9000
@@ -149,15 +160,15 @@ class TestMufgZaimTransferRowConverter:
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-11-05"
-        assert zaim_row_data.store_name == ""
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.store_name
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_source == config_account_name
         assert zaim_row_data.cash_flow_target == config_transfer_account_name
         assert zaim_row_data.amount_transfer == expected_amount
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_mufg")
     def test_transfer_income_row() -> None:
         """Arguments should set into properties."""
         expected_amount = 10000
@@ -166,22 +177,22 @@ class TestMufgZaimTransferRowConverter:
         account_context = Account.MUFG.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(
-            InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_OWN_ACCOUNT
+            InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_OWN_ACCOUNT,
         )
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-10-20"
-        assert zaim_row_data.store_name == ""
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.store_name
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_source == "お財布"
         assert zaim_row_data.cash_flow_target == transfer_target
         assert zaim_row_data.amount_transfer == expected_amount
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_mufg")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_mufg")
     def test_transfer_payment_row() -> None:
         """Arguments should set into properties."""
         expected_amount = 59260
@@ -190,15 +201,15 @@ class TestMufgZaimTransferRowConverter:
         account_context = Account.MUFG.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(
-            InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_GOLD_POINT_MARKETING
+            InstanceResource.ROW_DATA_MUFG_TRANSFER_PAYMENT_GOLD_POINT_MARKETING,
         )
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-10-29"
-        assert zaim_row_data.store_name == ""
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.store_name
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_source == config_account_name
         assert zaim_row_data.cash_flow_target == "ゴールドポイントカード・プラス"
         assert zaim_row_data.amount_transfer == expected_amount
@@ -210,7 +221,7 @@ class TestMufgZaimRowConverterFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, input_row_data, expected",
+        ("database_session_with_schema", "input_row_data", "expected"),
         [
             # Case when MUFG income by card
             (
@@ -257,7 +268,7 @@ class TestMufgZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test_success(
         input_row_data: MufgRowData,
         expected: type[ZaimRowConverter[InputRow[InputRowData], InputRowData]],

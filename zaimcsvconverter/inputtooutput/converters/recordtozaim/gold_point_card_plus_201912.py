@@ -20,7 +20,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records.gold_point_card_plus
 
 
 class GoldPointCardPlus201912ZaimTransferRowConverter(
-    ZaimTransferRowConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
+    ZaimTransferRowConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData],
 ):
     """This class implements convert steps from GOLD POINT CARD + input row to Zaim transfer row."""
 
@@ -39,7 +39,7 @@ class GoldPointCardPlus201912ZaimTransferRowConverter(
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
 class GoldPointCardPlus201912ZaimPaymentRowConverter(
-    ZaimPaymentRowStoreConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
+    ZaimPaymentRowStoreConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData],
 ):
     """This class implements convert steps from GOLD POINT CARD + input row to Zaim payment row."""
 
@@ -54,14 +54,16 @@ class GoldPointCardPlus201912ZaimPaymentRowConverter(
 
 
 class GoldPointCardPlus201912ZaimRowConverterFactory(
-    CsvRecordToZaimRowConverterFactory[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]
+    CsvRecordToZaimRowConverterFactory[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData],
 ):
     """This class implements select steps from GOLD POINT CARD + Viewer input row to Zaim row converter."""
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
-        self, input_row: Kind1[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData], path_csv_file: Path
+    def create(
+        self,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]:
         dekinded_input_row = cast(GoldPointCardPlus201912Row, input_row)
         if dekinded_input_row.store.transfer_target:

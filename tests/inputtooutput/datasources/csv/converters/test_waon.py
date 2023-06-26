@@ -1,3 +1,4 @@
+"""Tests for WaonRowFactory."""
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -12,7 +13,7 @@ class TestWaonRowFactory:
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        "argument, property_name_true",
+        ("argument", "property_name_true"),
         [
             (InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI, "is_payment"),
             (InstanceResource.ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO, "is_charge"),

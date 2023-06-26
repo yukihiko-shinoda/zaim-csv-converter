@@ -2,7 +2,7 @@
 from datetime import datetime
 
 import pytest
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
@@ -16,27 +16,30 @@ class TestViewCardRow:
     # pylint: disable=protected-access,too-many-arguments,unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "view_card_row_data, expected_date, expected_store_name_zaim, expected_is_row_to_skip",
+        ("view_card_row_data", "expected_date", "expected_store_name_zaim", "expected_is_row_to_skip"),
         [
             (
                 InstanceResource.ROW_DATA_VIEW_CARD_ITABASHI_STATION_AUTO_CHARGE,
-                datetime(2020, 3, 21, 0, 0, 0),
+                # Reason: Time is not used in this process.
+                datetime(2020, 3, 21, 0, 0, 0),  # noqa: DTZ001
                 None,
                 True,
             ),
             (
                 InstanceResource.ROW_DATA_VIEW_CARD_ANNUAL_FEE,
-                datetime(2020, 3, 31, 0, 0, 0),
+                # Reason: Time is not used in this process.
+                datetime(2020, 3, 31, 0, 0, 0),  # noqa: DTZ001
                 "ビューカード　ビューカードセンター",
                 False,
             ),
         ],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_view_card")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_view_card")
     def test_init(
         view_card_row_data: ViewCardRowData,
         expected_date: datetime,
         expected_store_name_zaim: str,
+        *,
         expected_is_row_to_skip: bool,
     ) -> None:
         """Arguments should set into properties.
@@ -50,7 +53,7 @@ class TestViewCardRow:
         if expected_store_name_zaim is None:
             with pytest.raises(NoResultFound):
                 # pylint: disable=unused-variable
-                store_name = row.store  # noqa
+                store_name = row.store  # noqa: F841
         else:
             assert isinstance(row.store, Store)
             # noinspection PyUnresolvedReferences

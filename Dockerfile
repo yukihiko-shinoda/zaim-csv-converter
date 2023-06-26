@@ -7,7 +7,7 @@ COPY Pipfile Pipfile.lock /workspace/
 # see:
 # - Fail to pipenv update due to MetadataGenerationFailed · Issue #5377 · pypa/pipenv
 #   https://github.com/pypa/pipenv/issues/5377
-RUN pip --no-cache-dir install pipenv==2022.8.5 \
+RUN pip --no-cache-dir install pipenv==2023.6.2 \
  && pipenv install --deploy --system \
  && pip uninstall -y pipenv virtualenv-clone virtualenv
 COPY . /workspace
@@ -20,7 +20,7 @@ ENV PIPENV_VENV_IN_PROJECT=1
 # see:
 # - Fail to pipenv update due to MetadataGenerationFailed · Issue #5377 · pypa/pipenv
 #   https://github.com/pypa/pipenv/issues/5377
-RUN pip --no-cache-dir install pipenv==2022.8.5 \
+RUN pip --no-cache-dir install pipenv==2023.6.2 \
  && pipenv sync --dev
 ENTRYPOINT [ "pipenv", "run" ]
 CMD ["pytest"]

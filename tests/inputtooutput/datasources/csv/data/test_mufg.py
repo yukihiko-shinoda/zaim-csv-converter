@@ -29,6 +29,7 @@ class TestMufgRowData:
         note = ""
         is_uncapitalized = ""
         cash_flow_kind = "振替支払い"
+        expected_payed_amount = 3628
         mufg_row_data = RowDataFactory(MufgRowData).create(
             [
                 date,
@@ -40,16 +41,17 @@ class TestMufgRowData:
                 note,
                 is_uncapitalized,
                 cash_flow_kind,
-            ]
+            ],
         )
         assert mufg_row_data.summary == summary
-        assert mufg_row_data.payed_amount == 3628
+        assert mufg_row_data.payed_amount == expected_payed_amount
         assert mufg_row_data.deposit_amount is None
         assert mufg_row_data.balance == balance
         assert mufg_row_data.note == note
         assert mufg_row_data.is_uncapitalized == is_uncapitalized
         assert mufg_row_data.cash_flow_kind == CashFlowKind.TRANSFER_PAYMENT
-        assert mufg_row_data.date == datetime(2018, 11, 28, 0, 0)
+        # Reason: Time is not used in this process.
+        assert mufg_row_data.date == datetime(2018, 11, 28, 0, 0)  # noqa: DTZ001
         assert mufg_row_data.store_name == summary_content
 
     # pylint: disable=unused-argument
@@ -64,4 +66,6 @@ class TestMufgRowData:
         assert len(errors) == 1
         error = errors[0]
         assert error["loc"] == ("cash_flow_kind",)
-        assert error["msg"] == "value is not a valid enumeration member; permitted: '入金', '支払い', '振替入金', '振替支払い'"
+        assert error["msg"] == "".join(
+            ["value is not a valid enumeration member; permitted: '入金', '支払い', '振替入金', '振替支払い'"],
+        )

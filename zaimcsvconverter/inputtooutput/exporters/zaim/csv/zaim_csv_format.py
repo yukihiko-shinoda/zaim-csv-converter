@@ -3,10 +3,13 @@
 
 # Reason: Guarding for the future when it comes to calculating constants
 # pylint: disable=too-few-public-methods
+from typing import ClassVar
+
+
 class ZaimCsvFormat:
     """This class implements Zaim CSV format."""
 
-    HEADER = [
+    HEADER: ClassVar[list[str]] = [
         "日付",
         "方法",
         "カテゴリ",

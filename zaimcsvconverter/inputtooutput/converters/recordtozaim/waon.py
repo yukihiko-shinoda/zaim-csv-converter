@@ -65,10 +65,12 @@ class WaonZaimTransferRowConverter(ZaimTransferRowConverter[WaonRow, WaonRowData
 class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, WaonRowData]):
     """This class implements select steps from WAON input row to Zaim row converter."""
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
-        self, input_row: Kind1[WaonRow, WaonRowData], path_csv_file: Path
+    def create(
+        self,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[WaonRow, WaonRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[WaonRow, WaonRowData]:
         if isinstance(input_row, WaonChargeRow):
             return self._create(input_row)
@@ -80,10 +82,10 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
     def _create(self, input_row: WaonChargeRow) -> ZaimRowConverter[WaonRow, WaonRowData]:
         if input_row.is_charge_by_point or input_row.is_charge_by_download_value:
             # Reason: The returns can't detect correct type limited by if instance block.
-            return WaonZaimIncomeRowConverter(input_row)  # type: ignore
+            return WaonZaimIncomeRowConverter(input_row)  # type: ignore[arg-type,return-value]
         if input_row.is_auto_charge or input_row.is_charge_by_bank_account or input_row.is_charge_by_cash:
             # Reason: The returns can't detect correct type limited by if instance block.
-            return WaonZaimTransferRowConverter(input_row)  # type: ignore
+            return WaonZaimTransferRowConverter(input_row)  # type: ignore[arg-type]
         raise ValueError(self.build_message(input_row))
 
     @staticmethod

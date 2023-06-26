@@ -26,7 +26,7 @@ class TestGoldPointCardPlus201912ZaimPaymentRowConverter:
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        "gold_point_card_plus_201912_row_data, expected_date, expected_store_name_zaim, expected_use_amount",
+        ("gold_point_card_plus_201912_row_data", "expected_date", "expected_store_name_zaim", "expected_use_amount"),
         [
             (
                 InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC,
@@ -42,7 +42,7 @@ class TestGoldPointCardPlus201912ZaimPaymentRowConverter:
             ),
         ],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_gold_point_card_plus")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_gold_point_card_plus")
     def test(
         gold_point_card_plus_201912_row_data: GoldPointCardPlus201912RowData,
         expected_date: str,
@@ -60,7 +60,7 @@ class TestGoldPointCardPlus201912ZaimPaymentRowConverter:
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == expected_date
         assert zaim_row_data.store_name == expected_store_name_zaim
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_source == "ヨドバシゴールドポイントカード・プラス"
         assert zaim_row_data.amount_payment == expected_use_amount
 
@@ -71,7 +71,7 @@ class TestGoldPointCardPlus201912ZaimRowConverterFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, input_row_data, expected",
+        ("database_session_with_schema", "input_row_data", "expected"),
         [
             # Case when Gold Point Card Plus payment
             (
@@ -88,9 +88,10 @@ class TestGoldPointCardPlus201912ZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test_select_factory(
-        input_row_data: GoldPointCardPlus201912RowData, expected: type[GoldPointCardPlus201912ZaimPaymentRowConverter]
+        input_row_data: GoldPointCardPlus201912RowData,
+        expected: type[GoldPointCardPlus201912ZaimPaymentRowConverter],
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
         account_context = Account.GOLD_POINT_CARD_PLUS_201912.value

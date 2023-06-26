@@ -16,23 +16,25 @@ class TestWaonRow:
     # pylint: disable=too-many-arguments,unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "waon_row_data, expected_date, expected_store_name_zaim, expected_amount",
+        ("waon_row_data", "expected_date", "expected_store_name_zaim", "expected_amount"),
         [
             (
                 InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI,
-                datetime(2018, 8, 7, 0, 0, 0),
+                # Reason: Time is not used in this process.
+                datetime(2018, 8, 7, 0, 0, 0),  # noqa: DTZ001
                 "ファミリーマート　かぶと町永代通り店",
                 129,
             ),
             (
                 InstanceResource.ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO,
-                datetime(2018, 8, 30, 0, 0, 0),
+                # Reason: Time is not used in this process.
+                datetime(2018, 8, 30, 0, 0, 0),  # noqa: DTZ001
                 "イオンスタイル　板橋前野町",
                 1489,
             ),
         ],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_basic_store_waon")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_basic_store_waon")
     def test_init_success(
         waon_row_data: WaonRowData,
         expected_date: datetime,
@@ -55,12 +57,30 @@ class TestWaonRow:
     def test_is_row_to_skip() -> None:
         """WaonRow which express download point should be row to skip."""
         waon_row_data_factory = RowDataFactory(WaonRowData)
-        assert WaonRow(waon_row_data_factory.create(["2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-"])).is_row_to_skip
         assert WaonRow(
-            waon_row_data_factory.create(["2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（アップロード）", "-"])
+            waon_row_data_factory.create(["2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-"]),
         ).is_row_to_skip
         assert WaonRow(
-            waon_row_data_factory.create(["2020/10/23", "イオン銀行ＭＳ板橋区役所前１", "9,863円", "WAON移行（ダウンロード）", "-"])
+            waon_row_data_factory.create(
+                [
+                    "2020/10/23",
+                    "イオン銀行ＭＳ板橋区役所前１",
+                    "9,863円",
+                    "WAON移行（アップロード）",  # noqa: RUF001
+                    "-",
+                ],
+            ),
+        ).is_row_to_skip
+        assert WaonRow(
+            waon_row_data_factory.create(
+                [
+                    "2020/10/23",
+                    "イオン銀行ＭＳ板橋区役所前１",
+                    "9,863円",
+                    "WAON移行（ダウンロード）",  # noqa: RUF001
+                    "-",
+                ],
+            ),
         ).is_row_to_skip
 
 
@@ -74,11 +94,12 @@ class TestWaonChargeRow:
         [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
         indirect=["database_session_with_schema"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test_charge_kind_fail() -> None:
         """Property should raise ValueError when charge kind is null on WAON charge row."""
-        with pytest.raises(ValueError) as error:
+        with pytest.raises(ValueError, match=r"Charge\skind\son\scharge\srow\sis\snot\sallowed\s\"\-\"\."):
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
-            WaonChargeRow(InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO).charge_kind
-        assert str(error.value) == 'Charge kind on charge row is not allowed "-".'
+            WaonChargeRow(  # noqa: B018
+                InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO,
+            ).charge_kind

@@ -24,7 +24,7 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_sf_card_viewer")
     def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 195
@@ -32,7 +32,7 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
         account_context = Account.PASMO.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         sf_card_viewer_row = csv_record_processor.create_input_row_instance(
-            InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION
+            InstanceResource.ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION,
         )
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row, Path()))
@@ -41,7 +41,7 @@ class TestSFCardViewerZaimPaymentOnStationRowConverter:
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-11-13"
         assert zaim_row_data.store_name == "東京地下鉄株式会社　南北線後楽園駅"
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_source == config_account_name
         assert zaim_row_data.note == "メトロ 六本木一丁目 → メトロ 後楽園"
         assert zaim_row_data.amount_payment == expected_amount
@@ -52,7 +52,7 @@ class TestSFCardViewerZaimTransferRowConverter:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_sf_card_viewer")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_sf_card_viewer")
     def test() -> None:
         """Arguments should set into properties."""
         expected_amount = 3000
@@ -61,15 +61,15 @@ class TestSFCardViewerZaimTransferRowConverter:
         account_context = Account.PASMO.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         sf_card_viewer_row = csv_record_processor.create_input_row_instance(
-            InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION
+            InstanceResource.ROW_DATA_SF_CARD_VIEWER_AUTO_CHARGE_AKIHABARA_STATION,
         )
         zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(sf_card_viewer_row, Path()))
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
         assert zaim_row_data.date == "2018-11-11"
-        assert zaim_row_data.store_name == ""
-        assert zaim_row_data.item_name == ""
+        assert not zaim_row_data.store_name
+        assert not zaim_row_data.item_name
         assert zaim_row_data.cash_flow_source == config_auto_charge_source
         assert zaim_row_data.cash_flow_target == config_account_name
         assert zaim_row_data.amount_transfer == expected_amount
@@ -81,7 +81,7 @@ class TestSFCardViewerZaimRowConverterFactory:
     # pylint: disable=unused-argument
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, input_row_data, expected",
+        ("database_session_with_schema", "input_row_data", "expected"),
         [
             # Case when SF Card Viewer transportation
             (
@@ -116,7 +116,7 @@ class TestSFCardViewerZaimRowConverterFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test_success(
         input_row_data: SFCardViewerRowData,
         expected: type[ZaimRowConverter[InputRow[InputRowData], InputRowData]],

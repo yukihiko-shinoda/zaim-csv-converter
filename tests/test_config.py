@@ -1,8 +1,7 @@
 """Tests for Config."""
 from pathlib import Path
 
-# Reason: Following export method in __init__.py from Effective Python 2nd Edition item 85
-from zaimcsvconverter import Config  # type: ignore
+from zaimcsvconverter.config import Config
 
 
 class TestConfig:

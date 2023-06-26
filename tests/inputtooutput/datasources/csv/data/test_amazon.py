@@ -9,8 +9,7 @@ class TestAmazonRowData:
     """Tests for AmazonRowData."""
 
     @staticmethod
-    # pylint: disable=too-many-locals
-    def test_init_and_property() -> None:
+    def test_init_and_property() -> None:  # pylint: disable=too-many-locals
         """Tests following:
 
         - Property date should return datetime object.
@@ -19,7 +18,7 @@ class TestAmazonRowData:
         ordered_date = "2018/10/23"
         order_id = "123-4567890-1234567"
         item_name = "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"
-        note = "販売： Amazon Japan G.K.  コンディション： 新品"
+        note = "販売： Amazon Japan G.K.  コンディション： 新品"  # noqa: RUF001
         price = "4980"
         number = "1"
         subtotal_price_item = "6276"
@@ -30,13 +29,14 @@ class TestAmazonRowData:
         billing_amount = "5952"
         credit_card_billing_date = "2018/10/23"
         credit_card_billing_amount = "5952"
-        credit_card_identity = "Visa（下4けたが1234）"
+        credit_card_identity = "Visa（下4けたが1234）"  # noqa: RUF001
         url_order_summary = "https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=123-4567890-1234567"
         url_receipt = (
             "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
             "?ie=UTF8&orderID=123-4567890-1234567"
         )
         url_item = "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1"
+        expected_price = 4980
         row_data = RowDataFactory(AmazonRowData).create(
             [
                 ordered_date,
@@ -57,11 +57,11 @@ class TestAmazonRowData:
                 url_order_summary,
                 url_receipt,
                 url_item,
-            ]
+            ],
         )
         assert row_data.order_id == order_id
         assert row_data.note == note
-        assert row_data.price == 4980
+        assert row_data.price == expected_price
         assert row_data.number == 1
         assert row_data.subtotal_price_item == subtotal_price_item
         assert row_data.total_order == total_order
@@ -75,5 +75,6 @@ class TestAmazonRowData:
         assert row_data.url_order_summary == url_order_summary
         assert row_data.url_receipt == url_receipt
         assert row_data.url_item == url_item
-        assert row_data.date == datetime(2018, 10, 23, 0, 0)
+        # Reason: Time is not used in this process.
+        assert row_data.date == datetime(2018, 10, 23, 0, 0)  # noqa: DTZ001
         assert row_data.item_name == item_name

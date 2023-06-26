@@ -17,13 +17,14 @@ class TestAmazon201911DiscountRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
     def test_init() -> None:
         """Arguments should set into properties."""
         store_name = "Amazon Japan G.K."
-        item_name = "（Amazon ポイント）"
+        item_name = "（Amazon ポイント）"  # noqa: RUF001
         amazon_row = Amazon201911DiscountRow(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT)
-        assert amazon_row.date == datetime(2019, 11, 9, 0, 0, 0)
+        # Reason: Time is not used in this process.
+        assert amazon_row.date == datetime(2019, 11, 9, 0, 0, 0)  # noqa: DTZ001
         assert isinstance(amazon_row.store, Store)
         assert amazon_row.store.name_zaim == store_name
         assert isinstance(amazon_row.item, Item)
@@ -32,11 +33,10 @@ class TestAmazon201911DiscountRow:
     @staticmethod
     def test_total_order_fail() -> None:
         """Property should raise ValueError when value is None."""
-        with pytest.raises(ValueError) as error:
+        with pytest.raises(ValueError, match=r"Total\sorder\son\sdiscount\srow\sis\snot\sallowed\sempty\."):
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
-            Amazon201911DiscountRow(InstanceResource.ROW_DATA_AMAZON_201911_HUMMING_FINE).total_order
-        assert str(error.value) == "Total order on discount row is not allowed empty."
+            Amazon201911DiscountRow(InstanceResource.ROW_DATA_AMAZON_201911_HUMMING_FINE).total_order  # noqa: B018
 
 
 class TestAmazon201911ShippingHandlingRow:
@@ -44,11 +44,16 @@ class TestAmazon201911ShippingHandlingRow:
 
     @staticmethod
     def test_subtotal_price_item_fail() -> None:
-        with pytest.raises(ValueError) as error:
+        """Property should raise ValueError when subtotal price item is None."""
+        with pytest.raises(
+            ValueError,
+            match=r"Subtotal\sprice\sitem\son\sshipping\shandling\srow\sis\snot\sallowed\sempty\.",
+        ):
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
-            Amazon201911ShippingHandlingRow(InstanceResource.ROW_DATA_AMAZON_201911_HUMMING_FINE).subtotal_price_item
-        assert str(error.value) == "Subtotal price item on shipping handling row is not allowed empty."
+            Amazon201911ShippingHandlingRow(  # noqa: B018
+                InstanceResource.ROW_DATA_AMAZON_201911_HUMMING_FINE,
+            ).subtotal_price_item
 
 
 class TestAmazon201911PaymentRow:
@@ -58,15 +63,17 @@ class TestAmazon201911PaymentRow:
     # noinspection DuplicatedCode
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_item")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
     def test_init() -> None:
         """Arguments should set into properties."""
+        expected_price = 4980
         store_name = "Amazon Japan G.K."
         item_name = "Echo Dot (エコードット) 第2世代 - スマートスピーカー with Alexa、ホワイト"
         amazon_row = Amazon201911PaymentRow(InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT)
-        assert amazon_row.price == 4980
+        assert amazon_row.price == expected_price
         assert amazon_row.number == 1
-        assert amazon_row.date == datetime(2019, 11, 9, 0, 0, 0)
+        # Reason: Time is not used in this process.
+        assert amazon_row.date == datetime(2019, 11, 9, 0, 0, 0)  # noqa: DTZ001
         assert isinstance(amazon_row.store, Store)
         assert amazon_row.store.name_zaim == store_name
         assert isinstance(amazon_row.item, Item)
@@ -75,17 +82,15 @@ class TestAmazon201911PaymentRow:
     @staticmethod
     def test_price_fail() -> None:
         """Property should raise ValueError when value is None."""
-        with pytest.raises(ValueError) as error:
+        with pytest.raises(ValueError, match=r"Price\son\spayment\srow\sis\snot\sallowed\sempty\."):
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
-            Amazon201911PaymentRow(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT).price
-        assert str(error.value) == "Price on payment row is not allowed empty."
+            Amazon201911PaymentRow(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT).price  # noqa: B018
 
     @staticmethod
     def test_number_fail() -> None:
         """Property should raise ValueError when value is None."""
-        with pytest.raises(ValueError) as error:
+        with pytest.raises(ValueError, match=r"Number\son\spayment\srow\sis\snot\sallowed\sempty\."):
             # pylint: disable=expression-not-assigned
             # noinspection PyStatementEffect
-            Amazon201911PaymentRow(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT).number
-        assert str(error.value) == "Number on payment row is not allowed empty."
+            Amazon201911PaymentRow(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT).number  # noqa: B018

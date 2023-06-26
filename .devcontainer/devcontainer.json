@@ -17,31 +17,68 @@
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
 	"workspaceFolder": "/workspace",
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		"python.formatting.provider":"black",
-		"python.linting.enabled": true,
-		"python.linting.lintOnSave": true,
-		"python.linting.banditEnabled": true,
-		"python.linting.flake8Enabled": true,
-		"python.linting.mypyEnabled": true,
-		"python.linting.pydocstyleEnabled": true,
-		// VS Code displays Pylint warning: import-error that not reported in Pylint by executing CLI.
-		// "python.linting.pylintEnabled": true,
-		// This setting forcibly generate __pycache__.
-		// "python.testing.pytestEnabled": true,
-		"[python]": {
-			"editor.formatOnSave": true
-		}
-	},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"ms-python.python",
-		"bungcip.better-toml",
-		"grapecity.gc-excelviewer",
-		"streetsidesoftware.code-spell-checker"
-	]
+	"customizations": {
+		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"GitHub.copilot",
+				"ms-python.python",
+				"charliermarsh.ruff",
+				"ms-python.flake8",
+				"ms-python.pylint",
+				"bungcip.better-toml",
+				"wk-j.save-and-run",
+				"grapecity.gc-excelviewer",
+				"streetsidesoftware.code-spell-checker"
+			]
+		},
+		// Set *default* container specific settings.json values on container create.
+		"settings": {
+			"python.formatting.provider":"black",
+			"python.linting.enabled": true,
+			"python.linting.lintOnSave": true,
+			"python.linting.banditEnabled": true,
+			"python.linting.banditArgs": [
+				"--configfile",
+				"pyproject.toml"
+			],
+			"python.linting.flake8Enabled": true,
+			"python.linting.mypyEnabled": true,
+			"python.linting.pydocstyleEnabled": true,
+			// VS Code displays Pylint warning: import-error that not reported in Pylint by executing CLI.
+			// "python.linting.pylintEnabled": true,
+			// This setting forcibly generate __pycache__.
+			// "python.testing.pytestEnabled": true,
+			"[python]": {
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.fixAll": true,
+					"source.organizeImports": true
+				}
+			},
+			"ruff.organizeImports": false,
+			"emeraldwalk.runonsave": {
+				"commands": [
+					{
+						"match": ".*\\.py",
+						"cmd": "pipenv run autoflake --in-place ${file}"
+					},
+					{
+						"match": ".*\\.py",
+						"cmd": "pipenv run docformatter --in-place ${file}"
+					}
+				]
+			},
+			"cSpell.customDictionaries": {
+				"project-words": {
+				  "name": "project-words",
+				  "path": "${workspaceRoot}/project-words.txt",
+				  "description": "Words used in this project",
+				  "addWords": true
+				}
+			}
+		}	
+	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],

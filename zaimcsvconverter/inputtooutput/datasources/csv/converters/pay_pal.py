@@ -11,5 +11,5 @@ class PayPalRowFactory(InputRowFactory[PayPalRowData, PayPalRow]):
     # see:
     #   - Create your own container — returns 0.18.0 documentation
     #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
-    def create(self, input_row_data: PayPalRowData) -> PayPalRow:  # type: ignore
+    def create(self, input_row_data: PayPalRowData) -> PayPalRow:  # type: ignore[override]
         return PayPalRow(input_row_data)

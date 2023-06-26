@@ -24,7 +24,7 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import Za
 # Reason: SFCardViewer and Mobile Suica requires same specification
 #         and having common ancestor generates extra complexity.
 class SFCardViewerZaimPaymentOnSomewhereRowConverter(
-    ZaimPaymentRowConverter[SFCardViewerRow, SFCardViewerRowData]
+    ZaimPaymentRowConverter[SFCardViewerRow, SFCardViewerRowData],
 ):  # pylint: disable=duplicate-code
     """This class implements convert steps from SFCard Viewer row to Zaim payment row."""
 
@@ -60,7 +60,7 @@ class SFCardViewerZaimPaymentOnSomewhereRowConverter(
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
 class SFCardViewerZaimPaymentOnStationRowConverter(
-    ZaimPaymentRowStoreConverter[SFCardViewerEnterExitRow, SFCardViewerRowData]
+    ZaimPaymentRowStoreConverter[SFCardViewerEnterExitRow, SFCardViewerRowData],
 ):
     """This class implements convert steps from SFCard Viewer enter row to Zaim payment row."""
 
@@ -106,13 +106,15 @@ class SFCardViewerZaimTransferRowConverter(ZaimTransferRowConverter[SFCardViewer
 class SFCardViewerZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[SFCardViewerRow, SFCardViewerRowData]):
     """This class implements select steps from SFCard Viewer input row to Zaim row converter."""
 
-    def __init__(self, account_config: Callable[[], SFCardViewerConfig]):
+    def __init__(self, account_config: Callable[[], SFCardViewerConfig]) -> None:
         self._account_config = account_config
 
-    # Reason: Maybe, there are no way to resolve.
-    # The nearest issues: https://github.com/dry-python/returns/issues/708
-    def create(  # type: ignore
-        self, input_row: Kind1[SFCardViewerRow, SFCardViewerRowData], path_csv_file: Path
+    def create(
+        self,
+        # Reason: Maybe, there are no way to resolve.
+        # The nearest issues: https://github.com/dry-python/returns/issues/708
+        input_row: Kind1[SFCardViewerRow, SFCardViewerRowData],  # type: ignore[override]
+        _path_csv_file: Path,
     ) -> ZaimRowConverter[SFCardViewerRow, SFCardViewerRowData]:
         if isinstance(input_row, SFCardViewerEnterExitRow):
 
@@ -120,21 +122,24 @@ class SFCardViewerZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[SFC
                 account_config = self._account_config()
 
             # Reason: The returns can't detect correct type limited by if instance block.
-            return ConcreteSFCardViewerZaimPaymentOnStationRowConverter(input_row)  # type: ignore
+            return ConcreteSFCardViewerZaimPaymentOnStationRowConverter(
+                input_row,  # type: ignore[arg-type,return-value]
+            )
         if isinstance(input_row, SFCardViewerEnterRow):
 
             class ConcreteSFCardViewerZaimTransferRowConverter(SFCardViewerZaimTransferRowConverter):
                 account_config = self._account_config()
 
             # Reason: The returns can't detect correct type limited by if instance block.
-            return ConcreteSFCardViewerZaimTransferRowConverter(input_row)  # type: ignore
+            return ConcreteSFCardViewerZaimTransferRowConverter(input_row)  # type: ignore[arg-type,return-value]
         if isinstance(input_row, SFCardViewerRow):
 
             class ConcreteSFCardViewerZaimPaymentOnSomewhereRowConverter(
-                SFCardViewerZaimPaymentOnSomewhereRowConverter
+                SFCardViewerZaimPaymentOnSomewhereRowConverter,
             ):
                 account_config = self._account_config()
 
             return ConcreteSFCardViewerZaimPaymentOnSomewhereRowConverter(input_row)
-        raise ValueError(f"Unsupported row. class = {type(input_row)}")  # pragma: no cover
+        msg = f"Unsupported row. class = {type(input_row)}"
+        raise ValueError(msg)  # pragma: no cover
         # Reason: This line is insurance for future development so process must be not able to reach

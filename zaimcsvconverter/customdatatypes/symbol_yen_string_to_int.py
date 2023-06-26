@@ -18,5 +18,7 @@ if TYPE_CHECKING:
     StrictSymbolYenStringToInt = int
 else:
     StrictSymbolYenStringToInt = constringtoint(
-        "ConstrainedSymbolYenStringToIntValue", SymbolYenStringToInt, strict=True
+        "ConstrainedSymbolYenStringToIntValue",
+        SymbolYenStringToInt,
+        strict=True,
     )

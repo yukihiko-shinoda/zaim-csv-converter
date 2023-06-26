@@ -1,27 +1,29 @@
 """This module implements abstract row model of Zaim CSV."""
 from abc import abstractmethod
-from datetime import datetime
-from typing import List, Optional, TYPE_CHECKING, Union
+from typing import Optional, TYPE_CHECKING, Union
 
-# Reason: Pylint's bug.
-from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData  # pylint: disable=unused-import
 from zaimcsvconverter.inputtooutput.exporters import OutputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
 
 if TYPE_CHECKING:  # pragma: no cover
+    from datetime import datetime
+
     from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
         ZaimIncomeRowConverter,
         ZaimPaymentRowConverter,
         ZaimRowConverter,
         ZaimTransferRowConverter,
     )
+
+    # Reason: Pylint's bug.
+    from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData  # pylint: disable=unused-import
     from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 
 
 class ZaimRow(OutputRecord):
     """This class implements abstract row model of Zaim CSV."""
 
-    def __init__(self, zaim_row_converter: "ZaimRowConverter[InputRow[InputRowData], InputRowData]"):
+    def __init__(self, zaim_row_converter: "ZaimRowConverter[InputRow[InputRowData], InputRowData]") -> None:
         self._date: datetime = zaim_row_converter.date
 
     @property
@@ -29,7 +31,7 @@ class ZaimRow(OutputRecord):
         return self._date.strftime("%Y-%m-%d")
 
     @abstractmethod
-    def convert_to_list(self) -> List[Optional[Union[str, int]]]:
+    def convert_to_list(self) -> list[Optional[Union[str, int]]]:
         """This method converts object data to list."""
 
 
@@ -38,14 +40,14 @@ class ZaimIncomeRow(ZaimRow):
 
     METHOD: str = "income"
 
-    def __init__(self, zaim_row_converter: "ZaimIncomeRowConverter[InputRow[InputRowData], InputRowData]"):
+    def __init__(self, zaim_row_converter: "ZaimIncomeRowConverter[InputRow[InputRowData], InputRowData]") -> None:
         self._category = zaim_row_converter.category
         self._cash_flow_target = zaim_row_converter.cash_flow_target
         self._store_name = zaim_row_converter.store_name
         self._amount_income = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
-    def convert_to_list(self) -> List[Optional[Union[str, int]]]:
+    def convert_to_list(self) -> list[Optional[Union[str, int]]]:
         return [
             self._date_string,
             self.METHOD,
@@ -71,7 +73,7 @@ class ZaimPaymentRow(ZaimRow):
 
     METHOD: str = "payment"
 
-    def __init__(self, zaim_row_converter: "ZaimPaymentRowConverter[InputRow[InputRowData], InputRowData]"):
+    def __init__(self, zaim_row_converter: "ZaimPaymentRowConverter[InputRow[InputRowData], InputRowData]") -> None:
         self._category_large = zaim_row_converter.category_large
         self._category_small = zaim_row_converter.category_small
         self._cash_flow_source = zaim_row_converter.cash_flow_source
@@ -81,7 +83,7 @@ class ZaimPaymentRow(ZaimRow):
         self._amount_payment = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
-    def convert_to_list(self) -> List[Optional[Union[str, int]]]:
+    def convert_to_list(self) -> list[Optional[Union[str, int]]]:
         return [
             self._date_string,
             self.METHOD,
@@ -107,13 +109,13 @@ class ZaimTransferRow(ZaimRow):
 
     METHOD: str = "transfer"
 
-    def __init__(self, zaim_row_converter: "ZaimTransferRowConverter[InputRow[InputRowData], InputRowData]"):
+    def __init__(self, zaim_row_converter: "ZaimTransferRowConverter[InputRow[InputRowData], InputRowData]") -> None:
         self._cash_flow_source = zaim_row_converter.cash_flow_source
         self._cash_flow_target = zaim_row_converter.cash_flow_target
         self._amount_transfer = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
-    def convert_to_list(self) -> List[Optional[Union[str, int]]]:
+    def convert_to_list(self) -> list[Optional[Union[str, int]]]:
         return [
             self._date_string,
             self.METHOD,

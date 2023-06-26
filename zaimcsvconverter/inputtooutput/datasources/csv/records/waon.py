@@ -10,7 +10,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records import InputStoreRow
 class WaonRow(InputStoreRow[WaonRowData]):
     """This class implements row model of WAON CSV."""
 
-    def __init__(self, row_data: WaonRowData):
+    def __init__(self, row_data: WaonRowData) -> None:
         super().__init__(row_data, FileCsvConvert.WAON.value)
         self.used_amount: int = row_data.used_amount
         self.use_kind: UseKind = row_data.use_kind
@@ -52,20 +52,22 @@ class WaonRow(InputStoreRow[WaonRowData]):
 class WaonChargeRow(WaonRow):
     """This class implements charge row model of WAON CSV."""
 
-    def __init__(self, row_data: WaonRowData):
+    def __init__(self, row_data: WaonRowData) -> None:
         super().__init__(row_data)
         self._charge_kind: ChargeKind = row_data.charge_kind
 
     @property
     def charge_kind(self) -> ChargeKind:
         if self._charge_kind == ChargeKind.NULL:
-            raise ValueError(f'Charge kind on charge row is not allowed "{ChargeKind.NULL.value}".')
+            msg = f'Charge kind on charge row is not allowed "{ChargeKind.NULL.value}".'
+            raise ValueError(msg)
         return self._charge_kind
 
     @property
     def validate(self) -> bool:
         self.stock_error(
-            lambda: self.charge_kind, f"Charge kind in charge row is required. Charge kind = {self._charge_kind}"
+            lambda: self.charge_kind,
+            f"Charge kind in charge row is required. Charge kind = {self._charge_kind}",
         )
         return super().validate
 

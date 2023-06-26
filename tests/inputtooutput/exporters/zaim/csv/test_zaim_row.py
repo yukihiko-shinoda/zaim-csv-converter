@@ -1,7 +1,7 @@
 """Tests for zaim_row.py."""
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import cast, Type
+from typing import cast
 
 import pytest
 from returns.primitives.hkt import Kind1
@@ -43,13 +43,14 @@ class TestZaimIncomeRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_item")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_item")
     def test_all() -> None:
         """Argument should set into properties."""
+        expected_amount_income = 20
         account_context = Account.MUFG.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         mufg_row = csv_record_processor.create_input_row_instance(
-            InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT
+            InstanceResource.ROW_DATA_MUFG_TRANSFER_INCOME_NOT_OWN_ACCOUNT,
         )
         # Reason: Pylint's bug. pylint: disable=no-member
         zaim_low = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(mufg_row, Path()))
@@ -59,18 +60,18 @@ class TestZaimIncomeRow:
         assert zaim_row_data.method == "income"
         assert zaim_row_data.category_large == "臨時収入"
         assert zaim_row_data.category_small == "-"
-        assert zaim_row_data.cash_flow_source == ""
+        assert not zaim_row_data.cash_flow_source
         assert zaim_row_data.cash_flow_target == "三菱UFJ銀行"
-        assert zaim_row_data.item_name == ""
-        assert zaim_row_data.note == ""
+        assert not zaim_row_data.item_name
+        assert not zaim_row_data.note
         assert zaim_row_data.store_name == "三菱UFJ銀行"
-        assert zaim_row_data.currency == ""
-        assert zaim_row_data.amount_income == 20
+        assert not zaim_row_data.currency
+        assert zaim_row_data.amount_income == expected_amount_income
         assert zaim_row_data.amount_payment == 0
         assert zaim_row_data.amount_transfer == 0
-        assert zaim_row_data.balance_adjustment == ""
-        assert zaim_row_data.amount_before_currency_conversion == ""
-        assert zaim_row_data.setting_aggregate == ""
+        assert not zaim_row_data.balance_adjustment
+        assert not zaim_row_data.amount_before_currency_conversion
+        assert not zaim_row_data.setting_aggregate
 
 
 class TestZaimPaymentRow:
@@ -80,9 +81,17 @@ class TestZaimPaymentRow:
     @staticmethod
     @pytest.mark.parametrize(
         (
-            "input_row_factory, input_row_data, zaim_row_converter_factory, expected_date, "
-            "expected_category_large, expected_category_small, expected_cash_flow_source, expected_item_name, "
-            "expected_note, expected_store_name, expected_amount_payment"
+            "input_row_factory",
+            "input_row_data",
+            "zaim_row_converter_factory",
+            "expected_date",
+            "expected_category_large",
+            "expected_category_small",
+            "expected_cash_flow_source",
+            "expected_item_name",
+            "expected_note",
+            "expected_store_name",
+            "expected_amount_payment",
         ),
         [
             (
@@ -113,8 +122,8 @@ class TestZaimPaymentRow:
             ),
         ],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_item")
-    def test_all(
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_item")
+    def test_all(  # noqa: PLR0913
         input_row_factory: InputRowFactory[InputRowData, InputRow[InputRowData]],
         input_row_data: InputRowData,
         zaim_row_converter_factory: CsvRecordToZaimRowConverterFactory[InputRow[InputRowData], InputRowData],
@@ -137,17 +146,17 @@ class TestZaimPaymentRow:
         assert zaim_row_data.category_large == expected_category_large
         assert zaim_row_data.category_small == expected_category_small
         assert zaim_row_data.cash_flow_source == expected_cash_flow_source
-        assert zaim_row_data.cash_flow_target == ""
+        assert not zaim_row_data.cash_flow_target
         assert zaim_row_data.item_name == expected_item_name
         assert zaim_row_data.note == expected_note
         assert zaim_row_data.store_name == expected_store_name
-        assert zaim_row_data.currency == ""
+        assert not zaim_row_data.currency
         assert zaim_row_data.amount_income == 0
         assert zaim_row_data.amount_payment == expected_amount_payment
         assert zaim_row_data.amount_transfer == 0
-        assert zaim_row_data.balance_adjustment == ""
-        assert zaim_row_data.amount_before_currency_conversion == ""
-        assert zaim_row_data.setting_aggregate == ""
+        assert not zaim_row_data.balance_adjustment
+        assert not zaim_row_data.amount_before_currency_conversion
+        assert not zaim_row_data.setting_aggregate
 
 
 class TestZaimTransferRow:
@@ -155,16 +164,17 @@ class TestZaimTransferRow:
 
     # pylint: disable=unused-argument
     @staticmethod
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_stores_item")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_item")
     def test_all() -> None:
         """Argument should set into properties."""
+        expected_amount_transfer = 5000
         account_context = Account.WAON.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         waon_auto_charge_row = csv_record_processor.create_input_row_instance(
-            InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO
+            InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO,
         )
         zaim_low = ZaimRowFactory.create(
-            account_context.zaim_row_converter_factory.create(waon_auto_charge_row, Path())
+            account_context.zaim_row_converter_factory.create(waon_auto_charge_row, Path()),
         )
         list_zaim_row = zaim_low.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
@@ -174,16 +184,16 @@ class TestZaimTransferRow:
         assert zaim_row_data.category_small == "-"
         assert zaim_row_data.cash_flow_source == "イオン銀行"
         assert zaim_row_data.cash_flow_target == "WAON"
-        assert zaim_row_data.item_name == ""
-        assert zaim_row_data.note == ""
-        assert zaim_row_data.store_name == ""
-        assert zaim_row_data.currency == ""
+        assert not zaim_row_data.item_name
+        assert not zaim_row_data.note
+        assert not zaim_row_data.store_name
+        assert not zaim_row_data.currency
         assert zaim_row_data.amount_income == 0
         assert zaim_row_data.amount_payment == 0
-        assert zaim_row_data.amount_transfer == 5000
-        assert zaim_row_data.balance_adjustment == ""
-        assert zaim_row_data.amount_before_currency_conversion == ""
-        assert zaim_row_data.setting_aggregate == ""
+        assert zaim_row_data.amount_transfer == expected_amount_transfer
+        assert not zaim_row_data.balance_adjustment
+        assert not zaim_row_data.amount_before_currency_conversion
+        assert not zaim_row_data.setting_aggregate
 
 
 class TestZaimRowFactory:
@@ -192,7 +202,7 @@ class TestZaimRowFactory:
     # pylint: disable=unused-argument,too-many-arguments
     @staticmethod
     @pytest.mark.parametrize(
-        "database_session_with_schema, zaim_row_converter_class, input_row_class, waon_row_data, expected",
+        ("database_session_with_schema", "zaim_row_converter_class", "input_row_class", "waon_row_data", "expected"),
         [
             (
                 [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
@@ -218,10 +228,10 @@ class TestZaimRowFactory:
         ],
         indirect=["database_session_with_schema"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test_success(
         zaim_row_converter_class: type[ZaimRowConverter[WaonRow, WaonRowData]],
-        input_row_class: Type[WaonRow],
+        input_row_class: type[WaonRow],
         waon_row_data: WaonRowData,
         expected: type[ZaimRow],
     ) -> None:
@@ -249,7 +259,7 @@ class TestZaimRowFactory:
             # Reason: Raw code is simple enough. pylint: disable=missing-docstring
             @property
             def date(self) -> datetime:
-                return datetime.now()
+                return datetime.now(tz=timezone(timedelta(hours=+9), "JST"))
 
             @property
             def store_name(self) -> str:
@@ -267,6 +277,8 @@ class TestZaimRowFactory:
             Kind1[InputRow[InputRowData], InputRowData],
             UndefinedInputRow(UndefinedInputRowData()),
         )
-        with pytest.raises(ValueError) as error:
+        with pytest.raises(
+            ValueError,
+            match=r"Undefined\sZaim\srow\sconverter\.\sZaim\srow\sconverter\s\=\sUndefinedZaimRowConverter",
+        ):
             ZaimRowFactory.create(UndefinedZaimRowConverter(undefined_input_row))
-        assert str(error.value) == "Undefined Zaim row converter. Zaim row converter = UndefinedZaimRowConverter"

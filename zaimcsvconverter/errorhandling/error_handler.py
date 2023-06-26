@@ -1,21 +1,24 @@
 """This module implements error handler."""
 from __future__ import annotations
 
-from typing import Iterator, List
+from typing import TYPE_CHECKING
 
-import numpy
+import numpy as np
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 class UndefinedContentErrorHandler:
     """This class implements undefined content error handler."""
 
     def __init__(self) -> None:
-        self.list_error: List[List[str]] = []
+        self.list_error: list[list[str]] = []
 
-    def __iter__(self) -> Iterator[List[str]]:
+    def __iter__(self) -> Iterator[list[str]]:
         return self.list_error.__iter__()
 
-    def extend_list(self, error: List[List[str]]) -> None:
+    def extend_list(self, error: list[list[str]]) -> None:
         """This method appends error list argument into error list property."""
         self.list_error.extend(error)
         self.uniquify()
@@ -36,4 +39,4 @@ class UndefinedContentErrorHandler:
     def uniquify(self) -> None:
         """This method uniquify error list."""
         # noinspection PyTypeChecker
-        self.list_error = numpy.unique(numpy.array(self.list_error), axis=0).tolist()
+        self.list_error = np.unique(np.array(self.list_error), axis=0).tolist()

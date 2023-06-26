@@ -1,4 +1,4 @@
-"""Tests for row_processror.py."""
+"""Tests for row_processor.py."""
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
@@ -18,7 +18,7 @@ class TestCsvRecordProcessor:
         [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
         indirect=["database_session_with_schema"],
     )
-    @pytest.mark.usefixtures("yaml_config_load", "database_session_with_schema")
+    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test() -> None:
         """Tests following:
 
@@ -30,8 +30,8 @@ class TestCsvRecordProcessor:
         with pytest.raises(InvalidRecordError) as excinfo:
             csv_record_processor.execute(
                 RowDataFactory(account_context.input_row_data_class).create(
-                    ["2018/11/11", "板橋前野町", "5,000円", "オートチャージ", "-"]
-                )
+                    ["2018/11/11", "板橋前野町", "5,000円", "オートチャージ", "-"],
+                ),
             )
         exception = excinfo.value
         assert len(exception.list_error) == 1
