@@ -37,6 +37,7 @@ coverage = ">=3.5.4"
 dlint = ">=0.14.0"
 docformatter = {extras = ["tomli"], version = "*"}
 dodgy = "*"
+exceptiongroup = {version = "*", markers="python_version <= '3.10'"}
 factory_boy = "*"
 fixturefilehandler = "*"
 # Since Pipenv can't lock for too much combinations to attempt lock:
@@ -54,14 +55,7 @@ mypy = "*"
 pydantic = "*"
 pydocstyle = {version = "*", markers="python_version >= '3.6'"}
 pylint = "*"
-# Maybe, pytest's issue in Python 3.10 or less:
-#   File "/home/runner/.local/share/virtualenvs/zaim-csv-converter-LHc7ObRl/lib/python3.10/site-packages/_pytest/_code/code.py", line 59, in <module>
-#     from exceptiongroup import BaseExceptionGroup
-# ModuleNotFoundError: No module named 'exceptiongroup'
-# Exception Group is supported from Python 3.11:
-# - PEP 654 – Exception Groups and except* | peps.python.org
-#   https://peps.python.org/pep-0654/
-pytest = "<7.4.0"
+pytest = "*"
 pytest-resource-path = "*"
 pyvelocity = {version = "*", markers="python_version >= '3.9'"}
 radon = "*"
