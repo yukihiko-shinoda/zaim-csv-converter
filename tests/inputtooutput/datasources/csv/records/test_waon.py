@@ -6,7 +6,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow, WaonRowToSkip
 from zaimcsvconverter.models import Store
 
 
@@ -57,10 +57,10 @@ class TestWaonRow:
     def test_is_row_to_skip() -> None:
         """WaonRow which express download point should be row to skip."""
         waon_row_data_factory = RowDataFactory(WaonRowData)
-        assert WaonRow(
+        assert WaonRowToSkip(
             waon_row_data_factory.create(["2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-"]),
         ).is_row_to_skip
-        assert WaonRow(
+        assert WaonRowToSkip(
             waon_row_data_factory.create(
                 [
                     "2020/10/23",
@@ -71,7 +71,7 @@ class TestWaonRow:
                 ],
             ),
         ).is_row_to_skip
-        assert WaonRow(
+        assert WaonRowToSkip(
             waon_row_data_factory.create(
                 [
                     "2020/10/23",

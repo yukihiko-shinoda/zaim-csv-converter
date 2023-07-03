@@ -1,15 +1,17 @@
 """Converter from VIEW CARD CSV data to record model."""
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.view_card import ViewCardRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.view_card import ViewCardNotStoreRow, ViewCardStoreRow
 
 
-class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardRow]):
+class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardStoreRow]):
     """This class implements factory to create GOLD POINT CARD+ CSV row instance."""
 
     # Reason: The example implementation of returns ignore incompatible return type.
     # see:
     #   - Create your own container — returns 0.18.0 documentation
     #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
-    def create(self, input_row_data: ViewCardRowData) -> ViewCardRow:  # type: ignore[override]
-        return ViewCardRow(input_row_data)
+    def create(self, input_row_data: ViewCardRowData) -> ViewCardStoreRow:  # type: ignore[override]
+        if input_row_data.is_suica:
+            return ViewCardNotStoreRow(input_row_data)
+        return ViewCardStoreRow(input_row_data)
