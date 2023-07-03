@@ -170,11 +170,17 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
         input_row: Kind1[MufgRow, MufgRowData],  # type: ignore[override]
         _path_csv_file: Path,
     ) -> ZaimRowConverter[MufgRow, MufgRowData]:
-        dekinded_input_row = cast(MufgRow, input_row)
         if isinstance(input_row, MufgIncomeFromOthersRow):
             return self._create_for_income_from_other(input_row)
         if isinstance(input_row, MufgPaymentToSomeoneRow):
             return self._create_for_payment_to_someone(input_row)
+        return self._create(input_row)
+
+    def _create(
+        self,
+        input_row: MufgIncomeFromOthersRow,
+    ) -> ZaimRowConverter[MufgRow, MufgRowData]:
+        dekinded_input_row = cast(MufgRow, input_row)
         if isinstance(input_row, MufgPaymentToSelfRow) and dekinded_input_row.is_payment:
             # Because, for now, payment row looks only for express withdrawing cash by ATM.
             # Reason: The returns can't detect correct type limited by if instance block.

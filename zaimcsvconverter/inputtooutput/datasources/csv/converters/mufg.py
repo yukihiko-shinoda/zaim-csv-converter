@@ -24,6 +24,9 @@ class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
             return MufgIncomeFromSelfRow(input_row_data)
         if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == CashFlowKind.PAYMENT:
             return MufgPaymentToSelfRow(input_row_data)
+        return self._create(input_row_data)
+
+    def _create(self, input_row_data: MufgRowData) -> MufgRow:  # type: ignore[override]
         if input_row_data.cash_flow_kind in (CashFlowKind.PAYMENT, CashFlowKind.TRANSFER_PAYMENT):
             # In case when ATM fee, store name is empty.
             # MufgPaymentToSomeoneRow requires store name.
