@@ -17,6 +17,8 @@ mufg:
   account_name: '三菱UFJ銀行'
   # ↓ 入出金時に振替先となる、Zaim上で登録している口座名を設定します。
   transfer_account_name: 'お財布'
+  # ↓ Zaim上で三菱UFJ銀行として登録しているお店名を設定します。
+  store_name_zaim: '三菱UFJ銀行'
 pasmo:
   # ↓ Zaim上でPASMO用として登録している口座名を設定します。
   account_name: 'PASMO'

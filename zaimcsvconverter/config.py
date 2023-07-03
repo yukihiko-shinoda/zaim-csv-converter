@@ -31,6 +31,7 @@ class MufgConfig(DataClassJsonMixin):
 
     account_name: str
     transfer_account_name: str
+    store_name_zaim: str
 
 
 @dataclass

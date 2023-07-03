@@ -13,6 +13,7 @@ gold_point_card_plus:
 mufg:
   account_name: '三菱UFJ銀行'
   transfer_account_name: 'お財布'
+  store_name_zaim: '三菱UFJ銀行'
 amazon:
   store_name_zaim: 'Amazon Japan G.K.'
   payment_account_name: 'ヨドバシゴールドポイントカード・プラス'

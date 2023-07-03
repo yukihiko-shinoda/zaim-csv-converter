@@ -1,5 +1,6 @@
 """Generator to iterate CSV row data as model instance."""
 from collections.abc import Generator
+from logging import getLogger
 from pathlib import Path
 from typing import Generic, TypeVar
 
@@ -26,6 +27,7 @@ class FirstFormNormalizer(Generic[T]):
         super().__init__()
         self.god_slayer = god_slayer
         self.input_row_data_class = input_row_data_class
+        self.logger = getLogger(__name__)
 
     def __iter__(self) -> Generator[T, None, None]:
         iterator = self.god_slayer.__iter__()
@@ -34,6 +36,8 @@ class FirstFormNormalizer(Generic[T]):
                 list_input_row_standard_type_value = next(iterator)
             except StopIteration:
                 break
+            self.logger.debug("self.input_row_data_class: %s", self.input_row_data_class)
+            self.logger.debug("list_input_row_standard_type_value: %s", list_input_row_standard_type_value)
             yield self.input_row_data_class(*list_input_row_standard_type_value)
 
     @property

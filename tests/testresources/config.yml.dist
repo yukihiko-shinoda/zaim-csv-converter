@@ -9,6 +9,7 @@ gold_point_card_plus:
 mufg:
   account_name: '三菱UFJ銀行'
   transfer_account_name: 'お財布'
+  store_name_zaim: '三菱UFJ銀行'
 pasmo:
   account_name: 'PASMO'
   auto_charge_source: 'TOKYU CARD'

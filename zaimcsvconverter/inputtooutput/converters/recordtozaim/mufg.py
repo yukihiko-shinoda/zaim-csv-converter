@@ -22,6 +22,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records.mufg import (
     MufgIncomeFromSelfRow,
     MufgIncomeRow,
     MufgPaymentRow,
+    MufgPaymentToMufgRow,
     MufgPaymentToSelfRow,
     MufgPaymentToSomeoneRow,
     MufgRow,
@@ -140,6 +141,25 @@ class MufgTransferPaymentZaimTransferRowConverter(
         return self.input_row.store.transfer_target
 
 
+class MufgPaymentToMufgRowConverter(MufgZaimPaymentRowConverter):
+    """This class implements convert steps from MUFG input row to Zaim payment row."""
+
+    @property
+    def category_large(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return "通信"
+
+    @property
+    def category_small(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return "その他"
+
+    @property
+    def store_name(self) -> Optional[str]:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return CONFIG.mufg.store_name_zaim
+
+
 class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, MufgRowData]):
     """This class implements select steps from MUFG input row to Zaim row converter."""
 
@@ -159,6 +179,9 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
             # Because, for now, payment row looks only for express withdrawing cash by ATM.
             # Reason: The returns can't detect correct type limited by if instance block.
             return MufgPaymentZaimTransferRowConverter(input_row)  # type: ignore[arg-type,return-value]
+        if isinstance(input_row, MufgPaymentToMufgRow):
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return MufgPaymentToMufgRowConverter(input_row)  # type: ignore[arg-type,return-value]
         if isinstance(input_row, MufgIncomeFromSelfRow) and dekinded_input_row.is_income_from_other_own_account:
             # Reason: The returns can't detect correct type limited by if instance block.
             return MufgIncomeZaimTransferRowConverter(input_row)  # type: ignore[arg-type,return-value]
