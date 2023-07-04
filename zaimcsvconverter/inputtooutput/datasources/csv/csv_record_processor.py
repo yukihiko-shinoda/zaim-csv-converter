@@ -23,13 +23,14 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
         """This method executes convert steps of input CSV row."""
         input_record = self.create_input_row_instance(input_record_data)
         dekinded_input_record = cast(InputRow[InputRowData], input_record)
-        if dekinded_input_record.is_row_to_skip:
-            raise SkipRecord
+        # Requires to validate before skip check process since skip check process checks store.
         if dekinded_input_record.validate:
             raise InvalidRecordError(
                 dekinded_input_record.list_error,
                 undefined_content_error_handler=self.create_undefined_content_error_handler(input_record),
             )
+        if dekinded_input_record.is_row_to_skip:
+            raise SkipRecord
         return input_record
 
     @staticmethod

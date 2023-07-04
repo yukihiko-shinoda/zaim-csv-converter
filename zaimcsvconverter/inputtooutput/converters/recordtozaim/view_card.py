@@ -10,11 +10,11 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimRowConverter,
 )
 from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.view_card import ViewCardRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.view_card import ViewCardStoreRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
-class ViewCardZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[ViewCardRow, ViewCardRowData]):
+class ViewCardZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[ViewCardStoreRow, ViewCardRowData]):
     """This class implements convert steps from GOLD POINT CARD + input row to Zaim payment row."""
 
     @property
@@ -27,14 +27,14 @@ class ViewCardZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[ViewCardRow, 
         return self.input_row.billing_amount_current_time
 
 
-class ViewCardZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[ViewCardRow, ViewCardRowData]):
+class ViewCardZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[ViewCardStoreRow, ViewCardRowData]):
     """This class implements select steps from GOLD POINT CARD + Viewer input row to Zaim row converter."""
 
     def create(
         self,
         # Reason: Maybe, there are no way to resolve.
         # The nearest issues: https://github.com/dry-python/returns/issues/708
-        input_row: Kind1[ViewCardRow, ViewCardRowData],  # type: ignore[override]
+        input_row: Kind1[ViewCardStoreRow, ViewCardRowData],  # type: ignore[override]
         _path_csv_file: Path,
-    ) -> ZaimRowConverter[ViewCardRow, ViewCardRowData]:
+    ) -> ZaimRowConverter[ViewCardStoreRow, ViewCardRowData]:
         return ViewCardZaimPaymentRowConverter(input_row)

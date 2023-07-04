@@ -4,7 +4,13 @@ from __future__ import annotations
 from zaimcsvconverter.data.waon import ChargeKind, UseKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import InputStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow, InputStoreRow
+
+
+class WaonRowToSkip(InputRow[WaonRowData]):
+    @property
+    def is_row_to_skip(self) -> bool:
+        return True
 
 
 class WaonRow(InputStoreRow[WaonRowData]):
@@ -17,8 +23,7 @@ class WaonRow(InputStoreRow[WaonRowData]):
 
     @property
     def is_row_to_skip(self) -> bool:
-        """This property returns whether this row should be skipped or not."""
-        return self.is_download_point or self.is_transfer_waon_upload or self.is_transfer_waon_download
+        return False
 
     @property
     def is_payment(self) -> bool:
@@ -35,18 +40,6 @@ class WaonRow(InputStoreRow[WaonRowData]):
     @property
     def is_auto_charge(self) -> bool:
         return self.use_kind == UseKind.AUTO_CHARGE
-
-    @property
-    def is_download_point(self) -> bool:
-        return self.use_kind == UseKind.DOWNLOAD_POINT
-
-    @property
-    def is_transfer_waon_upload(self) -> bool:
-        return self.use_kind == UseKind.TRANSFER_WAON_UPLOAD
-
-    @property
-    def is_transfer_waon_download(self) -> bool:
-        return self.use_kind == UseKind.TRANSFER_WAON_DOWNLOAD
 
 
 class WaonChargeRow(WaonRow):

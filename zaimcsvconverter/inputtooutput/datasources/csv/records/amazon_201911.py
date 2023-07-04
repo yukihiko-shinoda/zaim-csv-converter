@@ -5,8 +5,14 @@ from typing import Optional
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import InputItemRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records import InputItemRow, InputRow
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
+
+
+class Amazon201911RowToSkip(InputRow[Amazon201911RowData]):
+    @property
+    def is_row_to_skip(self) -> bool:
+        return True
 
 
 class Amazon201911Row(InputItemRow[Amazon201911RowData]):
@@ -22,12 +28,6 @@ class Amazon201911Row(InputItemRow[Amazon201911RowData]):
     @property
     def store(self) -> Store:
         return self._store
-
-
-class Amazon201911RowToSkip(Amazon201911Row):
-    @property
-    def is_row_to_skip(self) -> bool:
-        return True
 
 
 class Amazon201911DiscountRow(Amazon201911Row):

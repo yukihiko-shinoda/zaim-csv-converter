@@ -5,6 +5,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.mufg import (
     MufgIncomeFromOthersRow,
     MufgIncomeFromSelfRow,
+    MufgPaymentToMufgRow,
     MufgPaymentToSelfRow,
     MufgPaymentToSomeoneRow,
     MufgRow,
@@ -23,8 +24,17 @@ class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
             return MufgIncomeFromSelfRow(input_row_data)
         if input_row_data.is_empty_store_name and input_row_data.cash_flow_kind == CashFlowKind.PAYMENT:
             return MufgPaymentToSelfRow(input_row_data)
+        return self._create(input_row_data)
+
+    def _create(self, input_row_data: MufgRowData) -> MufgRow:  # type: ignore[override]
         if input_row_data.cash_flow_kind in (CashFlowKind.PAYMENT, CashFlowKind.TRANSFER_PAYMENT):
-            return MufgPaymentToSomeoneRow(input_row_data)
+            # In case when ATM fee, store name is empty.
+            # MufgPaymentToSomeoneRow requires store name.
+            return (
+                MufgPaymentToSomeoneRow(input_row_data)
+                if input_row_data.store_name
+                else MufgPaymentToMufgRow(input_row_data)
+            )
         if input_row_data.cash_flow_kind in (CashFlowKind.INCOME, CashFlowKind.TRANSFER_INCOME):
             return MufgIncomeFromOthersRow(input_row_data)
         msg = f"Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}"  # pragma: no cover

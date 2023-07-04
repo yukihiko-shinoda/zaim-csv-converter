@@ -97,7 +97,7 @@ class MufgIncomeFromSelfRow(MufgIncomeRow):
 
 
 class MufgPaymentToSelfRow(MufgPaymentRow):
-    """This class implements payment from self row model of MUFG bank CSV."""
+    """This class implements payment to self row model of MUFG bank CSV."""
 
 
 # pylint: disable=too-many-instance-attributes
@@ -129,3 +129,7 @@ class MufgPaymentToSomeoneRow(MufgStoreRow, MufgPaymentRow):
 
     It may to others, also may to self.
     """
+
+
+class MufgPaymentToMufgRow(MufgPaymentRow):
+    """Payment to MUFG row model of MUFG bank CSV."""

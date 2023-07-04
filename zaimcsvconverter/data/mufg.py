@@ -26,7 +26,7 @@ class MufgRowData(CsvRowData):
     class Summary(Enum):
         # Reason: Specification.
         CARD = "カ−ド"  # noqa: RUF001
-        CARD_CONVENIENCE_STORE_ATM = "カ−ドＣ１"  # noqa: RUF001
+        CARD_CONVENIENCE_STORE_ATM = "カードＣ１"
 
     date_: StringSlashToDateTime
     summary: str

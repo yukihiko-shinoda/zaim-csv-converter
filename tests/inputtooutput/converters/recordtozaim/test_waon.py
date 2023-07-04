@@ -1,5 +1,6 @@
 """Tests for waon.py."""
 from pathlib import Path
+from typing import cast
 
 import pytest
 
@@ -16,6 +17,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import 
 from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
 
 
@@ -206,5 +208,5 @@ class TestWaonZaimRowConverterConverter:
         input_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO,
         )
-        with pytest.raises(ValueError, match=r"Unsupported\srow\.\sInput\srow\s=\sWaonRow,\sポイントダウンロード"):
-            account_context.zaim_row_converter_factory.create(input_row, Path())
+        input_row = cast(WaonRow, input_row)
+        assert input_row.is_row_to_skip
