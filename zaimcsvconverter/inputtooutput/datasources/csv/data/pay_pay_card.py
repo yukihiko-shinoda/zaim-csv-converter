@@ -13,7 +13,7 @@ class PayPayCardRowData(pay_pay_card.PayPayRowData, InputStoreRowData):
 
     @property
     def date(self) -> datetime:
-        return self.used_date
+        return self.used_cancelled_date
 
     @property
     def store_name(self) -> str:
