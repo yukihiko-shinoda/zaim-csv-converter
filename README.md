@@ -29,11 +29,7 @@ Zaim で口座連携をするために
 
 ## 動作確認環境
 
-- Windows 10 home 64bit
-- Python 3.8.0
-- Pipenv 2018.11.26
-
-※上記より新しければ動作するものと思われます。
+Python 3.9.17 以上
 
 ## 初回のみ行う利用準備
 
@@ -429,17 +425,4 @@ Chrome 拡張の[アマゾン注文履歴フィルタ](https://chrome.google.com
 
 4\.
 
-画面を下にスクロールしていくとある [ご利用明細の印刷] ボタンをクリック
-
-5\.
-
-[回数指定払い] の HTML テーブルを Google スプレッドシートにコピーします。
-
-Chrome の場合は [Table Capture](https://chrome.google.com/webstore/detail/table-capture/iebpjdmgckacbodjpijphcplhebcmeop) という拡張機能を使います。
-
-6\.
-
-最上段の [回数指定払い] の行と最下段の [回数指定払い小計] の行を削除します。
-
-7\.
-該当月のスプレッドシートを開いた状態で [ファイル] -> [形式を指定してダウンロード] -> [カンマ区切りの値(.csv、現在のシート)]
+画面を下にスクロールしていくとある [CSVダウンロード] ボタンをクリック
