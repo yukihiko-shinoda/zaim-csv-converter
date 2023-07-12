@@ -12,8 +12,8 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install pipenv
       - run: python -m pipenv sync --dev
-      - uses: paambaati/codeclimate-action@v4.0.0
+      - uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         with:
-          coverageCommand: python -m pipenv run invoke coverage --xml
+          coverageCommand: python -m pipenv run invoke test.cov --xml
