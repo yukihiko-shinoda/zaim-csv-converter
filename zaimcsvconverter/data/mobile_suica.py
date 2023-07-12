@@ -24,6 +24,8 @@ class Kind1(str, Enum):
     # Includes JRE point
     CASH = "現金"
     EXCHANGE_OTHER_TICKET = "購"
+    # Reason: This is not password.
+    COMMUTER_PASS = "定"  # nosec  # noqa: S105
 
 
 class Kind2(str, Enum):
