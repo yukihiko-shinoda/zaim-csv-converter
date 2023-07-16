@@ -20,6 +20,7 @@ from tests.testlibraries.integration_test_expected_factory import (
     create_zaim_row_data_mufg_201808,
     create_zaim_row_data_mufg_201810,
     create_zaim_row_data_mufg_201811,
+    create_zaim_row_data_mufg_202304,
     create_zaim_row_data_pasmo_201811,
     create_zaim_row_data_pasmo_201901,
     create_zaim_row_data_pay_pal_201810,
@@ -75,7 +76,7 @@ class TestZaimCsvConverter:
             TestZaimCsvConverter.debug_csv("error_invalid_row.csv", directory_csv_output)
             raise
         files = sorted(directory_csv_output.target.rglob("*[!.gitkeep]"))
-        expected_length = 22
+        expected_length = 23
         assert len(files) == expected_length
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file("waon201807.csv", create_zaim_row_data_waon_201807())
@@ -90,6 +91,7 @@ class TestZaimCsvConverter:
         checker.assert_file("mufg201808.csv", create_zaim_row_data_mufg_201808())
         checker.assert_file("mufg201810.csv", create_zaim_row_data_mufg_201810())
         checker.assert_file("mufg201811.csv", create_zaim_row_data_mufg_201811())
+        checker.assert_file("mufg202304.csv", create_zaim_row_data_mufg_202304())
         checker.assert_file("pasmo201811.csv", create_zaim_row_data_pasmo_201811())
         checker.assert_file("pasmo201901.csv", create_zaim_row_data_pasmo_201901())
         checker.assert_file("amazon201810.csv", create_zaim_row_data_amazon_201810())
