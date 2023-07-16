@@ -133,6 +133,17 @@ def create_zaim_row_data_mufg_201811() -> list[ZaimRowData]:
     return [zaim_row_data_01]
 
 
+def create_zaim_row_data_mufg_202304() -> list[ZaimRowData]:
+    """Creates expected zaim row data for MUFG 201811."""
+    zaim_row_data_01 = ZaimRowData(
+        # fmt: off
+        "2023-04-22", "transfer", "-", "-", "三菱UFJ銀行", "お財布",
+        "", "", "", "", "0", "0", "9000", "", "", "",
+        # fmt: on
+    )
+    return [zaim_row_data_01]
+
+
 def create_zaim_row_data_pasmo_201811() -> list[ZaimRowData]:
     """Creates expected zaim row data for PASMO 201811."""
     zaim_row_data_01 = ZaimRowData(
