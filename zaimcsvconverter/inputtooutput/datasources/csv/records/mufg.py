@@ -42,6 +42,10 @@ class MufgRow(InputRow[MufgRowData]):
         )
 
     @property
+    def is_yucho_bank(self) -> bool:
+        return self._summary == MufgRowData.Summary.YUCHO_BANK.value
+
+    @property
     def is_income_from_other_own_account(self) -> bool:
         return self.is_income and self.is_by_card
 
@@ -129,6 +133,22 @@ class MufgPaymentToSomeoneRow(MufgStoreRow, MufgPaymentRow):
 
     It may to others, also may to self.
     """
+
+    @property
+    def is_store_name_start_with_used_post_office(self) -> bool:
+        if self.store.name:
+            return self.store.name.startswith("リヨウキヨク")
+        return False
+
+    @property
+    def payment_to_yucho_bank_atm(self) -> bool:
+        """This method returns whether this row is payment to Yucho bank or not."""
+        return self.is_yucho_bank and self.is_store_name_start_with_used_post_office
+
+    @property
+    def is_transfer_payment_to_other_own_account(self) -> bool:
+        """This method returns whether this row is transfer payment to other own account or not."""
+        return super().is_transfer_payment_to_other_own_account or self.payment_to_yucho_bank_atm
 
 
 class MufgPaymentToMufgRow(MufgPaymentRow):

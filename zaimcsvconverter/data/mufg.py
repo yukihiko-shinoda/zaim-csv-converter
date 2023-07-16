@@ -27,6 +27,7 @@ class MufgRowData(CsvRowData):
         # Reason: Specification.
         CARD = "カ−ド"  # noqa: RUF001
         CARD_CONVENIENCE_STORE_ATM = "カードＣ１"
+        YUCHO_BANK = "ゆうちょ"
 
     date_: StringSlashToDateTime
     summary: str
