@@ -63,7 +63,8 @@
 					"description": "Words used in this project",
 					"addWords": true
 					}
-				}
+				},
+				"files.autoGuessEncoding": true
 			},
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
