@@ -376,3 +376,14 @@ def create_zaim_row_data_mobile_suica_202212() -> list[ZaimRowData]:
         # fmt: on
     )
     return [zaim_row_data_01]
+
+
+def create_zaim_row_data_mobile_suica_202301() -> list[ZaimRowData]:
+    """Creates expected zaim row data for Mobile Suica 202212."""
+    zaim_row_data_01 = ZaimRowData(
+        # fmt: off
+        "2023-01-29", "payment", "交通", "バス", "Suica", "",
+        "", "", "都営バス", "", "0", "210", "0", "", "", "",
+        # fmt: on
+    )
+    return [zaim_row_data_01]

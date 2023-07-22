@@ -18,7 +18,7 @@ class Kind1(str, Enum):
     # Reason: Specification.
     LAYOVER = "＊入"  # noqa: RUF001
     AUTO_CHARGE = "ｵｰﾄ"
-    BUS_ETC = "ﾊﾞｽ等"
+    BUS_ET_CETERA = "ﾊﾞｽ等"
     VIEW = "VIEW"
     CARD = "ｶｰﾄﾞ"
     # Includes JRE point

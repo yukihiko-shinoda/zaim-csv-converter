@@ -43,7 +43,7 @@ class MobileSuicaRow(InputRow[MobileSuicaRowData]):
 
     @property
     def is_bus_tram(self) -> bool:
-        return self.kind_1 == Kind1.BUS_ETC
+        return self.kind_1 == Kind1.BUS_ET_CETERA
 
     @property
     def deposit_used_amount(self) -> int:
@@ -63,7 +63,7 @@ class MobileSuicaRow(InputRow[MobileSuicaRowData]):
 
 
 class MobileSuicaStoreRow(MobileSuicaRow, InputStoreRow[MobileSuicaRowData]):
-    """This class implements enter station row model of SF Card Viewer CSV."""
+    """This class implements enter station row model of Mobile Suica CSV."""
 
     def __init__(self, row_data: MobileSuicaRowData, account_config: SFCardViewerConfig) -> None:
         super().__init__(row_data, account_config, FileCsvConvert.MOBILE_SUICA.value)
@@ -71,16 +71,23 @@ class MobileSuicaStoreRow(MobileSuicaRow, InputStoreRow[MobileSuicaRowData]):
 
 # Specification requires. pylint: disable=too-many-ancestors
 class MobileSuicaFirstRow(MobileSuicaStoreRow):
-    """This class implements enter station row model of SF Card Viewer CSV."""
+    """This class implements enter station row model of Mobile Suica CSV."""
 
     @property
     def validate(self) -> bool:
         return super(MobileSuicaRow, self).validate
 
 
+class MobileSuicaBusEtCeteraRow(MobileSuicaStoreRow):
+    """This class implements bus or etc.
+
+    row model of Mobile Suica CSV.
+    """
+
+
 # Specification requires. pylint: disable=too-many-ancestors
 class MobileSuicaEnterExitRow(MobileSuicaStoreRow):
-    """This class implements enter and exit station row model of SF Card Viewer CSV."""
+    """This class implements enter and exit station row model of Mobile Suica CSV."""
 
     def __init__(self, row_data: MobileSuicaRowData, account_config: SFCardViewerConfig) -> None:
         super().__init__(row_data, account_config)
