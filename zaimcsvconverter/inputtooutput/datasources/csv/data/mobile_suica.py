@@ -31,6 +31,11 @@ class MobileSuicaRowData(mobile_suica.MobileSuicaRowData, InputStoreRowData):
         return bool(self.used_place_1)
 
     @property
+    def is_bus_et_cetera(self) -> bool:
+        """This property returns whether this row has used place 1."""
+        return self.kind_1 == mobile_suica.Kind1.BUS_ET_CETERA
+
+    @property
     def is_used_in_mobile(self) -> bool:
         """This property returns whether this row has used place 1."""
         return self.used_place_1 == "モバイル"

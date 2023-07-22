@@ -17,6 +17,7 @@ from tests.testlibraries.integration_test_expected_factory import (
     create_zaim_row_data_mobile_suica_202210,
     create_zaim_row_data_mobile_suica_202211,
     create_zaim_row_data_mobile_suica_202212,
+    create_zaim_row_data_mobile_suica_202301,
     create_zaim_row_data_mufg_201808,
     create_zaim_row_data_mufg_201810,
     create_zaim_row_data_mufg_201811,
@@ -76,8 +77,8 @@ class TestZaimCsvConverter:
             TestZaimCsvConverter.debug_csv("error_invalid_row.csv", directory_csv_output)
             raise
         files = sorted(directory_csv_output.target.rglob("*[!.gitkeep]"))
-        expected_length = 23
-        assert len(files) == expected_length
+        expected_length = 24
+        assert len(files) == expected_length, ",\n".join(str(file) for file in files)
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file("waon201807.csv", create_zaim_row_data_waon_201807())
         checker.assert_file("waon201808.csv", create_zaim_row_data_waon_201808())
@@ -105,6 +106,7 @@ class TestZaimCsvConverter:
         checker.assert_file("mobile_suica_202210.csv", create_zaim_row_data_mobile_suica_202210())
         checker.assert_file("mobile_suica_202211.csv", create_zaim_row_data_mobile_suica_202211())
         checker.assert_file("mobile_suica_202212.csv", create_zaim_row_data_mobile_suica_202212())
+        checker.assert_file("mobile_suica_202301.csv", create_zaim_row_data_mobile_suica_202301())
 
     @staticmethod
     def debug_csv(csv_file_name: str, directory_csv_output: RelativeDeployFilePath) -> None:

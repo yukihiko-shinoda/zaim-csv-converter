@@ -27,15 +27,20 @@ class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):
             list_expected,
         ), f"len(list_output_row_data) = {len(list_output_row_data)}, len(list_expected) = {len(list_expected)}"
         for output_row_data, expected in zip(list_output_row_data, list_expected):
-            assert output_row_data == expected, self._build_error_message(list_output_row_data, output_row_data)
+            assert output_row_data == expected, self._build_error_message(
+                expected,
+                list_output_row_data,
+                output_row_data,
+            )
 
     @staticmethod
     def _build_error_message(
+        expected: TypeVarOutputRowData,
         list_output_row_data: list[TypeVarOutputRowData],
         output_row_data: TypeVarOutputRowData,
     ) -> str:
         debug_list_output_row_data = ",\n".join(str(output_row_data) for output_row_data in list_output_row_data)
-        return f", output_row_data = {output_row_data}\nlist_output_row_data = {debug_list_output_row_data}"
+        return f"\n{expected=}\n{output_row_data=}\nlist_output_row_data={debug_list_output_row_data}"
 
     def read_output_csv(self, file_name: str) -> list[TypeVarOutputRowData]:
         """This method reads output CSV files and returns as list of output row data instance."""
