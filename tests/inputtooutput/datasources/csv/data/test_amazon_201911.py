@@ -41,6 +41,7 @@ class TestAmazon201911RowData:
         expected_price = 4980
         expected_subtotal_price_item = 6276
         expected_total_order = 6390
+        expected_billing_amount = 5952
         row_data = RowDataFactory(Amazon201911RowData).create(
             [
                 ordered_date,
@@ -71,7 +72,7 @@ class TestAmazon201911RowData:
         assert row_data.destination == destination
         assert row_data.status == status
         assert row_data.billing_address == billing_address
-        assert row_data.billing_amount == billing_amount
+        assert row_data.billing_amount == expected_billing_amount
         assert row_data.credit_card_billing_date == credit_card_billing_date
         assert row_data.credit_card_billing_amount == credit_card_billing_amount
         assert row_data.credit_card_identity == credit_card_identity

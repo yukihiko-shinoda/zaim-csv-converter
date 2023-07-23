@@ -80,10 +80,10 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
         raise ValueError(self.build_message(dekinded_input_row))
 
     def _create(self, input_row: WaonChargeRow) -> ZaimRowConverter[WaonRow, WaonRowData]:
-        if input_row.is_charge_by_point or input_row.is_charge_by_download_value:
+        if input_row.is_income:
             # Reason: The returns can't detect correct type limited by if instance block.
             return WaonZaimIncomeRowConverter(input_row)  # type: ignore[arg-type,return-value]
-        if input_row.is_auto_charge or input_row.is_charge_by_bank_account or input_row.is_charge_by_cash:
+        if input_row.is_transfer:
             # Reason: The returns can't detect correct type limited by if instance block.
             return WaonZaimTransferRowConverter(input_row)  # type: ignore[arg-type]
         raise ValueError(self.build_message(input_row))

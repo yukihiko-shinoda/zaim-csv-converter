@@ -19,3 +19,11 @@ class SBISumishinNetBankRowData(sbi_sumishin_net_bank.SBISumishinNetBankRowData,
     @property
     def store_name(self) -> str:
         return self.content
+
+    @property
+    def is_withdrawal(self) -> bool:
+        return self.deposit_amount is None and self.withdrawal_amount is not None
+
+    @property
+    def is_deposit(self) -> bool:
+        return self.deposit_amount is not None and self.withdrawal_amount is None

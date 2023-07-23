@@ -65,6 +65,14 @@ class WaonChargeRow(WaonRow):
         return super().validate
 
     @property
+    def is_income(self) -> bool:
+        return self.is_charge_by_point or self.is_charge_by_download_value
+
+    @property
+    def is_transfer(self) -> bool:
+        return self.is_auto_charge or self.is_charge_by_bank_account or self.is_charge_by_cash
+
+    @property
     def is_charge_by_point(self) -> bool:
         return self.is_charge and self.charge_kind == ChargeKind.POINT
 

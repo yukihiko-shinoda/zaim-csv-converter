@@ -32,7 +32,7 @@ class Amazon201911RowData(CsvRowData):
     destination: str
     status: str
     billing_address: str
-    billing_amount: str
+    billing_amount: ConstrainedStringToOptionalInt  # type: ignore[valid-type]
     credit_card_billing_date: str
     credit_card_billing_amount: str
     credit_card_identity: str

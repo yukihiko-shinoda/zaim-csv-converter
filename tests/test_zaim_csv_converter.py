@@ -12,6 +12,7 @@ from tests.testlibraries.integration_test_expected_factory import (
     create_zaim_row_data_amazon_201810,
     create_zaim_row_data_amazon_201911_201911,
     create_zaim_row_data_amazon_201911_202004,
+    create_zaim_row_data_amazon_201911_202006,
     create_zaim_row_data_gold_point_card_plus_201807,
     create_zaim_row_data_gold_point_card_plus_201912_201807,
     create_zaim_row_data_mobile_suica_202210,
@@ -77,7 +78,7 @@ class TestZaimCsvConverter:
             TestZaimCsvConverter.debug_csv("error_invalid_row.csv", directory_csv_output)
             raise
         files = sorted(directory_csv_output.target.rglob("*[!.gitkeep]"))
-        expected_length = 24
+        expected_length = 25
         assert len(files) == expected_length, ",\n".join(str(file) for file in files)
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file("waon201807.csv", create_zaim_row_data_waon_201807())
@@ -98,6 +99,7 @@ class TestZaimCsvConverter:
         checker.assert_file("amazon201810.csv", create_zaim_row_data_amazon_201810())
         checker.assert_file("amazon_201911_201911.csv", create_zaim_row_data_amazon_201911_201911())
         checker.assert_file("amazon_201911_202004.csv", create_zaim_row_data_amazon_201911_202004())
+        checker.assert_file("amazon_201911_202006.csv", create_zaim_row_data_amazon_201911_202006())
         checker.assert_file("view_card202005.csv", create_zaim_row_data_view_card_202005())
         checker.assert_file("suica202003.csv", create_zaim_row_data_suica_202003())
         checker.assert_file("pay_pal201810.csv", create_zaim_row_data_pay_pal_201810())
