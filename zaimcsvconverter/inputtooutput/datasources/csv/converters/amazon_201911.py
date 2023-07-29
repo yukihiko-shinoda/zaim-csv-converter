@@ -23,7 +23,7 @@ class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911Ro
             return Amazon201911RowToSkip(input_row_data)
         return self._create(input_row_data)
 
-    def _create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:  # type: ignore[override]
+    def _create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:
         if input_row_data.is_discount:
             return Amazon201911DiscountRow(input_row_data)
         if input_row_data.is_shipping_handling:

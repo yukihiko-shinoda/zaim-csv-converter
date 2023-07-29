@@ -26,7 +26,7 @@ class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
             return MufgPaymentToSelfRow(input_row_data)
         return self._create(input_row_data)
 
-    def _create(self, input_row_data: MufgRowData) -> MufgRow:  # type: ignore[override]
+    def _create(self, input_row_data: MufgRowData) -> MufgRow:
         if input_row_data.cash_flow_kind in (CashFlowKind.PAYMENT, CashFlowKind.TRANSFER_PAYMENT):
             # In case when ATM fee, store name is empty.
             # MufgPaymentToSomeoneRow requires store name.
@@ -37,7 +37,7 @@ class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):
             )
         return self._create2(input_row_data)
 
-    def _create2(self, input_row_data: MufgRowData) -> MufgRow:  # type: ignore[override]
+    def _create2(self, input_row_data: MufgRowData) -> MufgRow:
         if input_row_data.cash_flow_kind in (CashFlowKind.INCOME, CashFlowKind.TRANSFER_INCOME):
             return MufgIncomeFromOthersRow(input_row_data)
         msg = f"Cash flow kind is not supported. Cash flow kind = {input_row_data.cash_flow_kind}"  # pragma: no cover

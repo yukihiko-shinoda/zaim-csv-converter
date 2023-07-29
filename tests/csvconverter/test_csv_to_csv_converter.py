@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from tests.testlibraries.assert_list import assert_each_properties
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
@@ -39,22 +40,27 @@ class TestCsvToCsvConverterForStore:
             reader_zaim = csv.reader(file_zaim)
             list_zaim_row = next(reader_zaim)
             zaim_row_data = ZaimRowData(*list_zaim_row)
-            assert zaim_row_data.date == "日付"
-            assert zaim_row_data.method == "方法"
-            assert zaim_row_data.category_large == "カテゴリ"
-            assert zaim_row_data.category_small == "カテゴリの内訳"
-            assert zaim_row_data.cash_flow_source == "支払元"
-            assert zaim_row_data.cash_flow_target == "入金先"
-            assert zaim_row_data.item_name == "品目"
-            assert zaim_row_data.note == "メモ"
-            assert zaim_row_data.store_name == "お店"
-            assert zaim_row_data.currency == "通貨"
-            assert zaim_row_data.amount_income == "収入"
-            assert zaim_row_data.amount_payment == "支出"
-            assert zaim_row_data.amount_transfer == "振替"
-            assert zaim_row_data.balance_adjustment == "残高調整"
-            assert zaim_row_data.amount_before_currency_conversion == "通貨変換前の金額"
-            assert zaim_row_data.setting_aggregate == "集計の設定"
+            assert_each_properties(
+                zaim_row_data,
+                [
+                    "日付",
+                    "方法",
+                    "カテゴリ",
+                    "カテゴリの内訳",
+                    "支払元",
+                    "入金先",
+                    "品目",
+                    "メモ",
+                    "お店",
+                    "通貨",
+                    "収入",
+                    "支出",
+                    "振替",
+                    "残高調整",
+                    "通貨変換前の金額",
+                    "集計の設定",
+                ],
+            )
 
     # pylint: disable=unused-argument
     @staticmethod

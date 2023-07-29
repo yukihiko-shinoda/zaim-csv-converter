@@ -4,6 +4,7 @@ from datetime import datetime
 from pydantic import ValidationError
 import pytest
 
+from tests.testlibraries.assert_list import assert_each_properties
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.data.mufg import CashFlowKind
 from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
@@ -43,16 +44,21 @@ class TestMufgRowData:
                 cash_flow_kind,
             ],
         )
-        assert mufg_row_data.summary == summary
-        assert mufg_row_data.payed_amount == expected_payed_amount
-        assert mufg_row_data.deposit_amount is None
-        assert mufg_row_data.balance == balance
-        assert mufg_row_data.note == note
-        assert mufg_row_data.is_uncapitalized == is_uncapitalized
-        assert mufg_row_data.cash_flow_kind == CashFlowKind.TRANSFER_PAYMENT
-        # Reason: Time is not used in this process.
-        assert mufg_row_data.date == datetime(2018, 11, 28, 0, 0)  # noqa: DTZ001
-        assert mufg_row_data.store_name == summary_content
+        assert_each_properties(
+            mufg_row_data,
+            [
+                # Reason: Time is not used in this process.
+                datetime(2018, 11, 28, 0, 0),  # noqa: DTZ001
+                summary,
+                summary_content,
+                expected_payed_amount,
+                None,
+                balance,
+                note,
+                is_uncapitalized,
+                CashFlowKind.TRANSFER_PAYMENT,
+            ],
+        )
 
     # pylint: disable=unused-argument
     @staticmethod

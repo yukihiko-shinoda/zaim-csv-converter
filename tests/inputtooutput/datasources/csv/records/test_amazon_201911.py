@@ -16,15 +16,17 @@ class TestAmazon201911DiscountRow:
     """Tests for Amazon201911DiscountRow."""
 
     # pylint: disable=unused-argument
-    @staticmethod
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
-    def test_init() -> None:
+    def test_init(self) -> None:
         """Arguments should set into properties."""
         store_name = "Amazon Japan G.K."
         item_name = "（Amazon ポイント）"  # noqa: RUF001
         amazon_row = Amazon201911DiscountRow(InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT)
         # Reason: Time is not used in this process.
         assert amazon_row.date == datetime(2019, 11, 9, 0, 0, 0)  # noqa: DTZ001
+        self.assert_store_and_item(amazon_row, store_name, item_name)
+
+    def assert_store_and_item(self, amazon_row: Amazon201911DiscountRow, store_name: str, item_name: str) -> None:
         assert isinstance(amazon_row.store, Store)
         assert amazon_row.store.name_zaim == store_name
         assert isinstance(amazon_row.item, Item)
@@ -62,9 +64,8 @@ class TestAmazon201911PaymentRow:
     # Reason: Testing different version of row data is better to be separated code.
     # noinspection DuplicatedCode
     # pylint: disable=unused-argument
-    @staticmethod
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
-    def test_init() -> None:
+    def test_init(self) -> None:
         """Arguments should set into properties."""
         expected_price = 4980
         store_name = "Amazon Japan G.K."
@@ -74,6 +75,9 @@ class TestAmazon201911PaymentRow:
         assert amazon_row.number == 1
         # Reason: Time is not used in this process.
         assert amazon_row.date == datetime(2019, 11, 9, 0, 0, 0)  # noqa: DTZ001
+        self.assert_store_and_item(amazon_row, store_name, item_name)
+
+    def assert_store_and_item(self, amazon_row: Amazon201911PaymentRow, store_name: str, item_name: str) -> None:
         assert isinstance(amazon_row.store, Store)
         assert amazon_row.store.name_zaim == store_name
         assert isinstance(amazon_row.item, Item)

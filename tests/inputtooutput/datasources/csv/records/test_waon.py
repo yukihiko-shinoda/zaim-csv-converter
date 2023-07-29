@@ -14,7 +14,6 @@ class TestWaonRow:
     """Tests for WaonRow."""
 
     # pylint: disable=too-many-arguments,unused-argument
-    @staticmethod
     @pytest.mark.parametrize(
         ("waon_row_data", "expected_date", "expected_store_name_zaim", "expected_amount"),
         [
@@ -36,6 +35,7 @@ class TestWaonRow:
     )
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_basic_store_waon")
     def test_init_success(
+        self,
         waon_row_data: WaonRowData,
         expected_date: datetime,
         expected_store_name_zaim: str,
@@ -47,9 +47,16 @@ class TestWaonRow:
         """
         waon_row = WaonRow(waon_row_data)
         assert waon_row.date == expected_date
+        self.assert_store_and_item(waon_row, expected_store_name_zaim, expected_amount)
+
+    def assert_store_and_item(self, waon_row: WaonRow, expected_store_name_zaim: str, expected_amount: int) -> None:
         assert isinstance(waon_row.store, Store)
         assert waon_row.store.name_zaim == expected_store_name_zaim
         assert waon_row.used_amount == expected_amount
+
+
+class TestWaonRowToSkip:
+    """Tests for WaonRowToSkip."""
 
     # pylint: disable=unused-argument
     @staticmethod

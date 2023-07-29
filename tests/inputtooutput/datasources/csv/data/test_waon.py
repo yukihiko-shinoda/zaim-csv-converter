@@ -4,6 +4,7 @@ from datetime import datetime
 from pydantic import ValidationError
 import pytest
 
+from tests.testlibraries.assert_list import assert_each_properties
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.data.waon import ChargeKind, UseKind
 from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
@@ -27,12 +28,17 @@ class TestWaonRowData:
         use_kind = "支払"
         charge_kind = "-"
         waon_row_data = RowDataFactory(WaonRowData).create([date, used_store, used_amount, use_kind, charge_kind])
-        # Reason: Time is not used in this process.
-        assert waon_row_data.date == datetime(2018, 8, 7, 0, 0)  # noqa: DTZ001
-        assert waon_row_data.store_name == used_store
-        assert waon_row_data.used_amount == expected_amount
-        assert waon_row_data.use_kind == UseKind.PAYMENT
-        assert waon_row_data.charge_kind == ChargeKind.NULL
+        assert_each_properties(
+            waon_row_data,
+            [
+                # Reason: Time is not used in this process.
+                datetime(2018, 8, 7, 0, 0),  # noqa: DTZ001
+                used_store,
+                expected_amount,
+                UseKind.PAYMENT,
+                ChargeKind.NULL,
+            ],
+        )
 
     @staticmethod
     # pylint: disable=unused-argument

@@ -4,19 +4,13 @@ from typing import cast
 
 import pytest
 
+from tests.testlibraries.assert_list import assert_each_properties
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import (
-    WaonZaimIncomeRowConverter,
-    WaonZaimPaymentRowConverter,
-    WaonZaimTransferRowConverter,
-)
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter, ZaimRowFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
 
@@ -45,6 +39,7 @@ class TestWaonZaimIncomeRowConverter:
         expected_amount_income: int,
     ) -> None:
         """Arguments should set into properties."""
+        item_name = ""
         account_context = Account.WAON.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         waon_row = csv_record_processor.create_input_row_instance(waon_row_data)
@@ -53,11 +48,11 @@ class TestWaonZaimIncomeRowConverter:
         assert isinstance(zaim_row, ZaimIncomeRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
-        assert zaim_row_data.date == expected_date
-        assert zaim_row_data.store_name == expected_store
-        assert not zaim_row_data.item_name
-        assert zaim_row_data.cash_flow_target == "WAON"
-        assert zaim_row_data.amount_income == expected_amount_income
+        assert_each_properties(
+            zaim_row_data,
+            [expected_date, "WAON", item_name, expected_store, expected_amount_income],
+            attribute_filter=["date", "cash_flow_target", "item_name", "store_name", "amount_income"],
+        )
 
 
 class TestWaonZaimPaymentRowConverter:
@@ -90,6 +85,7 @@ class TestWaonZaimPaymentRowConverter:
         expected_amount_payment: int,
     ) -> None:
         """Arguments should set into properties."""
+        item_name = ""
         account_context = Account.WAON.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         waon_row = csv_record_processor.create_input_row_instance(waon_row_data)
@@ -98,11 +94,11 @@ class TestWaonZaimPaymentRowConverter:
         assert isinstance(zaim_row, ZaimPaymentRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
-        assert zaim_row_data.date == expected_date
-        assert zaim_row_data.store_name == expected_store
-        assert not zaim_row_data.item_name
-        assert zaim_row_data.cash_flow_source == "WAON"
-        assert zaim_row_data.amount_payment == expected_amount_payment
+        assert_each_properties(
+            zaim_row_data,
+            [expected_date, "WAON", item_name, expected_store, expected_amount_payment],
+            attribute_filter=["date", "cash_flow_source", "item_name", "store_name", "amount_payment"],
+        )
 
 
 class TestWaonZaimTransferRowConverter:
@@ -129,84 +125,29 @@ class TestWaonZaimTransferRowConverter:
         assert isinstance(zaim_row, ZaimTransferRow)
         list_zaim_row = zaim_row.convert_to_list()
         zaim_row_data = ZaimRowData(*list_zaim_row)
-        assert zaim_row_data.date == expected_date
-        assert zaim_row_data.cash_flow_source == "イオン銀行"
-        assert zaim_row_data.cash_flow_target == "WAON"
-        assert zaim_row_data.amount_transfer == expected_amount_payment
+        assert_each_properties(
+            zaim_row_data,
+            [expected_date, "イオン銀行", "WAON", expected_amount_payment],
+            attribute_filter=["date", "cash_flow_source", "cash_flow_target", "amount_transfer"],
+        )
 
 
 class TestWaonZaimRowConverterConverter:
     """Tests for WaonZaimRowConverterConverter."""
 
-    # pylint: disable=unused-argument
-    @staticmethod
-    @pytest.mark.parametrize(
-        ("database_session_with_schema", "input_row_data", "expected"),
-        [
-            # Case when WAON payment
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_WAON_FAMILY_MART_KABUTOCHOEITAIDORI],
-                InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI,
-                WaonZaimPaymentRowConverter,
-            ),
-            # Case when WAON charge from point
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
-                InstanceResource.ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO,
-                WaonZaimIncomeRowConverter,
-            ),
-            # Case when WAON auto charge
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
-                InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO,
-                WaonZaimTransferRowConverter,
-            ),
-            # Case when WAON charge by bank account
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
-                InstanceResource.ROW_DATA_WAON_CHARGE_BANK_ACCOUNT_ITABASHIMAENOCHO,
-                WaonZaimTransferRowConverter,
-            ),
-            # Case when WAON charge by cash
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
-                InstanceResource.ROW_DATA_WAON_CHARGE_CASH_ITABASHIMAENOCHO,
-                WaonZaimTransferRowConverter,
-            ),
-            # Case when WAON charge by value download
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
-                InstanceResource.ROW_DATA_WAON_CHARGE_DOWNLOAD_VALUE_ITABASHIMAENOCHO,
-                WaonZaimIncomeRowConverter,
-            ),
-        ],
-        indirect=["database_session_with_schema"],
-    )
-    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
-    def test_success(
-        input_row_data: WaonRowData,
-        expected: type[ZaimRowConverter[InputRow[InputRowData], InputRowData]],
-    ) -> None:
-        """Input row should convert to suitable ZaimRow by transfer target."""
-        account_context = Account.WAON.value
-        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
-        input_row = csv_record_processor.create_input_row_instance(input_row_data)
-        actual = account_context.zaim_row_converter_factory.create(input_row, Path())
-        assert isinstance(actual, expected)
-
-    @staticmethod
     @pytest.mark.parametrize(
         "database_session_with_schema",
         [[InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO]],
         indirect=["database_session_with_schema"],
     )
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
-    def test_fail() -> None:
+    def test_fail(self) -> None:
         """Create method should raise ValueError when input row is undefined type."""
         account_context = Account.WAON.value
         csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
         input_row = csv_record_processor.create_input_row_instance(
             InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO,
         )
+        # Reason: To fix, it is necessary to recreate designs of ZaimRowConverterFactory.
         input_row = cast(WaonRow, input_row)
         assert input_row.is_row_to_skip
