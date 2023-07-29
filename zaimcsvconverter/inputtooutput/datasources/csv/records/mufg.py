@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import Any
+from typing import Any, Optional
 
 from zaimcsvconverter.data.mufg import CashFlowKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -55,7 +55,7 @@ class MufgIncomeRow(MufgRow, ABC):
 
     def __init__(self, row_data: MufgRowData, *args: Any, **kwargs: Any) -> None:
         super().__init__(row_data, *args, **kwargs)
-        self._deposit_amount: int | None = row_data.deposit_amount
+        self._deposit_amount: Optional[int] = row_data.deposit_amount
 
     @property
     def deposit_amount(self) -> int:
@@ -78,7 +78,7 @@ class MufgPaymentRow(MufgRow, ABC):
 
     def __init__(self, row_data: MufgRowData, *args: Any, **kwargs: Any) -> None:
         super().__init__(row_data, *args, **kwargs)
-        self._payed_amount: int | None = row_data.payed_amount
+        self._payed_amount: Optional[int] = row_data.payed_amount
 
     @property
     def payed_amount(self) -> int:

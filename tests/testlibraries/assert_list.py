@@ -1,13 +1,13 @@
 """To reduce cyclomatic complexity."""
 from collections.abc import Iterable
-from typing import Any
+from typing import Any, Optional
 
 
 def assert_each_properties(
     actual_object: object,
     list_expected: list[Any],
     *,
-    attribute_filter: list[str] | None = None,
+    attribute_filter: Optional[list[str]] = None,
 ) -> None:
     list_actual = create_actual_iterator(actual_object, attribute_filter)
     try:
@@ -16,7 +16,7 @@ def assert_each_properties(
         raise AssertionError(str(actual_object.__dict__.keys()) + ",\n" + str(error)) from error
 
 
-def create_actual_iterator(actual_object: object, attribute_filter: list[str] | None = None) -> Iterable[Any]:
+def create_actual_iterator(actual_object: object, attribute_filter: Optional[list[str]] = None) -> Iterable[Any]:
     return (
         value
         for key, value in actual_object.__dict__.items()

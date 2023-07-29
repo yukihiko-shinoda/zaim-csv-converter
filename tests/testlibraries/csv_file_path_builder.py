@@ -15,7 +15,7 @@ class CsvFilePathBuilder(RelativeVacateFilePath):
         self,
         target: Path = Path("export.csv"),
         backup: Optional[Path] = None,
-        base: Path | None = None,
+        base: Optional[Path] = None,
         output: Path = Path("csvoutput"),
     ) -> None:
         if not base:
