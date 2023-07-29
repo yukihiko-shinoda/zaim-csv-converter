@@ -19,15 +19,13 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_output_exporter 
 class TestConvertWorkflow:
     """Tests for InputData."""
 
-    # pylint: disable=unused-argument
-    @staticmethod
     @pytest.mark.parametrize(
         ("database_session_with_schema", "path_file_csv_input"),
         [([InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO], "waon")],
         indirect=["database_session_with_schema", "path_file_csv_input"],
     )
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
-    def test(path_file_csv_input: Path, tmp_path: Path) -> None:
+    def test(self, path_file_csv_input: Path, tmp_path: Path) -> None:
         """Tests following:
 
         - InvalidInputCsvError should be raised
@@ -52,6 +50,9 @@ class TestConvertWorkflow:
             "Undefined store or item name in convert table CSV exists in test_waon.csv. "
             "Please check property AccountCsvConverter.list_undefined_store."
         )
+        self.assert_data_source(data_source)
+
+    def assert_data_source(self, data_source: Csv[Any, Any]) -> None:
         assert data_source.is_invalid
         invalid_cell_error = data_source.dictionary_invalid_record[0][0]
         assert isinstance(invalid_cell_error, InvalidCellError)

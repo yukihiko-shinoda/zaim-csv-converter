@@ -1,6 +1,7 @@
 """Tests for sf_card_viewer.py."""
 from datetime import datetime
 
+from tests.testlibraries.assert_list import assert_each_properties
 from zaimcsvconverter.data.sf_card_viewer import Note
 from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
@@ -43,14 +44,19 @@ class TestSFCardViewerRowData:
                 note,
             ],
         )
-        assert sf_card_viewer_row_data.is_commuter_pass_enter == is_commuter_pass_enter
-        assert sf_card_viewer_row_data.railway_company_name_enter == railway_company_name_enter
-        assert sf_card_viewer_row_data.station_name_enter == station_name_enter
-        assert sf_card_viewer_row_data.is_commuter_pass_exit == is_commuter_pass_exit
-        assert sf_card_viewer_row_data.railway_company_name_exit == railway_company_name_exit
-        assert sf_card_viewer_row_data.used_amount == expected_used_amount
-        assert sf_card_viewer_row_data.balance == balance
-        assert sf_card_viewer_row_data.note == Note.EMPTY
-        # Reason: Time is not used in this process.
-        assert sf_card_viewer_row_data.date == datetime(2018, 11, 13, 0, 0)  # noqa: DTZ001
-        assert sf_card_viewer_row_data.store_name == station_name_exit
+        assert_each_properties(
+            sf_card_viewer_row_data,
+            [
+                # Reason: Time is not used in this process.
+                datetime(2018, 11, 13, 0, 0),  # noqa: DTZ001
+                is_commuter_pass_enter,
+                railway_company_name_enter,
+                station_name_enter,
+                is_commuter_pass_exit,
+                railway_company_name_exit,
+                station_name_exit,
+                expected_used_amount,
+                balance,
+                Note.EMPTY,
+            ],
+        )

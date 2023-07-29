@@ -1,6 +1,7 @@
 """Tests for AmazonRow."""
 from datetime import datetime
 
+from tests.testlibraries.assert_list import assert_each_properties
 from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
 
@@ -59,22 +60,27 @@ class TestAmazonRowData:
                 url_item,
             ],
         )
-        assert row_data.order_id == order_id
-        assert row_data.note == note
-        assert row_data.price == expected_price
-        assert row_data.number == 1
-        assert row_data.subtotal_price_item == subtotal_price_item
-        assert row_data.total_order == total_order
-        assert row_data.destination == destination
-        assert row_data.status == status
-        assert row_data.billing_address == billing_address
-        assert row_data.billing_amount == billing_amount
-        assert row_data.credit_card_billing_date == credit_card_billing_date
-        assert row_data.credit_card_billing_amount == credit_card_billing_amount
-        assert row_data.credit_card_identity == credit_card_identity
-        assert row_data.url_order_summary == url_order_summary
-        assert row_data.url_receipt == url_receipt
-        assert row_data.url_item == url_item
-        # Reason: Time is not used in this process.
-        assert row_data.date == datetime(2018, 10, 23, 0, 0)  # noqa: DTZ001
-        assert row_data.item_name == item_name
+        assert_each_properties(
+            row_data,
+            [
+                # Reason: Time is not used in this process.
+                datetime(2018, 10, 23, 0, 0, 0),  # noqa: DTZ001
+                order_id,
+                item_name,
+                note,
+                expected_price,
+                1,
+                subtotal_price_item,
+                total_order,
+                destination,
+                status,
+                billing_address,
+                billing_amount,
+                credit_card_billing_date,
+                credit_card_billing_amount,
+                credit_card_identity,
+                url_order_summary,
+                url_receipt,
+                url_item,
+            ],
+        )

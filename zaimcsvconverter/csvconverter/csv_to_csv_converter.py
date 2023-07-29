@@ -20,7 +20,7 @@ class CsvToCsvConverter:
     """This class implements abstract converting steps for CSV."""
 
     def __init__(self, path_csv_file: Path, directory_csv_output: Path = DirectoryCsv.OUTPUT.value) -> None:
-        account_context: AccountContext["InputRowData", "InputRow[InputRowData]"] = Account.create_by_path_csv_input(
+        account_context: AccountContext[InputRowData, InputRow[InputRowData]] = Account.create_by_path_csv_input(
             path_csv_file,
         ).value
         god_slayer = account_context.god_slayer_factory.create(path_csv_file)

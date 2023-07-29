@@ -46,7 +46,6 @@ class TestViewCardStoreRow:
     """Tests for ViewCardStoreRow."""
 
     # pylint: disable=protected-access,too-many-arguments,unused-argument
-    @staticmethod
     @pytest.mark.parametrize(
         ("view_card_row_data", "expected_date", "expected_store_name_zaim", "expected_is_row_to_skip"),
         [
@@ -61,6 +60,7 @@ class TestViewCardStoreRow:
     )
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_view_card")
     def test_init(
+        self,
         view_card_row_data: ViewCardRowData,
         expected_date: datetime,
         expected_store_name_zaim: str,
@@ -74,6 +74,21 @@ class TestViewCardStoreRow:
         # noinspection PyTypeChecker
         row = ViewCardStoreRow(view_card_row_data)
         assert row.date == expected_date
+        self.assert_store_and_item(
+            row,
+            view_card_row_data,
+            expected_store_name_zaim,
+            expected_is_row_to_skip=expected_is_row_to_skip,
+        )
+
+    def assert_store_and_item(
+        self,
+        row: ViewCardStoreRow,
+        view_card_row_data: ViewCardRowData,
+        expected_store_name_zaim: str,
+        *,
+        expected_is_row_to_skip: bool,
+    ) -> None:
         assert isinstance(row.store, Store)
         # noinspection PyUnresolvedReferences
         assert row.store.name == view_card_row_data.used_place

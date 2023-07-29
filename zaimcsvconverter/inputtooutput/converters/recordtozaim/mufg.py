@@ -178,7 +178,7 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
 
     def _create(
         self,
-        input_row: MufgIncomeFromOthersRow,
+        input_row: Kind1[MufgRow, MufgRowData],
     ) -> ZaimRowConverter[MufgRow, MufgRowData]:
         dekinded_input_row = cast(MufgRow, input_row)
         if isinstance(input_row, MufgPaymentToSelfRow) and dekinded_input_row.is_payment:
@@ -188,6 +188,13 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
         if isinstance(input_row, MufgPaymentToMufgRow):
             # Reason: The returns can't detect correct type limited by if instance block.
             return MufgPaymentToMufgRowConverter(input_row)  # type: ignore[arg-type,return-value]
+        return self._create2(input_row)
+
+    def _create2(
+        self,
+        input_row: Kind1[MufgRow, MufgRowData],
+    ) -> ZaimRowConverter[MufgRow, MufgRowData]:
+        dekinded_input_row = cast(MufgRow, input_row)
         if isinstance(input_row, MufgIncomeFromSelfRow) and dekinded_input_row.is_income_from_other_own_account:
             # Reason: The returns can't detect correct type limited by if instance block.
             return MufgIncomeZaimTransferRowConverter(input_row)  # type: ignore[arg-type,return-value]

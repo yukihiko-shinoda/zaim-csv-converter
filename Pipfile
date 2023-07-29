@@ -52,7 +52,8 @@ hacking = {version = ">=5.0.0", markers="python_version >= '3.8'"}
 invokelint = {version = ">=0.8.1", markers="python_version >= '3.7'"}
 isort = "*"
 mypy = "*"
-pydantic = "*"
+# Currentry, migration steps is difficult
+pydantic = "<2.0.0"
 pydocstyle = {version = "*", markers="python_version >= '3.6'"}
 pylint = "*"
 pytest = "*"

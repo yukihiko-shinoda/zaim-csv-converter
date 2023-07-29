@@ -211,6 +211,9 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
             return ConcreteMobileSuicaZaimPaymentOnStationRowConverter(
                 input_row,  # type: ignore[return-value,arg-type]
             )
+        return self._create(input_row)
+
+    def _create(self, input_row: MobileSuicaStoreRow) -> ZaimRowConverter[MobileSuicaRow, MobileSuicaRowData]:
         if isinstance(input_row, MobileSuicaStoreRow):
 
             class ConcreteMobileSuicaZaimTransferRowConverter(MobileSuicaZaimTransferRowConverter):

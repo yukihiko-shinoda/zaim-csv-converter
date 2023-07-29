@@ -69,44 +69,60 @@ class TestConvertTableImporter:
             database_session_with_schema,
         )
 
-    @staticmethod
-    def assert_store_equal(expected_stores: list[Any], database_session_with_schema: SQLAlchemySession) -> None:
+    def assert_store_equal(
+        self,
+        expected_stores: list[list[Any]],
+        database_session_with_schema: SQLAlchemySession,
+    ) -> None:
         """This method asserts Store table."""
         # Reeason: SQLAlchemy 2 Stubs' issue:
         # - any, has on column attribute · Issue #207 · sqlalchemy/sqlalchemy2-stubs
         #   https://github.com/sqlalchemy/sqlalchemy2-stubs/issues/207
         stores: list[Store] = database_session_with_schema.query(Store).order_by(Store.id.asc()).all()
         assert len(stores) == len(expected_stores)
-        index = 0
-        for store in stores:
-            expected_store = expected_stores[index]
-            assert store.id == expected_store[0]
-            assert store.file_csv_convert_id == expected_store[1]
-            assert store.name == expected_store[2]
-            assert store.name_zaim == expected_store[3]
-            assert store.category_payment_large == expected_store[4]
-            assert store.category_payment_small == expected_store[5]
-            assert store.category_income == expected_store[6]
-            assert store.transfer_target == expected_store[7]
-            index += 1
+        for store, expected_store in zip(stores, expected_stores):
+            self.assert_store1(store, expected_store)
+            self.assert_store2(store, expected_store)
 
     @staticmethod
-    def assert_item_equal(expected_items: list[Any], database_session_with_schema: SQLAlchemySession) -> None:
+    def assert_store1(store: Store, expected_store: list[Any]) -> None:
+        assert store.id == expected_store[0]
+        assert store.file_csv_convert_id == expected_store[1]
+        assert store.name == expected_store[2]
+        assert store.name_zaim == expected_store[3]
+
+    @staticmethod
+    def assert_store2(store: Store, expected_store: list[Any]) -> None:
+        assert store.category_payment_large == expected_store[4]
+        assert store.category_payment_small == expected_store[5]
+        assert store.category_income == expected_store[6]
+        assert store.transfer_target == expected_store[7]
+
+    def assert_item_equal(
+        self,
+        expected_items: list[list[Any]],
+        database_session_with_schema: SQLAlchemySession,
+    ) -> None:
         """This method asserts Store table."""
         # Reeason: SQLAlchemy 2 Stubs' issue:
         # - any, has on column attribute · Issue #207 · sqlalchemy/sqlalchemy2-stubs
         #   https://github.com/sqlalchemy/sqlalchemy2-stubs/issues/207
         items: list[Item] = database_session_with_schema.query(Item).order_by(Item.id.asc()).all()
         assert len(items) == len(expected_items)
-        index = 0
-        for item in items:
-            expected_item = expected_items[index]
-            assert item.id == expected_item[0]
-            assert item.file_csv_convert_id == expected_item[1]
-            assert item.name == expected_item[2]
-            assert item.category_payment_large == expected_item[3]
-            assert item.category_payment_small == expected_item[4]
-            index += 1
+        for item, expected_item in zip(items, expected_items):
+            self.assert_item1(item, expected_item)
+            self.assert_item2(item, expected_item)
+
+    @staticmethod
+    def assert_item1(item: Item, expected_item: list[Any]) -> None:
+        assert item.id == expected_item[0]
+        assert item.file_csv_convert_id == expected_item[1]
+        assert item.name == expected_item[2]
+
+    @staticmethod
+    def assert_item2(item: Item, expected_item: list[Any]) -> None:
+        assert item.category_payment_large == expected_item[3]
+        assert item.category_payment_small == expected_item[4]
 
     # pylint: disable=unused-argument
     @staticmethod

@@ -17,7 +17,6 @@ class TestGoldPointCardPlus201912Row:
     """Tests for GoldPointCartPlusRow."""
 
     # pylint: disable=protected-access,too-many-arguments,unused-argument
-    @staticmethod
     @pytest.mark.parametrize(
         (
             "gold_point_card_plus_201912_row_data",
@@ -60,6 +59,7 @@ class TestGoldPointCardPlus201912Row:
     )
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_gold_point_card_plus")
     def test_init(
+        self,
         gold_point_card_plus_201912_row_data: GoldPointCardPlus201912RowData,
         expected_date: datetime,
         expected_store_name_zaim: str,
@@ -72,6 +72,21 @@ class TestGoldPointCardPlus201912Row:
         """
         row = GoldPointCardPlus201912Row(gold_point_card_plus_201912_row_data)
         assert row.date == expected_date
+        self.assert_store_and_item(
+            row,
+            gold_point_card_plus_201912_row_data,
+            expected_store_name_zaim,
+            expected_is_row_to_skip=expected_is_row_to_skip,
+        )
+
+    def assert_store_and_item(
+        self,
+        row: GoldPointCardPlus201912Row,
+        gold_point_card_plus_201912_row_data: GoldPointCardPlus201912RowData,
+        expected_store_name_zaim: str,
+        *,
+        expected_is_row_to_skip: bool,
+    ) -> None:
         assert isinstance(row.store, Store)
         # pylint: disable=protected-access
         assert row.store.name == gold_point_card_plus_201912_row_data.used_store

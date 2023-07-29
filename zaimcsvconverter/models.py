@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import Enum
 import re
 from types import DynamicClassAttribute
-from typing import Any, cast, Generic, TypeVar
+from typing import Any, cast, Generic, Optional, TypeVar
 import warnings
 
 from inflector import Inflector
@@ -70,19 +70,19 @@ class ConvertTableRowData:
 class StoreRowData(ConvertTableRowData):
     """This class implements data class for wrapping list of store convert table row model."""
 
-    name_zaim: str | None = None
-    category_payment_large: str | None = None
-    category_payment_small: str | None = None
-    category_income: str | None = None
-    transfer_account: str | None = None
+    name_zaim: Optional[str] = None
+    category_payment_large: Optional[str] = None
+    category_payment_small: Optional[str] = None
+    category_income: Optional[str] = None
+    transfer_account: Optional[str] = None
 
 
 @dataclass
 class ItemRowData(ConvertTableRowData):
     """This class implements data class for wrapping list of item and category row model."""
 
-    category_payment_large: str | None = None
-    category_payment_small: str | None = None
+    category_payment_large: Optional[str] = None
+    category_payment_small: Optional[str] = None
 
 
 TypeVarConvertTableRowData = TypeVar("TypeVarConvertTableRowData", bound=ConvertTableRowData)
@@ -119,7 +119,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
         self.name = row_data.name
 
     @staticmethod
-    def _get_str_or_none(value: str | None) -> str | None:
+    def _get_str_or_none(value: Optional[str]) -> Optional[str]:
         return value if value else None
 
     @classmethod
@@ -165,9 +165,9 @@ with warnings.catch_warnings():
         # as well as being able to control which types are optional.
         # - Mypy / Pep-484 Support for ORM Mappings — SQLAlchemy 1.4 Documentation
         #   https://docs.sqlalchemy.org/en/14/orm/extensions/mypy.html#introspection-of-columns-based-on-typeengine
-        name_zaim: str | None = Column(String(255))
-        category_income: str | None = Column(String(255))
-        transfer_target: str | None = Column(String(255))
+        name_zaim: Optional[str] = Column(String(255))
+        category_income: Optional[str] = Column(String(255))
+        transfer_target: Optional[str] = Column(String(255))
 
         def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: StoreRowData) -> None:
             ConvertTableRecordMixin.__init__(self, file_csv_convert_id, row_data)

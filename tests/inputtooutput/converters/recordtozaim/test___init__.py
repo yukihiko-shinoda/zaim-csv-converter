@@ -1,13 +1,20 @@
 """Tests for __init__.py."""
-from pathlib import Path
-
 import pytest
 
+from tests.conftest import create_zaim_row_converter
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimPaymentRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import (
+    Amazon201911DiscountZaimPaymentRowConverter,
+    Amazon201911PaymentZaimPaymentRowConverter,
+)
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus import (
     GoldPointCardPlusZaimPaymentRowConverter,
+)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
+    GoldPointCardPlus201912ZaimPaymentRowConverter,
+    GoldPointCardPlus201912ZaimTransferRowConverter,
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import (
     MufgIncomeZaimTransferRowConverter,
@@ -22,13 +29,13 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer impor
     SFCardViewerZaimPaymentOnStationRowConverter,
     SFCardViewerZaimTransferRowConverter,
 )
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.view_card import ViewCardZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import (
     WaonZaimIncomeRowConverter,
     WaonZaimPaymentRowConverter,
     WaonZaimTransferRowConverter,
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
-from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
 
@@ -69,12 +76,47 @@ class TestZaimRowConverterFactory:
                 InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO,
                 WaonZaimTransferRowConverter,
             ),
+            # Case when WAON charge by bank account
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
+                Account.WAON,
+                InstanceResource.ROW_DATA_WAON_CHARGE_BANK_ACCOUNT_ITABASHIMAENOCHO,
+                WaonZaimTransferRowConverter,
+            ),
+            # Case when WAON charge by cash
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
+                Account.WAON,
+                InstanceResource.ROW_DATA_WAON_CHARGE_CASH_ITABASHIMAENOCHO,
+                WaonZaimTransferRowConverter,
+            ),
+            # Case when WAON charge by value download
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
+                Account.WAON,
+                InstanceResource.ROW_DATA_WAON_CHARGE_DOWNLOAD_VALUE_ITABASHIMAENOCHO,
+                WaonZaimIncomeRowConverter,
+            ),
             # Case when Gold Point Card Plus payment
             (
                 [InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP],
                 Account.GOLD_POINT_CARD_PLUS,
                 InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP,
                 GoldPointCardPlusZaimPaymentRowConverter,
+            ),
+            # Case when Gold Point Card Plus payment
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_DOWNLOADS],
+                Account.GOLD_POINT_CARD_PLUS_201912,
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS,
+                GoldPointCardPlus201912ZaimPaymentRowConverter,
+            ),
+            # Case when Gold Point Card Plus transfer
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_KYASH],
+                Account.GOLD_POINT_CARD_PLUS_201912,
+                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_KYASH,
+                GoldPointCardPlus201912ZaimTransferRowConverter,
             ),
             # Case when MUFG income by card
             (
@@ -167,6 +209,27 @@ class TestZaimRowConverterFactory:
                 InstanceResource.ROW_DATA_AMAZON_ECHO_DOT,
                 AmazonZaimPaymentRowConverter,
             ),
+            # Case when Amazon payment
+            (
+                [InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT],
+                Account.AMAZON_201911,
+                InstanceResource.ROW_DATA_AMAZON_201911_ECHO_DOT,
+                Amazon201911PaymentZaimPaymentRowConverter,
+            ),
+            # Case when Amazon discount
+            (
+                [InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_AMAZON_POINT],
+                Account.AMAZON_201911,
+                InstanceResource.ROW_DATA_AMAZON_201911_AMAZON_POINT,
+                Amazon201911DiscountZaimPaymentRowConverter,
+            ),
+            # Case when Gold Point Card Plus payment
+            (
+                [InstanceResource.FIXTURE_RECORD_STORE_VIEW_CARD_VIEW_CARD],
+                Account.VIEW_CARD,
+                InstanceResource.ROW_DATA_VIEW_CARD_ANNUAL_FEE,
+                ViewCardZaimPaymentRowConverter,
+            ),
         ],
         indirect=["database_session_with_schema"],
     )
@@ -177,9 +240,4 @@ class TestZaimRowConverterFactory:
         expected: type[ZaimPaymentRowConverter[InputRow[InputRowData], InputRowData]],
     ) -> None:
         """Input row should convert to suitable ZaimRow by transfer target."""
-        account_context = account.value
-        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
-        input_row = csv_record_processor.create_input_row_instance(input_row_data)
-        factory_class = account_context.zaim_row_converter_factory.create(input_row, Path())
-        # noinspection PyTypeChecker
-        assert isinstance(factory_class, expected)
+        assert isinstance(create_zaim_row_converter(account.value, input_row_data), expected)

@@ -18,6 +18,9 @@ class UndefinedContentErrorHandler:
     def __iter__(self) -> Iterator[list[str]]:
         return self.list_error.__iter__()
 
+    def __len__(self) -> int:
+        return len(self.list_error)
+
     def extend_list(self, error: list[list[str]]) -> None:
         """This method appends error list argument into error list property."""
         self.list_error.extend(error)

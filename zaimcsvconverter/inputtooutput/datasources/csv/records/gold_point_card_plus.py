@@ -16,10 +16,19 @@ class GoldPointCardPlusRow(InputStoreRow[GoldPointCardPlusRowData]):
     @property
     def is_row_to_skip(self) -> bool:
         return (
-            CONFIG.gold_point_card_plus.skip_amazon_row
-            and self.store.is_amazon
-            or CONFIG.gold_point_card_plus.skip_pay_pal_row
-            and self.store.is_pay_pal
-            or CONFIG.gold_point_card_plus.skip_kyash_row
-            and self.store.is_kyash
+            self.is_amazon_row_and_should_skip
+            or self.is_pay_pal_row_and_should_skip
+            or self.is_kyash_row_and_should_skip
         ) and self.used_amount >= 0
+
+    @property
+    def is_amazon_row_and_should_skip(self) -> bool:
+        return CONFIG.gold_point_card_plus.skip_amazon_row and self.store.is_amazon
+
+    @property
+    def is_pay_pal_row_and_should_skip(self) -> bool:
+        return CONFIG.gold_point_card_plus.skip_pay_pal_row and self.store.is_pay_pal
+
+    @property
+    def is_kyash_row_and_should_skip(self) -> bool:
+        return CONFIG.gold_point_card_plus.skip_kyash_row and self.store.is_kyash

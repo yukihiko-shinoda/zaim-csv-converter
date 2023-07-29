@@ -19,8 +19,11 @@ class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911Ro
     #     https://returns.readthedocs.io/en/latest/pages/create-your-own-container.html#step-5-checking-laws
     def create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:  # type: ignore[override]
         # @see https://github.com/furyutei/amzOrderHistoryFilter/issues/3#issuecomment-543645937
-        if input_row_data.is_billing_to_credit_card or input_row_data.is_free_kindle:
+        if input_row_data.is_row_to_skip:
             return Amazon201911RowToSkip(input_row_data)
+        return self._create(input_row_data)
+
+    def _create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:
         if input_row_data.is_discount:
             return Amazon201911DiscountRow(input_row_data)
         if input_row_data.is_shipping_handling:

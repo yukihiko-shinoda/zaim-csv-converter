@@ -1,6 +1,7 @@
 """This module implements config for pytest."""
 from collections.abc import Generator
 from pathlib import Path
+from typing import Any
 
 from fixturefilehandler.factories import DeployerFactory
 from fixturefilehandler.file_paths import YamlConfigFilePathBuilder
@@ -11,7 +12,13 @@ from sqlalchemy.orm.session import Session as SQLAlchemySession
 from tests.test_zaim_csv_converter import create_relative_deploy_file_path
 from tests.testlibraries.database_for_test import DatabaseForTest
 from tests.testlibraries.instance_resource import InstanceResource
+from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter, ZaimRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimRow
 
 
 @pytest.fixture()
@@ -33,6 +40,19 @@ def database_session_basic_store_waon() -> Generator[SQLAlchemySession, None, No
         [
             InstanceResource.FIXTURE_RECORD_STORE_WAON_FAMILY_MART_KABUTOCHOEITAIDORI,
             InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO,
+        ],
+    )
+
+
+@pytest.fixture(scope="class")
+def database_session_stores_gold_point_card_plus_class_scope() -> Generator[SQLAlchemySession, None, None]:
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema(
+        [
+            InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC,
+            InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP,
+            InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_DOWNLOADS,
+            InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AWS,
         ],
     )
 
@@ -65,6 +85,19 @@ def database_session_stores_mufg() -> Generator[SQLAlchemySession, None, None]:
     )
 
 
+@pytest.fixture(scope="class")
+def database_session_stores_sf_card_viewer_class_scope() -> Generator[SQLAlchemySession, None, None]:
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema(
+        [
+            InstanceResource.FIXTURE_RECORD_STORE_PASMO_KOHRAKUEN_STATION,
+            InstanceResource.FIXTURE_RECORD_STORE_PASMO_KITASENJU_STATION,
+            InstanceResource.FIXTURE_RECORD_STORE_PASMO_AKIHABARA_STATION,
+            InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY,
+        ],
+    )
+
+
 @pytest.fixture()
 def database_session_stores_sf_card_viewer() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
@@ -75,6 +108,14 @@ def database_session_stores_sf_card_viewer() -> Generator[SQLAlchemySession, Non
             InstanceResource.FIXTURE_RECORD_STORE_PASMO_AKIHABARA_STATION,
             InstanceResource.FIXTURE_RECORD_STORE_PASMO_EMPTY,
         ],
+    )
+
+
+@pytest.fixture(scope="class")
+def database_session_stores_view_card_class_scope() -> Generator[SQLAlchemySession, None, None]:
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema(
+        [InstanceResource.FIXTURE_RECORD_STORE_VIEW_CARD_VIEW_CARD],
     )
 
 
@@ -97,6 +138,19 @@ def database_session_store_item() -> Generator[SQLAlchemySession, None, None]:
     )
 
 
+@pytest.fixture(scope="class")
+def database_session_stores_item_class_scope() -> Generator[SQLAlchemySession, None, None]:
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema(
+        [
+            InstanceResource.FIXTURE_RECORD_STORE_MUFG_MUFG,
+            InstanceResource.FIXTURE_RECORD_STORE_PASMO_KOHRAKUEN_STATION,
+            InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO,
+            InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT,
+        ],
+    )
+
+
 @pytest.fixture()
 def database_session_stores_item() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
@@ -106,6 +160,17 @@ def database_session_stores_item() -> Generator[SQLAlchemySession, None, None]:
             InstanceResource.FIXTURE_RECORD_STORE_PASMO_KOHRAKUEN_STATION,
             InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO,
             InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT,
+        ],
+    )
+
+
+@pytest.fixture(scope="class")
+def database_session_item_class_scope() -> Generator[SQLAlchemySession, None, None]:
+    """This fixture prepares database session and records."""
+    yield from DatabaseForTest.database_session_with_schema(
+        [
+            InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_ECHO_DOT,
+            InstanceResource.FIXTURE_RECORD_ITEM_AMAZON_AMAZON_POINT,
         ],
     )
 
@@ -133,6 +198,11 @@ def _yaml_config_file(resource_path_root: Path) -> Generator[None, None, None]:
     yaml_config_file_deployer.setup()
     yield
     yaml_config_file_deployer.teardown()
+
+
+@pytest.fixture(scope="class")
+def _yaml_config_load_class_scope(resource_path_root: Path) -> None:
+    CONFIG.load(resource_path_root / "config.yml.dist")
 
 
 @pytest.fixture()
@@ -195,3 +265,20 @@ def directory_csv_output(resource_path: Path) -> Generator[RelativeDeployFilePat
     ResourceFileDeployer.setup(csv_output_file_path)
     yield csv_output_file_path
     ResourceFileDeployer.teardown(csv_output_file_path)
+
+
+def create_zaim_row_converter(
+    account_context: AccountContext[TypeVarInputRowData, TypeVarInputRow],
+    row_data: TypeVarInputRowData,
+) -> ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]:
+    csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
+    amazon_row = csv_record_processor.create_input_row_instance(row_data)
+    # Reason: Pylint's bug. pylint: disable=no-member
+    return account_context.zaim_row_converter_factory.create(amazon_row, Path())
+
+
+def create_zaim_row(
+    account_context: AccountContext[TypeVarInputRowData, Any],
+    row_data: TypeVarInputRowData,
+) -> ZaimRow:
+    return ZaimRowFactory.create(create_zaim_row_converter(account_context, row_data))

@@ -244,6 +244,11 @@ def create_zaim_row_data_amazon_201911_202004() -> list[ZaimRowData]:
     ]
 
 
+def create_zaim_row_data_amazon_201911_202006() -> list[ZaimRowData]:
+    """Creates expected zaim row data for Amazon 201911 202006."""
+    return []
+
+
 def create_zaim_row_data_view_card_202005() -> list[ZaimRowData]:
     """Creates expected zaim row data for VIEW CARD 202005."""
     zaim_row_data_view_card_01 = ZaimRowData(

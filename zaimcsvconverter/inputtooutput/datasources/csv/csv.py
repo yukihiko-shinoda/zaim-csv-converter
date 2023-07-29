@@ -32,13 +32,7 @@ class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
         iterator = self.first_form_normalizer.__iter__()
         while True:
             try:
-                input_record_data = next(iterator)
-            except InvalidHeaderError as error:
-                self.invalid_header_error = error
-                raise InvalidInputCsvError(self, str(error)) from error
-            except InvalidFooterError as error:
-                self.invalid_footer_error = error
-                raise InvalidInputCsvError(self, str(error)) from error
+                input_record_data = self.try_to_iterate(iterator)
             except ValidationError as exc:
                 exception = self.build_invalid_record_error(exc)
                 self.mark_current_record_as_error(exception.list_error)
@@ -47,6 +41,17 @@ class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
             except StopIteration:
                 break
             yield from self.convert_to_record(input_record_data)
+
+    def try_to_iterate(self, iterator: Generator[TypeVarInputRowData, None, None]) -> TypeVarInputRowData:
+        """Try to iterate CSV row data."""
+        try:
+            return next(iterator)
+        except InvalidHeaderError as error:
+            self.invalid_header_error = error
+            raise InvalidInputCsvError(self, str(error)) from error
+        except InvalidFooterError as error:
+            self.invalid_footer_error = error
+            raise InvalidInputCsvError(self, str(error)) from error
 
     def convert_to_record(self, input_record_data: TypeVarInputRowData) -> Generator[AbstractInputRecord, None, None]:
         """Converts InputRecordData to InputRecord."""

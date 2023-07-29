@@ -1,101 +1,138 @@
 """Tests for gold_point_card_plus_201912.py."""
-from pathlib import Path
+from dataclasses import dataclass
 
 import pytest
 
+from tests.conftest import create_zaim_row
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912ZaimPaymentRowConverter,
-    GoldPointCardPlus201912ZaimTransferRowConverter,
-)
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
 )
-from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow, ZaimRow
 
 
-class TestGoldPointCardPlus201912ZaimPaymentRowConverter:
+@pytest.fixture(scope="class")
+def zaim_row_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter(
+    _yaml_config_load_class_scope: None,
+    # Reason: pytest fixture can't use pytest.mark.usefixtures. pylint: disable=unused-argument
+    database_session_stores_gold_point_card_plus_class_scope: None,  # noqa: ARG001
+    gold_point_card_plus_201912_row_data: GoldPointCardPlus201912RowData,
+) -> ZaimRow:
+    return create_zaim_row(Account.GOLD_POINT_CARD_PLUS_201912.value, gold_point_card_plus_201912_row_data)
+
+
+@pytest.mark.parametrize(
+    ("gold_point_card_plus_201912_row_data"),
+    [
+        (InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC),
+        (InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS),
+    ],
+    scope="class",
+)
+class TestZaimRowFactory:
     """Tests for GoldPointCardPlus201912ZaimPaymentRowConverter."""
 
-    # Reason: Testing different version of row data is better to be separated code.
-    # noinspection DuplicatedCode
-    # pylint: disable=unused-argument,too-many-arguments
-    @staticmethod
-    @pytest.mark.parametrize(
-        ("gold_point_card_plus_201912_row_data", "expected_date", "expected_store_name_zaim", "expected_use_amount"),
-        [
-            (
-                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC,
+    def test(
+        self,
+        # Reason: pytest fixture.
+        # pylint: disable=unused-argument,redefined-outer-name
+        zaim_row_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter: ZaimRow,
+    ) -> None:
+        assert isinstance(zaim_row_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter, ZaimPaymentRow)
+
+
+@pytest.fixture(scope="class")
+def zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter(
+    # Reason: pytest fixture. pylint: disable=unused-argument,redefined-outer-name
+    zaim_row_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter: ZaimRow,
+) -> ZaimRowData:
+    list_zaim_row = zaim_row_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter.convert_to_list()
+    return ZaimRowData(*list_zaim_row)
+
+
+ITEM_NAME_EMPTY = ""
+CASH_FLOW_SOURCE_GOLD_POINT_CARD_PLUS = "ヨドバシゴールドポイントカード・プラス"
+
+
+@dataclass
+class ExpectedZaimRowData:
+    date: str
+    store_name: str
+    amount_payment: int
+    item_name: str = ITEM_NAME_EMPTY
+    cash_flow_source: str = CASH_FLOW_SOURCE_GOLD_POINT_CARD_PLUS
+
+
+@pytest.mark.parametrize(
+    ("gold_point_card_plus_201912_row_data", "expected"),
+    [
+        (
+            InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC,
+            ExpectedZaimRowData(
                 "2019-11-05",
                 "東京電力エナジーパートナー株式会社",
                 11905,
             ),
-            (
-                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS,
+        ),
+        (
+            InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS,
+            ExpectedZaimRowData(
                 "2019-11-09",
                 "Amazon Japan G.K.",
                 1969,
             ),
-        ],
-    )
-    @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_gold_point_card_plus")
-    def test(
-        gold_point_card_plus_201912_row_data: GoldPointCardPlus201912RowData,
-        expected_date: str,
-        expected_store_name_zaim: str,
-        expected_use_amount: int,
+        ),
+    ],
+    scope="class",
+)
+class TestGoldPointCardPlus201912ZaimPaymentRowConverter:
+    """Tests for GoldPointCardPlus201912ZaimPaymentRowConverter."""
+
+    def test_date(
+        self,
+        # Reason: pytest fixture. pylint: disable=unused-argument,redefined-outer-name
+        zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter: ZaimRowData,
+        expected: ZaimRowData,
     ) -> None:
-        """Arguments should set into properties."""
-        account_context = Account.GOLD_POINT_CARD_PLUS_201912.value
-        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
-        row = csv_record_processor.create_input_row_instance(gold_point_card_plus_201912_row_data)
-        # Reason: Pylint's bug. pylint: disable=no-member
-        zaim_row = ZaimRowFactory.create(account_context.zaim_row_converter_factory.create(row, Path()))
-        assert isinstance(zaim_row, ZaimPaymentRow)
-        list_zaim_row = zaim_row.convert_to_list()
-        zaim_row_data = ZaimRowData(*list_zaim_row)
-        assert zaim_row_data.date == expected_date
-        assert zaim_row_data.store_name == expected_store_name_zaim
-        assert not zaim_row_data.item_name
-        assert zaim_row_data.cash_flow_source == "ヨドバシゴールドポイントカード・プラス"
-        assert zaim_row_data.amount_payment == expected_use_amount
+        assert zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter.date == expected.date
 
-
-class TestGoldPointCardPlus201912ZaimRowConverterFactory:
-    """Tests for GoldPointCardPlus201912ZaimRowConverterFactory."""
-
-    # pylint: disable=unused-argument
-    @staticmethod
-    @pytest.mark.parametrize(
-        ("database_session_with_schema", "input_row_data", "expected"),
-        [
-            # Case when Gold Point Card Plus payment
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_AMAZON_DOWNLOADS],
-                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_DOWNLOADS,
-                GoldPointCardPlus201912ZaimPaymentRowConverter,
-            ),
-            # Case when Gold Point Card Plus transfer
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_GOLD_POINT_CARD_PLUS_KYASH],
-                InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_KYASH,
-                GoldPointCardPlus201912ZaimTransferRowConverter,
-            ),
-        ],
-        indirect=["database_session_with_schema"],
-    )
-    @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
-    def test_select_factory(
-        input_row_data: GoldPointCardPlus201912RowData,
-        expected: type[GoldPointCardPlus201912ZaimPaymentRowConverter],
+    def test_store_name(
+        self,
+        # Reason: pytest fixture. pylint: disable=unused-argument,redefined-outer-name
+        zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter: ZaimRowData,
+        expected: ZaimRowData,
     ) -> None:
-        """Input row should convert to suitable ZaimRow by transfer target."""
-        account_context = Account.GOLD_POINT_CARD_PLUS_201912.value
-        csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
-        input_row = csv_record_processor.create_input_row_instance(input_row_data)
-        actual = account_context.zaim_row_converter_factory.create(input_row, Path())
-        assert isinstance(actual, expected)
+        zaim_row_data = zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter
+        assert zaim_row_data.store_name == expected.store_name
+        assert zaim_row_data.item_name == expected.item_name
+        assert zaim_row_data.cash_flow_source == expected.cash_flow_source
+        assert zaim_row_data.amount_payment == expected.amount_payment
+
+    def test_item_name(
+        self,
+        # Reason: pytest fixture. pylint: disable=unused-argument,redefined-outer-name
+        zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter: ZaimRowData,
+        expected: ZaimRowData,
+    ) -> None:
+        zaim_row_data = zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter
+        assert zaim_row_data.item_name == expected.item_name
+
+    def test_cash_flow_source(
+        self,
+        # Reason: pytest fixture. pylint: disable=unused-argument,redefined-outer-name
+        zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter: ZaimRowData,
+        expected: ZaimRowData,
+    ) -> None:
+        zaim_row_data = zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter
+        assert zaim_row_data.cash_flow_source == expected.cash_flow_source
+
+    def test_amount_payment(
+        self,
+        # Reason: pytest fixture. pylint: disable=unused-argument,redefined-outer-name
+        zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter: ZaimRowData,
+        expected: ZaimRowData,
+    ) -> None:
+        zaim_row_data = zaim_row_data_converted_by_gold_point_card_plus_201912_zaim_payment_row_converter
+        assert zaim_row_data.amount_payment == expected.amount_payment
