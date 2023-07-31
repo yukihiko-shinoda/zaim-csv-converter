@@ -171,7 +171,6 @@ fixable = [
     "EM102",  # Exception must not use an f-string literal, assign to variable first
     "PT001",  # Use `@pytest.fixture()` over `@pytest.fixture`
     "PT006",  # Wrong name(s) type in `@pytest.mark.parametrize`, expected `tuple`
-    "SIM108",  # Use ternary operator `extra_context = {} if extra_context is None else request.param` instead of `if`-`else`-block
     "UP006",  # Use {} instead of {} for type annotations
     "UP015",  # Unnecessary open mode parameters
     "UP037",  # Remove quotes from type annotation
@@ -180,6 +179,8 @@ unfixable = [
     # When fix `return a and b != ""` as `return a and b`, mypy will report warning:
     #   error: Incompatible return value type (got "Union[Literal[False], str]", expected "bool")  [return-value]
     "PLC1901",
+    # To handle mypy's bug in case when use Pydantic custom data type.
+    "SIM108",  # Use ternary operator `extra_context = {} if extra_context is None else request.param` instead of `if`-`else`-block
 ]
 target-version = "py39"
 

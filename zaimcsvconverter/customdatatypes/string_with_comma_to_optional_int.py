@@ -35,4 +35,9 @@ def constringwithcommatooptionalint(  # noqa: PLR0913
     return type("ConstrainedStringWithCommaToIntValue", (StringWithCommaToOptionalInt,), namespace)
 
 
-StrictStringWithCommaToOptionalInt = Optional[int] if TYPE_CHECKING else constringwithcommatooptionalint(strict=True)
+# Reason: The mypy's bug:
+#   error: Unsupported left operand type for == (ConstrainedStringToOptionalInt?)  [operator]
+if TYPE_CHECKING:  # noqa: SIM108
+    StrictStringWithCommaToOptionalInt = Optional[int]
+else:
+    StrictStringWithCommaToOptionalInt = constringwithcommatooptionalint(strict=True)

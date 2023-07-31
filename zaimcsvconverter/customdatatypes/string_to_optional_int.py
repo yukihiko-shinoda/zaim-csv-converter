@@ -57,4 +57,9 @@ def constringtooptionalint(  # noqa: PLR0913
     return type("ConstrainedStringToOptionalIntValue", (StringToOptionalInt,), namespace)
 
 
-ConstrainedStringToOptionalInt = Optional[int] if TYPE_CHECKING else constringtooptionalint()
+# Reason: The mypy's bug:
+#   error: Unsupported left operand type for == (ConstrainedStringToOptionalInt?)  [operator]
+if TYPE_CHECKING:  # noqa: SIM108
+    ConstrainedStringToOptionalInt = Optional[int]
+else:
+    ConstrainedStringToOptionalInt = constringtooptionalint()

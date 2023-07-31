@@ -22,17 +22,14 @@ class Amazon201911RowData(CsvRowData):
     order_id: str
     item_name_: str
     note: str
-    # Reason: Now we don't have enough time to recreate type class:
-    # - Answer: python - How can mypy accept pydantic's constr() types? - Stack Overflow
-    #   https://stackoverflow.com/a/67871116/12721873
-    price: ConstrainedStringToOptionalInt  # type: ignore[valid-type]
-    number: ConstrainedStringToOptionalInt  # type: ignore[valid-type]
-    subtotal_price_item: ConstrainedStringToOptionalInt  # type: ignore[valid-type]
-    total_order: ConstrainedStringToOptionalInt  # type: ignore[valid-type]
+    price: ConstrainedStringToOptionalInt
+    number: ConstrainedStringToOptionalInt
+    subtotal_price_item: ConstrainedStringToOptionalInt
+    total_order: ConstrainedStringToOptionalInt
     destination: str
     status: str
     billing_address: str
-    billing_amount: ConstrainedStringToOptionalInt  # type: ignore[valid-type]
+    billing_amount: ConstrainedStringToOptionalInt
     credit_card_billing_date: str
     credit_card_billing_amount: str
     credit_card_identity: str
