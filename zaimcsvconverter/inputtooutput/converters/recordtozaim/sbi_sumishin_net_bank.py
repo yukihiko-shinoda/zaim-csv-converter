@@ -31,8 +31,7 @@ class SBISumishinNetBankZaimPaymentRowConverter(
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.withdrawal_amount  # type: ignore[no-any-return, has-type]
+        return self.input_row.withdrawal_amount
 
 
 class SBISumishinNetBankWithdrawalZaimTransferRowConverter(
@@ -50,8 +49,7 @@ class SBISumishinNetBankWithdrawalZaimTransferRowConverter(
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.withdrawal_amount  # type: ignore[no-any-return, has-type]
+        return self.input_row.withdrawal_amount
 
 
 class SBISumishinNetBankZaimIncomeRowConverter(
@@ -65,8 +63,7 @@ class SBISumishinNetBankZaimIncomeRowConverter(
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.deposit_amount  # type: ignore[no-any-return, has-type]
+        return self.input_row.deposit_amount
 
 
 class SBISumishinNetBankDepositZaimTransferRowConverter(
@@ -84,8 +81,7 @@ class SBISumishinNetBankDepositZaimTransferRowConverter(
 
     @property
     def amount(self) -> int:
-        # Reason: Pylint's bug. pylint: disable=no-member
-        return self.input_row.deposit_amount  # type: ignore[no-any-return, has-type]
+        return self.input_row.deposit_amount
 
 
 class SBISumishinNetBankZaimRowConverterFactory(

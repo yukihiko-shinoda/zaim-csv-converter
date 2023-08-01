@@ -13,13 +13,18 @@ class StringToDateTime(datetime):
 
     @classmethod
     def __get_validators__(cls) -> "CallableGenerator":
+        yield cls.datetime_must_be_from_str
         yield cls.parse_date
 
     @classmethod
-    def parse_date(cls, value: Any) -> datetime:
+    def datetime_must_be_from_str(cls, value: Any) -> str:
         if not isinstance(value, str):
             msg = "string required"
             raise TypeError(msg)
+        return value
+
+    @classmethod
+    def parse_date(cls, value: Any) -> datetime:
         # Reason: Time is not used in this process.
         return datetime.strptime(value, cls.get_format())  # noqa: DTZ007
 
@@ -39,6 +44,20 @@ class StringSlashToDateTime(StringToDateTime):
 
 class StringNumberOnlyToDateTime(StringToDateTime):
     """Type that converts string to datetime."""
+
+    @classmethod
+    def __get_validators__(cls) -> "CallableGenerator":
+        yield cls.datetime_must_be_from_str
+        yield cls.eight_digits_required
+        yield cls.parse_date
+
+    @classmethod
+    def eight_digits_required(cls, value: str) -> str:
+        number_digit = 8
+        if len(value) != number_digit:
+            msg = "8 digits required"
+            raise ValueError(msg)
+        return value
 
     @classmethod
     def get_format(cls) -> str:

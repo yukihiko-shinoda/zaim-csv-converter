@@ -49,7 +49,4 @@ class MobileSuicaRowData(CsvRowData):
     kind_2: Kind2
     used_place_2: str
     balance: StrictSymbolYenStringToInt
-    # Reason: Now we don't have enough time to recreate type class:
-    # - Answer: python - How can mypy accept pydantic's constr() types? - Stack Overflow
-    #   https://stackoverflow.com/a/67871116/12721873
-    deposit_used_amount: StrictStringWithCommaToOptionalInt  # type: ignore[valid-type]
+    deposit_used_amount: StrictStringWithCommaToOptionalInt

@@ -13,10 +13,7 @@ class SBISumishinNetBankRowData(CsvRowData):
 
     date_: StringSlashToDateTime
     content: str
-    # Reason: Now we don't have enough time to recreate type class:
-    # - Answer: python - How can mypy accept pydantic's constr() types? - Stack Overflow
-    #   https://stackoverflow.com/a/67871116/12721873
-    withdrawal_amount: StrictStringWithCommaToOptionalInt  # type: ignore[valid-type]
-    deposit_amount: StrictStringWithCommaToOptionalInt  # type: ignore[valid-type]
+    withdrawal_amount: StrictStringWithCommaToOptionalInt
+    deposit_amount: StrictStringWithCommaToOptionalInt
     balance: str
     note: str
