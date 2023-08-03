@@ -108,8 +108,8 @@ class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
 
     def __init__(
         self,
-        file_csv_convert_item: FileCsvConvertContext,
         input_item_row_data: TypeVarInputItemRowData,
+        file_csv_convert_item: FileCsvConvertContext,
     ) -> None:
         super().__init__(input_item_row_data)
         self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_item

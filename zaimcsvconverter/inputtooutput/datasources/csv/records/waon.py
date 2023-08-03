@@ -1,23 +1,17 @@
 """This module implements row model of WAON CSV."""
 from __future__ import annotations
 
+from typing import Any
+
 from zaimcsvconverter.data.waon import ChargeKind, UseKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow, InputStoreRow
 
 
-class WaonRowToSkip(InputRow[WaonRowData]):
-    @property
-    def is_row_to_skip(self) -> bool:
-        return True
-
-
-class WaonRow(InputStoreRow[WaonRowData]):
-    """This class implements row model of WAON CSV."""
-
-    def __init__(self, row_data: WaonRowData) -> None:
-        super().__init__(row_data, FileCsvConvert.WAON.value)
+class WaonRow(InputRow[WaonRowData]):
+    def __init__(self, row_data: WaonRowData, *args: Any, **kwargs: Any) -> None:
+        super().__init__(row_data, *args, **kwargs)
         self.used_amount: int = row_data.used_amount
         self.use_kind: UseKind = row_data.use_kind
 
@@ -42,7 +36,20 @@ class WaonRow(InputStoreRow[WaonRowData]):
         return self.use_kind == UseKind.AUTO_CHARGE
 
 
-class WaonChargeRow(WaonRow):
+class WaonRowToSkip(WaonRow):
+    @property
+    def is_row_to_skip(self) -> bool:
+        return True
+
+
+class WaonStoreRow(WaonRow, InputStoreRow[WaonRowData]):
+    """This class implements row model of WAON CSV."""
+
+    def __init__(self, row_data: WaonRowData) -> None:
+        super().__init__(row_data, FileCsvConvert.WAON.value)
+
+
+class WaonChargeRow(WaonStoreRow):
     """This class implements charge row model of WAON CSV."""
 
     def __init__(self, row_data: WaonRowData) -> None:

@@ -30,7 +30,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import 
 from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonStoreRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
     ZaimIncomeRow,
     ZaimPaymentRow,
@@ -452,14 +452,14 @@ class TestZaimRowFactory:
             (
                 [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
                 WaonZaimPaymentRowConverter,
-                WaonRow,
+                WaonStoreRow,
                 InstanceResource.ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO,
                 ZaimPaymentRow,
             ),
             (
                 [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
                 WaonZaimTransferRowConverter,
-                WaonRow,
+                WaonStoreRow,
                 InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO,
                 ZaimTransferRow,
             ),
@@ -468,8 +468,8 @@ class TestZaimRowFactory:
     )
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_with_schema")
     def test_success(
-        zaim_row_converter_class: type[ZaimRowConverter[WaonRow, WaonRowData]],
-        input_row_class: type[WaonRow],
+        zaim_row_converter_class: type[ZaimRowConverter[WaonStoreRow, WaonRowData]],
+        input_row_class: type[WaonStoreRow],
         waon_row_data: WaonRowData,
         expected: type[ZaimRow],
     ) -> None:

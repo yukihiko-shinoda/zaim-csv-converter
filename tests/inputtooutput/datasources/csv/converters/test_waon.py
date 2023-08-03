@@ -4,7 +4,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.waon import WaonRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonRow, WaonRowToSkip
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonRowToSkip, WaonStoreRow
 
 
 class TestWaonRowFactory:
@@ -40,6 +40,6 @@ class TestWaonRowFactory:
         ]
         # pylint: disable=protected-access
         waon_row = WaonRowFactory().create(row_data)
-        assert isinstance(waon_row, WaonRow)
+        assert isinstance(waon_row, WaonStoreRow)
         for property_use_kind in list_property_use_kind:
             assert getattr(waon_row, property_use_kind) == (property_use_kind == property_name_true)

@@ -7,7 +7,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Am
 from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (
     Amazon201911DiscountRow,
     Amazon201911PaymentRow,
-    Amazon201911Row,
+    Amazon201911ItemRow,
     Amazon201911RowToSkip,
     Amazon201911ShippingHandlingRow,
 )
@@ -28,7 +28,7 @@ class TestAmazon201911RowFactory:
         ],
     )
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_item")
-    def test_create(argument: Amazon201911RowData, expected: type[Amazon201911Row]) -> None:
+    def test_create(argument: Amazon201911RowData, expected: type[Amazon201911ItemRow]) -> None:
         """Method should return Store model when note is defined."""
         # pylint: disable=protected-access
         gold_point_card_plus_row = Amazon201911RowFactory().create(argument)

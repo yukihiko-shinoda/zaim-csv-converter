@@ -2,7 +2,12 @@
 from zaimcsvconverter.data.waon import UseKind
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow, WaonRowToSkip
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import (
+    WaonChargeRow,
+    WaonRow,
+    WaonRowToSkip,
+    WaonStoreRow,
+)
 
 
 class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
@@ -21,4 +26,4 @@ class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
             return WaonRowToSkip(input_row_data)
         if input_row_data.use_kind in (UseKind.CHARGE, UseKind.AUTO_CHARGE):
             return WaonChargeRow(input_row_data)
-        return WaonRow(input_row_data)
+        return WaonStoreRow(input_row_data)

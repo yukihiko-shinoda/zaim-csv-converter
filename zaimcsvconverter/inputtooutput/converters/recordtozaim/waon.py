@@ -14,7 +14,7 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimTransferRowConverter,
 )
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow, WaonStoreRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
@@ -32,7 +32,7 @@ class WaonZaimIncomeRowConverter(ZaimIncomeRowStoreConverter[WaonChargeRow, Waon
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
-class WaonZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[WaonRow, WaonRowData]):
+class WaonZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[WaonStoreRow, WaonRowData]):
     """This class implements convert steps from WAON input row to Zaim payment row."""
 
     @property
@@ -45,7 +45,7 @@ class WaonZaimPaymentRowConverter(ZaimPaymentRowStoreConverter[WaonRow, WaonRowD
         return -self.input_row.used_amount if self.input_row.is_payment_cancel else self.input_row.used_amount
 
 
-class WaonZaimTransferRowConverter(ZaimTransferRowConverter[WaonRow, WaonRowData]):
+class WaonZaimTransferRowConverter(ZaimTransferRowConverter[WaonStoreRow, WaonRowData]):
     """This class implements convert steps from WAON input row to Zaim transfer row."""
 
     @property
@@ -73,19 +73,25 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
         _path_csv_file: Path,
     ) -> ZaimRowConverter[WaonRow, WaonRowData]:
         if isinstance(input_row, WaonChargeRow):
-            return self._create(input_row)
+            return self.create_charge(input_row)
+        if isinstance(input_row, WaonStoreRow):
+            return self.create_store(input_row)
         dekinded_input_row = cast(WaonRow, input_row)
-        if dekinded_input_row.is_payment or dekinded_input_row.is_payment_cancel:
-            return WaonZaimPaymentRowConverter(input_row)
         raise ValueError(self.build_message(dekinded_input_row))
 
-    def _create(self, input_row: WaonChargeRow) -> ZaimRowConverter[WaonRow, WaonRowData]:
+    def create_charge(self, input_row: WaonChargeRow) -> ZaimRowConverter[WaonRow, WaonRowData]:
         if input_row.is_income:
             # Reason: The returns can't detect correct type limited by if instance block.
             return WaonZaimIncomeRowConverter(input_row)  # type: ignore[arg-type,return-value]
         if input_row.is_transfer:
             # Reason: The returns can't detect correct type limited by if instance block.
-            return WaonZaimTransferRowConverter(input_row)  # type: ignore[arg-type]
+            return WaonZaimTransferRowConverter(input_row)  # type: ignore[arg-type,return-value]
+        raise ValueError(self.build_message(input_row))
+
+    def create_store(self, input_row: WaonStoreRow) -> ZaimRowConverter[WaonRow, WaonRowData]:
+        if input_row.is_payment or input_row.is_payment_cancel:
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return WaonZaimPaymentRowConverter(input_row)  # type: ignore[arg-type,return-value]
         raise ValueError(self.build_message(input_row))
 
     @staticmethod

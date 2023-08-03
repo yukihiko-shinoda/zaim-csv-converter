@@ -7,7 +7,7 @@ from tests.testlibraries.assert_list import assert_list
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon import AmazonRow
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonRow
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonStoreRow
 
 
 class TestErrorHandler:
@@ -54,7 +54,7 @@ class TestErrorHandler:
         assert_list(error_handler_a, list_expected_error)
 
     def create_waon_row_report_undefined_content_error(self) -> list[list[str]]:
-        waon_row = WaonRow(InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI)
+        waon_row = WaonStoreRow(InstanceResource.ROW_DATA_WAON_PAYMENT_FAMILY_MART_KABUTOCHOEIDAIDORI)
         # Reason: To update state. pylint: disable=pointless-statement
         waon_row.validate  # noqa: B018
         return waon_row.get_report_undefined_content_error()
