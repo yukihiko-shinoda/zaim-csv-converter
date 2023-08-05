@@ -71,6 +71,7 @@ class TestGoldPointCardPlusRow:
         *,
         expected_is_row_to_skip: bool,
     ) -> None:
+        """Asserts store and item."""
         assert isinstance(row.store, Store)
         # pylint: disable=protected-access
         assert row.store.name == gold_point_card_plus_row_data.used_store

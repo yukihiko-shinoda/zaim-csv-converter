@@ -34,3 +34,10 @@ def optional_number_multiple_validator(value: Optional["Number"], field: "ModelF
     if value is None:
         return None
     return number_multiple_validator(value, field)
+
+
+def string_validator(value: Any) -> str:
+    if not isinstance(value, str):
+        msg = "string required"
+        raise TypeError(msg)
+    return value

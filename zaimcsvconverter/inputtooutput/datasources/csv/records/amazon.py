@@ -12,7 +12,7 @@ class AmazonRow(InputItemRow[AmazonRowData]):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: AmazonRowData) -> None:
-        super().__init__(FileCsvConvert.AMAZON.value, row_data)
+        super().__init__(row_data, FileCsvConvert.AMAZON.value)
         self._store: Store = Store(
             FileCsvConvertId.AMAZON,
             StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim),

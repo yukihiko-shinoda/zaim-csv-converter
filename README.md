@@ -1,8 +1,10 @@
 # 📥Zaim CSV Converter📤
 
 [![Test](https://github.com/yukihiko-shinoda/zaim-csv-converter/workflows/Test/badge.svg)](https://github.com/yukihiko-shinoda/zaim-csv-converter/actions?query=workflow%3ATest)
+[![CodeQL](https://github.com/yukihiko-shinoda/zaim-csv-converter/workflows/CodeQL/badge.svg)](https://github.com/yukihiko-shinoda/zaim-csv-converter/actions?query=workflow%3ACodeQL)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d420cae61c02b01316ca/test_coverage)](https://codeclimate.com/github/yukihiko-shinoda/zaim-csv-converter/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d420cae61c02b01316ca/maintainability)](https://codeclimate.com/github/yukihiko-shinoda/zaim-csv-converter/maintainability)
+[![Code Climate technical debt](https://img.shields.io/codeclimate/tech-debt/yukihiko-shinoda/zaim-csv-converter)](https://codeclimate.com/github/yukihiko-shinoda/zaim-csv-converter)
 [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fyukihiko-shinoda%2Fzaim-csv-converter)](http://twitter.com/share?text=Zaim%20CSV%20Converter&url=https://github.com/yukihiko-shinoda/zaim-csv-converter&hashtags=python,zaim)
 
 各口座の WEB サイト等で出力できる CSV を

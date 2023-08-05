@@ -1,6 +1,6 @@
 """This module implements row model of Amazon.co.jp CSV version 201911."""
 
-from typing import Optional
+from typing import Any, Optional
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -9,17 +9,22 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records import InputItemRow,
 from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
 
 
-class Amazon201911RowToSkip(InputRow[Amazon201911RowData]):
+class Amazon201911Row(InputRow[Amazon201911RowData]):
+    def __init__(self, row_data: Amazon201911RowData, *args: Any, **kwargs: Any) -> None:
+        super().__init__(row_data, *args, **kwargs)
+
+
+class Amazon201911RowToSkip(Amazon201911Row):
     @property
     def is_row_to_skip(self) -> bool:
         return True
 
 
-class Amazon201911Row(InputItemRow[Amazon201911RowData]):
+class Amazon201911ItemRow(Amazon201911Row, InputItemRow[Amazon201911RowData]):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: Amazon201911RowData) -> None:
-        super().__init__(FileCsvConvert.AMAZON.value, row_data)
+        super().__init__(row_data, FileCsvConvert.AMAZON.value)
         self._store: Store = Store(
             FileCsvConvertId.AMAZON,
             StoreRowData("Amazon.co.jp", CONFIG.amazon.store_name_zaim),
@@ -30,7 +35,8 @@ class Amazon201911Row(InputItemRow[Amazon201911RowData]):
         return self._store
 
 
-class Amazon201911DiscountRow(Amazon201911Row):
+# Reason: Specification requires. pylint: disable=too-many-ancestors
+class Amazon201911DiscountRow(Amazon201911ItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: Amazon201911RowData) -> None:
@@ -53,7 +59,8 @@ class Amazon201911DiscountRow(Amazon201911Row):
         return super().validate
 
 
-class Amazon201911ShippingHandlingRow(Amazon201911Row):
+# Reason: Specification requires. pylint: disable=too-many-ancestors
+class Amazon201911ShippingHandlingRow(Amazon201911ItemRow):
     """Row model of shipping / handling of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: Amazon201911RowData) -> None:
@@ -77,7 +84,8 @@ class Amazon201911ShippingHandlingRow(Amazon201911Row):
         return super().validate
 
 
-class Amazon201911PaymentRow(Amazon201911Row):
+# Reason: Specification requires. pylint: disable=too-many-ancestors
+class Amazon201911PaymentRow(Amazon201911ItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
 
     def __init__(self, row_data: Amazon201911RowData) -> None:

@@ -47,6 +47,7 @@ class TestErrorTotalizer:
         self.assert_error_csv(tmp_path)
 
     def assert_error_csv(self, tmp_path: Path) -> None:
+        """Asserts error csv file."""
         files = sorted(tmp_path.rglob("*[!.gitkeep]"))
         with files[1].open("r", encoding="UTF-8", newline="\n") as file_error:
             reader_error = csv.reader(file_error)

@@ -3,6 +3,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFa
 from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (
     Amazon201911DiscountRow,
+    Amazon201911ItemRow,
     Amazon201911PaymentRow,
     Amazon201911Row,
     Amazon201911RowToSkip,
@@ -10,7 +11,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import
 )
 
 
-class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911Row]):
+class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911ItemRow]):
     """This class implements factory to create Amazon.co.jp CSV row instance version 201911."""
 
     # Reason: The example implementation of returns ignore incompatible return type.
@@ -23,7 +24,7 @@ class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911Ro
             return Amazon201911RowToSkip(input_row_data)
         return self._create(input_row_data)
 
-    def _create(self, input_row_data: Amazon201911RowData) -> Amazon201911Row:
+    def _create(self, input_row_data: Amazon201911RowData) -> Amazon201911ItemRow:
         if input_row_data.is_discount:
             return Amazon201911DiscountRow(input_row_data)
         if input_row_data.is_shipping_handling:

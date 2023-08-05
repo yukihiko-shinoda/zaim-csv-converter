@@ -122,12 +122,12 @@ class MufgStoreRow(MufgRow, InputStoreRow[MufgRowData], ABC):
         return self.is_transfer_payment and self.store.transfer_target is not None
 
 
-# pylint: disable=too-many-ancestors
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class MufgIncomeFromOthersRow(MufgStoreRow, MufgIncomeRow):
     """This class implements row model of MUFG bank CSV."""
 
 
-# pylint: disable=too-many-ancestors
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class MufgPaymentToSomeoneRow(MufgStoreRow, MufgPaymentRow):
     """This class implements payment row model of MUFG bank CSV.
 

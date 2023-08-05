@@ -10,10 +10,7 @@ class StringWithCommaToOptionalInt(StringToOptionalInt):
     """Type that converts string with comma to optional int."""
 
     @classmethod
-    def optional_integer_must_be_from_str(cls, value: Any) -> Optional[int]:
-        if not isinstance(value, str):
-            msg = "string required"
-            raise TypeError(msg)
+    def convert_to_optional_integer(cls, value: Any) -> Optional[int]:
         if not value:
             return None
         return Utility.convert_string_with_comma_to_int(value)

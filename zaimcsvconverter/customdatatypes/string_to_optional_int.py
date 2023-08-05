@@ -10,6 +10,7 @@ from zaimcsvconverter.customdatatypes.validators import (
     optional_number_multiple_validator,
     optional_number_size_validator,
     optional_strict_int_validator,
+    string_validator,
 )
 
 Number = Union[int, float, Decimal]
@@ -25,17 +26,15 @@ class StringToOptionalInt(ConstrainedInt):
 
     @classmethod
     def __get_validators__(cls) -> "CallableGenerator":
-        yield cls.optional_integer_must_be_from_str
+        yield string_validator
+        yield cls.convert_to_optional_integer
         yield optional_strict_int_validator if cls.strict else optional_int_validator
         yield optional_number_size_validator
         yield optional_number_multiple_validator
 
     @classmethod
-    def optional_integer_must_be_from_str(cls, value: Any) -> Optional[int]:
+    def convert_to_optional_integer(cls, value: Any) -> Optional[int]:
         """Optional integer must be from str."""
-        if not isinstance(value, str):
-            msg = "string required"
-            raise TypeError(msg)
         if not value:
             return None
         return int(value)

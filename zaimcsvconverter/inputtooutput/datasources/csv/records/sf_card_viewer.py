@@ -62,7 +62,7 @@ class SFCardViewerEnterRow(SFCardViewerRow, InputStoreRow[SFCardViewerRowData]):
         self.station_name_enter: str = row_data.station_name_enter
 
 
-# Specification requires. pylint: disable=too-many-ancestors
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class SFCardViewerEnterExitRow(SFCardViewerEnterRow):
     """This class implements enter and exit station row model of SF Card Viewer CSV."""
 

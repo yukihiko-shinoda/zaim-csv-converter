@@ -12,8 +12,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
 from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (
     Amazon201911DiscountRow,
+    Amazon201911ItemRow,
     Amazon201911PaymentRow,
-    Amazon201911Row,
     Amazon201911ShippingHandlingRow,
 )
 
@@ -65,16 +65,18 @@ class Amazon201911ShippingHandlingZaimPaymentRowConverter(
         return self.input_row.subtotal_price_item
 
 
-class Amazon201911ZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Amazon201911Row, Amazon201911RowData]):
+class Amazon201911ZaimRowConverterFactory(
+    CsvRecordToZaimRowConverterFactory[Amazon201911ItemRow, Amazon201911RowData],
+):
     """This class implements select steps from Amazon input row to Zaim row converter."""
 
     def create(
         self,
         # Reason: Maybe, there are no way to resolve.
         # The nearest issues: https://github.com/dry-python/returns/issues/708
-        input_row: Kind1[Amazon201911Row, Amazon201911RowData],  # type: ignore[override]
+        input_row: Kind1[Amazon201911ItemRow, Amazon201911RowData],  # type: ignore[override]
         _path_csv_file: Path,
-    ) -> ZaimRowConverter[Amazon201911Row, Amazon201911RowData]:
+    ) -> ZaimRowConverter[Amazon201911ItemRow, Amazon201911RowData]:
         if isinstance(input_row, Amazon201911DiscountRow):
             # Reason: The returns can't detect correct type limited by if instance block.
             return Amazon201911DiscountZaimPaymentRowConverter(input_row)  # type: ignore[arg-type,return-value]

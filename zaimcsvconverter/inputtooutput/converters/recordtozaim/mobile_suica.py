@@ -69,7 +69,7 @@ class MobileSuicaZaimPaymentOnSomewhereRowConverter(
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object
 class MobileSuicaZaimPaymentOnBusEtCeteraRowConverter(
-    ZaimPaymentRowStoreConverter[MobileSuicaEnterExitRow, MobileSuicaRowData],
+    ZaimPaymentRowStoreConverter[MobileSuicaBusEtCeteraRow, MobileSuicaRowData],
 ):
     """This class implements convert steps from Mobile Suica enter row to Zaim payment row."""
 
@@ -200,7 +200,10 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
                 account_config = self._account_config()
                 year = self.year
 
-            return ConcreteMobileSuicaZaimPaymentOnBusEtCeteraRowConverter(input_row)
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return ConcreteMobileSuicaZaimPaymentOnBusEtCeteraRowConverter(  # type: ignore[return-value]
+                input_row,  # type: ignore[arg-type]
+            )
         if isinstance(input_row, MobileSuicaEnterExitRow):
 
             class ConcreteMobileSuicaZaimPaymentOnStationRowConverter(MobileSuicaZaimPaymentOnStationRowConverter):
@@ -213,7 +216,10 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
             )
         return self._create(input_row)
 
-    def _create(self, input_row: MobileSuicaStoreRow) -> ZaimRowConverter[MobileSuicaRow, MobileSuicaRowData]:
+    def _create(
+        self,
+        input_row: Kind1[MobileSuicaRow, MobileSuicaRowData],
+    ) -> ZaimRowConverter[MobileSuicaRow, MobileSuicaRowData]:
         if isinstance(input_row, MobileSuicaStoreRow):
 
             class ConcreteMobileSuicaZaimTransferRowConverter(MobileSuicaZaimTransferRowConverter):

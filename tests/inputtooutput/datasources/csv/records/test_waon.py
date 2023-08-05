@@ -6,7 +6,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow, WaonRowToSkip
+from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRowToSkip, WaonStoreRow
 from zaimcsvconverter.models import Store
 
 
@@ -45,11 +45,17 @@ class TestWaonRow:
 
         :param WaonRowData waon_row_data:
         """
-        waon_row = WaonRow(waon_row_data)
+        waon_row = WaonStoreRow(waon_row_data)
         assert waon_row.date == expected_date
         self.assert_store_and_item(waon_row, expected_store_name_zaim, expected_amount)
 
-    def assert_store_and_item(self, waon_row: WaonRow, expected_store_name_zaim: str, expected_amount: int) -> None:
+    def assert_store_and_item(
+        self,
+        waon_row: WaonStoreRow,
+        expected_store_name_zaim: str,
+        expected_amount: int,
+    ) -> None:
+        """Asserts store and item."""
         assert isinstance(waon_row.store, Store)
         assert waon_row.store.name_zaim == expected_store_name_zaim
         assert waon_row.used_amount == expected_amount

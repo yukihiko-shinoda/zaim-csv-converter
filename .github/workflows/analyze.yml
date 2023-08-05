@@ -16,4 +16,4 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         with:
-          coverageCommand: python -m pipenv run invoke test.cov --xml
+          coverageCommand: python -m pipenv run invoke test.coverage --xml

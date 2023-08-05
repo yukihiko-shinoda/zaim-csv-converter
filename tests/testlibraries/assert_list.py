@@ -9,6 +9,7 @@ def assert_each_properties(
     *,
     attribute_filter: Optional[list[str]] = None,
 ) -> None:
+    """Asserts each properties of actual object."""
     list_actual = create_actual_iterator(actual_object, attribute_filter)
     try:
         assert_list(list_actual, list_expected)

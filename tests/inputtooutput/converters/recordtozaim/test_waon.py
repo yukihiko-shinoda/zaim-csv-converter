@@ -149,5 +149,5 @@ class TestWaonZaimRowConverterConverter:
             InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO,
         )
         # Reason: To fix, it is necessary to recreate designs of ZaimRowConverterFactory.
-        input_row = cast(WaonRow, input_row)
-        assert input_row.is_row_to_skip
+        dekinded_input_row = cast(WaonRow, input_row)
+        assert dekinded_input_row.is_row_to_skip

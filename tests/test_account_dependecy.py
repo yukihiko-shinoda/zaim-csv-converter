@@ -1,4 +1,6 @@
 """Tests for account_dependency.py ."""
+from dataclasses import dataclass, field
+
 from godslayer.god_slayer_factory import GodSlayerFactory
 import pytest
 
@@ -9,14 +11,15 @@ from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonRow
 
 
+@dataclass
 class Variables:
     """Variables for test."""
 
     regex_csv_file_name: str = r".*waon.*\.csv"
-    god_slayer_factory: GodSlayerFactory = GodSlayerFactory()
+    god_slayer_factory: GodSlayerFactory = field(default_factory=GodSlayerFactory)
     input_row_data_class: type[WaonRowData] = WaonRowData
-    input_row_factory: WaonRowFactory = WaonRowFactory()
-    zaim_row_factory_selector: WaonZaimRowConverterFactory = WaonZaimRowConverterFactory()
+    input_row_factory: WaonRowFactory = field(default_factory=WaonRowFactory)
+    zaim_row_factory_selector: WaonZaimRowConverterFactory = field(default_factory=WaonZaimRowConverterFactory)
 
 
 @pytest.fixture(scope="class")
