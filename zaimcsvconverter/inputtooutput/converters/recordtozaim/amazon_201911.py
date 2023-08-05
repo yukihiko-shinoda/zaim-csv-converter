@@ -12,8 +12,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
 from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (
     Amazon201911DiscountRow,
-    Amazon201911PaymentRow,
     Amazon201911ItemRow,
+    Amazon201911PaymentRow,
     Amazon201911ShippingHandlingRow,
 )
 
@@ -66,7 +66,7 @@ class Amazon201911ShippingHandlingZaimPaymentRowConverter(
 
 
 class Amazon201911ZaimRowConverterFactory(
-    CsvRecordToZaimRowConverterFactory[Amazon201911ItemRow, Amazon201911RowData]
+    CsvRecordToZaimRowConverterFactory[Amazon201911ItemRow, Amazon201911RowData],
 ):
     """This class implements select steps from Amazon input row to Zaim row converter."""
 

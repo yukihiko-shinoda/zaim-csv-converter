@@ -42,6 +42,7 @@ class TestCsvToCsvConverterForStore:
             zaim_row_data = ZaimRowData(*list_zaim_row)
             assert_each_properties(
                 zaim_row_data,
+                # Reason: Duplicate with production code. pylint: disable=duplicate-code
                 [
                     "日付",
                     "方法",

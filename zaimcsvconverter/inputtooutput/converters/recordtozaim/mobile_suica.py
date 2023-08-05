@@ -201,7 +201,9 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
                 year = self.year
 
             # Reason: The returns can't detect correct type limited by if instance block.
-            return ConcreteMobileSuicaZaimPaymentOnBusEtCeteraRowConverter(input_row)  # type: ignore[return-value,arg-type]
+            return ConcreteMobileSuicaZaimPaymentOnBusEtCeteraRowConverter(  # type: ignore[return-value]
+                input_row,  # type: ignore[arg-type]
+            )
         if isinstance(input_row, MobileSuicaEnterExitRow):
 
             class ConcreteMobileSuicaZaimPaymentOnStationRowConverter(MobileSuicaZaimPaymentOnStationRowConverter):

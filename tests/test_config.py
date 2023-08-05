@@ -45,6 +45,7 @@ class TestConfig:
         skip_pay_pal_row: bool,
         skip_kyash_row: bool,
     ) -> None:
+        """Arguments should set into properties."""
         assert config.gold_point_card_plus.account_name == account_name
         assert config.gold_point_card_plus.skip_amazon_row == skip_amazon_row
         assert config.gold_point_card_plus.skip_pay_pal_row == skip_pay_pal_row
@@ -64,6 +65,7 @@ class TestConfig:
         *,
         skip_sales_goods_row: bool,
     ) -> None:
+        """Arguments should set into properties."""
         assert config.pasmo.account_name == account_name
         assert config.pasmo.auto_charge_source == auto_charge_source
         assert config.pasmo.skip_sales_goods_row == skip_sales_goods_row

@@ -80,6 +80,7 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
         raise ValueError(self.build_message(dekinded_input_row))
 
     def create_charge(self, input_row: WaonChargeRow) -> ZaimRowConverter[WaonRow, WaonRowData]:
+        """This method creates Zaim row converter for charge row."""
         if input_row.is_income:
             # Reason: The returns can't detect correct type limited by if instance block.
             return WaonZaimIncomeRowConverter(input_row)  # type: ignore[arg-type,return-value]

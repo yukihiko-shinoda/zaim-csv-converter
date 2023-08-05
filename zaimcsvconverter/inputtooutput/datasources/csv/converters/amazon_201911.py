@@ -3,11 +3,11 @@ from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFa
 from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (
     Amazon201911DiscountRow,
-    Amazon201911PaymentRow,
     Amazon201911ItemRow,
+    Amazon201911PaymentRow,
+    Amazon201911Row,
     Amazon201911RowToSkip,
     Amazon201911ShippingHandlingRow,
-    Amazon201911Row,
 )
 
 

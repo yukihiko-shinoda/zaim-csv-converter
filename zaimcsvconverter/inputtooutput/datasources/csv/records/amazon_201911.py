@@ -35,6 +35,7 @@ class Amazon201911ItemRow(Amazon201911Row, InputItemRow[Amazon201911RowData]):
         return self._store
 
 
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class Amazon201911DiscountRow(Amazon201911ItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
 
@@ -58,6 +59,7 @@ class Amazon201911DiscountRow(Amazon201911ItemRow):
         return super().validate
 
 
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class Amazon201911ShippingHandlingRow(Amazon201911ItemRow):
     """Row model of shipping / handling of Amazon.co.jp CSV."""
 
@@ -82,6 +84,7 @@ class Amazon201911ShippingHandlingRow(Amazon201911ItemRow):
         return super().validate
 
 
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class Amazon201911PaymentRow(Amazon201911ItemRow):
     """This class implements row model of Amazon.co.jp CSV."""
 

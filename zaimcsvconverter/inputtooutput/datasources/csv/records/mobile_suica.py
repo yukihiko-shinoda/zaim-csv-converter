@@ -69,7 +69,7 @@ class MobileSuicaStoreRow(MobileSuicaRow, InputStoreRow[MobileSuicaRowData]):
         super().__init__(row_data, account_config, FileCsvConvert.MOBILE_SUICA.value)
 
 
-# Specification requires. pylint: disable=too-many-ancestors
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class MobileSuicaFirstRow(MobileSuicaStoreRow):
     """This class implements enter station row model of Mobile Suica CSV."""
 
@@ -85,7 +85,7 @@ class MobileSuicaBusEtCeteraRow(MobileSuicaStoreRow):
     """
 
 
-# Specification requires. pylint: disable=too-many-ancestors
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class MobileSuicaEnterExitRow(MobileSuicaStoreRow):
     """This class implements enter and exit station row model of Mobile Suica CSV."""
 

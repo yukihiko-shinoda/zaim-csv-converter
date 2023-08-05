@@ -6,6 +6,7 @@ from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRow
 from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
 
 
+# Reason: Unluckily duplicate specification with Amazon 201911. pylint: disable=duplicate-code
 class TestAmazonRowData:
     """Tests for AmazonRowData."""
 

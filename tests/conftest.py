@@ -271,6 +271,7 @@ def create_zaim_row_converter(
     account_context: AccountContext[TypeVarInputRowData, TypeVarInputRow],
     row_data: TypeVarInputRowData,
 ) -> ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]:
+    """Creates ZaimRowConverter."""
     csv_record_processor = CsvRecordProcessor(account_context.input_row_factory)
     amazon_row = csv_record_processor.create_input_row_instance(row_data)
     # Reason: Pylint's bug. pylint: disable=no-member

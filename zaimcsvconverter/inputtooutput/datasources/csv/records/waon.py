@@ -10,6 +10,8 @@ from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow, Inp
 
 
 class WaonRow(InputRow[WaonRowData]):
+    """This class implements row model of WAON CSV."""
+
     def __init__(self, row_data: WaonRowData, *args: Any, **kwargs: Any) -> None:
         super().__init__(row_data, *args, **kwargs)
         self.used_amount: int = row_data.used_amount
@@ -37,18 +39,21 @@ class WaonRow(InputRow[WaonRowData]):
 
 
 class WaonRowToSkip(WaonRow):
+    """This class implements row to skip model of WAON CSV."""
+
     @property
     def is_row_to_skip(self) -> bool:
         return True
 
 
 class WaonStoreRow(WaonRow, InputStoreRow[WaonRowData]):
-    """This class implements row model of WAON CSV."""
+    """This class implements store row model of WAON CSV."""
 
     def __init__(self, row_data: WaonRowData) -> None:
         super().__init__(row_data, FileCsvConvert.WAON.value)
 
 
+# Reason: Specification requires. pylint: disable=too-many-ancestors
 class WaonChargeRow(WaonStoreRow):
     """This class implements charge row model of WAON CSV."""
 

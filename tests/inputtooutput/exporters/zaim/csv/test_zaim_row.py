@@ -11,11 +11,6 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimRowConverter,
-    ZaimRowFactory,
-)
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import (
@@ -23,8 +18,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import (
     WaonZaimPaymentRowConverter,
     WaonZaimTransferRowConverter,
 )
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter, ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon import AmazonRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.converters.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
@@ -37,22 +32,6 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
     ZaimRow,
     ZaimTransferRow,
 )
-
-
-@pytest.fixture(scope="class")
-def zaim_row_data_created_by_zaim_row(
-    _yaml_config_load_class_scope: None,
-    # Reason: pytest fixture can't use pytest.mark.usefixtures. pylint: disable=unused-argument
-    database_session_stores_item_class_scope: None,  # noqa: ARG001
-    account: Account,
-    input_row_data: InputRowData,
-) -> ZaimRowData:
-    csv_record_processor = CsvRecordProcessor(account.value.input_row_factory)
-    input_row = csv_record_processor.create_input_row_instance(input_row_data)
-    # Reason: Pylint's bug. pylint: disable=no-member
-    zaim_low = ZaimRowFactory.create(account.value.zaim_row_converter_factory.create(input_row, Path()))
-    list_zaim_row = zaim_low.convert_to_list()
-    return ZaimRowData(*list_zaim_row)
 
 
 @pytest.mark.parametrize(
@@ -130,23 +109,11 @@ class TestZaimIncomeRow:
         assert not zaim_row_data_created_by_zaim_row.setting_aggregate
 
 
-@pytest.fixture(scope="class")
-def zaim_row_data_created_by_zaim_payment_row(
-    _yaml_config_load_class_scope: None,
-    # Reason: pytest fixture can't use pytest.mark.usefixtures. pylint: disable=unused-argument
-    database_session_stores_item_class_scope: None,  # noqa: ARG001
-    input_row_factory: InputRowFactory[InputRowData, InputRow[InputRowData]],
-    input_row_data: InputRowData,
-    zaim_row_converter_factory: CsvRecordToZaimRowConverterFactory[InputRow[InputRowData], InputRowData],
-) -> ZaimRowData:
-    input_row = input_row_factory.create(input_row_data)
-    zaim_low = ZaimRowFactory.create(zaim_row_converter_factory.create(input_row, Path()))
-    list_zaim_row = zaim_low.convert_to_list()
-    return ZaimRowData(*list_zaim_row)
-
-
 @dataclass
+# Reason: Dataclass. pylint: disable=too-many-instance-attributes
 class Expected:
+    """Expected values."""
+
     date: str
     category_large: str
     category_small: str
@@ -306,7 +273,10 @@ class TestZaimPaymentRow:
 
 
 @dataclass
+# Reason: Dataclass. pylint: disable=too-many-instance-attributes
 class ExpectedTransfer:
+    """Expected values."""
+
     date: str = "2018-11-11"
     method: str = "transfer"
     category_large: str = "-"

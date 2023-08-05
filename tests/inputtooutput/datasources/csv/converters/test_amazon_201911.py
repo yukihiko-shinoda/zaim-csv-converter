@@ -6,8 +6,8 @@ from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon_201911 imp
 from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (
     Amazon201911DiscountRow,
-    Amazon201911PaymentRow,
     Amazon201911ItemRow,
+    Amazon201911PaymentRow,
     Amazon201911RowToSkip,
     Amazon201911ShippingHandlingRow,
 )
