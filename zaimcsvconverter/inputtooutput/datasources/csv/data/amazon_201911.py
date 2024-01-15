@@ -67,9 +67,7 @@ class Amazon201911RowData(amazon_201911.Amazon201911RowData, InputItemRowData):
 
     @property
     def ensures_not_credit_card(self) -> bool:
-        return (
-            not self.credit_card_billing_date and not self.credit_card_billing_amount and not self.credit_card_identity
-        )
+        return not self.credit_card_billing_date and not self.credit_card_billing_amount
 
     @property
     def is_discount(self) -> bool:
@@ -93,7 +91,12 @@ class Amazon201911RowData(amazon_201911.Amazon201911RowData, InputItemRowData):
 
     @property
     def is_free_kindle(self) -> bool:
-        return self.is_digital_order and self.price == 0 and self.ensures_not_credit_card
+        return (
+            self.is_digital_order
+            and self.price == 0
+            and self.ensures_not_credit_card
+            and not self.credit_card_identity
+        )
 
     @property
     def is_digital_order(self) -> bool:
