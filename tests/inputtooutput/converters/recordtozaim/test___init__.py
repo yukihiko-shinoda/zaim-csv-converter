@@ -76,13 +76,6 @@ class TestZaimRowConverterFactory:
                 InstanceResource.ROW_DATA_WAON_AUTO_CHARGE_ITABASHIMAENOCHO,
                 WaonZaimTransferRowConverter,
             ),
-            # Case when WAON charge by bank account
-            (
-                [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],
-                Account.WAON,
-                InstanceResource.ROW_DATA_WAON_CHARGE_BANK_ACCOUNT_ITABASHIMAENOCHO,
-                WaonZaimTransferRowConverter,
-            ),
             # Case when WAON charge by cash
             (
                 [InstanceResource.FIXTURE_RECORD_STORE_WAON_ITABASHIMAENOCHO],

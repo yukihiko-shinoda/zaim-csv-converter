@@ -15,8 +15,7 @@ class ContextManager(Generic[TypeVarCovariant_co], ABC):
     """Class which can be used as `contextmanager`."""
 
     def __init__(self) -> None:
-        # Reason: There are no more typing ways.
-        self.__cm: Optional[contextlib._GeneratorContextManager[TypeVarCovariant_co]] = None  # noqa: SLF001
+        self.__cm: Optional[contextlib._GeneratorContextManager[TypeVarCovariant_co]] = None
 
     # Reason: Maybe, there are no way to fix.
     # error: Argument 1 to "contextmanager" has incompatible type
@@ -24,8 +23,7 @@ class ContextManager(Generic[TypeVarCovariant_co], ABC):
     #   expected "Callable[[ContextManager[T_co]], Iterator[<nothing>]]"
     @abstractmethod  # type: ignore[arg-type]
     @contextlib.contextmanager
-    # Reason: There are no more typing ways.
-    def contextmanager(self) -> contextlib._GeneratorContextManager[TypeVarCovariant_co]:  # noqa: SLF001
+    def contextmanager(self) -> contextlib._GeneratorContextManager[TypeVarCovariant_co]:
         raise NotImplementedError
 
     def __enter__(self) -> TypeVarCovariant_co:

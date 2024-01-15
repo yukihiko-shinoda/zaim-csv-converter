@@ -41,7 +41,7 @@ class StringToOptionalInt(ConstrainedInt):
 
 
 # Reason: To follow pydantic constr interface.
-def constringtooptionalint(  # noqa: PLR0913
+def constringtooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     *,
     strict: bool = False,
     gt: Optional[int] = None,  # pylint: disable=invalid-name
@@ -56,9 +56,7 @@ def constringtooptionalint(  # noqa: PLR0913
     return type("ConstrainedStringToOptionalIntValue", (StringToOptionalInt,), namespace)
 
 
-# Reason: The mypy's bug:
-#   error: Unsupported left operand type for == (ConstrainedStringToOptionalInt?)  [operator]
-if TYPE_CHECKING:  # noqa: SIM108
+if TYPE_CHECKING:
     ConstrainedStringToOptionalInt = Optional[int]
 else:
     ConstrainedStringToOptionalInt = constringtooptionalint()

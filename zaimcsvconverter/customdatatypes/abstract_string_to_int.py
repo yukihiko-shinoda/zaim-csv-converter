@@ -32,7 +32,7 @@ class ConstrainedStringToInt(ConstrainedInt):
 
 
 # Reason: Followed pydantic specification.
-def constringtoint(  # noqa: PLR0913
+def constringtoint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     type_name: str,
     type_class: type[ConstrainedStringToInt],
     *,

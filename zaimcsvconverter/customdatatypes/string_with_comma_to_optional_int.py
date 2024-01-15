@@ -17,7 +17,7 @@ class StringWithCommaToOptionalInt(StringToOptionalInt):
 
 
 # Reason: Followed pydantic specification.
-def constringwithcommatooptionalint(  # noqa: PLR0913
+def constringwithcommatooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     *,
     strict: bool = False,
     gt: Optional[int] = None,  # pylint: disable=invalid-name
@@ -32,9 +32,7 @@ def constringwithcommatooptionalint(  # noqa: PLR0913
     return type("ConstrainedStringWithCommaToIntValue", (StringWithCommaToOptionalInt,), namespace)
 
 
-# Reason: The mypy's bug:
-#   error: Unsupported left operand type for == (ConstrainedStringToOptionalInt?)  [operator]
-if TYPE_CHECKING:  # noqa: SIM108
+if TYPE_CHECKING:
     StrictStringWithCommaToOptionalInt = Optional[int]
 else:
     StrictStringWithCommaToOptionalInt = constringwithcommatooptionalint(strict=True)
