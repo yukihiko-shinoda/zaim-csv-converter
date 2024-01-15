@@ -249,6 +249,36 @@ def create_zaim_row_data_amazon_201911_202006() -> list[ZaimRowData]:
     return []
 
 
+def create_zaim_row_data_amazon_201911_202012() -> list[ZaimRowData]:
+    """Creates expected zaim row data for Amazon 201911 202006."""
+    zaim_row_data_01 = ZaimRowData(
+        # fmt: off
+        "2020-12-01", "payment", "大型出費", "家電", "ヨドバシゴールドポイントカード・プラス", "",
+        "Yubico - YubiKey 5C - USB-C - 認証キー - ブラック", "", "Amazon Japan G.K.",
+        "", "0", "7500", "0", "", "", "",
+        # fmt: on
+    )
+    zaim_row_data_02 = ZaimRowData(
+        # fmt: off
+        "2020-12-01", "payment", "通信", "宅急便", "ヨドバシゴールドポイントカード・プラス", "",
+        "（配送料・手数料）", "",  # noqa: RUF001
+        "Amazon Japan G.K.", "", "0", "410", "0", "", "", "",
+        # fmt: on
+    )
+    zaim_row_data_03 = ZaimRowData(
+        # fmt: off
+        "2020-12-01", "payment", "通信", "その他", "ヨドバシゴールドポイントカード・プラス", "",
+        "（割引）", "",  # noqa: RUF001
+        "Amazon Japan G.K.", "", "0", "-410", "0", "", "", "",
+        # fmt: on
+    )
+    return [
+        zaim_row_data_01,
+        zaim_row_data_02,
+        zaim_row_data_03,
+    ]
+
+
 def create_zaim_row_data_view_card_202005() -> list[ZaimRowData]:
     """Creates expected zaim row data for VIEW CARD 202005."""
     zaim_row_data_view_card_01 = ZaimRowData(
