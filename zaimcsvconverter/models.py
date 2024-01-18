@@ -104,8 +104,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
         class_name = cls.__name__
         return str(Inflector().pluralize(class_name.lower()))
 
-    # Reason: For database table design.
-    id = Column(Integer, primary_key=True)  # noqa: A003
+    id = Column(Integer, primary_key=True)
     file_csv_convert_id = Column(Integer)
     name = Column(String(255))
     category_payment_large = Column(String(255))

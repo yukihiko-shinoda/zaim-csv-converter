@@ -364,11 +364,17 @@ def create_zaim_row_data_pay_pay_card_202208() -> list[ZaimRowData]:
     """Creates expected zaim row data for PayPay Card 202208."""
     zaim_row_data_01 = ZaimRowData(
         # fmt: off
+        "2022-07-29", "transfer", "-", "-", "PayPay カード", "PayPay", "", "",
+        "", "", "0", "0", "3000", "", "", "",
+        # fmt: on
+    )
+    zaim_row_data_02 = ZaimRowData(
+        # fmt: off
         "2022-07-03", "payment", "食費", "食料品", "PayPay カード", "", "", "",
         "ビッグ・エー", "", "0", "292", "0", "", "", "",
         # fmt: on
     )
-    return [zaim_row_data_01]
+    return [zaim_row_data_01, zaim_row_data_02]
 
 
 def create_zaim_row_data_mobile_suica_202210() -> list[ZaimRowData]:

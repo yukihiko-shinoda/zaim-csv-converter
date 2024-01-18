@@ -23,7 +23,7 @@ class FileCsvConvertContext:
     """This class implements CSV file for convert table."""
 
     # pylint:disable=invalid-name
-    id: FileCsvConvertId  # noqa: A003
+    id: FileCsvConvertId
     name: str
     convert_table_type: ConvertTableType
 

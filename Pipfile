@@ -59,7 +59,9 @@ pylint = "*"
 pytest = "*"
 pytest-resource-path = "*"
 pyvelocity = {version = "*", markers="python_version >= '3.9'"}
-radon = "*"
+# - Radon can't run when use pytest log fornat: `$()d` · Issue #251 · rubik/radon
+#   https://github.com/rubik/radon/issues/251
+radon = "<6.0.0"
 returns = "*"
 ruff = {version = "*", markers="python_version >= '3.7'"}
 semgrep = {version = "*", markers="python_version >= '3.6'"}

@@ -93,7 +93,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
             ],
             partition=[
                 # fmt: off
-                r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",  # noqa: RUF001,E501 pylint: disable=line-too-long
+                r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",  # noqa: RUF001,RUF100,E501 pylint: disable=line-too-long
                 r".*", r".*", r".*", "",
                 # fmt: on
             ],
