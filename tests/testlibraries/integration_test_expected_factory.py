@@ -1,4 +1,5 @@
 """Expected data for integration test."""
+
 from tests.testlibraries.row_data import ZaimRowData
 
 

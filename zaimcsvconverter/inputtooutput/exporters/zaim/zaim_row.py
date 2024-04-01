@@ -1,4 +1,5 @@
 """This module implements abstract row model of Zaim CSV."""
+
 from abc import abstractmethod
 from typing import Optional, TYPE_CHECKING, Union
 

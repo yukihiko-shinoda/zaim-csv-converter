@@ -2,6 +2,7 @@
 
 Execute 'invoke --list' for guidance on using Invoke
 """
+
 from invoke import Collection
 from invokelint import _clean, dist, lint, path, style, test
 

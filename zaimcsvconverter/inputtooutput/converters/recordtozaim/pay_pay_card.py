@@ -1,6 +1,5 @@
 """This module implements convert steps from PayPay Card input row to Zaim row."""
 
-
 from pathlib import Path
 from typing import cast
 

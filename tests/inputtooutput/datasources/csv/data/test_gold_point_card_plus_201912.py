@@ -1,4 +1,5 @@
 """Tests for GoldPointCartPlusRow."""
+
 from datetime import datetime
 
 from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (

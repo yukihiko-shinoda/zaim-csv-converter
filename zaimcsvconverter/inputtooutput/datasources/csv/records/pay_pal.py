@@ -4,6 +4,7 @@ see:
   - PayPal activity download specification
     https://www.paypalobjects.com/webstatic/en_US/developer/docs/pdf/PP_ActivityDownload.pdf
 """
+
 from zaimcsvconverter.data.pay_pal import BalanceImpact, Status
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData

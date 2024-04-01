@@ -1,4 +1,5 @@
 """This module implements fixtures file handler for CSV files."""
+
 from pathlib import Path
 from typing import Optional
 

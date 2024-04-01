@@ -1,4 +1,5 @@
 """Tests for symbol_yen_string_to_int.py ."""
+
 import datetime
 from typing import Any
 

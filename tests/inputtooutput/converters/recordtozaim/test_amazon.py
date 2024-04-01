@@ -1,4 +1,5 @@
 """Tests for amazon.py."""
+
 from pathlib import Path
 
 import pytest

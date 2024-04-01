@@ -1,4 +1,5 @@
 """Custom data type to convert string with comma to int."""
+
 from typing import TYPE_CHECKING
 
 from zaimcsvconverter.customdatatypes.abstract_string_to_int import ConstrainedStringToInt, constringtoint

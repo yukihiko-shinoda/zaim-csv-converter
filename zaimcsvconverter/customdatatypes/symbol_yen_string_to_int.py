@@ -1,4 +1,5 @@
 """Custom data type to convert yen string to int."""
+
 from typing import TYPE_CHECKING
 
 # Reason: Pylint's bug. pylint: disable=no-name-in-module

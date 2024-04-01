@@ -1,4 +1,5 @@
 """Test for ViewCardRowFactory."""
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource

@@ -1,4 +1,5 @@
 """Tests for sf_card_viewer.py."""
+
 from dataclasses import dataclass
 
 import pytest

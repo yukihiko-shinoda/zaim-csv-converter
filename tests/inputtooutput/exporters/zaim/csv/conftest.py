@@ -1,4 +1,5 @@
 """Provides fixtures for tests of zaimcsvconverter.inputtooutput.exporters.zaim.csv."""
+
 from pathlib import Path
 
 import pytest

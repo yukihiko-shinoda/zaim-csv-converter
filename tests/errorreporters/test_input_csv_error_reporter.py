@@ -1,4 +1,5 @@
 """Tests for zaimcsvconverter.errorreporters.input_csv_error_reporter."""
+
 from collections.abc import Generator
 from typing import Generic
 

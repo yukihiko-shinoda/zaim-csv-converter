@@ -1,4 +1,5 @@
 """This module implements database engine manager for unit testing."""
+
 import contextlib
 from types import TracebackType
 from typing import Optional

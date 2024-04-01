@@ -1,4 +1,5 @@
 """Zaim CSV Converter extended GOLD POINT CARD+ CSV Data model."""
+
 from datetime import datetime
 
 from pydantic.dataclasses import dataclass

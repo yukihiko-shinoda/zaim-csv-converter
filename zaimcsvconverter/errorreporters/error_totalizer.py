@@ -1,4 +1,5 @@
 """This module implements totalize process of error."""
+
 from __future__ import annotations
 
 from enum import Enum

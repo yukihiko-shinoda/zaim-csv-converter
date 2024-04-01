@@ -1,4 +1,5 @@
 """GOLD POINT CARD+ CSV Data model."""
+
 from pydantic.dataclasses import dataclass
 
 from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime

@@ -1,4 +1,5 @@
 """Custom data type to convert string to datetime."""
+
 from abc import abstractmethod
 from datetime import datetime
 from typing import Any, TYPE_CHECKING

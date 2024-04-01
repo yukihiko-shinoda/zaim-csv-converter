@@ -1,4 +1,5 @@
 """This module implements model of input CSV."""
+
 from typing import Generic
 
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError

@@ -1,4 +1,5 @@
 """Tests for row_processor.py."""
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource

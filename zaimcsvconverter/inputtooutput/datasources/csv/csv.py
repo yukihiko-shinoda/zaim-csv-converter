@@ -1,4 +1,5 @@
 """CSV datasource."""
+
 from collections.abc import Generator
 from typing import cast, Generic, Optional
 

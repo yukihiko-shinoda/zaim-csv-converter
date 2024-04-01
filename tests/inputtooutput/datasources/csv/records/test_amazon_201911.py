@@ -1,4 +1,5 @@
 """Tests for AmazonRow."""
+
 from datetime import datetime
 
 import pytest

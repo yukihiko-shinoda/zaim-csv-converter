@@ -1,4 +1,5 @@
 """Test for Amazon201911RowFactory."""
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource

@@ -1,6 +1,5 @@
 """This module implements Zaim CSV format."""
 
-
 # Reason: Guarding for the future when it comes to calculating constants
 # pylint: disable=too-few-public-methods
 from typing import ClassVar

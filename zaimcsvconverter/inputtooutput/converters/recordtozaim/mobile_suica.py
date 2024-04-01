@@ -1,4 +1,5 @@
 """This module implements convert steps from SFCard Viewer input row to Zaim row."""
+
 from datetime import datetime
 from pathlib import Path
 import re

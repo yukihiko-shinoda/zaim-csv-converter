@@ -1,4 +1,5 @@
 """PayPal CSV Data model."""
+
 from dataclasses import field
 from enum import Enum
 from typing import ClassVar

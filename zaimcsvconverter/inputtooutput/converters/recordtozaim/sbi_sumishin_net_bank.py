@@ -1,4 +1,5 @@
 """This module implements convert steps from SBI Sumishin net bank input row to Zaim row."""
+
 from pathlib import Path
 from typing import cast, Optional, Union
 

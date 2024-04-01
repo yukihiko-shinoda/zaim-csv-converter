@@ -1,4 +1,5 @@
 """To reduce cyclomatic complexity."""
+
 from collections.abc import Iterable
 from typing import Any, Optional
 

@@ -1,4 +1,5 @@
 """WAON CSV Data model."""
+
 from enum import Enum
 
 from pydantic.dataclasses import dataclass

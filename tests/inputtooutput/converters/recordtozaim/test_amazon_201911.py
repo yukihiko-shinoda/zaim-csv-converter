@@ -1,4 +1,5 @@
 """Tests for amazon.py."""
+
 import pytest
 
 from tests.conftest import create_zaim_row

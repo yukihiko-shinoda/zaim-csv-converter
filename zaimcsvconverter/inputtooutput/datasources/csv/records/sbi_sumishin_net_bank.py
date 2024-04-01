@@ -1,4 +1,5 @@
 """This module implements row model of SBI Sumishin net bank CSV."""
+
 from typing import Any
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert

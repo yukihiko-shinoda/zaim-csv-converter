@@ -1,4 +1,5 @@
 """Tests for Config."""
+
 from pathlib import Path
 
 from tests.testlibraries.assert_list import assert_each_properties

@@ -1,4 +1,5 @@
 """Tests for gold_point_card_plus_201912.py."""
+
 from dataclasses import dataclass
 
 import pytest

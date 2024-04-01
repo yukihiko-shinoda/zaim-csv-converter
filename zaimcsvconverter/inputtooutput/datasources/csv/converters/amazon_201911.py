@@ -1,4 +1,5 @@
 """Converter from Amazon.co.jp CSV data to record model version 201911."""
+
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (

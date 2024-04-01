@@ -1,4 +1,5 @@
 """Tests for MufgRowFactory."""
+
 from dataclasses import dataclass
 
 import pytest
