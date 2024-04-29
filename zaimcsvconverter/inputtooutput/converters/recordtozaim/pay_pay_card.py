@@ -1,10 +1,8 @@
 """This module implements convert steps from PayPay Card input row to Zaim row."""
 
-
 from pathlib import Path
-from typing import cast
+from typing import cast, Optional
 
-from git import Optional
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG

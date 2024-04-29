@@ -1,4 +1,5 @@
 """Tests for model."""
+
 from typing import Optional
 
 import pytest

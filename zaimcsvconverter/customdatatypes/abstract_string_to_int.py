@@ -1,4 +1,5 @@
 """Custom data type to convert string with comma to int."""
+
 from abc import abstractmethod
 from typing import Any, Optional, TYPE_CHECKING
 

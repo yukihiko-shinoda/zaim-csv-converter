@@ -1,4 +1,5 @@
 """Tests for utility."""
+
 from typing import Optional
 
 import pytest

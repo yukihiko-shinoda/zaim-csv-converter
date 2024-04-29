@@ -1,4 +1,5 @@
 """Test for GoldPointCardPlusRowFactory."""
+
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource

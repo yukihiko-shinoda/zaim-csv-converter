@@ -1,4 +1,5 @@
 """RecordConverter from input to Zaim."""
+
 from pathlib import Path
 
 from zaimcsvconverter.inputtooutput.converters import RecordConverter

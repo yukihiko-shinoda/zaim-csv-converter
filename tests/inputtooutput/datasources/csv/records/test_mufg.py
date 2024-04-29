@@ -1,4 +1,5 @@
 """Tests for mufg.py."""
+
 from datetime import datetime
 
 import pytest

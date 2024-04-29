@@ -1,4 +1,5 @@
 """Tests for waon.py."""
+
 from datetime import datetime
 
 import pytest

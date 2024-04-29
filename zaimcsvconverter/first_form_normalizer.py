@@ -1,4 +1,5 @@
 """Generator to iterate CSV row data as model instance."""
+
 from collections.abc import Generator
 from logging import getLogger
 from pathlib import Path

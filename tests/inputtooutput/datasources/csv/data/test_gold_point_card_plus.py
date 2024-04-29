@@ -1,4 +1,5 @@
 """Tests for GoldPointCartPlusRow."""
+
 from datetime import datetime
 
 from tests.testlibraries.assert_list import assert_each_properties

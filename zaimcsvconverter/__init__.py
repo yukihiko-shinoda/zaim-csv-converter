@@ -1,4 +1,5 @@
 """This module implements default database settings."""
+
 from enum import Enum
 from pathlib import Path
 from types import DynamicClassAttribute

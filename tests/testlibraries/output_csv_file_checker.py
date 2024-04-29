@@ -1,4 +1,5 @@
 """This module implements checker for output CSV file."""
+
 from abc import abstractmethod
 import csv
 from dataclasses import dataclass, field

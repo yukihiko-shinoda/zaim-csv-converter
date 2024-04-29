@@ -1,4 +1,5 @@
 """This module implements convert steps of input CSV row."""
+
 from typing import cast, Generic, Optional
 
 from returns.primitives.hkt import Kind1

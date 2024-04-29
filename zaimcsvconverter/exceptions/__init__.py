@@ -1,6 +1,5 @@
 """This module implements exceptions for this package."""
 
-
 from typing import Optional
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler

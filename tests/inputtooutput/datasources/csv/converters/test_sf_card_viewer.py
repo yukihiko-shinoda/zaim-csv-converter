@@ -1,4 +1,5 @@
 """Test for SFCardViewerRowFactory."""
+
 from dataclasses import dataclass
 
 import pytest

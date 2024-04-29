@@ -2,6 +2,7 @@
 
 @see https://factoryboy.readthedocs.io/en/latest/orms.html#sqlalchemy
 """
+
 from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional

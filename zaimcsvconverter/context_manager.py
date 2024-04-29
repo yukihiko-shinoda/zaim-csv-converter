@@ -3,6 +3,7 @@
 see: python - entering context managers in __enter__ - Stack Overflow
 https://stackoverflow.com/questions/47705573/entering-context-managers-in-enter
 """
+
 from abc import ABC, abstractmethod
 import contextlib
 from types import TracebackType

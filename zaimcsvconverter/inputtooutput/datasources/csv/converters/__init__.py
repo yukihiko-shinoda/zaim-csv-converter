@@ -1,4 +1,5 @@
 """Converter from CSV data to record model."""
+
 from abc import abstractmethod
 from typing import Generic
 

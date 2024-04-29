@@ -1,4 +1,5 @@
 """Custom data type to convert string with comma to optional int."""
+
 from typing import Any, Optional, TYPE_CHECKING
 
 # Reason: Pylint's bug. pylint: disable=no-name-in-module

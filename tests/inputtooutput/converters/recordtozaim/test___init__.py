@@ -1,4 +1,5 @@
 """Tests for __init__.py."""
+
 import pytest
 
 from tests.conftest import create_zaim_row_converter

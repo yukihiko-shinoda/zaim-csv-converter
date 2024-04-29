@@ -1,4 +1,5 @@
 """This module implements importing process for convert table CSV."""
+
 import csv
 from pathlib import Path
 

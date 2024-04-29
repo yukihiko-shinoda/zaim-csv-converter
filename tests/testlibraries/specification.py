@@ -1,4 +1,5 @@
 """This module implements specification of production code."""
+
 from pathlib import Path
 
 

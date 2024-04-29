@@ -1,4 +1,5 @@
 """Zaim CSV Converter extended Amazon.co.jp CSV Data model."""
+
 from datetime import datetime
 
 from pydantic.dataclasses import dataclass

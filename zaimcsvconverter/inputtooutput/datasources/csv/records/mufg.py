@@ -1,4 +1,5 @@
 """This module implements row model of MUFG bank CSV."""
+
 from __future__ import annotations
 
 from abc import ABC

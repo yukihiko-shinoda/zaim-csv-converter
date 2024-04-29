@@ -1,4 +1,5 @@
 """This module implements row model of VIEW CARD CSV."""
+
 from typing import Any
 
 from zaimcsvconverter import CONFIG

@@ -1,4 +1,5 @@
 """To prevent circular import."""
+
 from zaimcsvconverter.exceptions import Error
 from zaimcsvconverter.inputtooutput.datasources import DataSource
 

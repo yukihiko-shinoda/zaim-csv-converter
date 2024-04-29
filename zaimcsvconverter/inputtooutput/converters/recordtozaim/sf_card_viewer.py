@@ -1,4 +1,5 @@
 """This module implements convert steps from SFCard Viewer input row to Zaim row."""
+
 from pathlib import Path
 from typing import Callable, Optional
 

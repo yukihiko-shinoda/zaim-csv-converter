@@ -1,4 +1,5 @@
 """This module implements row model of SF Card Viewer CSV."""
+
 from __future__ import annotations
 
 from typing import Any, TYPE_CHECKING

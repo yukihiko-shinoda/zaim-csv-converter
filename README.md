@@ -313,6 +313,17 @@ Chrome の場合は [Table Capture](https://chrome.google.com/webstore/detail/ta
 上記のファイル名の例の場合、西暦年は `2022` となります。
 この西暦年と CSV の履歴の日付から Zaim 形式の CSV の履歴の日付を計算します。
 
+#### CSV の履歴の期間内に、モバイル Suica に現金で入金（チャージ）した場合、履歴の修正が必要です
+
+CSV をアップロードすると、モバイル Suica に現金で入金した日付で、入金した金額と同じマイナスの支出履歴が登録されます。
+モバイル Suica の履歴からは JRE POINT の付与も <種別: 現金> となり、区別ができないので、
+頻度が高いと考えられる JRE POINT の付与として処理するためです。
+
+参考:
+
+- [SF(電子マネー)利用履歴を確認／印字したい。 | モバイルSuica よくあるご質問：JR東日本](https://msfaq.mobilesuica.com/faq/show/131?site_domain=default)
+- [モバイルSuicaに現金で入金（チャージ）したい。 | モバイルSuica よくあるご質問：JR東日本](https://msfaq.mobilesuica.com/faq/show/25?site_domain=default)
+
 ### Amazon
 
 1\.

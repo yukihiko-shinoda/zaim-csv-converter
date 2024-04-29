@@ -4,6 +4,7 @@ see:
 - python - How to type-annotate object returned by csv.writer? - Stack Overflow
   https://stackoverflow.com/questions/51264355/how-to-type-annotate-object-returned-by-csv-writer
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

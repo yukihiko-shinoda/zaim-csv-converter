@@ -1,4 +1,5 @@
 """Converter from PayPal CSV data to record model."""
+
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.pay_pal import PayPalRow

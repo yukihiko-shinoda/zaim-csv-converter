@@ -1,4 +1,5 @@
 """To handle data source by abstraction for compatibility in future."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

@@ -1,4 +1,5 @@
 """Tests for waon.py."""
+
 from datetime import datetime
 
 from pydantic import ValidationError

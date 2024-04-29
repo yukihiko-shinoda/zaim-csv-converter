@@ -1,4 +1,5 @@
 """This module implements error report process for input CSV."""
+
 from abc import ABC, abstractmethod
 from collections.abc import Generator
 from typing import Generic, Union

@@ -1,4 +1,5 @@
 """Zaim CSV Converter extended SBI Sumishin net bank CSV Data model."""
+
 from datetime import datetime
 
 from pydantic.dataclasses import dataclass

@@ -1,4 +1,5 @@
 """Tests for ViewCardRow."""
+
 from datetime import datetime
 
 from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory

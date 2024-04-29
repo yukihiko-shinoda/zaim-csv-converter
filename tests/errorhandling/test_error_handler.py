@@ -1,4 +1,5 @@
 """Tests for error_handler.py."""
+
 from typing import ClassVar
 
 import pytest

@@ -69,14 +69,16 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"GitHub.copilot",
-				"ms-python.python",
-				"charliermarsh.ruff",
-				"ms-python.flake8",
-				"ms-python.pylint",
+				"streetsidesoftware.code-spell-checker",
 				"bungcip.better-toml",
+				"charliermarsh.ruff",
+				"ms-python.python",
+				"ms-python.flake8",
+				"ms-python.isort",
+				"ms-python.mypy-type-checker",
+				"ms-python.pylint",
 				"wk-j.save-and-run",
-				"grapecity.gc-excelviewer",
-				"streetsidesoftware.code-spell-checker"
+				"grapecity.gc-excelviewer"
 			]
 		}
 	}

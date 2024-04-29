@@ -1,4 +1,5 @@
 """This module implements row model of PayPay Card CSV."""
+
 from __future__ import annotations
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert

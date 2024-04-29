@@ -1,4 +1,5 @@
 """Test for customdatatypes."""
+
 from typing import TypeVar
 
 V = TypeVar("V")

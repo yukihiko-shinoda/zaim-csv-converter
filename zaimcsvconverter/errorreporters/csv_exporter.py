@@ -1,4 +1,5 @@
 """This module implements CSV export."""
+
 from collections.abc import Iterable
 import csv
 from pathlib import Path

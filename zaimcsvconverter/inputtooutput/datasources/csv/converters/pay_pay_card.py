@@ -1,4 +1,5 @@
 """Converter from PayPay Card CSV data to record model."""
+
 from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pay_card import PayPayCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csv.records.pay_pay_card import PayPayCardRow

@@ -1,4 +1,5 @@
 """This module implements convert steps from input row to Zaim row."""
+
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path

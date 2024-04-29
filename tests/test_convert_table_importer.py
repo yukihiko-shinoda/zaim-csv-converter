@@ -1,4 +1,5 @@
 """Tests for convert_table_importer.py."""
+
 from pathlib import Path
 from typing import Any
 

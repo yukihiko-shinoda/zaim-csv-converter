@@ -1,4 +1,5 @@
 """Tests for account.py."""
+
 from enum import Enum
 import os
 from pathlib import Path

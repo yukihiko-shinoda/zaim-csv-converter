@@ -1,6 +1,7 @@
 [project]
 name = "zaimcsvconverter"
 version = "0.1.0"
+requires-python = ">=3.9"
 
 [tool.setuptools.packages.find]
 include = ["zaimcsvconverter", "zaimcsvconverter.*"]
@@ -110,6 +111,8 @@ markers = [
 
 [tool.ruff]
 line-length = 119
+
+[tool.ruff.lint]
 select = [
     "F",  # Pyflakes
     "E",  # pycodestyle
@@ -182,7 +185,6 @@ unfixable = [
     # To handle mypy's bug in case when use Pydantic custom data type.
     "SIM108",  # Use ternary operator `extra_context = {} if extra_context is None else request.param` instead of `if`-`else`-block
 ]
-target-version = "py39"
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]

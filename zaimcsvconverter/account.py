@@ -1,4 +1,5 @@
 """This module implements constants which suitable module to belong is not defined."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

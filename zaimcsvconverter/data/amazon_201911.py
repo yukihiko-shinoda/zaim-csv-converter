@@ -1,4 +1,5 @@
 """Amazon.co.jp CSV Data model version 201911."""
+
 from typing import ClassVar
 
 from pydantic.dataclasses import dataclass

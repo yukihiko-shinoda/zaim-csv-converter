@@ -1,4 +1,5 @@
 """Zaim CSV Converter extended VIEW CARD CSV Data model."""
+
 from datetime import datetime
 import re
 

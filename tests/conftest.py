@@ -1,4 +1,5 @@
 """This module implements config for pytest."""
+
 from collections.abc import Generator
 from pathlib import Path
 from typing import Any

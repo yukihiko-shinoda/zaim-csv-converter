@@ -1,4 +1,5 @@
 """Tests for zaim_csv_converter.py."""
+
 import csv
 from logging import getLogger
 from pathlib import Path

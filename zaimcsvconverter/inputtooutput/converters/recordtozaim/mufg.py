@@ -2,6 +2,7 @@
 
 @see https://faq01.bk.mufg.jp/usr/file/attachment/main_contents_0401.pdf
 """
+
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import cast, Optional, TypeVar

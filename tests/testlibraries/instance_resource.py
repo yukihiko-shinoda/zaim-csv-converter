@@ -1,4 +1,5 @@
 """This module implements fixture of instance."""
+
 from pathlib import Path
 from typing import ClassVar
 

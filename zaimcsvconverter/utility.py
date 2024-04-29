@@ -1,4 +1,5 @@
 """This module implements utility."""
+
 import re
 from typing import Optional
 

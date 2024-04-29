@@ -1,4 +1,5 @@
 """This module implements convert steps from GOLD POINT CARD + input row to Zaim row."""
+
 from pathlib import Path
 
 from returns.primitives.hkt import Kind1

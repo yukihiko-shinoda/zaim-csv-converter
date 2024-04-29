@@ -1,4 +1,5 @@
 """Zaim CSV Converter extended WAON CSV Data model."""
+
 from datetime import datetime
 
 from pydantic.dataclasses import dataclass

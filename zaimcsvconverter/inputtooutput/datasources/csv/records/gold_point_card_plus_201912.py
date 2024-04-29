@@ -1,4 +1,5 @@
 """This module implements row model of GOLD POINT CARD+ CSV version 201912."""
+
 from sqlalchemy.exc import NoResultFound
 
 from zaimcsvconverter import CONFIG

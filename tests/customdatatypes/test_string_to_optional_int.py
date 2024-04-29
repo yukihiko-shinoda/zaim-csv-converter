@@ -1,4 +1,5 @@
 """Tests for string_to_optional_int.py ."""
+
 import datetime
 from typing import Any
 
