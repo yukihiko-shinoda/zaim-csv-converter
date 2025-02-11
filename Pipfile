@@ -20,7 +20,7 @@ yamldataclassconfig = "*"
 [dev-packages]
 autoflake = "*"
 bandit = {version = "*", markers="python_version >= '3.7'"}
-black = {version = "*", markers="python_version >= '3.7'"}
+black = "*"
 cohesion = "*"
 # Hotfix for Pipenv's Bug:
 # - Pipenv should prioritize more cross-platform sys_platform condition between packages when lock
@@ -63,7 +63,7 @@ pyvelocity = {version = "*", markers="python_version >= '3.9'"}
 #   https://github.com/rubik/radon/issues/251
 radon = "<6.0.0"
 returns = "*"
-ruff = {version = "*", markers="python_version >= '3.7'"}
+ruff = "*"
 semgrep = {version = "*", markers="python_version >= '3.6'"}
 types-invoke = "*"
 xenon = "*"

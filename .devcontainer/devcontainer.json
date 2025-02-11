@@ -21,26 +21,16 @@
 		"vscode": {
 			// Set *default* container specific settings.json values on container create.
 			"settings": {
-				"python.formatting.provider": "black",
-				"python.linting.enabled": true,
-				"python.linting.lintOnSave": true,
-				"python.linting.banditEnabled": true,
-				"python.linting.banditArgs": [
-					"--configfile",
-					"pyproject.toml"
-				],
-				"python.linting.flake8Enabled": true,
-				"python.linting.mypyEnabled": true,
-				"python.linting.pydocstyleEnabled": true,
 				// VS Code displays Pylint warning: import-error that not reported in Pylint by executing CLI.
 				// "python.linting.pylintEnabled": true,
 				// This setting forcibly generate __pycache__.
 				// "python.testing.pytestEnabled": true,
 				"[python]": {
+					"editor.defaultFormatter": "ms-python.black-formatter",
 					"editor.formatOnSave": true,
 					"editor.codeActionsOnSave": {
-						"source.fixAll": true,
-						"source.organizeImports": true
+						"source.fixAll": "explicit",
+						"source.organizeImports": "explicit"
 					}
 				},
 				"ruff.organizeImports": false,
@@ -70,14 +60,15 @@
 			"extensions": [
 				"GitHub.copilot",
 				"streetsidesoftware.code-spell-checker",
-				"bungcip.better-toml",
+				"tamasfe.even-better-toml",
 				"charliermarsh.ruff",
 				"ms-python.python",
+				"ms-python.black-formatter",
 				"ms-python.flake8",
 				"ms-python.isort",
 				"ms-python.mypy-type-checker",
 				"ms-python.pylint",
-				"wk-j.save-and-run",
+				"emeraldwalk.RunOnSave",
 				"grapecity.gc-excelviewer"
 			]
 		}
