@@ -13,8 +13,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimRowConverter,
     ZaimTransferRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.sbi_sumishin_net_bank import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import (
     SBISumishinNetBankDepositRow,
     SBISumishinNetBankRow,
     SBISumishinNetBankWithdrawalRow,

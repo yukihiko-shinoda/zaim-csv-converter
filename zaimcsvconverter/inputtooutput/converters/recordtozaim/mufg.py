@@ -17,8 +17,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimRowConverter,
     ZaimTransferRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.mufg import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import (
     MufgIncomeFromOthersRow,
     MufgIncomeFromSelfRow,
     MufgIncomeRow,

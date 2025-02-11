@@ -13,8 +13,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimRowConverter,
     ZaimTransferRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonChargeRow, WaonRow, WaonStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonChargeRow, WaonRow, WaonStoreRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object

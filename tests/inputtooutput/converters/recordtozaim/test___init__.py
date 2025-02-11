@@ -37,8 +37,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import (
     WaonZaimTransferRowConverter,
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
-from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
 
 
 class TestZaimRowConverterFactory:

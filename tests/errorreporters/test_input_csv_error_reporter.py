@@ -8,8 +8,8 @@ import pytest
 from zaimcsvconverter.errorreporters.input_csv_error_reporter import DataSourceErrorReporterFactory
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord, DataSource
-from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
 
 
 class TestInputCsvErrorReporter:

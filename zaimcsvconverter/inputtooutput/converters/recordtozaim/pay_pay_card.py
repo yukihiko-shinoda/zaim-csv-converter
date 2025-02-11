@@ -12,8 +12,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimRowConverter,
     ZaimTransferRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pay_card import PayPayCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.pay_pay_card import PayPayCardRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pay_card import PayPayCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.pay_pay_card import PayPayCardRow
 
 
 class PayPayCardZaimTransferRowConverter(ZaimTransferRowConverter[PayPayCardRow, PayPayCardRowData]):

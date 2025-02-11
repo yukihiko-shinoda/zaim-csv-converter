@@ -8,8 +8,8 @@ from typing import Generic, TypeVar
 from fixturefilehandler.file_paths import RelativeDeployFilePath
 
 from tests.testlibraries.row_data import InvalidRowErrorRowData, ZaimRowData
-from zaimcsvconverter.inputtooutput.exporters.zaim.csv.csv_types import CSVReader
-from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
+from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.csv_types import CSVReader
+from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
 
 TypeVarOutputRowData = TypeVar("TypeVarOutputRowData")
 

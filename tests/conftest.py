@@ -16,25 +16,25 @@ from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter, ZaimRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimRow
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database and fixture records."""
     yield from DatabaseForTest.database_session()
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_with_schema(request: pytest.FixtureRequest) -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database and fixture records."""
     yield from DatabaseForTest.database_session_with_schema(getattr(request, "param", None))
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_basic_store_waon() -> Generator[SQLAlchemySession, None, None]:
     """This function prepare common fixture with some tests."""
     yield from DatabaseForTest.database_session_with_schema(
@@ -58,7 +58,7 @@ def database_session_stores_gold_point_card_plus_class_scope() -> Generator[SQLA
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_stores_gold_point_card_plus() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema(
@@ -71,7 +71,7 @@ def database_session_stores_gold_point_card_plus() -> Generator[SQLAlchemySessio
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_stores_mufg() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema(
@@ -99,7 +99,7 @@ def database_session_stores_sf_card_viewer_class_scope() -> Generator[SQLAlchemy
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_stores_sf_card_viewer() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema(
@@ -120,7 +120,7 @@ def database_session_stores_view_card_class_scope() -> Generator[SQLAlchemySessi
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_stores_view_card() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema(
@@ -128,7 +128,7 @@ def database_session_stores_view_card() -> Generator[SQLAlchemySession, None, No
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_store_item() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema(
@@ -152,7 +152,7 @@ def database_session_stores_item_class_scope() -> Generator[SQLAlchemySession, N
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_stores_item() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema(
@@ -176,7 +176,7 @@ def database_session_item_class_scope() -> Generator[SQLAlchemySession, None, No
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def database_session_item() -> Generator[SQLAlchemySession, None, None]:
     """This fixture prepares database session and records."""
     yield from DatabaseForTest.database_session_with_schema(
@@ -187,7 +187,7 @@ def database_session_item() -> Generator[SQLAlchemySession, None, None]:
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def _yaml_config_file(resource_path_root: Path) -> Generator[None, None, None]:
     """This fixture prepares YAML config file and loads it."""
     yaml_config_file_path = YamlConfigFilePathBuilder(
@@ -206,7 +206,7 @@ def _yaml_config_load_class_scope(resource_path_root: Path) -> None:
     CONFIG.load(resource_path_root / "config.yml.dist")
 
 
-@pytest.fixture()
+@pytest.fixture
 def _yaml_config_load(
     request: pytest.FixtureRequest,
     resource_path: Path,
@@ -224,7 +224,7 @@ def get_config_file_path(request: pytest.FixtureRequest, resource_path: Path, re
     return resource_path_root / "config.yml.dist"
 
 
-@pytest.fixture()
+@pytest.fixture
 def path_file_csv_input(request: pytest.FixtureRequest, resource_path: Path) -> Path:
     """This fixture prepare CSV output directory."""
     return get_input_csv_file_path(request, resource_path)
@@ -238,7 +238,7 @@ def get_input_csv_file_path(request: pytest.FixtureRequest, resource_path: Path)
     return resource_path.parent / file_name
 
 
-@pytest.fixture()
+@pytest.fixture
 def directory_csv_convert_table(resource_path: Path) -> Generator[RelativeDeployFilePath, None, None]:
     """This fixture prepares directory for CSV files of convert tables."""
     csv_convert_table_file_path = create_relative_deploy_file_path(resource_path, "csvconverttable")
@@ -247,7 +247,7 @@ def directory_csv_convert_table(resource_path: Path) -> Generator[RelativeDeploy
     ResourceFileDeployer.teardown(csv_convert_table_file_path)
 
 
-@pytest.fixture()
+@pytest.fixture
 def directory_csv_input(
     request: pytest.FixtureRequest,
     resource_path: Path,
@@ -259,7 +259,7 @@ def directory_csv_input(
     ResourceFileDeployer.teardown(csv_input_file_path)
 
 
-@pytest.fixture()
+@pytest.fixture
 def directory_csv_output(resource_path: Path) -> Generator[RelativeDeployFilePath, None, None]:
     """This fixture prepares directory for CSV files of output."""
     csv_output_file_path = create_relative_deploy_file_path(resource_path, "csvoutput")

@@ -10,8 +10,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimPaymentRowItemConverter,
     ZaimRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon_201911 import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import (
     Amazon201911DiscountRow,
     Amazon201911ItemRow,
     Amazon201911PaymentRow,

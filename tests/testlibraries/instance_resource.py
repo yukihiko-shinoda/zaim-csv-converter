@@ -4,17 +4,17 @@ from pathlib import Path
 from typing import ClassVar
 
 from tests.testlibraries.database_for_test import FixtureRecord
-from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus import GoldPointCardPlusRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data import RowDataFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
 from zaimcsvconverter.models import FileCsvConvertId, ItemRowData, StoreRowData
 
 

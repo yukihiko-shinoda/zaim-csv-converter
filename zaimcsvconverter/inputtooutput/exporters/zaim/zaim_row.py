@@ -4,7 +4,7 @@ from abc import abstractmethod
 from typing import Optional, TYPE_CHECKING, Union
 
 from zaimcsvconverter.inputtooutput.exporters import OutputRecord
-from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
+from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
 
 if TYPE_CHECKING:  # pragma: no cover
     from datetime import datetime
@@ -17,8 +17,8 @@ if TYPE_CHECKING:  # pragma: no cover
     )
 
     # Reason: Pylint's bug.
-    from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData  # pylint: disable=unused-import
-    from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
+    from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputRowData  # pylint: disable=unused-import
+    from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
 
 
 class ZaimRow(OutputRecord):
