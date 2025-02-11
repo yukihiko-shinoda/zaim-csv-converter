@@ -35,11 +35,18 @@ class FirstFormNormalizer(Generic[T]):
         while True:
             try:
                 list_input_row_standard_type_value = next(iterator)
+            except UnicodeDecodeError:
+                self.logger.exception("Invalid encode file: %s", self.god_slayer.path_to_file)
+                raise
             except StopIteration:
                 break
             self.logger.debug("self.input_row_data_class: %s", self.input_row_data_class)
             self.logger.debug("list_input_row_standard_type_value: %s", list_input_row_standard_type_value)
-            yield self.input_row_data_class(*list_input_row_standard_type_value)
+            try:
+                yield self.input_row_data_class(*list_input_row_standard_type_value)
+            except TypeError:
+                self.logger.exception("Invalid column type: %s", self.god_slayer.path_to_file)
+                raise
 
     @property
     def index(self) -> int:

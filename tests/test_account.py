@@ -55,6 +55,6 @@ class TestAccount:
         """All accounts should have regex."""
         with pytest.raises(
             ValueError,
-            match=r"can\'t\sdetect\saccount\stype\sby\scsv\sfile\sname\.\sPlease\sconfirm\scsv\sfile\sname\.",
+            match=r"can\'t\sdetect\saccount\stype\sby\scsv\sfile\sname\.\sPlease\sconfirm\scsv\sfile\sname\:\s.*\.csv",
         ):
             Account.create_by_path_csv_input(Path("test.csv"))

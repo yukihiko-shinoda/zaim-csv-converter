@@ -279,6 +279,6 @@ class Account(Enum):
         # noinspection PyUnusedLocal
         matches = [account for account in Account if re.search(account.value.regex_csv_file_name, path.name)]
         if not matches:
-            msg = "can't detect account type by csv file name. Please confirm csv file name."
+            msg = f"can't detect account type by csv file name. Please confirm csv file name: {path.name}"
             raise ValueError(msg)
         return max(matches, key=lambda matched_account: len(matched_account.value.regex_csv_file_name))
