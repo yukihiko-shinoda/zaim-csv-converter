@@ -14,6 +14,8 @@ class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
     # Reason: Specification.
     CONTENT_SBI_HYBRID_DEPOSIT = "ＳＢＩハイブリッド預金"
     CONTENT_INTEREST = "利息"
+    CONTENT_NATIONAL_TAX = "国税"
+    CONTENT_REGIONAL_TAX = "地方税"
     # Reason: Specification.
     CONTENT_TRANSFER_SBI_SECURITIES = "振替　ＳＢＩ証券"
     # Reason: Specification.
@@ -26,7 +28,7 @@ class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
 
     @property
     def is_transaction_with_others(self) -> bool:
-        return self.is_interest
+        return self.is_interest or self.is_national_tax or self.is_regional_tax
 
     @property
     def is_transfer(self) -> bool:
@@ -43,6 +45,14 @@ class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
     @property
     def is_interest(self) -> bool:
         return self.store.name == self.CONTENT_INTEREST
+
+    @property
+    def is_national_tax(self) -> bool:
+        return self.store.name == self.CONTENT_NATIONAL_TAX
+
+    @property
+    def is_regional_tax(self) -> bool:
+        return self.store.name == self.CONTENT_REGIONAL_TAX
 
     @property
     def is_transfer_sbi_securities(self) -> bool:
