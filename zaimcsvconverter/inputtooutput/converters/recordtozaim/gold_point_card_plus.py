@@ -10,8 +10,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimPaymentRowStoreConverter,
     ZaimRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus import GoldPointCardPlusRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.gold_point_card_plus import GoldPointCardPlusRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus import GoldPointCardPlusRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object

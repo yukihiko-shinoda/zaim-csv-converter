@@ -9,19 +9,19 @@ from returns.primitives.hkt import Kind1, kinded
 
 from zaimcsvconverter.exceptions import LogicError
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
-from zaimcsvconverter.inputtooutput.datasources.csv.data import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import (
     TypeVarInputItemRowData,
     TypeVarInputRowData,
     TypeVarInputStoreItemRowData,
     TypeVarInputStoreRowData,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.records import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import (
     TypeVarInputItemRow,
     TypeVarInputRow,
     TypeVarInputStoreItemRow,
     TypeVarInputStoreRow,
 )
-from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_format import ZaimCsvFormat
+from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
     ZaimIncomeRow,
     ZaimPaymentRow,

@@ -13,8 +13,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimRowConverter,
     ZaimTransferRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.sbi_sumishin_net_bank import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import (
     SBISumishinNetBankDepositRow,
     SBISumishinNetBankRow,
     SBISumishinNetBankWithdrawalRow,
@@ -85,6 +85,14 @@ class SBISumishinNetBankDepositZaimTransferRowConverter(
         return self.input_row.deposit_amount
 
 
+AnySbiSumishinNetBankConverter = Union[
+    SBISumishinNetBankZaimPaymentRowConverter,
+    SBISumishinNetBankWithdrawalZaimTransferRowConverter,
+    SBISumishinNetBankZaimIncomeRowConverter,
+    SBISumishinNetBankDepositZaimTransferRowConverter,
+]
+
+
 class SBISumishinNetBankZaimRowConverterFactory(
     CsvRecordToZaimRowConverterFactory[SBISumishinNetBankRow, SBISumishinNetBankRowData],
 ):
@@ -100,22 +108,9 @@ class SBISumishinNetBankZaimRowConverterFactory(
         # Reason: Maybe, there are no way to resolve.
         # The nearest issues: https://github.com/dry-python/returns/issues/708
         input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData],  # type: ignore[override]
-        _path_csv_file: Path,
+        _: Path,
     ) -> ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData]:
-        dictionary: dict[
-            str,
-            dict[
-                str,
-                type[
-                    Union[
-                        SBISumishinNetBankZaimPaymentRowConverter,
-                        SBISumishinNetBankWithdrawalZaimTransferRowConverter,
-                        SBISumishinNetBankZaimIncomeRowConverter,
-                        SBISumishinNetBankDepositZaimTransferRowConverter,
-                    ]
-                ],
-            ],
-        ] = {
+        dictionary: dict[str, dict[str, type[AnySbiSumishinNetBankConverter]]] = {
             self.KEY_INSTANCE_TYPE_INSTANCE_OF_WITHDRAWAL_ROW: {
                 self.KEY_TRANSACTION_TYPE_TRANSACTION_WITH_OTHERS: SBISumishinNetBankZaimPaymentRowConverter,
                 self.KEY_TRANSACTION_TYPE_TRANSFER: SBISumishinNetBankWithdrawalZaimTransferRowConverter,

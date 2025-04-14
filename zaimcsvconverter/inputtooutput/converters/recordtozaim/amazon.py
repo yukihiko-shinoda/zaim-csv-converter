@@ -10,8 +10,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimPaymentRowItemConverter,
     ZaimRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.amazon import AmazonRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon import AmazonRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object

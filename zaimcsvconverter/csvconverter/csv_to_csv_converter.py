@@ -8,13 +8,13 @@ from zaimcsvconverter import DirectoryCsv
 from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
 from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.record_to_zaim_converter import RecordToZaimConverter
-from zaimcsvconverter.inputtooutput.datasources.csv.csv import Csv
-from zaimcsvconverter.inputtooutput.datasources.csv.csv_record_processor import CsvRecordProcessor
-from zaimcsvconverter.inputtooutput.exporters.zaim.csv.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
+from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_file import Csv
+from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
+from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
 
 if TYPE_CHECKING:
-    from zaimcsvconverter.inputtooutput.datasources.csv.data import InputRowData
-    from zaimcsvconverter.inputtooutput.datasources.csv.records import InputRow
+    from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputRowData
+    from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
 
 
 class CsvToCsvConverter:

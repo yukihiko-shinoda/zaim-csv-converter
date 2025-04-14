@@ -34,7 +34,7 @@ class Kind2(str, Enum):
 
     EMPTY = ""
     EXIT = "出"
-    EXIT_BY_WINDOW = "精"
+    EXIT_BY_WINDOW = "窓出"
     # Reason: This is not password.
     COMMUTER_PASS = "定"  # nosec  # noqa: S105
 

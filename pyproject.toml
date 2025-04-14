@@ -150,7 +150,7 @@ select = [
     "SLF",  # flake8-self
     "SIM",  # flake8-simplify
     "TID",  # flake8-tidy-imports
-    "TCH",  # flake8-type-checking
+    "TC",  # flake8-type-checking
     "ARG",  # flake8-unused-arguments
     "PTH",  # flake8-use-pathlib
     "ERA",  # eradicate
@@ -163,8 +163,6 @@ select = [
 ]
 ignore = [
     "UP032",  # [*] Use f-string instead of `format` call
-    "ANN101",  # Missing type annotation for `self` in method
-    "ANN102",  # Missing type annotation for `cls` in classmethod
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed, These warnings are disabled by default
     # Python 3.9 incompatible
     "UP007",  # Use X | Y for type annotations

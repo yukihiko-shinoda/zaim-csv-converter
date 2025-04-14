@@ -12,10 +12,10 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimRowConverter,
     ZaimTransferRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.records.gold_point_card_plus_201912 import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912Row,
 )
 

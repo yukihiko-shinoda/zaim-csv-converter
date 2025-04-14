@@ -10,8 +10,8 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
     ZaimPaymentRowStoreItemConverter,
     ZaimRowConverter,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.pay_pal import PayPalRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pal import PayPalRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.pay_pal import PayPalRow
 
 
 class PayPalZaimPaymentRowConverter(ZaimPaymentRowStoreItemConverter[PayPalRow, PayPalRowData]):

@@ -28,44 +28,46 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.sbi_sumishin_net_ban
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.view_card import ViewCardZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaimRowConverterFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon import AmazonRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.amazon_201911 import Amazon201911RowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_plus import GoldPointCardPlusRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.gold_point_card_plus_201912 import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.amazon import AmazonRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.amazon_201911 import Amazon201911RowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.gold_point_card_plus import (
+    GoldPointCardPlusRowFactory,
+)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowFactory,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.mobile_suica import MobileSuicaRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.mufg import MufgRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.pay_pal import PayPalRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.pay_pay_card import PayPayCardRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.sbi_sumishin_net_bank import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.mobile_suica import MobileSuicaRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.mufg import MufgRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pal import PayPalRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pay_card import PayPayCardRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sbi_sumishin_net_bank import (
     SBISumishinNetBankRowFactory,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.sf_card_viewer import SFCardViewerRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.view_card import ViewCardRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.waon import WaonRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon import AmazonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus import GoldPointCardPlusRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.gold_point_card_plus_201912 import (
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sf_card_viewer import SFCardViewerRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.view_card import ViewCardRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.waon import WaonRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912RowData,
 )
-from zaimcsvconverter.inputtooutput.datasources.csv.data.mobile_suica import MobileSuicaRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.mufg import MufgRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pal import PayPalRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.pay_pay_card import PayPayCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.view_card import ViewCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mobile_suica import MobileSuicaRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pal import PayPalRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pay_card import PayPayCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
-    from zaimcsvconverter.inputtooutput.datasources.csv.converters import InputRowFactory
+    from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
 
 
 @dataclass
@@ -279,6 +281,6 @@ class Account(Enum):
         # noinspection PyUnusedLocal
         matches = [account for account in Account if re.search(account.value.regex_csv_file_name, path.name)]
         if not matches:
-            msg = "can't detect account type by csv file name. Please confirm csv file name."
+            msg = f"can't detect account type by csv file name. Please confirm csv file name: {path.name}"
             raise ValueError(msg)
         return max(matches, key=lambda matched_account: len(matched_account.value.regex_csv_file_name))

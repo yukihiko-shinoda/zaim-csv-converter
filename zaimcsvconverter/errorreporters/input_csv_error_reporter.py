@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 from collections.abc import Generator
 from typing import Generic, Union
 
-from zaimcsvconverter.inputtooutput.datasources.csv.csv import Csv
-from zaimcsvconverter.inputtooutput.datasources.csv.data import TypeVarInputRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records import TypeVarInputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_file import Csv
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
 from zaimcsvconverter.inputtooutput.datasources import DataSource
 
 

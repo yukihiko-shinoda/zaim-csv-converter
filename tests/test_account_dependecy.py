@@ -7,9 +7,9 @@ import pytest
 
 from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaimRowConverterFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.converters.waon import WaonRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csv.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csv.records.waon import WaonRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.waon import WaonRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonRow
 
 
 @dataclass
