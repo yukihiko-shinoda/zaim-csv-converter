@@ -76,7 +76,7 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
             return self.create_charge(input_row)
         if isinstance(input_row, WaonStoreRow):
             return self.create_store(input_row)
-        dekinded_input_row = cast(WaonRow, input_row)
+        dekinded_input_row = cast("WaonRow", input_row)
         raise ValueError(self.build_message(dekinded_input_row))
 
     def create_charge(self, input_row: WaonChargeRow) -> ZaimRowConverter[WaonRow, WaonRowData]:

@@ -43,7 +43,7 @@ class ZaimRowConverter(Generic[TypeVarInputRow, TypeVarInputRowData], AbstractZa
     """This class implements convert steps from input row to Zaim row."""
 
     def __init__(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]) -> None:
-        self.input_row = cast(TypeVarInputRow, self.to_container(input_row))
+        self.input_row = cast("TypeVarInputRow", self.to_container(input_row))
 
     @kinded
     @classmethod

@@ -56,7 +56,7 @@ class PayPayCardZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[PayPa
         input_row: Kind1[PayPayCardRow, PayPayCardRowData],  # type: ignore[override]
         _path_csv_file: Path,
     ) -> ZaimRowConverter[PayPayCardRow, PayPayCardRowData]:
-        dekinded_input_row = cast(PayPayCardRow, input_row)
+        dekinded_input_row = cast("PayPayCardRow", input_row)
         if dekinded_input_row.store.transfer_target:
             return PayPayCardZaimTransferRowConverter(input_row)
         return PayPayCardZaimPaymentRowConverter(input_row)

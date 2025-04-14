@@ -1,7 +1,7 @@
 """Tests for waon.py."""
 
 from pathlib import Path
-from typing import cast
+from typing import cast, TYPE_CHECKING
 
 import pytest
 
@@ -12,8 +12,10 @@ from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimIncomeRow, ZaimPaymentRow, ZaimTransferRow
+
+if TYPE_CHECKING:
+    from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonRow
 
 
 class TestWaonZaimIncomeRowConverter:
@@ -150,5 +152,5 @@ class TestWaonZaimRowConverterConverter:
             InstanceResource.ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO,
         )
         # Reason: To fix, it is necessary to recreate designs of ZaimRowConverterFactory.
-        dekinded_input_row = cast(WaonRow, input_row)
+        dekinded_input_row = cast("WaonRow", input_row)
         assert dekinded_input_row.is_row_to_skip

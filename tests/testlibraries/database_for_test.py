@@ -15,11 +15,7 @@ from zaimcsvconverter.models import Base, ConvertTableRowData, FileCsvConvertId,
 from zaimcsvconverter import Session
 
 
-# Reason: Since stub for SQLAlchemy lacks.
-# see:
-#   - Answer: python - Class cannot subclass 'QObject' (has type 'Any') using mypy - Stack Overflow
-#     https://stackoverflow.com/a/49897523/12721873
-class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):  # type: ignore[misc]
+class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Factory for Store model."""
 
     class Meta:  # Reason: Model. pylint: disable=too-few-public-methods
@@ -29,11 +25,7 @@ class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):  # type: ignore[misc
         sqlalchemy_session = Session
 
 
-# Reason: Since stub for SQLAlchemy lacks.
-# see:
-#   - Answer: python - Class cannot subclass 'QObject' (has type 'Any') using mypy - Stack Overflow
-#     https://stackoverflow.com/a/49897523/12721873
-class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):  # type: ignore[misc]
+class ItemFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Factory for Store model."""
 
     class Meta:  # Reason: Model. pylint: disable=too-few-public-methods
@@ -53,7 +45,8 @@ class FixtureRecord:
     def define(self) -> None:
         """This method defines factory_boy fixture records by using properties."""
         if self.file_csv_convert_id is FileCsvConvertId.AMAZON:
-            ItemFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)
+            # Reason: Mypy and SQLAlchemy's issue
+            ItemFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)  # type: ignore[no-untyped-call]  # noqa: E501 RUF100 pylint: disable=line-too-long
         elif self.file_csv_convert_id in (
             FileCsvConvertId.WAON,
             FileCsvConvertId.GOLD_POINT_CARD_PLUS,
@@ -61,7 +54,8 @@ class FixtureRecord:
             FileCsvConvertId.SF_CARD_VIEWER,
             FileCsvConvertId.VIEW_CARD,
         ):
-            StoreFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)
+            # Reason: Mypy and SQLAlchemy's issue
+            StoreFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)  # type: ignore[no-untyped-call]  # noqa: E501 RUF100 pylint: disable=line-too-long
         else:
             msg = (
                 "self.file_csv_convert_id is not supported on this class. "

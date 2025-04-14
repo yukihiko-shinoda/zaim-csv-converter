@@ -124,10 +124,10 @@ class SBISumishinNetBankZaimRowConverterFactory(
         transaction_type = self.check_transaction_type(input_row)
         # Reason: The returns can't detect correct type limited by if instance block.
         converter = dictionary[instance_type][transaction_type](input_row)  # type: ignore[arg-type]
-        return cast(ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData], converter)
+        return cast("ZaimRowConverter[SBISumishinNetBankRow, SBISumishinNetBankRowData]", converter)
 
     def check_transaction_type(self, input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]) -> str:
-        dekinded_input_row = cast(SBISumishinNetBankRow, input_row)
+        dekinded_input_row = cast("SBISumishinNetBankRow", input_row)
         if dekinded_input_row.is_transaction_with_others:
             return self.KEY_TRANSACTION_TYPE_TRANSACTION_WITH_OTHERS
         if dekinded_input_row.is_transfer:
@@ -144,7 +144,7 @@ class SBISumishinNetBankZaimRowConverterFactory(
     @staticmethod
     def build_message(input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]) -> str:  # pragma: no cover
         """This method builds error message."""
-        dekinded_input_row = cast(SBISumishinNetBankRow, input_row)
+        dekinded_input_row = cast("SBISumishinNetBankRow", input_row)
         return (
             "Unsupported row. "
             f"class = {type(input_row)}, "

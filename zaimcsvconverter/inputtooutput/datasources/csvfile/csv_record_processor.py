@@ -23,7 +23,7 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
     def execute(self, input_record_data: TypeVarInputRowData) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
         """This method executes convert steps of input CSV row."""
         input_record = self.create_input_row_instance(input_record_data)
-        dekinded_input_record = cast(InputRow[InputRowData], input_record)
+        dekinded_input_record = cast("InputRow[InputRowData]", input_record)
         # Requires to validate before skip check process since skip check process checks store.
         if dekinded_input_record.validate:
             raise InvalidRecordError(
@@ -39,7 +39,7 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
         input_row: Kind1[InputRow[InputRowData], InputRowData],
     ) -> Optional[UndefinedContentErrorHandler]:
         """To simplify instantiate process."""
-        dekinded_input_row = cast(InputRow[InputRowData], input_row)
+        dekinded_input_row = cast("InputRow[InputRowData]", input_row)
         if not isinstance(dekinded_input_row, InputContentRow):
             return None
         undefined_content_error_handler = UndefinedContentErrorHandler()

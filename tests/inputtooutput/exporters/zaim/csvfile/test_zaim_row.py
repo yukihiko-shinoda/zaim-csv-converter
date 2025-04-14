@@ -3,10 +3,9 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import cast
+from typing import cast, TYPE_CHECKING
 
 import pytest
-from returns.primitives.hkt import Kind1
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
@@ -33,6 +32,9 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import (
     ZaimRow,
     ZaimTransferRow,
 )
+
+if TYPE_CHECKING:
+    from returns.primitives.hkt import Kind1
 
 
 @pytest.mark.parametrize(
@@ -483,7 +485,7 @@ class TestZaimRowFactory:
                 return False
 
         undefined_input_row = cast(
-            Kind1[InputRow[InputRowData], InputRowData],
+            "Kind1[InputRow[InputRowData], InputRowData]",
             UndefinedInputRow(UndefinedInputRowData()),
         )
         with pytest.raises(

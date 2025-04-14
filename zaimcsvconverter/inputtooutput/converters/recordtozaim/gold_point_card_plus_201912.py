@@ -66,7 +66,7 @@ class GoldPointCardPlus201912ZaimRowConverterFactory(
         input_row: Kind1[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData],  # type: ignore[override]
         _path_csv_file: Path,
     ) -> ZaimRowConverter[GoldPointCardPlus201912Row, GoldPointCardPlus201912RowData]:
-        dekinded_input_row = cast(GoldPointCardPlus201912Row, input_row)
+        dekinded_input_row = cast("GoldPointCardPlus201912Row", input_row)
         if dekinded_input_row.store.transfer_target:
             return GoldPointCardPlus201912ZaimTransferRowConverter(input_row)
         return GoldPointCardPlus201912ZaimPaymentRowConverter(input_row)
