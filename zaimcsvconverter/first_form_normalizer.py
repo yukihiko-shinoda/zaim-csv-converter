@@ -40,13 +40,17 @@ class FirstFormNormalizer(Generic[T]):
                 raise
             except StopIteration:
                 break
-            self.logger.debug("self.input_row_data_class: %s", self.input_row_data_class)
-            self.logger.debug("list_input_row_standard_type_value: %s", list_input_row_standard_type_value)
-            try:
-                yield self.input_row_data_class(*list_input_row_standard_type_value)
-            except TypeError:
-                self.logger.exception("Invalid column type: %s", self.god_slayer.path_to_file)
-                raise
+            yield self.normalize_row_data(list_input_row_standard_type_value)
+
+    def normalize_row_data(self, list_input_row_standard_type_value: list[str]) -> T:
+        """Convert list of input row data to model instance."""
+        self.logger.debug("self.input_row_data_class: %s", self.input_row_data_class)
+        self.logger.debug("list_input_row_standard_type_value: %s", list_input_row_standard_type_value)
+        try:
+            return self.input_row_data_class(*list_input_row_standard_type_value)
+        except TypeError:
+            self.logger.exception("Invalid column type: %s", self.god_slayer.path_to_file)
+            raise
 
     @property
     def index(self) -> int:
