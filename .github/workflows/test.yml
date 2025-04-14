@@ -12,51 +12,51 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: [ '3.11', '3.10', '3.9' ]
+        python-version: [ '3.13', '3.12', '3.11', '3.10', '3.9' ]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - run: python -m pip install pipenv
-      - run: python -m pipenv sync --dev
+      - run: python -m pip install uv
+      - run: python -m uv sync
       # Invoke currently seems not support PowerShell,
       # production code of this package doesn't depends on cmd, however test depends on cmd.
       # - GitHub Actions default shell on Windows runners is changing to PowerShell | GitHub Changelog
       #   https://github.blog/changelog/2019-10-17-github-actions-default-shell-on-windows-runners-is-changing-to-powershell/
       - if: runner.os == 'Windows'
-        run: python -m pipenv run invoke test.all
+        run: python -m uv run invoke test.all
         shell: cmd
       - if: runner.os == 'Linux'
-        run: python -m pipenv run invoke test.all
+        run: python -m uv run invoke test.all
   check_style:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-      - run: python -m pip install pipenv
-      - run: python -m pipenv sync --dev
-      - run: python -m pipenv run invoke style --check
+          python-version: '3.13'
+      - run: python -m pip install uv
+      - run: python -m uv sync
+      - run: python -m uv run invoke style --check
   check_lint_fast:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-      - run: python -m pip install pipenv
-      - run: python -m pipenv sync --dev
-      - run: python -m pipenv run invoke lint
+          python-version: '3.13'
+      - run: python -m pip install uv
+      - run: python -m uv sync --dev
+      - run: python -m uv run invoke lint
   check_lint_deep:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-      - run: python -m pip install pipenv
-      - run: python -m pipenv sync --dev
-      - run: python -m pipenv run invoke lint.deep
+          python-version: '3.13'
+      - run: python -m pip install uv
+      - run: python -m uv sync --dev
+      - run: python -m uv run invoke lint.deep

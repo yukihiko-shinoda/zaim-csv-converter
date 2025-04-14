@@ -38,11 +38,11 @@
 					"commands": [
 						{
 							"match": ".*\\.py",
-							"cmd": "pipenv run autoflake --in-place ${file}"
+							"cmd": "uv run autoflake --in-place ${file}"
 						},
 						{
 							"match": ".*\\.py",
-							"cmd": "pipenv run docformatter --in-place ${file}"
+							"cmd": "uv run docformatter --in-place ${file}"
 						}
 					]
 				},

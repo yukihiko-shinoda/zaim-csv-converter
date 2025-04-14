@@ -230,8 +230,8 @@ CSV ファイルへのパスの例を追加します。
 ### 8. ユニットテストの実行
 
 ```console
-pipenv shell
-inv coverage
+. .venv/bin/activate
+inv test.cov
 ```
 
 ### 9. `README.md` の追記

@@ -77,7 +77,7 @@ PayPay カード|pay_pay_card.csv|お店単位
 ### 4. Python プロジェクト実行用の仮想環境を作成します
 
 ```console
-pipenv install
+uv sync
 ```
 
 ## 利用方法
@@ -113,7 +113,7 @@ PayPay カード|pay_pay_card
 ### 2. 実行します
 
 ```console
-pipenv run start
+uv run convert.py
 ```
 
 ### 3. 実行結果の確認を行います
