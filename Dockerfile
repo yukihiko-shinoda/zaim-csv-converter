@@ -1,26 +1,26 @@
 # Slim image can't install numpy
-FROM python:3.11.4-bookworm as production
+FROM python:3.13.3-slim-bookworm AS production
 WORKDIR /workspace
 # setuptools 65.3.0 can't lock package defined its dependencies by pyproject.toml
-RUN pip install --upgrade setuptools>=65.4.0
-COPY Pipfile Pipfile.lock /workspace/
-# see:
-# - Fail to pipenv update due to MetadataGenerationFailed · Issue #5377 · pypa/pipenv
-#   https://github.com/pypa/pipenv/issues/5377
-RUN pip --no-cache-dir install pipenv==2023.7.23 \
- && pipenv install --deploy --system \
- && pip uninstall -y pipenv virtualenv-clone virtualenv
+RUN pip install --no-cache-dir --upgrade setuptools>=65.4.0
+ENV UV_PROJECT_ENVIRONMENT=/usr/local/
+COPY pyproject.toml uv.lock /workspace/
+RUN pip install --no-cache-dir uv==0.6.14 \
+ && uv sync --no-dev \
+ && uv cache clean \
+ && pip uninstall -y uv
 COPY . /workspace
-
 ENTRYPOINT [ "python3", "convert.py" ]
 
-FROM production as development
-# see: https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
-ENV PIPENV_VENV_IN_PROJECT=1
-# see:
-# - Fail to pipenv update due to MetadataGenerationFailed · Issue #5377 · pypa/pipenv
-#   https://github.com/pypa/pipenv/issues/5377
-RUN pip --no-cache-dir install pipenv==2023.7.23 \
- && pipenv sync --dev
-ENTRYPOINT [ "pipenv", "run" ]
+FROM production AS development
+ENV UV_PROJECT_ENVIRONMENT=
+# The uv command also errors out when installing semgrep:
+# - Getting semgrep-core in pipenv · Issue #2929 · semgrep/semgrep
+#   https://github.com/semgrep/semgrep/issues/2929#issuecomment-818994969
+ENV SEMGREP_SKIP_BIN=true
+RUN pip install --no-cache-dir uv===0.6.14
+# Reason: This is not for production
+# hadolint ignore=DL3059
+RUN uv sync
+ENTRYPOINT [ "uv", "run" ]
 CMD ["pytest"]

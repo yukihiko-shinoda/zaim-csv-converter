@@ -181,7 +181,7 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
         self,
         input_row: Kind1[MufgRow, MufgRowData],
     ) -> ZaimRowConverter[MufgRow, MufgRowData]:
-        dekinded_input_row = cast(MufgRow, input_row)
+        dekinded_input_row = cast("MufgRow", input_row)
         if isinstance(input_row, MufgPaymentToSelfRow) and dekinded_input_row.is_payment:
             # Because, for now, payment row looks only for express withdrawing cash by ATM.
             # Reason: The returns can't detect correct type limited by if instance block.
@@ -195,7 +195,7 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
         self,
         input_row: Kind1[MufgRow, MufgRowData],
     ) -> ZaimRowConverter[MufgRow, MufgRowData]:
-        dekinded_input_row = cast(MufgRow, input_row)
+        dekinded_input_row = cast("MufgRow", input_row)
         if isinstance(input_row, MufgIncomeFromSelfRow) and dekinded_input_row.is_income_from_other_own_account:
             # Reason: The returns can't detect correct type limited by if instance block.
             return MufgIncomeZaimTransferRowConverter(input_row)  # type: ignore[arg-type,return-value]

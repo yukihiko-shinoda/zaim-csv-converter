@@ -18,13 +18,14 @@ class ContextManager(Generic[TypeVarCovariant_co], ABC):
     def __init__(self) -> None:
         self.__cm: Optional[contextlib._GeneratorContextManager[TypeVarCovariant_co]] = None
 
+    @abstractmethod
     # Reason: Maybe, there are no way to fix.
     # error: Argument 1 to "contextmanager" has incompatible type
     #   "Callable[[ContextManager[T_co]], _GeneratorContextManager[T_co]]";  # noqa: ERA001
     #   expected "Callable[[ContextManager[T_co]], Iterator[<nothing>]]"
-    @abstractmethod  # type: ignore[arg-type]
-    @contextlib.contextmanager
+    @contextlib.contextmanager  # type: ignore[arg-type]
     def contextmanager(self) -> contextlib._GeneratorContextManager[TypeVarCovariant_co]:
+        """This method is used to implement context manager."""
         raise NotImplementedError
 
     def __enter__(self) -> TypeVarCovariant_co:

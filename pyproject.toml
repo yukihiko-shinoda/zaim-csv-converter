@@ -2,23 +2,80 @@
 name = "zaimcsvconverter"
 version = "0.1.0"
 requires-python = ">=3.9"
+dependencies = [
+    # To collect error when validate input record
+    "errorcollector",
+    # To read Kami CSV
+    "godslayer",
+    # To generate table name by model class name
+    "inflector",
+    # To uniquify undefined content errors
+    "numpy",
+    # To manage stores and items by database (now using SQLite)
+    "sqlalchemy",
+    # To read yaml file as config
+    "yamldataclassconfig",
+]
 
+[dependency-groups]
+dev = [
+    "autoflake",
+    "bandit; python_version >= '3.7'",
+    "black",
+    "cohesion",
+    # Pipenv can't crawl coverage==3.5.3:
+    # - Command: "pipenv install --skip-lock" fails 
+    #   since it tries to parse legacy package metadata and raise InstallError
+    #   · Issue #5595 · pypa/pipenv
+    #   https://github.com/pypa/pipenv/issues/5595
+    "coverage>=3.5.4",
+    # The dlint less than 0.14.0 limits max version of flake8.
+    "dlint>=0.14.0",
+    "docformatter",
+    "dodgy",
+    "exceptiongroup; python_version <= '3.10'",
+    "factory_boy",
+    "fixturefilehandler",
+    # Since Pipenv can't lock for too much combinations to attempt lock:
+    # pip._vendor.resolvelib.resolvers.ResolutionTooDeep: 2000000
+    # The hacking depends flake8 ~=5.0.1 or ~=4.0.1.
+    "flake8!=6.0.0,!=5.0.0,>=4.0.1; python_version >= '3.6'",
+    # To use flake8 --radon-show-closures
+    "flake8-polyfill",
+    # Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
+    # When unpin hacking, it has possibility to install too legacy version of hacking.
+    "hacking>=5.0.0; python_version >= '3.8'",
+    "invokelint>=0.8.1; python_version >= '3.7'",
+    "isort",
+    "mypy",
+    # Currentry, migration steps is difficult
+    "pydantic<2.0.0",
+    "pydocstyle; python_version >= '3.6'",
+    "pylint",
+    "pytest",
+    "pytest-resource-path",
+    "pyvelocity; python_version >= '3.9'",
+    # - Radon can't run when use pytest log fornat: `$()d` · Issue #251 · rubik/radon
+    #   https://github.com/rubik/radon/issues/251
+    "radon<6.0.0",
+    "returns",
+    "ruff",
+    "semgrep; python_version >= '3.6'",
+    "types-invoke",
+    "xenon",
+]
 [tool.setuptools.packages.find]
 include = ["zaimcsvconverter", "zaimcsvconverter.*"]
 
 [tool.bandit.assert_used]
-skips = [
-    "*_test.py",
-    "*/test_*.py",
-]
+skips = ["tests/*.py"]
 
 # see: https://black.readthedocs.io/en/stable/pyproject_toml.html#configuration-format
 [tool.black]
 line-length = 119
 
 [tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
+exclude_also = [
     # Assume `if TYPE_CHECKING: ... else: ...` block is covered · Issue #831 · nedbat/coveragepy
     #   https://github.com/nedbat/coveragepy/issues/831#issuecomment-517778185
     "if TYPE_CHECKING:",
@@ -63,13 +120,12 @@ strict = true
 plugins = [
   "pydantic.mypy",
   "returns.contrib.mypy.returns_plugin",
-  "sqlalchemy.ext.mypy.plugin"
 ]
 
 [[tool.mypy.overrides]]
 module = [
     "factory",
-    "inflector"
+    "inflector",
 ]
 ignore_missing_imports = true
 

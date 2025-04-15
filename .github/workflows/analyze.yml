@@ -9,11 +9,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-      - run: python -m pip install pipenv
-      - run: python -m pipenv sync --dev
+          python-version: '3.13'
+      - run: python -m pip install uv
+      - run: python -m uv sync
       - uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         with:
-          coverageCommand: python -m pipenv run invoke test.coverage --xml
+          coverageCommand: python -m uv run invoke test.coverage --xml

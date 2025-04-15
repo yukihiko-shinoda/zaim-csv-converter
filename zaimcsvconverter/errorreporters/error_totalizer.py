@@ -19,8 +19,8 @@ if TYPE_CHECKING:
 
 
 class FileNameForError(Enum):
-    INVALID_ROW: str = "error_invalid_row.csv"
-    UNDEFINED_CONTENT: str = "error_undefined_content.csv"
+    INVALID_ROW = "error_invalid_row.csv"
+    UNDEFINED_CONTENT = "error_undefined_content.csv"
 
 
 class ErrorTotalizer:

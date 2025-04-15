@@ -12,10 +12,10 @@ from typing import Any, cast, Generic, Optional, TypeVar
 import warnings
 
 from inflector import Inflector
-from sqlalchemy import Column, exc, Integer, select, String, UniqueConstraint
+from sqlalchemy import exc, Integer, select, String, UniqueConstraint
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
+from sqlalchemy.orm import declarative_mixin, declared_attr, Mapped, mapped_column
 
 from zaimcsvconverter import Session
 
@@ -89,6 +89,7 @@ class ItemRowData(ConvertTableRowData):
 TypeVarConvertTableRowData = TypeVar("TypeVarConvertTableRowData", bound=ConvertTableRowData)
 
 
+@declarative_mixin
 class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
     """This class implements convert table mixin.
 
@@ -101,15 +102,15 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
     # - Mixin and Custom Base Classes — SQLAlchemy 1.3 Documentation
     #   https://docs.sqlalchemy.org/en/13/orm/extensions/declarative/mixins.html
     # pylint: disable=no-self-argument
-    def __tablename__(cls) -> str:  # noqa: N805
-        class_name = cls.__name__
-        return str(Inflector().pluralize(class_name.lower()))
+    def __tablename__(cls) -> Mapped[str]:  # noqa: N805
+        class_name = cls.__class__.__name__
+        return mapped_column(str(Inflector().pluralize(class_name.lower())))
 
-    id = Column(Integer, primary_key=True)
-    file_csv_convert_id = Column(Integer)
-    name = Column(String(255))
-    category_payment_large = Column(String(255))
-    category_payment_small = Column(String(255))
+    id = mapped_column(Integer, primary_key=True)
+    file_csv_convert_id = mapped_column(Integer)
+    name: Mapped[str] = mapped_column(String(255))
+    category_payment_large: Mapped[Optional[str]] = mapped_column(String(255))
+    category_payment_small: Mapped[Optional[str]] = mapped_column(String(255))
 
     __table_args__ = (UniqueConstraint("file_csv_convert_id", "name", name="_name_on_each_account_uc"),)
 
@@ -138,7 +139,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
         """This method select Store model from database."""
         with Session() as session:
             return cast(
-                TypeVarBase,
+                "TypeVarBase",
                 session.execute(
                     select(cls).where(cls.file_csv_convert_id == file_csv_convert_id.value, cls.name == name),
                 ).scalar_one(),
@@ -165,9 +166,9 @@ with warnings.catch_warnings():
         # as well as being able to control which types are optional.
         # - Mypy / Pep-484 Support for ORM Mappings — SQLAlchemy 1.4 Documentation
         #   https://docs.sqlalchemy.org/en/14/orm/extensions/mypy.html#introspection-of-columns-based-on-typeengine
-        name_zaim: Optional[str] = Column(String(255))
-        category_income: Optional[str] = Column(String(255))
-        transfer_target: Optional[str] = Column(String(255))
+        name_zaim: Mapped[Optional[str]] = mapped_column(String(255))
+        category_income: Mapped[Optional[str]] = mapped_column(String(255))
+        transfer_target: Mapped[Optional[str]] = mapped_column(String(255))
 
         def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: StoreRowData) -> None:
             ConvertTableRecordMixin.__init__(self, file_csv_convert_id, row_data)
@@ -201,7 +202,7 @@ with warnings.catch_warnings():
         def is_kyash(self) -> bool:
             """This property returns whether this store is Kyash or not."""
             # Reason: Specification.
-            return self.name == "ＫＹＡＳＨ"  # noqa: RUF001
+            return bool(self.name == "ＫＹＡＳＨ")  # noqa: RUF001
 
     class Item(Base, ConvertTableRecordMixin["Item", ItemRowData]):
         """This class implements Store model to convert from account CSV to Zaim CSV."""
@@ -241,4 +242,4 @@ class ConvertTableType(Enum):
     #     https://github.com/python/typing/issues/535
     def value(self) -> ClassConvertTable[Any, Any]:
         """This method overwrite super method for type hint."""
-        return cast(ClassConvertTable[Any, Any], super().value)
+        return cast("ClassConvertTable[Any, Any]", super().value)
