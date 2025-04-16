@@ -2066,6 +2066,7 @@ dev = [
     { name = "ruff" },
     { name = "semgrep" },
     { name = "types-invoke" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
     { name = "xenon" },
 ]
 
@@ -2109,6 +2110,7 @@ dev = [
     { name = "ruff" },
     { name = "semgrep", marker = "python_full_version >= '3.6'" },
     { name = "types-invoke" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
     { name = "xenon" },
 ]
 

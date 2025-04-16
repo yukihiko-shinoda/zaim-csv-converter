@@ -1,6 +1,6 @@
 """Custom data type to convert yen string to int."""
 
-from typing import Annotated
+from typing import Annotated, Optional
 
 import annotated_types
 from pydantic import BeforeValidator
@@ -13,12 +13,12 @@ from zaimcsvconverter.utility import Utility
 # Reason: Followed Pydantic specification.
 def constringtoint(  # noqa: PLR0913  # pylint: disable=too-many-arguments
     *,
-    strict: bool | None = None,  # noqa: ARG001  # pylint: disable=unused-argument
-    gt: int | None = None,
-    ge: int | None = None,
-    lt: int | None = None,
-    le: int | None = None,
-    multiple_of: int | None = None,
+    strict: Optional[bool] = None,  # noqa: ARG001  # pylint: disable=unused-argument
+    gt: Optional[int] = None,
+    ge: Optional[int] = None,
+    lt: Optional[int] = None,
+    le: Optional[int] = None,
+    multiple_of: Optional[int] = None,
 ) -> type[int]:
     """A wrapper around `int` that allows for additional constraints.
 

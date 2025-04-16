@@ -15,6 +15,11 @@ from zaimcsvconverter.customdatatypes.validators import (
 )
 from zaimcsvconverter.utility import Utility
 
+try:
+    from typing import Unpack
+except ImportError:
+    from typing_extensions import Unpack
+
 
 # Reason: Followed pydantic specification.
 def constringwithcommatooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
@@ -42,7 +47,7 @@ def constringwithcommatooptionalint(  # noqa: PLR0913 pylint: disable=too-many-a
     return Annotated[  # type: ignore[return-value]
         Optional[int],
         BeforeValidator(OptionalIntegerMustBeFromStr(Utility.convert_string_with_comma_to_int).validate),
-        *abstract_constringtooptionalint(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of),
+        Unpack[abstract_constringtooptionalint(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of)],
     ]
 
 

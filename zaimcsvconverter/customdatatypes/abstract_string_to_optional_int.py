@@ -31,12 +31,12 @@ class OptionalIntegerMustBeFromStr:
 # Reason: Followed Pydantic specification.
 def abstract_constringtooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     *,
-    strict: bool | None = None,
-    gt: int | None = None,
-    ge: int | None = None,
-    lt: int | None = None,
-    le: int | None = None,
-    multiple_of: int | None = None,
+    strict: Optional[bool] = None,
+    gt: Optional[int] = None,
+    ge: Optional[int] = None,
+    lt: Optional[int] = None,
+    le: Optional[int] = None,
+    multiple_of: Optional[int] = None,
 ) -> list[Any]:
     """A wrapper around `int` that allows for additional constraints."""
     return [

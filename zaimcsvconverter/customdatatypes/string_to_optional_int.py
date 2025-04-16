@@ -15,18 +15,23 @@ from zaimcsvconverter.customdatatypes.validators import (
     optional_number_size_validator,
 )
 
+try:
+    from typing import Unpack
+except ImportError:
+    from typing_extensions import Unpack
+
 Number = Union[int, float, Decimal]
 
 
 # Reason: Followed Pydantic specification.
 def constringtooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     *,
-    strict: bool | None = None,
-    gt: int | None = None,
-    ge: int | None = None,
-    lt: int | None = None,
-    le: int | None = None,
-    multiple_of: int | None = None,
+    strict: Optional[bool] = None,
+    gt: Optional[int] = None,
+    ge: Optional[int] = None,
+    lt: Optional[int] = None,
+    le: Optional[int] = None,
+    multiple_of: Optional[int] = None,
 ) -> type[Optional[int]]:
     """A wrapper around `int` that allows for additional constraints.
 
@@ -44,7 +49,7 @@ def constringtooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     return Annotated[  # type: ignore[return-value]
         Optional[int],
         BeforeValidator(OptionalIntegerMustBeFromStr(int).validate),
-        *abstract_constringtooptionalint(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of),
+        Unpack[abstract_constringtooptionalint(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of)],
     ]
 
 
