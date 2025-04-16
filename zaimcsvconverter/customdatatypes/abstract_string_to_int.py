@@ -1,4 +1,4 @@
-"""Custom data type to convert string with comma to int."""
+"""Custom data type to convert string to int."""
 
 from abc import abstractmethod
 from typing import Any, Callable, Optional, TYPE_CHECKING
@@ -21,17 +21,24 @@ if TYPE_CHECKING:
 
 
 class IntegerMustBeFromStr:
+    """Validator to convert string to int."""
+
     def __init__(self, string_to_int: Callable[[str], int]) -> None:
         self.string_to_int = string_to_int
 
     def validate(self, value: Any) -> int:
+        self.raise_if_not_str(value)
+        return self.string_to_int(value)
+
+    def raise_if_not_str(self, value: Any) -> None:
         if not isinstance(value, str):
             msg = f"String required. Value is {value}. Type is {type(value)}."
             raise TypeError(msg)
-        return self.string_to_int(value)
 
 
 class ConstrainedInt(int, metaclass=ConstrainedNumberMeta):
+    """Type that represents a constrained integer."""
+
     strict: bool = False
     gt: OptionalInt = None
     ge: OptionalInt = None

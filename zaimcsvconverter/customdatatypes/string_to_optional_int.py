@@ -1,29 +1,21 @@
 """Custom data types."""
 
 from decimal import Decimal
-from typing import Annotated, Any, Optional, Union
+from typing import Annotated, Optional, Union
 
-import annotated_types
 from pydantic import BeforeValidator
 
+from zaimcsvconverter.customdatatypes.abstract_string_to_optional_int import (
+    abstract_constringtooptionalint,
+    OptionalIntegerMustBeFromStr,
+)
 from zaimcsvconverter.customdatatypes.validators import (
     optional_int_validator,
     optional_number_multiple_validator,
     optional_number_size_validator,
-    optional_strict_int_validator,
 )
 
 Number = Union[int, float, Decimal]
-
-
-def optional_integer_must_be_from_str(value: Any) -> Optional[int]:
-    """Optional integer must be from str."""
-    if not isinstance(value, str):
-        msg = "string required"
-        raise TypeError(msg)
-    if not value:
-        return None
-    return int(value)
 
 
 # Reason: Followed Pydantic specification.
@@ -51,18 +43,14 @@ def constringtooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     """
     return Annotated[  # type: ignore[return-value]
         Optional[int],
-        BeforeValidator(optional_integer_must_be_from_str),
-        optional_strict_int_validator if strict else optional_int_validator,
-        optional_number_size_validator,
-        optional_number_multiple_validator,
-        annotated_types.Interval(gt=gt, ge=ge, lt=lt, le=le),
-        annotated_types.MultipleOf(multiple_of) if multiple_of is not None else None,
+        BeforeValidator(OptionalIntegerMustBeFromStr(int).validate),
+        *abstract_constringtooptionalint(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of),
     ]
 
 
 ConstrainedStringToOptionalInt = Annotated[
     Optional[int],
-    BeforeValidator(optional_integer_must_be_from_str),
+    BeforeValidator(OptionalIntegerMustBeFromStr(int).validate),
     optional_int_validator,
     optional_number_size_validator,
     optional_number_multiple_validator,

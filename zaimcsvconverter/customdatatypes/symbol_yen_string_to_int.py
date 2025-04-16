@@ -19,9 +19,9 @@ class SymbolYenStringToInt(ConstrainedStringToInt):
 
 
 # Reason: Followed Pydantic specification.
-def constringtoint(  # noqa: PLR0913
+def constringtoint(  # noqa: PLR0913  # pylint: disable=too-many-arguments
     *,
-    strict: bool | None = None,  # noqa: ARG001
+    strict: bool | None = None,  # noqa: ARG001  # pylint: disable=unused-argument
     gt: int | None = None,
     ge: int | None = None,
     lt: int | None = None,

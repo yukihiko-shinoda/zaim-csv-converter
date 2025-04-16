@@ -4,7 +4,7 @@ import datetime
 from typing import Any
 
 from pydantic.dataclasses import dataclass
-from pydantic_core._pydantic_core import ValidationError
+from pydantic_core import ValidationError
 import pytest
 
 from tests.customdatatypes import create

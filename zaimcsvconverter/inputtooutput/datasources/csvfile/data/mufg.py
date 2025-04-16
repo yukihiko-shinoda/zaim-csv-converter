@@ -8,7 +8,7 @@ from zaimcsvconverter.data import mufg
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputStoreRowData
 
 
-@dataclass(config=dict(loc_by_alias=False))
+@dataclass
 # Reason: Model. pylint: disable=too-few-public-methods
 class MufgRowData(mufg.MufgRowData, InputStoreRowData):
     """This class implements data class for wrapping list of MUFG CSV row model."""

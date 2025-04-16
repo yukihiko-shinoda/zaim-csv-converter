@@ -46,7 +46,7 @@ class TestWaonRowData:
     @pytest.mark.usefixtures("database_session_with_schema")
     def test_validate() -> None:
         """Validate method should collect errors."""
-        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501  # pylint: disable=line-too-long
         #   https://github.com/pydantic/pydantic/issues/9140
         index_use_kind = 3
         with pytest.raises(ValidationError) as excinfo:
@@ -64,7 +64,7 @@ class TestWaonRowData:
     @staticmethod
     def test_unsupported_charge_kind() -> None:
         """Unsupported charge kind should raise error."""
-        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501  # pylint: disable=line-too-long
         #   https://github.com/pydantic/pydantic/issues/9140
         index_charge_kind = 4
         with pytest.raises(ValidationError) as excinfo:

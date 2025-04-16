@@ -1,26 +1,19 @@
 """Custom data type to convert string with comma to optional int."""
 
-from typing import Annotated, Any, Optional
+from typing import Annotated, Optional
 
-import annotated_types
 from pydantic import BeforeValidator
 
+from zaimcsvconverter.customdatatypes.abstract_string_to_optional_int import (
+    abstract_constringtooptionalint,
+    OptionalIntegerMustBeFromStr,
+)
 from zaimcsvconverter.customdatatypes.validators import (
-    optional_int_validator,
     optional_number_multiple_validator,
     optional_number_size_validator,
     optional_strict_int_validator,
 )
 from zaimcsvconverter.utility import Utility
-
-
-def optional_integer_must_be_from_str(value: Any) -> Optional[int]:
-    if not isinstance(value, str):
-        msg = "string required"
-        raise TypeError(msg)
-    if not value:
-        return None
-    return Utility.convert_string_with_comma_to_int(value)
 
 
 # Reason: Followed pydantic specification.
@@ -48,18 +41,14 @@ def constringwithcommatooptionalint(  # noqa: PLR0913 pylint: disable=too-many-a
     """
     return Annotated[  # type: ignore[return-value]
         Optional[int],
-        BeforeValidator(optional_integer_must_be_from_str),
-        optional_strict_int_validator if strict else optional_int_validator,
-        optional_number_size_validator,
-        optional_number_multiple_validator,
-        annotated_types.Interval(gt=gt, ge=ge, lt=lt, le=le),
-        annotated_types.MultipleOf(multiple_of) if multiple_of is not None else None,
+        BeforeValidator(OptionalIntegerMustBeFromStr(Utility.convert_string_with_comma_to_int).validate),
+        *abstract_constringtooptionalint(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of),
     ]
 
 
 StrictStringWithCommaToOptionalInt = Annotated[
     Optional[int],
-    BeforeValidator(optional_integer_must_be_from_str),
+    BeforeValidator(OptionalIntegerMustBeFromStr(Utility.convert_string_with_comma_to_int).validate),
     optional_strict_int_validator,
     optional_number_size_validator,
     optional_number_multiple_validator,
