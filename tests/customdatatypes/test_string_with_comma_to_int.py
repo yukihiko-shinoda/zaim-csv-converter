@@ -4,7 +4,7 @@ import datetime
 from typing import Any
 
 from pydantic.dataclasses import dataclass
-from pydantic import ValidationError
+from pydantic_core import ValidationError
 import pytest
 
 from tests.customdatatypes import create
@@ -57,5 +57,5 @@ class Test:
     )
     def test_error(self, value: Any) -> None:
         """Property should be converted to int."""
-        with pytest.raises(ValidationError):
+        with pytest.raises((ValidationError, TypeError)):
             create(Stub, [value])

@@ -2,20 +2,24 @@
 
 from abc import abstractmethod
 from datetime import datetime
-from typing import Any, TYPE_CHECKING
+from typing import Any
 
-if TYPE_CHECKING:
-    # Reason: Prioritize typing
-    from pydantic.types import CallableGenerator  # type: ignore[attr-defined]
+from pydantic import GetCoreSchemaHandler
+from pydantic_core.core_schema import no_info_after_validator_function
+from pydantic_core import CoreSchema
 
 
 class StringToDateTime(datetime):
     """Type that converts string to datetime."""
 
     @classmethod
-    def __get_validators__(cls) -> "CallableGenerator":
-        yield cls.datetime_must_be_from_str
-        yield cls.parse_date
+    def __get_pydantic_core_schema__(cls, _source_type: Any, handler: GetCoreSchemaHandler) -> CoreSchema:
+        return no_info_after_validator_function(cls.validate, handler.generate_schema(str))
+
+    @classmethod
+    def validate(cls, value: Any) -> datetime:
+        value = cls.datetime_must_be_from_str(value)
+        return cls.parse_date(value)
 
     @classmethod
     def datetime_must_be_from_str(cls, value: Any) -> str:
@@ -47,10 +51,10 @@ class StringNumberOnlyToDateTime(StringToDateTime):
     """Type that converts string to datetime."""
 
     @classmethod
-    def __get_validators__(cls) -> "CallableGenerator":
-        yield cls.datetime_must_be_from_str
-        yield cls.eight_digits_required
-        yield cls.parse_date
+    def validate(cls, value: Any) -> datetime:
+        value = cls.datetime_must_be_from_str(value)
+        value = cls.eight_digits_required(value)
+        return cls.parse_date(value)
 
     @classmethod
     def eight_digits_required(cls, value: str) -> str:
@@ -65,12 +69,8 @@ class StringNumberOnlyToDateTime(StringToDateTime):
         return "%Y%m%d"
 
 
-class StringSlashMonthDayOnlyToDatetime(datetime):
+class StringSlashMonthDayOnlyToDatetime(StringToDateTime):
     """Type that converts string to datetime."""
-
-    @classmethod
-    def __get_validators__(cls) -> "CallableGenerator":
-        yield cls.parse_date
 
     @classmethod
     def parse_date(cls, value: Any) -> datetime:
@@ -78,4 +78,8 @@ class StringSlashMonthDayOnlyToDatetime(datetime):
             msg = "string required"
             raise TypeError(msg)
         # Reason: Time is not used in this process.
-        return datetime.strptime(f"1904/{value}", "%Y/%m/%d")  # noqa: DTZ007
+        return datetime.strptime(f"1904/{value}", cls.get_format())  # noqa: DTZ007
+
+    @classmethod
+    def get_format(cls) -> str:
+        return "%Y/%m/%d"

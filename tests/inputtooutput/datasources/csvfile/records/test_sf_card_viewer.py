@@ -91,12 +91,15 @@ class TestSFCardViewerExitByWindowRow:
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_sf_card_viewer")
     def test_create_fail() -> None:
         """Method should raise ValueError when note is not defined."""
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501  # pylint: disable=line-too-long
+        #   https://github.com/pydantic/pydantic/issues/9140
+        index_note = 9
         with pytest.raises(ValidationError) as excinfo:
             # pylint: disable=protected-access
             RowDataFactory(SFCardViewerRowData).create(InstanceResource.ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE)
         assert len(excinfo.value.errors()) == 1
         error = excinfo.value.errors()[0]
-        assert error["loc"] == ("note",)
+        assert error["loc"] == (index_note,)
         assert error["msg"] == "".join(
-            ["value is not a valid enumeration member; permitted: '', '物販', 'ｵｰﾄﾁｬｰｼﾞ', '窓出', 'ﾊﾞｽ/路面等'"],
+            ["Input should be '', '物販', 'ｵｰﾄﾁｬｰｼﾞ', '窓出' or 'ﾊﾞｽ/路面等'"],
         )

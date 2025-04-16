@@ -4,10 +4,15 @@ from decimal import Decimal
 from typing import Any, Optional, TYPE_CHECKING, Union
 
 # pylint: disable=no-name-in-module
-from pydantic.validators import int_validator, number_multiple_validator, number_size_validator, strict_int_validator
+from pydantic.v1.validators import (
+    int_validator,
+    number_multiple_validator,
+    number_size_validator,
+    strict_int_validator,
+)
 
 if TYPE_CHECKING:
-    from pydantic.fields import ModelField  # pylint: disable=no-name-in-module,unused-import
+    from pydantic.v1.fields import ModelField  # pylint: disable=no-name-in-module,unused-import
 
 
 Number = Union[int, float, Decimal]
