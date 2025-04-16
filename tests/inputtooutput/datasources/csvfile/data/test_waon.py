@@ -46,30 +46,36 @@ class TestWaonRowData:
     @pytest.mark.usefixtures("database_session_with_schema")
     def test_validate() -> None:
         """Validate method should collect errors."""
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501
+        #   https://github.com/pydantic/pydantic/issues/9140
+        index_use_kind = 3
         with pytest.raises(ValidationError) as excinfo:
             RowDataFactory(WaonRowData).create(InstanceResource.ROW_DATA_WAON_UNSUPPORTED_USE_KIND)
         errors = excinfo.value.errors()
         assert len(errors) == 1
         error = errors[0]
-        assert error["loc"] == ("use_kind",)
+        assert error["loc"] == (index_use_kind,)
         assert error["msg"] == (
-            "value is not a valid enumeration member; permitted: "
+            "Input should be "
             "'支払', '支払取消', 'チャージ', 'オートチャージ', "
-            "'ポイントダウンロード', 'WAON移行（アップロード）', 'WAON移行（ダウンロード）'"  # noqa: RUF001
+            "'ポイントダウンロード', 'WAON移行（アップロード）' or 'WAON移行（ダウンロード）'"  # noqa: RUF001
         )
 
     @staticmethod
     def test_unsupported_charge_kind() -> None:
         """Unsupported charge kind should raise error."""
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501
+        #   https://github.com/pydantic/pydantic/issues/9140
+        index_charge_kind = 4
         with pytest.raises(ValidationError) as excinfo:
             RowDataFactory(WaonRowData).create(InstanceResource.ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND)
         errors = excinfo.value.errors()
         assert len(errors) == 1
         error = errors[0]
-        assert error["loc"] == ("charge_kind",)
+        assert error["loc"] == (index_charge_kind,)
         assert error["msg"] == "".join(
             [
-                "value is not a valid enumeration member; permitted: ",
-                "'銀行口座', 'ポイント', '現金', 'バリューダウンロード', '-'",
+                "Input should be ",
+                "'銀行口座', 'ポイント', '現金', 'バリューダウンロード' or '-'",
             ],
         )

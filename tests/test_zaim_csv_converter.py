@@ -171,10 +171,7 @@ class TestZaimCsvConverter:
                 InvalidRowErrorRowData(
                     "waon201808.csv",
                     "1",
-                    (
-                        "Invalid charge_kind, value is not a valid enumeration member; permitted: "
-                        "'銀行口座', 'ポイント', '現金', 'バリューダウンロード', '-'"
-                    ),
+                    "Invalid 4, Input should be '銀行口座', 'ポイント', '現金', 'バリューダウンロード' or '-'",
                 ),
             ],
         )

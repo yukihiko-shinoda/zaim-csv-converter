@@ -66,13 +66,16 @@ class TestMufgRowData:
     @pytest.mark.usefixtures("database_session_stores_mufg")
     def test_create_fail() -> None:
         """Method should raise ValueError when note is not defined."""
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501
+        #   https://github.com/pydantic/pydantic/issues/9140
+        index_cash_flow_kind = 8
         with pytest.raises(ValidationError) as excinfo:
             # pylint: disable=protected-access
             RowDataFactory(MufgRowData).create(InstanceResource.ROW_DATA_MUFG_UNSUPPORTED_NOTE)
         errors = excinfo.value.errors()
         assert len(errors) == 1
         error = errors[0]
-        assert error["loc"] == ("cash_flow_kind",)
+        assert error["loc"] == (index_cash_flow_kind,)
         assert error["msg"] == "".join(
-            ["value is not a valid enumeration member; permitted: '入金', '支払い', '振替入金', '振替支払い'"],
+            ["Input should be '入金', '支払い', '振替入金' or '振替支払い'"],
         )

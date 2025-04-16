@@ -1,63 +1,69 @@
 """Custom data types."""
 
 from decimal import Decimal
-from typing import Any, Optional, TYPE_CHECKING, Union
+from typing import Annotated, Any, Optional, Union
 
-# Reason: Pylint's bug.
-from pydantic import ConstrainedInt  # pylint: disable=no-name-in-module
+import annotated_types
+from pydantic import BeforeValidator
 
 from zaimcsvconverter.customdatatypes.validators import (
     optional_int_validator,
     optional_number_multiple_validator,
     optional_number_size_validator,
     optional_strict_int_validator,
-    string_validator,
 )
 
 Number = Union[int, float, Decimal]
 
 
-if TYPE_CHECKING:
-    # Reason: Prioritize typing
-    from pydantic.types import CallableGenerator  # type: ignore[attr-defined]
+def optional_integer_must_be_from_str(value: Any) -> Optional[int]:
+    """Optional integer must be from str."""
+    if not isinstance(value, str):
+        msg = "string required"
+        raise TypeError(msg)
+    if not value:
+        return None
+    return int(value)
 
 
-class StringToOptionalInt(ConstrainedInt):
-    """Optional pydantic ConstrainedInt from str."""
-
-    @classmethod
-    def __get_validators__(cls) -> "CallableGenerator":
-        yield string_validator
-        yield cls.convert_to_optional_integer
-        yield optional_strict_int_validator if cls.strict else optional_int_validator
-        yield optional_number_size_validator
-        yield optional_number_multiple_validator
-
-    @classmethod
-    def convert_to_optional_integer(cls, value: Any) -> Optional[int]:
-        """Optional integer must be from str."""
-        if not value:
-            return None
-        return int(value)
-
-
-# Reason: To follow pydantic constr interface.
+# Reason: Followed Pydantic specification.
 def constringtooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     *,
-    strict: bool = False,
-    gt: Optional[int] = None,  # pylint: disable=invalid-name
-    ge: Optional[int] = None,  # pylint: disable=invalid-name
-    lt: Optional[int] = None,  # pylint: disable=invalid-name
-    le: Optional[int] = None,  # pylint: disable=invalid-name
-    multiple_of: Optional[int] = None,
-) -> type[int]:
-    """Optional pydantic conint from str."""
-    # use kwargs then define conf in a dict to aid with IDE type hinting
-    namespace = {"strict": strict, "gt": gt, "ge": ge, "lt": lt, "le": le, "multiple_of": multiple_of}
-    return type("ConstrainedStringToOptionalIntValue", (StringToOptionalInt,), namespace)
+    strict: bool | None = None,
+    gt: int | None = None,
+    ge: int | None = None,
+    lt: int | None = None,
+    le: int | None = None,
+    multiple_of: int | None = None,
+) -> type[Optional[int]]:
+    """A wrapper around `int` that allows for additional constraints.
+
+    Args:
+        strict: Whether to validate the integer in strict mode. Defaults to `None`.
+        gt: The value must be greater than this.
+        ge: The value must be greater than or equal to this.
+        lt: The value must be less than this.
+        le: The value must be less than or equal to this.
+        multiple_of: The value must be a multiple of this.
+
+    Returns:
+        The wrapped integer type.
+    """
+    return Annotated[  # type: ignore[return-value]
+        Optional[int],
+        BeforeValidator(optional_integer_must_be_from_str),
+        optional_strict_int_validator if strict else optional_int_validator,
+        optional_number_size_validator,
+        optional_number_multiple_validator,
+        annotated_types.Interval(gt=gt, ge=ge, lt=lt, le=le),
+        annotated_types.MultipleOf(multiple_of) if multiple_of is not None else None,
+    ]
 
 
-if TYPE_CHECKING:
-    ConstrainedStringToOptionalInt = Optional[int]
-else:
-    ConstrainedStringToOptionalInt = constringtooptionalint()
+ConstrainedStringToOptionalInt = Annotated[
+    Optional[int],
+    BeforeValidator(optional_integer_must_be_from_str),
+    optional_int_validator,
+    optional_number_size_validator,
+    optional_number_multiple_validator,
+]
