@@ -5,8 +5,8 @@
 	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
 	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
 	"dockerComposeFile": [
-		"../docker-compose.yml",
-		"docker-compose.yml"
+		"../compose.yml",
+		"compose.yml"
 	],
 
 	// The 'service' property is the name of the service for the container that VS Code should
@@ -19,33 +19,37 @@
 
 	"customizations": {
 		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"GitHub.copilot",
+				"streetsidesoftware.code-spell-checker",
+				"tamasfe.even-better-toml",
+				"charliermarsh.ruff",
+				"ms-python.python",
+				"ms-python.flake8",
+				"ms-python.mypy-type-checker",
+				"ms-python.pylint",
+				"pycqa.bandit-pycqa",
+				"emeraldwalk.RunOnSave",
+				"grapecity.gc-excelviewer"
+			],
 			// Set *default* container specific settings.json values on container create.
 			"settings": {
-				// VS Code displays Pylint warning: import-error that not reported in Pylint by executing CLI.
-				// "python.linting.pylintEnabled": true,
+				"files.autoGuessEncoding": true,
 				// This setting forcibly generate __pycache__.
 				// "python.testing.pytestEnabled": true,
 				"[python]": {
-					"editor.defaultFormatter": "ms-python.black-formatter",
-					"editor.formatOnSave": true,
+					"editor.defaultFormatter": "charliermarsh.ruff",
 					"editor.codeActionsOnSave": {
 						"source.fixAll": "explicit",
 						"source.organizeImports": "explicit"
-					}
+					},
+					"editor.formatOnSave": true
 				},
-				"ruff.organizeImports": false,
-				"emeraldwalk.runonsave": {
-					"commands": [
-						{
-							"match": ".*\\.py",
-							"cmd": "uv run autoflake --in-place ${file}"
-						},
-						{
-							"match": ".*\\.py",
-							"cmd": "uv run docformatter --in-place ${file}"
-						}
-					]
-				},
+				"bandit.args": [
+					"--configfile",
+					"pyproject.toml"
+				],
 				"cSpell.customDictionaries": {
 					"project-words": {
 					"name": "project-words",
@@ -54,23 +58,15 @@
 					"addWords": true
 					}
 				},
-				"files.autoGuessEncoding": true
-			},
-			// Add the IDs of extensions you want installed when the container is created.
-			"extensions": [
-				"GitHub.copilot",
-				"streetsidesoftware.code-spell-checker",
-				"tamasfe.even-better-toml",
-				"charliermarsh.ruff",
-				"ms-python.python",
-				"ms-python.black-formatter",
-				"ms-python.flake8",
-				"ms-python.isort",
-				"ms-python.mypy-type-checker",
-				"ms-python.pylint",
-				"emeraldwalk.RunOnSave",
-				"grapecity.gc-excelviewer"
-			]
+				"emeraldwalk.runonsave": {
+					"commands": [
+						{
+							"match": ".*\\.py",
+							"cmd": "uv run docformatter --in-place ${file}"
+						}
+					]
+				}
+			}
 		}
 	}
 
