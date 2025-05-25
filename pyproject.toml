@@ -24,6 +24,10 @@ dev = [
     # We should avoid the versions that is not compatible with the hacking,
     # considering the speed of dependency calculation process
     "flake8!=6.0.0,!=5.0.0,>=4.0.1; python_version >= '3.6'",
+    # To replace E501 in pycodestyle with B950 in flake8-bugbear:
+    # - Using Black with other tools - Black 25.1.0 documentation
+    #   https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#bugbear
+    "flake8-bugbear",
     # To use flake8 --radon-show-closures
     "flake8-polyfill",
     # To use pyproject.toml for Flake8 configuration
@@ -110,12 +114,14 @@ wrap-summaries = 119
 
 [tool.flake8]
 # @see https://github.com/psf/black/blob/master/README.md#line-length
-max_line_length = 119
+max_line_length = 108
 extend_ignore = [
   # For compatibility with Black:
   # - Using Black with other tools - Black 25.1.0 documentation
-  #   https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8
+  #   https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#bugbear
   "E203",
+  "E501",
+  "E701",
   # 2025-05-24 Now openstack/hacking wasn't introduced into Ruff and sorting imports is mainly considered with isort.
   "H306",
   # Cohesion may be in experimental.
@@ -200,6 +206,8 @@ ignore = [
     "D402",    # First line should not be the function’s “signature”
     # Reason: First line may ends with ":" for expression.
     "D415",    # First line should end with a period, question mark, or exclamation point
+    # Reason: `Line too long` is checked by flake8-bugbear.
+    "E501",    # Line too long ({width} > {limit})
     # To support for Python 3.5 in the future
     "UP032",   # [*] Use f-string instead of `format` call
     # Currently, there are too many Any types in the codebase

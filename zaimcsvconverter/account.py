@@ -81,7 +81,7 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     # fmt: off
     GOD_SLAYER_FACTORY_SF_CARD_VIEWER: GodSlayerFactory = field(
         default=GodSlayerFactory(
-            header=["利用年月日", "定期", "鉄道会社名", "入場駅/事業者名", "定期", "鉄道会社名", "出場駅/降車場所", "利用額(円)", "残額(円)", "メモ"],  # noqa: E501 pylint: disable=line-too-long
+            header=["利用年月日", "定期", "鉄道会社名", "入場駅/事業者名", "定期", "鉄道会社名", "出場駅/降車場所", "利用額(円)", "残額(円)", "メモ"],  # pylint: disable=line-too-long
             encoding="shift_jis_2004",
         ),
         init=False,
@@ -90,11 +90,11 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     GOD_SLAYER_FACTORY_AMAZON: GodSlayerFactory = field(
         default=GodSlayerFactory(
             header=[
-                "注文日", "注文番号", "商品名", "付帯情報", "価格", "個数", "商品小計", "注文合計", "お届け先", "状態", "請求先", "請求額", "クレカ請求日",  # noqa: E501 pylint: disable=line-too-long
+                "注文日", "注文番号", "商品名", "付帯情報", "価格", "個数", "商品小計", "注文合計", "お届け先", "状態", "請求先", "請求額", "クレカ請求日",  # pylint: disable=line-too-long
                 "クレカ請求額", "クレカ種類", "注文概要URL", "領収書URL", "商品URL",
             ],
             partition=[
-                r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",  # noqa: RUF001,RUF100,E501 pylint: disable=line-too-long
+                r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",  # noqa: RUF001,RUF100 pylint: disable=line-too-long
                 r".*", r".*", r".*", "",
             ],
             encoding="utf-8-sig",

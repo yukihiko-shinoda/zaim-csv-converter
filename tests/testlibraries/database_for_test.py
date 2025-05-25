@@ -55,8 +55,8 @@ class FixtureRecord:
     def define(self) -> None:
         """This method defines factory_boy fixture records by using properties."""
         if self.file_csv_convert_id is FileCsvConvertId.AMAZON:
-            # Reason: Mypy and SQLAlchemy's issue
-            ItemFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)  # type: ignore[no-untyped-call]  # noqa: E501 RUF100 pylint: disable=line-too-long
+            # Reason: Mypy and SQLAlchemy's issue pylint: disable-next=line-too-long
+            ItemFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)  # type: ignore[no-untyped-call]
         elif self.file_csv_convert_id in (
             FileCsvConvertId.WAON,
             FileCsvConvertId.GOLD_POINT_CARD_PLUS,
@@ -64,8 +64,8 @@ class FixtureRecord:
             FileCsvConvertId.SF_CARD_VIEWER,
             FileCsvConvertId.VIEW_CARD,
         ):
-            # Reason: Mypy and SQLAlchemy's issue
-            StoreFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)  # type: ignore[no-untyped-call]  # noqa: E501 RUF100 pylint: disable=line-too-long
+            # Reason: Mypy and SQLAlchemy's issue pylint: disable-next=line-too-long
+            StoreFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)  # type: ignore[no-untyped-call]
         else:
             msg = (
                 "self.file_csv_convert_id is not supported on this class. "

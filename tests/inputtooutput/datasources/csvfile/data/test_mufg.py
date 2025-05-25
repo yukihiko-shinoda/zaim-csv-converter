@@ -66,7 +66,7 @@ class TestMufgRowData:
     @pytest.mark.usefixtures("database_session_stores_mufg")
     def test_create_fail() -> None:
         """Method should raise ValueError when note is not defined."""
-        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501  # pylint: disable=line-too-long
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # pylint: disable=line-too-long
         #   https://github.com/pydantic/pydantic/issues/9140
         index_cash_flow_kind = 8
         with pytest.raises(ValidationError) as excinfo:
