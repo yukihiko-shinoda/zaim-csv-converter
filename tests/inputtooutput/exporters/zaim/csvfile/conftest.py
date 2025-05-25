@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from tests.testlibraries.row_data import ZaimRowData
-from zaimcsvconverter.account import Account
+from zaimcsvconverter.accounts.enum import Account
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory

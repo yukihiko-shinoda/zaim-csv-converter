@@ -15,7 +15,7 @@ from tests.test_zaim_csv_converter import create_relative_deploy_file_path
 from tests.testlibraries.database_for_test import DatabaseForTest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account import AccountContext
+from zaimcsvconverter.accounts.context import AccountContext
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor

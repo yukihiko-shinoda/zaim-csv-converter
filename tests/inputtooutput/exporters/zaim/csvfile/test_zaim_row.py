@@ -13,7 +13,7 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.account import Account
+from zaimcsvconverter.accounts.enum import Account
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimRowConverterFactory

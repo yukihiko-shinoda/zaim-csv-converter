@@ -4,7 +4,7 @@ import pytest
 
 from tests.conftest import create_zaim_row_converter
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.account import Account
+from zaimcsvconverter.accounts.enum import Account
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import (
