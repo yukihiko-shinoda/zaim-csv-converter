@@ -74,9 +74,4 @@ class TestWaonRowData:
         assert len(errors) == 1
         error = errors[0]
         assert error["loc"] == (index_charge_kind,)
-        assert error["msg"] == "".join(
-            [
-                "Input should be ",
-                "'銀行口座', 'ポイント', '現金', 'バリューダウンロード' or '-'",
-            ],
-        )
+        assert error["msg"] == "Input should be '銀行口座', 'ポイント', '現金', 'バリューダウンロード' or '-'"

@@ -1,5 +1,7 @@
 """This module implements abstract row model of Zaim CSV."""
 
+from __future__ import annotations
+
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 from typing import Optional
@@ -24,7 +26,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class ZaimRow(OutputRecord):
     """This class implements abstract row model of Zaim CSV."""
 
-    def __init__(self, zaim_row_converter: "ZaimRowConverter[InputRow[InputRowData], InputRowData]") -> None:
+    def __init__(self, zaim_row_converter: ZaimRowConverter[InputRow[InputRowData], InputRowData]) -> None:
         self._date: datetime = zaim_row_converter.date
 
     @property
@@ -41,7 +43,7 @@ class ZaimIncomeRow(ZaimRow):
 
     METHOD: str = "income"
 
-    def __init__(self, zaim_row_converter: "ZaimIncomeRowConverter[InputRow[InputRowData], InputRowData]") -> None:
+    def __init__(self, zaim_row_converter: ZaimIncomeRowConverter[InputRow[InputRowData], InputRowData]) -> None:
         self._category = zaim_row_converter.category
         self._cash_flow_target = zaim_row_converter.cash_flow_target
         self._store_name = zaim_row_converter.store_name
@@ -74,7 +76,7 @@ class ZaimPaymentRow(ZaimRow):
 
     METHOD: str = "payment"
 
-    def __init__(self, zaim_row_converter: "ZaimPaymentRowConverter[InputRow[InputRowData], InputRowData]") -> None:
+    def __init__(self, zaim_row_converter: ZaimPaymentRowConverter[InputRow[InputRowData], InputRowData]) -> None:
         self._category_large = zaim_row_converter.category_large
         self._category_small = zaim_row_converter.category_small
         self._cash_flow_source = zaim_row_converter.cash_flow_source
@@ -110,7 +112,7 @@ class ZaimTransferRow(ZaimRow):
 
     METHOD: str = "transfer"
 
-    def __init__(self, zaim_row_converter: "ZaimTransferRowConverter[InputRow[InputRowData], InputRowData]") -> None:
+    def __init__(self, zaim_row_converter: ZaimTransferRowConverter[InputRow[InputRowData], InputRowData]) -> None:
         self._cash_flow_source = zaim_row_converter.cash_flow_source
         self._cash_flow_target = zaim_row_converter.cash_flow_target
         self._amount_transfer = zaim_row_converter.amount

@@ -1,6 +1,8 @@
 """CSV datasource."""
 
-from collections.abc import Generator
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from typing import Generic
 from typing import Optional
 from typing import cast
@@ -14,12 +16,16 @@ from zaimcsvconverter.exceptions import InvalidRecordError
 from zaimcsvconverter.exceptions import LogicError
 from zaimcsvconverter.exceptions import SkipRecord
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
-from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.inputtooutput.datasources import DataSource
-from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
+    from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
 
 
 class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):

@@ -76,6 +76,4 @@ class TestMufgRowData:
         assert len(errors) == 1
         error = errors[0]
         assert error["loc"] == (index_cash_flow_kind,)
-        assert error["msg"] == "".join(
-            ["Input should be '入金', '支払い', '振替入金' or '振替支払い'"],
-        )
+        assert error["msg"] == "Input should be '入金', '支払い', '振替入金' or '振替支払い'"

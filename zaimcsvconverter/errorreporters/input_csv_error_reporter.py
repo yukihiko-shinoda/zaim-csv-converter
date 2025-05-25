@@ -1,15 +1,21 @@
 """This module implements error report process for input CSV."""
 
+from __future__ import annotations
+
 from abc import ABC
 from abc import abstractmethod
-from collections.abc import Generator
+from typing import TYPE_CHECKING
 from typing import Generic
 from typing import Union
 
-from zaimcsvconverter.inputtooutput.datasources import DataSource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_file import Csv
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from zaimcsvconverter.inputtooutput.datasources import DataSource
 
 
 class DataSourceErrorReporter(ABC):

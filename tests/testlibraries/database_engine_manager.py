@@ -1,13 +1,19 @@
 """This module implements database engine manager for unit testing."""
 
+from __future__ import annotations
+
 import contextlib
-from types import TracebackType
+from typing import TYPE_CHECKING
 from typing import Optional
 
 import sqlalchemy
 from sqlalchemy.engine.base import Engine
-from sqlalchemy.orm import scoped_session
-from sqlalchemy.orm.session import Session
+
+if TYPE_CHECKING:
+    from types import TracebackType
+
+    from sqlalchemy.orm import scoped_session
+    from sqlalchemy.orm.session import Session
 
 
 class DatabaseEngineManager(contextlib.AbstractContextManager[Engine]):

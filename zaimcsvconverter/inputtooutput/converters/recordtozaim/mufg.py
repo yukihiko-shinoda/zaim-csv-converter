@@ -3,14 +3,14 @@
 @see https://faq01.bk.mufg.jp/usr/file/attachment/main_contents_0401.pdf
 """
 
+from __future__ import annotations
+
 from abc import ABC
 from abc import abstractmethod
-from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Optional
 from typing import TypeVar
 from typing import cast
-
-from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
@@ -28,6 +28,11 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import Mufg
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentToSomeoneRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgStoreRow
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from returns.primitives.hkt import Kind1
 
 TypeVarMufgRow = TypeVar("TypeVarMufgRow", bound=MufgRow)
 TypeVarMufgIncomeRow = TypeVar("TypeVarMufgIncomeRow", bound=MufgIncomeRow)

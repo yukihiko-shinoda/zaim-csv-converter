@@ -1,9 +1,10 @@
 """This module implements convert steps from input row to Zaim row."""
 
+from __future__ import annotations
+
 from abc import ABC
 from abc import abstractmethod
-from datetime import datetime
-from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Generic
 from typing import Optional
 from typing import TypeVar
@@ -13,7 +14,6 @@ from returns.primitives.hkt import Kind1
 from returns.primitives.hkt import kinded
 
 from zaimcsvconverter.exceptions import LogicError
-from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputItemRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputStoreItemRowData
@@ -27,6 +27,12 @@ from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimIncomeRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimTransferRow
+
+if TYPE_CHECKING:
+    from datetime import datetime
+    from pathlib import Path
+
+    from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 
 
 # Reason: Abstract class. pylint: disable=too-few-public-methods

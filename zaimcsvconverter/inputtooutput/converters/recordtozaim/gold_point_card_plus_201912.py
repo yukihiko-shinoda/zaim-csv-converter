@@ -1,10 +1,10 @@
 """This module implements convert steps from GOLD POINT CARD + input row to Zaim row."""
 
-from pathlib import Path
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from typing import Optional
 from typing import cast
-
-from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
@@ -17,6 +17,11 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plu
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus_201912 import (
     GoldPointCardPlus201912Row,  # noqa: H301,RUF100
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from returns.primitives.hkt import Kind1
 
 
 class GoldPointCardPlus201912ZaimTransferRowConverter(

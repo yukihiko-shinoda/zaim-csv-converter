@@ -1,5 +1,7 @@
 """Custom data type to convert string with comma to int."""
 
+from __future__ import annotations
+
 from typing import Annotated
 from typing import Optional
 

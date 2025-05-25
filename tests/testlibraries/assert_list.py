@@ -1,8 +1,13 @@
 """To reduce cyclomatic complexity."""
 
-from collections.abc import Iterable
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Optional
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 def assert_each_properties(

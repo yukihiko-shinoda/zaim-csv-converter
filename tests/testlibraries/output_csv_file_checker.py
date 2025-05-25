@@ -48,14 +48,14 @@ class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):
 
     def read_output_csv(self, file_name: str) -> list[TypeVarOutputRowData]:
         """This method reads output CSV files and returns as list of output row data instance."""
-        list_zaim_row_data = []
         with (self.directory_csv_output.target / file_name).open("r", encoding="UTF-8", newline="\n") as file:
             csv_reader = csv.reader(file)
             self.assert_header_and_skip(csv_reader)
-            for list_row_data in csv_reader:
+            return [
                 # Reason: Pylint has not support dataclasses. pylint: disable=not-callable
-                list_zaim_row_data.append(self.output_row_data_class(*list_row_data))
-        return list_zaim_row_data
+                self.output_row_data_class(*list_row_data)
+                for list_row_data in csv_reader
+            ]
 
     @abstractmethod
     def assert_header_and_skip(self, csv_reader: CSVReader) -> None:

@@ -1,11 +1,11 @@
 """This module implements convert steps from SBI Sumishin net bank input row to Zaim row."""
 
-from pathlib import Path
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from typing import Optional
 from typing import Union
 from typing import cast
-
-from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
@@ -21,6 +21,11 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import (
     SBISumishinNetBankWithdrawalRow,  # noqa: H301,RUF100
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from returns.primitives.hkt import Kind1
 
 
 class SBISumishinNetBankZaimPaymentRowConverter(

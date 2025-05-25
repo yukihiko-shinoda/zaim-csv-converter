@@ -1,5 +1,7 @@
 """Custom data type to convert string to int."""
 
+from __future__ import annotations
+
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 from typing import Any
@@ -17,13 +19,13 @@ from pydantic.v1.types import int_validator  # type: ignore[attr-defined]
 from pydantic.v1.types import strict_int_validator  # type: ignore[attr-defined]
 from pydantic.v1.types import update_not_none  # type: ignore[attr-defined]
 from pydantic.v1.utils import almost_equal_floats
-from pydantic_core import CoreSchema
 from pydantic_core.core_schema import no_info_after_validator_function
 
 if TYPE_CHECKING:
     # Reason: Prioritize typing
     from pydantic.v1.types import CallableGenerator  # type: ignore[attr-defined] # noqa: F401
     from pydantic.v1.validators import Number
+    from pydantic_core import CoreSchema
 
 
 class IntegerMustBeFromStr:
@@ -68,33 +70,33 @@ class ConstrainedInt(int, metaclass=ConstrainedNumberMeta):
         )
 
     @classmethod
-    def validate(cls, value: Any) -> "Number":
+    def validate(cls, value: Any) -> Number:
         value = strict_int_validator(value) if cls.strict else int_validator(value)
         value = cls.number_size_validator(value)
         return cls.number_multiple_validator(value)
 
     @classmethod
-    def number_size_validator(cls, v: "Number") -> "Number":
+    def number_size_validator(cls, v: Number) -> Number:
         cls.number_size_validator_greater(v)
         cls.number_size_validator_less(v)
         return v
 
     @classmethod
-    def number_size_validator_greater(cls, v: "Number") -> None:
+    def number_size_validator_greater(cls, v: Number) -> None:
         if cls.gt is not None and not v > cls.gt:
             raise errors.NumberNotGtError(limit_value=cls.gt)
         if cls.ge is not None and not v >= cls.ge:
             raise errors.NumberNotGeError(limit_value=cls.ge)
 
     @classmethod
-    def number_size_validator_less(cls, v: "Number") -> None:
+    def number_size_validator_less(cls, v: Number) -> None:
         if cls.lt is not None and not v < cls.lt:
             raise errors.NumberNotLtError(limit_value=cls.lt)
         if cls.le is not None and not v <= cls.le:
             raise errors.NumberNotLeError(limit_value=cls.le)
 
     @classmethod
-    def number_multiple_validator(cls, v: "Number") -> "Number":
+    def number_multiple_validator(cls, v: Number) -> Number:
         if cls.multiple_of is not None:
             mod = float(v) / float(cls.multiple_of) % 1
             if not almost_equal_floats(mod, 0.0) and not almost_equal_floats(mod, 1.0):
@@ -108,7 +110,7 @@ class ConstrainedStringToInt(ConstrainedInt):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @classmethod
-    def validate(cls, value: Any) -> "Number":
+    def validate(cls, value: Any) -> Number:
         value = cls.integer_must_be_from_str(value)
         return super().validate(value)
 

@@ -1,5 +1,7 @@
 """Tests for zaim_csv_converter.py."""
 
+from __future__ import annotations
+
 import csv
 from logging import getLogger
 from pathlib import Path

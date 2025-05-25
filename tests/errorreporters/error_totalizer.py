@@ -52,11 +52,9 @@ class TestErrorTotalizer:
         files = sorted(tmp_path.rglob("*[!.gitkeep]"))
         with files[1].open("r", encoding="UTF-8", newline="\n") as file_error:
             reader_error = csv.reader(file_error)
-            expected_item_name = "".join(
-                [
-                    "LITTLE TREEチェアマット 120×90cm厚1.5mm 床を保護 机の擦り傷防止滑り止め ",  # noqa: RUF001
-                    "カート可能 透明大型デスク足元マット フローリング/畳/床暖房対応 (120×90cm)",  # noqa: RUF001
-                ],
+            expected_item_name = (
+                "LITTLE TREEチェアマット 120×90cm厚1.5mm 床を保護 机の擦り傷防止滑り止め "  # noqa: RUF001
+                "カート可能 透明大型デスク足元マット フローリング/畳/床暖房対応 (120×90cm)"  # noqa: RUF001
             )
             error_row_data = ErrorRowDataForTest(*(next(reader_error)))
             assert_each_properties(error_row_data, ["amazon.csv", None, expected_item_name])

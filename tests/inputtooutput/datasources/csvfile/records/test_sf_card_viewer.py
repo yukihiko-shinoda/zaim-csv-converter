@@ -98,6 +98,4 @@ class TestSFCardViewerExitByWindowRow:
         assert len(excinfo.value.errors()) == 1
         error = excinfo.value.errors()[0]
         assert error["loc"] == (index_note,)
-        assert error["msg"] == "".join(
-            ["Input should be '', '物販', 'ｵｰﾄﾁｬｰｼﾞ', '窓出' or 'ﾊﾞｽ/路面等'"],
-        )
+        assert error["msg"] == "Input should be '', '物販', 'ｵｰﾄﾁｬｰｼﾞ', '窓出' or 'ﾊﾞｽ/路面等'"

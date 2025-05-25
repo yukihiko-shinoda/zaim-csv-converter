@@ -1,14 +1,13 @@
 """This module implements convert steps from SFCard Viewer input row to Zaim row."""
 
+from __future__ import annotations
+
 import re
 from datetime import datetime
-from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Callable
 from typing import Optional
 
-from returns.primitives.hkt import Kind1
-
-from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowStoreConverter
@@ -21,6 +20,13 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica imp
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaStoreRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from returns.primitives.hkt import Kind1
+
+    from zaimcsvconverter.config import SFCardViewerConfig
 
 
 # Reason: SFCardViewer and Mobile Suica requires same specification

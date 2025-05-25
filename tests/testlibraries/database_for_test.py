@@ -3,12 +3,13 @@
 @see https://factoryboy.readthedocs.io/en/latest/orms.html#sqlalchemy
 """
 
-from collections.abc import Generator
+from __future__ import annotations
+
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from typing import Optional
 
 import factory
-from sqlalchemy.orm.session import Session as SQLAlchemySession
 
 from tests.testlibraries.database_engine_manager import DatabaseEngineManager
 from zaimcsvconverter import Session
@@ -17,6 +18,11 @@ from zaimcsvconverter.models import ConvertTableRowData
 from zaimcsvconverter.models import FileCsvConvertId
 from zaimcsvconverter.models import Item
 from zaimcsvconverter.models import Store
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from sqlalchemy.orm.session import Session as SQLAlchemySession
 
 
 class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):
