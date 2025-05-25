@@ -4,13 +4,13 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowFactory,
+    GoldPointCardPlus201912RowFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,
+    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912Row,
+    GoldPointCardPlus201912Row,  # noqa: H301,RUF100
 )
 
 

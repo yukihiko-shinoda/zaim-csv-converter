@@ -1,14 +1,20 @@
 """This module implements convert steps of input CSV row."""
 
-from typing import Generic, Optional, cast
+from typing import Generic
+from typing import Optional
+from typing import cast
 
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
-from zaimcsvconverter.exceptions import InvalidRecordError, SkipRecord
+from zaimcsvconverter.exceptions import InvalidRecordError
+from zaimcsvconverter.exceptions import SkipRecord
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputRowData, TypeVarInputRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputContentRow, InputRow, TypeVarInputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputContentRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
 
 
 class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):

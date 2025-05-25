@@ -1,12 +1,14 @@
 """Custom data type to convert yen string to int."""
 
-from typing import Annotated, Optional
+from typing import Annotated
+from typing import Optional
 
 import annotated_types
 from pydantic import BeforeValidator
 
 # Reason: Pylint's bug. pylint: disable=no-name-in-module
-from zaimcsvconverter.customdatatypes.abstract_string_to_int import ConstrainedStringToInt, IntegerMustBeFromStr
+from zaimcsvconverter.customdatatypes.abstract_string_to_int import ConstrainedStringToInt
+from zaimcsvconverter.customdatatypes.abstract_string_to_int import IntegerMustBeFromStr
 from zaimcsvconverter.utility import Utility
 
 

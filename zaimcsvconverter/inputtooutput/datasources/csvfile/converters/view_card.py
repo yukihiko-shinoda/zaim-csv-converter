@@ -2,11 +2,9 @@
 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import (
-    ViewCardNotStoreRow,
-    ViewCardRow,
-    ViewCardStoreRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardNotStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardStoreRow
 
 
 class ViewCardRowFactory(InputRowFactory[ViewCardRowData, ViewCardRow]):

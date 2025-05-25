@@ -5,13 +5,11 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.amazon_201911 import Amazon201911RowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import (
-    Amazon201911DiscountRow,
-    Amazon201911ItemRow,
-    Amazon201911PaymentRow,
-    Amazon201911RowToSkip,
-    Amazon201911ShippingHandlingRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911DiscountRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911ItemRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911PaymentRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911RowToSkip
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911ShippingHandlingRow
 
 
 class TestAmazon201911RowFactory:

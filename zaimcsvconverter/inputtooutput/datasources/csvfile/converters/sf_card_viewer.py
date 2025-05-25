@@ -6,11 +6,9 @@ from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.data.sf_card_viewer import Note
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import (
-    SFCardViewerEnterExitRow,
-    SFCardViewerEnterRow,
-    SFCardViewerRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerEnterExitRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerEnterRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerRow
 
 
 class SFCardViewerRowFactory(InputRowFactory[SFCardViewerRowData, SFCardViewerRow]):

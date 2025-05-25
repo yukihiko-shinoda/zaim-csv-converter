@@ -5,11 +5,9 @@ from pathlib import Path
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimPaymentRowStoreItemConverter,
-    ZaimRowConverter,
-)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowStoreItemConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pal import PayPalRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.pay_pal import PayPalRow
 

@@ -7,7 +7,9 @@ import pytest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonChargeRow, WaonRowToSkip, WaonStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonChargeRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonRowToSkip
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonStoreRow
 from zaimcsvconverter.models import Store
 
 

@@ -1,6 +1,7 @@
 """Abstract record converter."""
 
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.inputtooutput.exporters import OutputRecord

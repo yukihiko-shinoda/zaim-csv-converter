@@ -3,7 +3,8 @@
 from pathlib import Path
 
 from zaimcsvconverter.inputtooutput.converters import RecordConverter
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverterFactory, ZaimRowFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimRow
 

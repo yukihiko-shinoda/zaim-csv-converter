@@ -1,15 +1,16 @@
 """Validators."""
 
 from decimal import Decimal
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Optional
+from typing import Union
 
 # pylint: disable=no-name-in-module
-from pydantic.v1.validators import (
-    int_validator,
-    number_multiple_validator,
-    number_size_validator,
-    strict_int_validator,
-)
+from pydantic.v1.validators import int_validator
+from pydantic.v1.validators import number_multiple_validator
+from pydantic.v1.validators import number_size_validator
+from pydantic.v1.validators import strict_int_validator
 
 if TYPE_CHECKING:
     from pydantic.v1.fields import ModelField  # pylint: disable=no-name-in-module,unused-import

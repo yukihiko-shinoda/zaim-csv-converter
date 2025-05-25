@@ -1,22 +1,21 @@
 """This module implements convert steps from GOLD POINT CARD + input row to Zaim row."""
 
 from pathlib import Path
-from typing import Optional, cast
+from typing import Optional
+from typing import cast
 
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimPaymentRowStoreConverter,
-    ZaimRowConverter,
-    ZaimTransferRowConverter,
-)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowStoreConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimTransferRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,
+    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912Row,
+    GoldPointCardPlus201912Row,  # noqa: H301,RUF100
 )
 
 

@@ -110,9 +110,6 @@ wrap-summaries = 119
 max_line_length = 119
 extend_ignore = [
   "E203",
-  # Since it conflicts with Black, Black and its philosophy should be respect than hacking.
-  # see: https://github.com/psf/black
-  "H301",
   # 2025-05-24 Now openstack/hacking wasn't introduced into Ruff and sorting imports is mainly considered with isort.
   "H306",
   # Cohesion may be in experimental.
@@ -141,17 +138,12 @@ ignore_missing_imports = true
 [tool.pydocstyle]
 convention = "google"
 add_ignore = [
-    # Reason: Docstring may be missed in public class since docstring-min-length is set.
+    # Reason: Docstring may be missed since docstring-min-length is set.
     "D101",  # Missing docstring in public class
-    # Reason: Docstring may be missed in public method since docstring-min-length is set.
     "D102",  # Missing docstring in public method
-    # Reason: Docstring may be missed in public function since docstring-min-length is set.
     "D103",  # Missing docstring in public function
-    # Reason: Docstring may be missed in magic method since docstring-min-length is set.
     "D105",  # Missing docstring in magic method
-    # Reason: Docstring may be missed in public nested class since docstring-min-length is set.
     "D106",  # Missing docstring in public nested class
-    # Reason: Docstring may be missed in __init__ method since docstring-min-length is set.
     "D107",  # Missing docstring in __init__
     # Reason: First line may ends with function signature for expression.
     "D402",  # First line should not be the function’s “signature”
@@ -188,87 +180,82 @@ line-length = 119
 
 [tool.ruff.lint]
 select = [
-    "F",  # Pyflakes
-    "E",  # pycodestyle
-    "W",  # pycodestyle
+    "F",    # Pyflakes
+    "E",    # pycodestyle
+    "W",    # pycodestyle
     "C90",  # mccabe
-    "I",  # isort
-    "N",  # pep8-naming
-    "D",  # pydocstyle
-    "UP",  # pyupgrade
+    "I",    # isort
+    "N",    # pep8-naming
+    "D",    # pydocstyle
+    "UP",   # pyupgrade
     "YTT",  # flake8-2020
     "ANN",  # flake8-annotations
-    "S",  # flake8-bandit
+    "S",    # flake8-bandit
     "BLE",  # flake8-blind-except
     "FBT",  # flake8-boolean-trap
-    "B",  # flake8-bugbear
-    "A",  # flake8-builtins
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
     "COM",  # flake8-commas
-    "C4",  # flake8-comprehensions
+    "C4",   # flake8-comprehensions
     "DTZ",  # flake8-datetimez
     "T10",  # flake8-debugger
-    "DJ",  # flake8-django
-    "EM",  # flake8-errmsg
+    "DJ",   # flake8-django
+    "EM",   # flake8-errmsg
     "EXE",  # flake8-executable
     "ISC",  # flake8-implicit-str-concat
     "ICN",  # flake8-import-conventions
-    "G",  # flake8-logging-format
+    "G",    # flake8-logging-format
     "INP",  # flake8-no-pep420
     "PIE",  # flake8-pie
     "T20",  # flake8-print
     "PYI",  # flake8-pyi
-    "PT",  # flake8-pytest-style
-    "Q",  # flake8-quotes
+    "PT",   # flake8-pytest-style
+    "Q",    # flake8-quotes
     "RSE",  # flake8-raise
     "RET",  # flake8-return
     "SLF",  # flake8-self
     "SIM",  # flake8-simplify
     "TID",  # flake8-tidy-imports
-    "TC",  # flake8-type-checking
+    "TC",   # flake8-type-checking
     "ARG",  # flake8-unused-arguments
     "PTH",  # flake8-use-pathlib
     "ERA",  # eradicate
-    "PD",  # pandas-vet
+    "PD",   # pandas-vet
     "PGH",  # pygrep-hooks
-    "PL",  # Pylint
+    "PL",   # Pylint
     "TRY",  # tryceratops
     "NPY",  # NumPy-specific rules
     "RUF",  # Ruff-specific rules
 ]
 ignore = [
     # lint.pydocstyle
-    # Reason: Docstring may be missed in public class since docstring-min-length is set.
-    "D101",  # Missing docstring in public class
-    # Reason: Docstring may be missed in public method since docstring-min-length is set.
-    "D102",  # Missing docstring in public method
-    # Reason: Docstring may be missed in public function since docstring-min-length is set.
-    "D103",  # Missing docstring in public function
-    # Reason: Docstring may be missed in magic method since docstring-min-length is set.
-    "D105",  # Missing docstring in magic method
-    # Reason: Docstring may be missed in public nested class since docstring-min-length is set.
-    "D106",  # Missing docstring in public nested class
-    # Reason: Docstring may be missed in __init__ method since docstring-min-length is set.
-    "D107",  # Missing docstring in __init__
+    # Reason: Docstring may be missed since docstring-min-length is set.
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+    "D105",    # Missing docstring in magic method
+    "D106",    # Missing docstring in public nested class
+    "D107",    # Missing docstring in __init__
     # Reason: First line may ends with function signature for expression.
-    "D402",  # First line should not be the function’s “signature”
+    "D402",    # First line should not be the function’s “signature”
     # Reason: First line may ends with ":" for expression.
-    "D415",  # First line should end with a period, question mark, or exclamation point
+    "D415",    # First line should end with a period, question mark, or exclamation point
     # To support for Python 3.5 in the future
-    "UP032",  # [*] Use f-string instead of `format` call
+    "UP032",   # [*] Use f-string instead of `format` call
     # Currently, there are too many Any types in the codebase
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed, These warnings are disabled by default
     # Python 3.9 incompatible
-    "UP007",  # Use X | Y for type annotations
+    "UP007",   # Use X | Y for type annotations
 ]
 fixable = [
     "COM812",  # Trailing comma missing
-    "EM102",  # Exception must not use an f-string literal, assign to variable first
-    "I",  # isort
-    "PT001",  # Use `@pytest.fixture()` over `@pytest.fixture`
-    "PT006",  # Wrong name(s) type in `@pytest.mark.parametrize`, expected `tuple`
-    "UP006",  # Use {} instead of {} for type annotations
-    "UP015",  # Unnecessary open mode parameters
-    "UP037",  # Remove quotes from type annotation
+    "EM102",   # Exception must not use an f-string literal, assign to variable first
+    "I",       # isort
+    "PT001",   # Use `@pytest.fixture()` over `@pytest.fixture`
+    "PT006",   # Wrong name(s) type in `@pytest.mark.parametrize`, expected `tuple`
+    "UP006",   # Use {} instead of {} for type annotations
+    "UP015",   # Unnecessary open mode parameters
+    "UP037",   # Remove quotes from type annotation
 ]
 unfixable = [
     # When fix `return a and b != ""` as `return a and b`, mypy will report warning:
@@ -277,6 +264,9 @@ unfixable = [
     # To handle mypy's bug in case when use Pydantic custom data type.
     "SIM108",  # Use ternary operator `extra_context = {} if extra_context is None else request.param` instead of `if`-`else`-block
 ]
+
+[tool.ruff.lint.isort]
+force-single-line = true
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]

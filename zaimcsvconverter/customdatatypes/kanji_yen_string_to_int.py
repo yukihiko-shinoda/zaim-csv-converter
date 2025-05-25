@@ -1,6 +1,7 @@
 """Custom data type to convert yen string to int."""
 
-from typing import Annotated, Optional
+from typing import Annotated
+from typing import Optional
 
 import annotated_types
 from pydantic import BeforeValidator

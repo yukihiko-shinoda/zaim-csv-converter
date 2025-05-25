@@ -6,7 +6,8 @@ from typing import Any
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.account import Account, AccountContext
+from zaimcsvconverter.account import Account
+from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer

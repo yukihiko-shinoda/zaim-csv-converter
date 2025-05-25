@@ -12,7 +12,11 @@ from sqlalchemy.orm.session import Session as SQLAlchemySession
 
 from tests.testlibraries.database_engine_manager import DatabaseEngineManager
 from zaimcsvconverter import Session
-from zaimcsvconverter.models import Base, ConvertTableRowData, FileCsvConvertId, Item, Store
+from zaimcsvconverter.models import Base
+from zaimcsvconverter.models import ConvertTableRowData
+from zaimcsvconverter.models import FileCsvConvertId
+from zaimcsvconverter.models import Item
+from zaimcsvconverter.models import Store
 
 
 class StoreFactory(factory.alchemy.SQLAlchemyModelFactory):

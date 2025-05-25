@@ -7,7 +7,8 @@ import pytest
 from sqlalchemy.orm.session import Session as SQLAlchemySession
 
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
-from zaimcsvconverter.models import Item, Store
+from zaimcsvconverter.models import Item
+from zaimcsvconverter.models import Store
 
 
 class TestConvertTableImporter:

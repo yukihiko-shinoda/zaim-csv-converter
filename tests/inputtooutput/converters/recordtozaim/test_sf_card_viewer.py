@@ -9,7 +9,9 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow, ZaimRow, ZaimTransferRow
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimRow
+from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimTransferRow
 
 
 @pytest.fixture(scope="class")

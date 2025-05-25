@@ -9,11 +9,9 @@ from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import (
-    SFCardViewerEnterExitRow,
-    SFCardViewerEnterRow,
-    SFCardViewerRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerEnterExitRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerEnterRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerRow
 from zaimcsvconverter.models import Store
 
 

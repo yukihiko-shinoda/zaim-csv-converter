@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler

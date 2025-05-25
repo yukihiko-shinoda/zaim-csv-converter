@@ -3,7 +3,8 @@
 from collections.abc import Generator
 from logging import getLogger
 from pathlib import Path
-from typing import Generic, TypeVar
+from typing import Generic
+from typing import TypeVar
 
 from godslayer.csv.god_slayer import GodSlayer
 from pydantic.dataclasses import dataclass

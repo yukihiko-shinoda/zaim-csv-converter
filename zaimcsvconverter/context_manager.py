@@ -5,9 +5,12 @@ https://stackoverflow.com/questions/47705573/entering-context-managers-in-enter
 """
 
 import contextlib
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from types import TracebackType
-from typing import Generic, Optional, TypeVar
+from typing import Generic
+from typing import Optional
+from typing import TypeVar
 
 TypeVarCovariant_co = TypeVar("TypeVarCovariant_co", covariant=True)
 

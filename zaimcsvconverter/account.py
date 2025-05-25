@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field
 from enum import Enum
-from typing import TYPE_CHECKING, Generic
+from typing import TYPE_CHECKING
+from typing import Generic
 
 from godslayer.god_slayer_factory import GodSlayerFactory
 
@@ -13,17 +15,17 @@ from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus import (
-    GoldPointCardPlusZaimRowConverterFactory,
+    GoldPointCardPlusZaimRowConverterFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912ZaimRowConverterFactory,
+    GoldPointCardPlus201912ZaimRowConverterFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mobile_suica import MobileSuicaZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pal import PayPalZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pay_card import PayPayCardZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sbi_sumishin_net_bank import (
-    SBISumishinNetBankZaimRowConverterFactory,
+    SBISumishinNetBankZaimRowConverterFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.view_card import ViewCardZaimRowConverterFactory
@@ -31,17 +33,17 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaim
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.amazon import AmazonRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.amazon_201911 import Amazon201911RowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.gold_point_card_plus import (
-    GoldPointCardPlusRowFactory,
+    GoldPointCardPlusRowFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowFactory,
+    GoldPointCardPlus201912RowFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.mobile_suica import MobileSuicaRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.mufg import MufgRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pal import PayPalRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pay_card import PayPayCardRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sbi_sumishin_net_bank import (
-    SBISumishinNetBankRowFactory,
+    SBISumishinNetBankRowFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.view_card import ViewCardRowFactory
@@ -51,7 +53,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import Amazo
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,
+    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mobile_suica import MobileSuicaRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData

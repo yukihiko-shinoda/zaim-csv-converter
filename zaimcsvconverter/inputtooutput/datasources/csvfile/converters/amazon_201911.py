@@ -2,14 +2,12 @@
 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import (
-    Amazon201911DiscountRow,
-    Amazon201911ItemRow,
-    Amazon201911PaymentRow,
-    Amazon201911Row,
-    Amazon201911RowToSkip,
-    Amazon201911ShippingHandlingRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911DiscountRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911ItemRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911PaymentRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911Row
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911RowToSkip
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911ShippingHandlingRow
 
 
 class Amazon201911RowFactory(InputRowFactory[Amazon201911RowData, Amazon201911ItemRow]):

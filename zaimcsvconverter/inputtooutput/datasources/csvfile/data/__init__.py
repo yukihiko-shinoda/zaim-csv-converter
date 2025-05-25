@@ -1,8 +1,10 @@
 """Zaim CSV Converter extended CSV Data model."""
 
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from datetime import datetime
-from typing import Generic, TypeVar
+from typing import Generic
+from typing import TypeVar
 
 from pydantic.dataclasses import dataclass
 

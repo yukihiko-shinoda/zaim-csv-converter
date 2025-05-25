@@ -1,6 +1,7 @@
 """Tests for account_dependency.py ."""
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field
 
 import pytest
 from godslayer.god_slayer_factory import GodSlayerFactory

@@ -6,7 +6,8 @@ import pytest
 
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.account import Account
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory, ZaimRowFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputRowData

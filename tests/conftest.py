@@ -5,7 +5,8 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from fixturefilehandler import RelativeDeployFilePath, ResourceFileDeployer
+from fixturefilehandler import RelativeDeployFilePath
+from fixturefilehandler import ResourceFileDeployer
 from fixturefilehandler.factories import DeployerFactory
 from fixturefilehandler.file_paths import YamlConfigFilePathBuilder
 from sqlalchemy.orm.session import Session as SQLAlchemySession
@@ -15,7 +16,8 @@ from tests.testlibraries.database_for_test import DatabaseForTest
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.account import AccountContext
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter, ZaimRowFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow

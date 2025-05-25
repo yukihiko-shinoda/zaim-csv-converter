@@ -2,12 +2,15 @@
 
 import csv
 from abc import abstractmethod
-from dataclasses import dataclass, field
-from typing import Generic, TypeVar
+from dataclasses import dataclass
+from dataclasses import field
+from typing import Generic
+from typing import TypeVar
 
 from fixturefilehandler.file_paths import RelativeDeployFilePath
 
-from tests.testlibraries.row_data import InvalidRowErrorRowData, ZaimRowData
+from tests.testlibraries.row_data import InvalidRowErrorRowData
+from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.csv_types import CSVReader
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
 

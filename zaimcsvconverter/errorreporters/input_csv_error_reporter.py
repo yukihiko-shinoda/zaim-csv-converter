@@ -1,8 +1,10 @@
 """This module implements error report process for input CSV."""
 
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from collections.abc import Generator
-from typing import Generic, Union
+from typing import Generic
+from typing import Union
 
 from zaimcsvconverter.inputtooutput.datasources import DataSource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_file import Csv

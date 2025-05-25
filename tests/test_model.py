@@ -9,7 +9,9 @@ from sqlalchemy.orm.session import Session as SQLAlchemySession
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
+from zaimcsvconverter.models import FileCsvConvertId
+from zaimcsvconverter.models import Store
+from zaimcsvconverter.models import StoreRowData
 
 
 class TestModel:

@@ -4,7 +4,9 @@ import csv
 from pathlib import Path
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.models import Base, ConvertTableRecordMixin, ConvertTableRowData
+from zaimcsvconverter.models import Base
+from zaimcsvconverter.models import ConvertTableRecordMixin
+from zaimcsvconverter.models import ConvertTableRowData
 
 
 class ConvertTableImporter:

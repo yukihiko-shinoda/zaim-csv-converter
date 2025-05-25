@@ -7,13 +7,11 @@ from enum import Enum
 from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
 
-from zaimcsvconverter.models import (
-    Base,
-    ConvertTableRecordMixin,
-    ConvertTableRowData,
-    ConvertTableType,
-    FileCsvConvertId,
-)
+from zaimcsvconverter.models import Base
+from zaimcsvconverter.models import ConvertTableRecordMixin
+from zaimcsvconverter.models import ConvertTableRowData
+from zaimcsvconverter.models import ConvertTableType
+from zaimcsvconverter.models import FileCsvConvertId
 
 if TYPE_CHECKING:
     from pathlib import Path

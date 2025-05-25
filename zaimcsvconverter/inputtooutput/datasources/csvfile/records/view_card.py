@@ -5,7 +5,8 @@ from typing import Any
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow, InputStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStoreRow
 
 
 class ViewCardRow(InputRow[ViewCardRowData]):

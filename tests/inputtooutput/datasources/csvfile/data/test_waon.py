@@ -7,7 +7,8 @@ from pydantic import ValidationError
 
 from tests.testlibraries.assert_list import assert_each_properties
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.data.waon import ChargeKind, UseKind
+from zaimcsvconverter.data.waon import ChargeKind
+from zaimcsvconverter.data.waon import UseKind
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
 

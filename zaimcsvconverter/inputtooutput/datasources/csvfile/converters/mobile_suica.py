@@ -5,13 +5,11 @@ from typing import Callable
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mobile_suica import MobileSuicaRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import (
-    MobileSuicaBusEtCeteraRow,
-    MobileSuicaEnterExitRow,
-    MobileSuicaFirstRow,
-    MobileSuicaRow,
-    MobileSuicaStoreRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaBusEtCeteraRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaEnterExitRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaFirstRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaStoreRow
 
 
 class MobileSuicaRowFactory(InputRowFactory[MobileSuicaRowData, MobileSuicaRow]):

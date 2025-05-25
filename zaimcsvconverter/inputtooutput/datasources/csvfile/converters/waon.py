@@ -3,12 +3,10 @@
 from zaimcsvconverter.data.waon import UseKind
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import (
-    WaonChargeRow,
-    WaonRow,
-    WaonRowToSkip,
-    WaonStoreRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonChargeRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonRowToSkip
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.waon import WaonStoreRow
 
 
 class WaonRowFactory(InputRowFactory[WaonRowData, WaonRow]):
