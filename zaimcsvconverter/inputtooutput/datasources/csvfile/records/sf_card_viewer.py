@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from zaimcsvconverter.data.sf_card_viewer import Note
 from zaimcsvconverter.file_csv_convert import FileCsvConvert

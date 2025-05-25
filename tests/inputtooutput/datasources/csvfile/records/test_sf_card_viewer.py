@@ -2,8 +2,8 @@
 
 from datetime import datetime
 
-from pydantic import ValidationError
 import pytest
+from pydantic import ValidationError
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG

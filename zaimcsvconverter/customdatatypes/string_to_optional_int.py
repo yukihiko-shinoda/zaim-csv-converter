@@ -6,8 +6,8 @@ from typing import Annotated, Optional, Union
 from pydantic import BeforeValidator
 
 from zaimcsvconverter.customdatatypes.abstract_string_to_optional_int import (
-    abstract_constringtooptionalint,
     OptionalIntegerMustBeFromStr,
+    abstract_constringtooptionalint,
 )
 from zaimcsvconverter.customdatatypes.validators import (
     optional_int_validator,

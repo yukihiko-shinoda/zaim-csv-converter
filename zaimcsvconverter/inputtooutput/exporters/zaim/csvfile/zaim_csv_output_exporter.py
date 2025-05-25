@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import csv
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from zaimcsvconverter.inputtooutput.exporters import OutputModelExporter
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat

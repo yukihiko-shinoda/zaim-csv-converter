@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import ClassVar
 
 from tests.testlibraries.database_for_test import FixtureRecord
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
@@ -11,7 +12,6 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plu
     GoldPointCardPlus201912RowData,
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
@@ -31,11 +31,11 @@ class InstanceResource:
     ROW_DATA_WAON_PAYMENT_ITABASHIMAENOCHO = WAON_ROW_DATA_FACTORY.create(
         ["2018/8/30", "板橋前野町", "1,489円", "支払", "-"],
     )
+    # fmt: off
     ROW_DATA_WAON_UNSUPPORTED_CHARGE_KIND: ClassVar[list[str]] = [
-        # fmt: off
         "2018/8/7", "ファミリーマートかぶと町永代", "129円", "支払", "クレジットカード",
-        # fmt: on
     ]
+    # fmt: on
     ROW_DATA_WAON_CHARGE_POINT_ITABASHIMAENOCHO = WAON_ROW_DATA_FACTORY.create(
         ["2018/10/22", "板橋前野町", "1,504円", "チャージ", "ポイント"],
     )
@@ -54,28 +54,28 @@ class InstanceResource:
     ROW_DATA_WAON_DOWNLOAD_POINT_ITABASHIMAENOCHO = WAON_ROW_DATA_FACTORY.create(
         ["2018/10/22", "板橋前野町", "0円", "ポイントダウンロード", "-"],
     )
+    # fmt: off
     ROW_DATA_WAON_UNSUPPORTED_USE_KIND: ClassVar[list[str]] = [
-        # fmt: off
         "2018/8/7", "ファミリーマートかぶと町永代", "10000円", "入金", "-",
-        # fmt: on
     ]
+    # fmt: on
     GOLD_POINT_CARD_PLUS_ROW_DATA_FACTORY = RowDataFactory(GoldPointCardPlusRowData)
+    # fmt: off
     ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP = GOLD_POINT_CARD_PLUS_ROW_DATA_FACTORY.create(
         [
-            # fmt: off
             "2018/7/4", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ", "ご本人", "1回払い", "",  # noqa: RUF001
             "18/8", "3456", "3456", "", "", "", "", "",
-            # fmt: on
         ],
     )
+    # fmt: on
+    # fmt: off
     ROW_DATA_GOLD_POINT_CARD_PLUS_AMAZON_CO_JP_RETURN = GOLD_POINT_CARD_PLUS_ROW_DATA_FACTORY.create(
         [
-            # fmt: off
             "2018/12/18", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ", "ご本人", "1回払い", "",  # noqa: RUF001
             "18/8", "-7500", "-7500", "", "", "", "", "",
-            # fmt: on
         ],
     )
+    # fmt: on
     ROW_DATA_GOLD_POINT_CARD_PLUS_TOKYO_ELECTRIC = GOLD_POINT_CARD_PLUS_ROW_DATA_FACTORY.create(
         ["2018/7/3", "東京電力  電気料金等", "ご本人", "1回払い", "", "18/8", "11402", "11402", "", "", "", "", ""],
     )
@@ -89,14 +89,14 @@ class InstanceResource:
     ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_RETURN = GOLD_POINT_CARD_PLUS_201912_ROW_DATA_FACTORY.create(
         ["2020/12/18", "ＡＭＡＺＯＮ．ＣＯ．ＪＰ", "-7500", "１", "１", "-7500", "返品"],  # noqa: RUF001
     )
+    # fmt: off
     ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AWS = GOLD_POINT_CARD_PLUS_201912_ROW_DATA_FACTORY.create(
         [
-            # fmt: off
             "2019/11/03", "AMAZON WEB SERVICES (AWS.AMAZON.CO)", "66", "１", "１",  # noqa: RUF001
             "66", "0.60　USD　110.712　11 03",
-            # fmt: on
         ],
     )
+    # fmt: on
     ROW_DATA_GOLD_POINT_CARD_PLUS_201912_TOKYO_ELECTRIC = GOLD_POINT_CARD_PLUS_201912_ROW_DATA_FACTORY.create(
         ["2019/11/05", "東京電力  電気料金等", "11905", "１", "１", "11905", ""],  # noqa: RUF001
     )
@@ -119,22 +119,22 @@ class InstanceResource:
     ROW_DATA_MUFG_TRANSFER_INCOME_OWN_ACCOUNT = MUFG_ROW_DATA_FACTORY.create(
         ["2018/10/20", "口座振替３", "リヨウギンコウ０２８８", "", "10000", "1000000", "", "", "振替入金"],
     )
+    # fmt: off
     ROW_DATA_MUFG_TRANSFER_PAYMENT_GOLD_POINT_MARKETING = MUFG_ROW_DATA_FACTORY.create(
         [
-            # fmt: off
             "2018/10/29", "口座振替３", "ＧＰマ−ケテイング",  # noqa: RUF001
             "59260", "", "3000000", "", "", "振替支払い",
-            # fmt: on
         ],
     )
+    # fmt: on
     ROW_DATA_MUFG_TRANSFER_PAYMENT_TOKYO_WATERWORKS = MUFG_ROW_DATA_FACTORY.create(
         ["2018/11/28", "水道", "トウキヨウトスイドウ", "3628", "", "5000000", "", "", "振替支払い"],
     )
+    # fmt: off
     ROW_DATA_MUFG_UNSUPPORTED_NOTE: ClassVar[list[str]] = [
-        # fmt: off
         "2018/11/28", "水道", "トウキヨウトスイドウ", "3628", "", "5000000", "", "", "",
-        # fmt: on
     ]
+    # fmt: on
     SF_CARD_VIEWER_ROW_DATA_FACTORY = RowDataFactory(SFCardViewerRowData)
     ROW_DATA_SF_CARD_VIEWER_TRANSPORTATION_KOHRAKUEN_STATION = SF_CARD_VIEWER_ROW_DATA_FACTORY.create(
         ["2018/11/13", "", "メトロ", "六本木一丁目", "", "メトロ", "後楽園", "195", "3601", ""],
@@ -151,11 +151,11 @@ class InstanceResource:
     ROW_DATA_SF_CARD_VIEWER_BUS_TRAM = SF_CARD_VIEWER_ROW_DATA_FACTORY.create(
         ["2019/01/27", "", "", "", "", "", "", "195", "2896", "ﾊﾞｽ/路面等"],
     )
+    # fmt: off
     ROW_DATA_SF_CARD_VIEWER_UNSUPPORTED_NOTE: ClassVar[list[str]] = [
-        # fmt: off
         "2018/11/25", "", "東武", "北千住", "", "東武", "北千住", "0", "2621", "ﾁｬｰｼﾞ",
-        # fmt: on
     ]
+    # fmt: on
     AMAZON_ROW_DATA_FACTORY = RowDataFactory(AmazonRowData)
     ROW_DATA_AMAZON_ECHO_DOT = AMAZON_ROW_DATA_FACTORY.create(
         [

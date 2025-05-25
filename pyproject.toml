@@ -1,7 +1,69 @@
+[dependency-groups]
+dev = [
+    "bandit; python_version >= '3.7'",
+    "cohesion",
+    # The coverage==3.5.3 is difficult to analyze its dependencies by dependencies management tool,
+    # so we should avoid 3.5.3 or lower.
+    # - Command: "pipenv install --skip-lock" fails 
+    #   since it tries to parse legacy package metadata and raise InstallError
+    #   · Issue #5595 · pypa/pipenv
+    #   https://github.com/pypa/pipenv/issues/5595
+    "coverage>=3.5.4",
+    # The dlint less than 0.14.0 limits max version of flake8.
+    # - dlint/requirements.txt at 0.13.0 · dlint-py/dlint
+    #   https://github.com/dlint-py/dlint/blob/0.13.0/requirements.txt#L1
+    "dlint>=0.14.0",
+    # To the docformatter load pyproject.toml settings:
+    "docformatter[tomli]; python_version < '3.11' and python_version >= '3.6'",
+    "docformatter; python_version >= '3.11'",
+    "dodgy",
+    "exceptiongroup; python_version <= '3.10'",
+    "factory_boy",
+    "fixturefilehandler",
+    # The hacking depends flake8 ~=6.1.0 or ~=5.0.1 or ~=4.0.1.
+    # We should avoid the versions that is not compatible with the hacking,
+    # considering the speed of dependency calculation process
+    "flake8!=6.0.0,!=5.0.0,>=4.0.1; python_version >= '3.6'",
+    # To use flake8 --radon-show-closures
+    "flake8-polyfill",
+    # To use pyproject.toml for Flake8 configuration
+    "Flake8-pyproject",
+    # Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
+    # When unpin hacking, it has possibility to install too legacy version of hacking.
+    "hacking>=5.0.0; python_version >= '3.8'",
+    "invokelint>=0.8.1; python_version >= '3.7'",
+    "mypy",
+    # Currently, migration steps is difficult
+    "pydantic>=2.0.0",
+    "pydocstyle; python_version >= '3.6'",
+    "pylint",
+    "pytest",
+    "pytest-resource-path",
+    "pyvelocity; python_version >= '3.9'",
+    # Since the radon can't run when use pytest log format:
+    # - Radon can't run when use pytest log fornat: `$()d` · Issue #251 · rubik/radon
+    #   https://github.com/rubik/radon/issues/251
+    "radon<6.0.0",
+    "returns",
+    "ruff; python_version >= '3.7'",
+    "semgrep;python_version>='3.9' or python_version>='3.6' and platform_system=='Linux'",
+    "types-invoke",
+    "typing-extensions; python_version <= '3.10'",
+    "xenon",
+]
+
 [project]
 name = "zaimcsvconverter"
 version = "0.1.0"
+readme = "README.md"
 requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Yukihiko Shinoda", email = "yuk.hik.future@gmail.com"},
+]
+maintainers = [
+    {name = "Yukihiko Shinoda", email = "yuk.hik.future@gmail.com"},
+]
 dependencies = [
     # To collect error when validate input record
     "errorcollector",
@@ -17,63 +79,11 @@ dependencies = [
     "yamldataclassconfig",
 ]
 
-[dependency-groups]
-dev = [
-    "autoflake",
-    "bandit; python_version >= '3.7'",
-    "black",
-    "cohesion",
-    # Pipenv can't crawl coverage==3.5.3:
-    # - Command: "pipenv install --skip-lock" fails 
-    #   since it tries to parse legacy package metadata and raise InstallError
-    #   · Issue #5595 · pypa/pipenv
-    #   https://github.com/pypa/pipenv/issues/5595
-    "coverage>=3.5.4",
-    # The dlint less than 0.14.0 limits max version of flake8.
-    "dlint>=0.14.0",
-    "docformatter",
-    "dodgy",
-    "exceptiongroup; python_version <= '3.10'",
-    "factory_boy",
-    "fixturefilehandler",
-    # Since Pipenv can't lock for too much combinations to attempt lock:
-    # pip._vendor.resolvelib.resolvers.ResolutionTooDeep: 2000000
-    # The hacking depends flake8 ~=6.1.0 or ~=5.0.1 or ~=4.0.1.
-    "flake8!=6.0.0,!=5.0.0,>=4.0.1; python_version >= '3.6'",
-    # To use flake8 --radon-show-closures
-    "flake8-polyfill",
-    # Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
-    # When unpin hacking, it has possibility to install too legacy version of hacking.
-    "hacking>=5.0.0; python_version >= '3.8'",
-    "invokelint>=0.8.1; python_version >= '3.7'",
-    "isort",
-    "mypy",
-    # Currentry, migration steps is difficult
-    "pydantic>=2.0.0",
-    "pydocstyle; python_version >= '3.6'",
-    "pylint",
-    "pytest",
-    "pytest-resource-path",
-    "pyvelocity; python_version >= '3.9'",
-    # - Radon can't run when use pytest log fornat: `$()d` · Issue #251 · rubik/radon
-    #   https://github.com/rubik/radon/issues/251
-    "radon<6.0.0",
-    "returns",
-    "ruff",
-    "semgrep; python_version >= '3.6'",
-    "types-invoke",
-    "typing-extensions; python_version <= '3.10'",
-    "xenon",
-]
 [tool.setuptools.packages.find]
 include = ["zaimcsvconverter", "zaimcsvconverter.*"]
 
 [tool.bandit.assert_used]
 skips = ["tests/*.py"]
-
-# see: https://black.readthedocs.io/en/stable/pyproject_toml.html#configuration-format
-[tool.black]
-line-length = 119
 
 [tool.coverage.report]
 exclude_also = [
@@ -91,30 +101,28 @@ source = ["zaimcsvconverter"]
 
 [tool.docformatter]
 recursive = true
+pre_summary_space = true
 wrap-descriptions = 119
 wrap-summaries = 119
 
-[tool.isort]
-# see:
-# - Using Black with other tools - Black 23.1.0 documentation
-#   https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#custom-configuration
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-line_length = 119
-# For compatibility with PyLint and Hacking, Google also supports, 
-# Black doesn't have any opinions
-# see:
-# - https://pycqa.github.io/isort/docs/configuration/profiles.html
-# - https://qiita.com/kaityo256/items/5b0b55d105ef2366cb0c
-# - https://www.xn--ebkc7kqd.com/entry/hacking-isort
-force_sort_within_sections = true
-lexicographical = true
-# Google supports, Black doesn't have any opinions
-# see: https://pycqa.github.io/isort/docs/configuration/profiles.html
-order_by_type = false
+[tool.flake8]
+# @see https://github.com/psf/black/blob/master/README.md#line-length
+max_line_length = 119
+extend_ignore = [
+  "E203",
+  # Since it conflicts with Black, Black and its philosophy should be respect than hacking.
+  # see: https://github.com/psf/black
+  "H301",
+  # 2025-05-24 Now openstack/hacking wasn't introduced into Ruff and sorting imports is mainly considered with isort.
+  "H306",
+  # Cohesion may be in experimental.
+  "H601",
+]
+statistics = true
+show_source = true
+exclude = [
+  ".venv",
+]
 
 [tool.mypy]
 strict = true
@@ -131,21 +139,25 @@ module = [
 ignore_missing_imports = true
 
 [tool.pydocstyle]
-# To add Google convention
-# see:
-# - Error Codes — pydocstyle 6.1.1 documentation
-#   http://www.pydocstyle.org/en/stable/error_codes.html#default-conventions
-add_select = ["D212", "D214", "D410", "D411", "D415", "D416", "D417"]
-# D400: First line may ends with ":" for expression.
-# D402: First line may ends with function signature for expression.
-# D415: First line may ends with ":" for expression.
-# D101: Docstring may be missed in public class since docstring-min-length is set.
-# D102: Docstring may be missed in public method since docstring-min-length is set.
-# D103: Docstring may be missed in public function since docstring-min-length is set.
-# D105: Docstring may be missed in magic method since docstring-min-length is set.
-# D105: Docstring may be missed in public nested class since docstring-min-length is set.
-# D107: Docstring may be missed in __init__ method since docstring-min-length is set.
-add_ignore = ["D400", "D401", "D402", "D415", "D101", "D102", "D103", "D105", "D106", "D107"]
+convention = "google"
+add_ignore = [
+    # Reason: Docstring may be missed in public class since docstring-min-length is set.
+    "D101",  # Missing docstring in public class
+    # Reason: Docstring may be missed in public method since docstring-min-length is set.
+    "D102",  # Missing docstring in public method
+    # Reason: Docstring may be missed in public function since docstring-min-length is set.
+    "D103",  # Missing docstring in public function
+    # Reason: Docstring may be missed in magic method since docstring-min-length is set.
+    "D105",  # Missing docstring in magic method
+    # Reason: Docstring may be missed in public nested class since docstring-min-length is set.
+    "D106",  # Missing docstring in public nested class
+    # Reason: Docstring may be missed in __init__ method since docstring-min-length is set.
+    "D107",  # Missing docstring in __init__
+    # Reason: First line may ends with function signature for expression.
+    "D402",  # First line should not be the function’s “signature”
+    # Reason: First line may ends with ":" for expression.
+    "D415",  # First line should end with a period, question mark, or exclamation point
+]
 
 [tool.pylint.basic]
 docstring-min-length = "7"
@@ -166,6 +178,11 @@ markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
 ]
 
+[tool.radon]
+cc_min = "B"
+show_complexity = true
+show_mi = true
+
 [tool.ruff]
 line-length = 119
 
@@ -175,9 +192,9 @@ select = [
     "E",  # pycodestyle
     "W",  # pycodestyle
     "C90",  # mccabe
-    # "I",  # isort
+    "I",  # isort
     "N",  # pep8-naming
-    # "D",  # pydocstyle
+    "D",  # pydocstyle
     "UP",  # pyupgrade
     "YTT",  # flake8-2020
     "ANN",  # flake8-annotations
@@ -219,7 +236,26 @@ select = [
     "RUF",  # Ruff-specific rules
 ]
 ignore = [
+    # lint.pydocstyle
+    # Reason: Docstring may be missed in public class since docstring-min-length is set.
+    "D101",  # Missing docstring in public class
+    # Reason: Docstring may be missed in public method since docstring-min-length is set.
+    "D102",  # Missing docstring in public method
+    # Reason: Docstring may be missed in public function since docstring-min-length is set.
+    "D103",  # Missing docstring in public function
+    # Reason: Docstring may be missed in magic method since docstring-min-length is set.
+    "D105",  # Missing docstring in magic method
+    # Reason: Docstring may be missed in public nested class since docstring-min-length is set.
+    "D106",  # Missing docstring in public nested class
+    # Reason: Docstring may be missed in __init__ method since docstring-min-length is set.
+    "D107",  # Missing docstring in __init__
+    # Reason: First line may ends with function signature for expression.
+    "D402",  # First line should not be the function’s “signature”
+    # Reason: First line may ends with ":" for expression.
+    "D415",  # First line should end with a period, question mark, or exclamation point
+    # To support for Python 3.5 in the future
     "UP032",  # [*] Use f-string instead of `format` call
+    # Currently, there are too many Any types in the codebase
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed, These warnings are disabled by default
     # Python 3.9 incompatible
     "UP007",  # Use X | Y for type annotations
@@ -227,6 +263,7 @@ ignore = [
 fixable = [
     "COM812",  # Trailing comma missing
     "EM102",  # Exception must not use an f-string literal, assign to variable first
+    "I",  # isort
     "PT001",  # Use `@pytest.fixture()` over `@pytest.fixture`
     "PT006",  # Wrong name(s) type in `@pytest.mark.parametrize`, expected `tuple`
     "UP006",  # Use {} instead of {} for type annotations
@@ -243,3 +280,6 @@ unfixable = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
-from typing import cast, Generic, Optional, TypeVar
+from typing import Generic, Optional, TypeVar, cast
 
 from returns.primitives.hkt import Kind1, kinded
 

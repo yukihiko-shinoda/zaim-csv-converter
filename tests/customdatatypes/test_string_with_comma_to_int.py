@@ -3,9 +3,9 @@
 import datetime
 from typing import Any
 
+import pytest
 from pydantic.dataclasses import dataclass
 from pydantic_core import ValidationError
-import pytest
 
 from tests.customdatatypes import create
 from zaimcsvconverter.customdatatypes.string_with_comma_to_int import StrictStringWithCommaToInt

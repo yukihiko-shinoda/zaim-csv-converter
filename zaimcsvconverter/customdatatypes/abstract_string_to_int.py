@@ -1,18 +1,22 @@
 """Custom data type to convert string to int."""
 
 from abc import abstractmethod
-from typing import Any, Callable, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from pydantic import ConfigDict, GetCoreSchemaHandler
 from pydantic.v1 import errors
-from pydantic.v1.types import ConstrainedNumberMeta, OptionalInt, update_not_none  # type: ignore[attr-defined]
 
 # Reason: Pylint's bug. pylint: disable-next=no-name-in-module
-from pydantic.v1.types import int_validator  # type: ignore[attr-defined]
-from pydantic.v1.types import strict_int_validator  # type: ignore[attr-defined]
+from pydantic.v1.types import (  # type: ignore[attr-defined]
+    ConstrainedNumberMeta,
+    OptionalInt,
+    int_validator,
+    strict_int_validator,
+    update_not_none,
+)
 from pydantic.v1.utils import almost_equal_floats
-from pydantic_core.core_schema import no_info_after_validator_function
 from pydantic_core import CoreSchema
+from pydantic_core.core_schema import no_info_after_validator_function
 
 if TYPE_CHECKING:
     # Reason: Prioritize typing

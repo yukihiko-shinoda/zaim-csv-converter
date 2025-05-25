@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from zaimcsvconverter.data.mobile_suica import Kind1, Kind2
 from zaimcsvconverter.file_csv_convert import FileCsvConvert

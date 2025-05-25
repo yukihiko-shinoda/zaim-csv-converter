@@ -1,13 +1,13 @@
 """CSV datasource."""
 
 from collections.abc import Generator
-from typing import cast, Generic, Optional
+from typing import Generic, Optional, cast
 
 from godslayer.exceptions import InvalidFooterError, InvalidHeaderError
 from pydantic import ValidationError
 
-from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.exceptions import InvalidCellError, InvalidRecordError, LogicError, SkipRecord
+from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord, DataSource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor

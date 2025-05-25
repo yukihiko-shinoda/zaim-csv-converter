@@ -1,8 +1,8 @@
 """This module implements convert steps from SFCard Viewer input row to Zaim row."""
 
+import re
 from datetime import datetime
 from pathlib import Path
-import re
 from typing import Callable, Optional
 
 from returns.primitives.hkt import Kind1

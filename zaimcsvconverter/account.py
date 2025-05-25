@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from enum import Enum
-import re
-from typing import Generic, TYPE_CHECKING
+from typing import TYPE_CHECKING, Generic
 
 from godslayer.god_slayer_factory import GodSlayerFactory
 
@@ -46,6 +46,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sbi_sumishin_
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.view_card import ViewCardRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.waon import WaonRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
@@ -58,7 +59,6 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pal import PayP
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pay_card import PayPayCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
@@ -76,12 +76,11 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     """This class implements recipe for converting steps for WAON CSV."""
 
     # pylint: disable=invalid-name
+    # fmt: off
     GOD_SLAYER_FACTORY_SF_CARD_VIEWER: GodSlayerFactory = field(
         default=GodSlayerFactory(
-            # fmt: off
             header=["利用年月日", "定期", "鉄道会社名", "入場駅/事業者名", "定期", "鉄道会社名", "出場駅/降車場所", "利用額(円)", "残額(円)", "メモ"],  # noqa: E501 pylint: disable=line-too-long
             encoding="shift_jis_2004",
-            # fmt: on
         ),
         init=False,
     )
@@ -89,21 +88,18 @@ class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
     GOD_SLAYER_FACTORY_AMAZON: GodSlayerFactory = field(
         default=GodSlayerFactory(
             header=[
-                # fmt: off
                 "注文日", "注文番号", "商品名", "付帯情報", "価格", "個数", "商品小計", "注文合計", "お届け先", "状態", "請求先", "請求額", "クレカ請求日",  # noqa: E501 pylint: disable=line-too-long
                 "クレカ請求額", "クレカ種類", "注文概要URL", "領収書URL", "商品URL",
-                # fmt: on
             ],
             partition=[
-                # fmt: off
                 r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",  # noqa: RUF001,RUF100,E501 pylint: disable=line-too-long
                 r".*", r".*", r".*", "",
-                # fmt: on
             ],
             encoding="utf-8-sig",
         ),
         init=False,
     )
+    # fmt: on
     regex_csv_file_name: str
     god_slayer_factory: GodSlayerFactory
     input_row_data_class: type[TypeVarInputRowData]
@@ -148,15 +144,14 @@ class Account(Enum):
         GoldPointCardPlus201912RowFactory(),
         GoldPointCardPlus201912ZaimRowConverterFactory(),
     )
+    # fmt: off
     GOLD_POINT_CARD_PLUS_202009 = AccountContext(
         r".*gold_point_card_plus_202009.*\.csv",
         GodSlayerFactory(
-            # fmt: off
             header=[
                 r".*　様", r"[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}-[0-9\*]{4}", "ゴールドポイントカードプラス",
                 "", "", "", "",
             ],
-            # fmt: on
             footer=["^$", "^$", "^$", "^$", "^$", r"^\d*$", "^$"],
             encoding="shift_jis_2004",
         ),
@@ -167,18 +162,17 @@ class Account(Enum):
     MUFG = AccountContext(
         r".*mufg.*\.csv",
         GodSlayerFactory(
-            # fmt: off
             header=[
                 "日付", "摘要", "摘要内容", "支払い金額", "預かり金額",
                 "差引残高", "メモ", "未資金化区分", "入払区分",
             ],
-            # fmt: on
             encoding="shift_jis_2004",
         ),
         MufgRowData,
         MufgRowFactory(),
         MufgZaimRowConverterFactory(),
     )
+    # fmt: on
     PASMO = AccountContext(
         r".*pasmo.*\.csv",
         AccountContext.GOD_SLAYER_FACTORY_SF_CARD_VIEWER,
@@ -252,20 +246,20 @@ class Account(Enum):
         SBISumishinNetBankRowFactory(),
         SBISumishinNetBankZaimRowConverterFactory(),
     )
+    # fmt: off
     PAY_PAY_CARD = AccountContext(
         r".*pay_pay_card.*\.csv",
         GodSlayerFactory(
-            # fmt: off
             header=[
                 "利用日/キャンセル日", "利用店名・商品名", "利用者", "支払区分", "利用金額",
                 "手数料", "支払総額", "当月支払金額", "翌月以降繰越金額", "調整額", "当月お支払日",
             ],
-            # fmt: on
         ),
         PayPayCardRowData,
         PayPayCardRowFactory(),
         PayPayCardZaimRowConverterFactory(),
     )
+    # fmt: on
     MOBILE_SUICA = AccountContext(
         r".*mobile_suica.*\.csv",
         GodSlayerFactory(header=["月日", "種別", "利用場所", "種別", "利用場所", "残高", "入金・利用額"]),

@@ -2,8 +2,8 @@
 
 from datetime import datetime
 
-from pydantic import ValidationError
 import pytest
+from pydantic import ValidationError
 
 from tests.testlibraries.assert_list import assert_each_properties
 from tests.testlibraries.instance_resource import InstanceResource

@@ -1,7 +1,7 @@
 """Validators."""
 
 from decimal import Decimal
-from typing import Any, Optional, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 # pylint: disable=no-name-in-module
 from pydantic.v1.validators import (

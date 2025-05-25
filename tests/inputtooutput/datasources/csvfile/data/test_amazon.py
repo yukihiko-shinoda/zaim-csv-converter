@@ -3,8 +3,8 @@
 from datetime import datetime
 
 from tests.testlibraries.assert_list import assert_each_properties
-from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
 
 
 # Reason: Unluckily duplicate specification with Amazon 201911. pylint: disable=duplicate-code

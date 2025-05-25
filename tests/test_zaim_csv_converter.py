@@ -5,8 +5,8 @@ from logging import getLogger
 from pathlib import Path
 from typing import Optional
 
-from fixturefilehandler.file_paths import RelativeDeployFilePath
 import pytest
+from fixturefilehandler.file_paths import RelativeDeployFilePath
 
 from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.integration_test_expected_factory import (

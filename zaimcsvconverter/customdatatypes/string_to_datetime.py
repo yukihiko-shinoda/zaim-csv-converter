@@ -5,8 +5,8 @@ from datetime import datetime
 from typing import Any
 
 from pydantic import GetCoreSchemaHandler
-from pydantic_core.core_schema import no_info_after_validator_function
 from pydantic_core import CoreSchema
+from pydantic_core.core_schema import no_info_after_validator_function
 
 
 class StringToDateTime(datetime):

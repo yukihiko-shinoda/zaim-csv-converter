@@ -2,20 +2,20 @@
 
 from __future__ import annotations
 
+import re
+import warnings
 from abc import abstractmethod
 from contextlib import suppress
 from dataclasses import dataclass
 from enum import Enum
-import re
 from types import DynamicClassAttribute
-from typing import Any, cast, Generic, Optional, TypeVar
-import warnings
+from typing import Any, Generic, Optional, TypeVar, cast
 
 from inflector import Inflector
-from sqlalchemy import exc, Integer, select, String, UniqueConstraint
+from sqlalchemy import Integer, String, UniqueConstraint, exc, select
 from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm import Mapped, declarative_mixin, declared_attr, mapped_column
 from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
-from sqlalchemy.orm import declarative_mixin, declared_attr, Mapped, mapped_column
 
 from zaimcsvconverter import Session
 

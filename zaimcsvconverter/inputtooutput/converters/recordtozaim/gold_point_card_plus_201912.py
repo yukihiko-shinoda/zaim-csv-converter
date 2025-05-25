@@ -1,7 +1,7 @@
 """This module implements convert steps from GOLD POINT CARD + input row to Zaim row."""
 
 from pathlib import Path
-from typing import cast, Optional
+from typing import Optional, cast
 
 from returns.primitives.hkt import Kind1
 

@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass, field
 
-from godslayer.god_slayer_factory import GodSlayerFactory
 import pytest
+from godslayer.god_slayer_factory import GodSlayerFactory
 
 from zaimcsvconverter.account import AccountContext
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaimRowConverterFactory

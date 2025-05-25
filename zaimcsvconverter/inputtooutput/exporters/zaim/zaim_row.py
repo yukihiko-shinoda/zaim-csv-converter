@@ -1,7 +1,7 @@
 """This module implements abstract row model of Zaim CSV."""
 
 from abc import abstractmethod
-from typing import Optional, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 from zaimcsvconverter.inputtooutput.exporters import OutputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
