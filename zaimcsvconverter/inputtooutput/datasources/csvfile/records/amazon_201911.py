@@ -1,12 +1,18 @@
 """This module implements row model of Amazon.co.jp CSV version 201911."""
 
-from typing import Any, Optional
+from __future__ import annotations
+
+from typing import Any
+from typing import Optional
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputItemRow, InputRow
-from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputItemRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
+from zaimcsvconverter.models import FileCsvConvertId
+from zaimcsvconverter.models import Store
+from zaimcsvconverter.models import StoreRowData
 
 
 class Amazon201911Row(InputRow[Amazon201911RowData]):

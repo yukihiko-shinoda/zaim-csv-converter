@@ -9,13 +9,25 @@ from contextlib import suppress
 from dataclasses import dataclass
 from enum import Enum
 from types import DynamicClassAttribute
-from typing import Any, Generic, Optional, TypeVar, cast
+from typing import Any
+from typing import Generic
+from typing import Optional
+from typing import TypeVar
+from typing import cast
 
 from inflector import Inflector
-from sqlalchemy import Integer, String, UniqueConstraint, exc, select
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import UniqueConstraint
+from sqlalchemy import exc
+from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.orm import Mapped, declarative_mixin, declared_attr, mapped_column
-from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import declarative_mixin
+from sqlalchemy.orm import declared_attr
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm.decl_api import DeclarativeMeta
+from sqlalchemy.orm.decl_api import registry
 
 from zaimcsvconverter import Session
 

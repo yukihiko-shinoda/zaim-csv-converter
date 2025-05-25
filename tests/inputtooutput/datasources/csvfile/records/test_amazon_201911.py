@@ -5,12 +5,11 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import (
-    Amazon201911DiscountRow,
-    Amazon201911PaymentRow,
-    Amazon201911ShippingHandlingRow,
-)
-from zaimcsvconverter.models import Item, Store
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911DiscountRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911PaymentRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911ShippingHandlingRow
+from zaimcsvconverter.models import Item
+from zaimcsvconverter.models import Store
 
 
 class TestAmazon201911DiscountRow:

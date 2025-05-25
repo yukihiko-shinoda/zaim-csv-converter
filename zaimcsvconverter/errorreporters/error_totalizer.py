@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
+from typing import Union
 
 from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler

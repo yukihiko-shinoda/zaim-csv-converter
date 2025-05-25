@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import Any, Optional
+from typing import Any
+from typing import Optional
 
 from zaimcsvconverter.data.mufg import CashFlowKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow, InputStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStoreRow
 
 
 class MufgRow(InputRow[MufgRowData]):

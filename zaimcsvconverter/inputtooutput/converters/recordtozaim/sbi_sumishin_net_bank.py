@@ -1,24 +1,31 @@
 """This module implements convert steps from SBI Sumishin net bank input row to Zaim row."""
 
-from pathlib import Path
-from typing import Optional, Union, cast
+from __future__ import annotations
 
-from returns.primitives.hkt import Kind1
+from typing import TYPE_CHECKING
+from typing import Optional
+from typing import Union
+from typing import cast
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimIncomeRowStoreConverter,
-    ZaimPaymentRowStoreConverter,
-    ZaimRowConverter,
-    ZaimTransferRowConverter,
-)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimIncomeRowStoreConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowStoreConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimTransferRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import (
-    SBISumishinNetBankDepositRow,
-    SBISumishinNetBankRow,
-    SBISumishinNetBankWithdrawalRow,
+    SBISumishinNetBankDepositRow,  # noqa: H301,RUF100
 )
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import SBISumishinNetBankRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import (
+    SBISumishinNetBankWithdrawalRow,  # noqa: H301,RUF100
+)
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from returns.primitives.hkt import Kind1
 
 
 class SBISumishinNetBankZaimPaymentRowConverter(

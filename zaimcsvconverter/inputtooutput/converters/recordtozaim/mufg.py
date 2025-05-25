@@ -3,32 +3,36 @@
 @see https://faq01.bk.mufg.jp/usr/file/attachment/main_contents_0401.pdf
 """
 
-from abc import ABC, abstractmethod
-from pathlib import Path
-from typing import Optional, TypeVar, cast
+from __future__ import annotations
 
-from returns.primitives.hkt import Kind1
+from abc import ABC
+from abc import abstractmethod
+from typing import TYPE_CHECKING
+from typing import Optional
+from typing import TypeVar
+from typing import cast
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimIncomeRowStoreConverter,
-    ZaimPaymentRowStoreConverter,
-    ZaimRowConverter,
-    ZaimTransferRowConverter,
-)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimIncomeRowStoreConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowStoreConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimTransferRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import (
-    MufgIncomeFromOthersRow,
-    MufgIncomeFromSelfRow,
-    MufgIncomeRow,
-    MufgPaymentRow,
-    MufgPaymentToMufgRow,
-    MufgPaymentToSelfRow,
-    MufgPaymentToSomeoneRow,
-    MufgRow,
-    MufgStoreRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgIncomeFromOthersRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgIncomeFromSelfRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgIncomeRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentToMufgRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentToSelfRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentToSomeoneRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgStoreRow
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from returns.primitives.hkt import Kind1
 
 TypeVarMufgRow = TypeVar("TypeVarMufgRow", bound=MufgRow)
 TypeVarMufgIncomeRow = TypeVar("TypeVarMufgIncomeRow", bound=MufgIncomeRow)

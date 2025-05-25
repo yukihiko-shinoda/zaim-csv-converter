@@ -4,7 +4,9 @@ import csv
 from pathlib import Path
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
-from zaimcsvconverter.models import Base, ConvertTableRecordMixin, ConvertTableRowData
+from zaimcsvconverter.models import Base
+from zaimcsvconverter.models import ConvertTableRecordMixin
+from zaimcsvconverter.models import ConvertTableRowData
 
 
 class ConvertTableImporter:
@@ -23,10 +25,8 @@ class ConvertTableImporter:
         file_csv_convert: FileCsvConvert,
         path: Path,
     ) -> list[ConvertTableRecordMixin[Base, ConvertTableRowData]]:
-        list_convert_table = []
         with path.open("r", encoding="UTF-8") as file_convert_table:
-            for list_convert_table_row_standard_type_value in csv.reader(file_convert_table):
-                list_convert_table.append(
-                    file_csv_convert.create_convert_table_row_instance(list_convert_table_row_standard_type_value),
-                )
-        return list_convert_table
+            return [
+                file_csv_convert.create_convert_table_row_instance(list_convert_table_row_standard_type_value)
+                for list_convert_table_row_standard_type_value in csv.reader(file_convert_table)
+            ]

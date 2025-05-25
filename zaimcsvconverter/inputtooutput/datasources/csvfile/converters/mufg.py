@@ -3,14 +3,12 @@
 from zaimcsvconverter.data.mufg import CashFlowKind
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import (
-    MufgIncomeFromOthersRow,
-    MufgIncomeFromSelfRow,
-    MufgPaymentToMufgRow,
-    MufgPaymentToSelfRow,
-    MufgPaymentToSomeoneRow,
-    MufgRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgIncomeFromOthersRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgIncomeFromSelfRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentToMufgRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentToSelfRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentToSomeoneRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgRow
 
 
 class MufgRowFactory(InputRowFactory[MufgRowData, MufgRow]):

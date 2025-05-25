@@ -6,7 +6,8 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardNotStoreRow, ViewCardStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardNotStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardStoreRow
 from zaimcsvconverter.models import Store
 
 

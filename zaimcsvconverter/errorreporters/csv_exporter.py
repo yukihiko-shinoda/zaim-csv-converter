@@ -1,9 +1,14 @@
 """This module implements CSV export."""
 
+from __future__ import annotations
+
 import csv
-from collections.abc import Iterable
-from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Union
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+    from pathlib import Path
 
 
 class CsvExporter:

@@ -4,7 +4,9 @@ from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputItemRow
-from zaimcsvconverter.models import FileCsvConvertId, Store, StoreRowData
+from zaimcsvconverter.models import FileCsvConvertId
+from zaimcsvconverter.models import Store
+from zaimcsvconverter.models import StoreRowData
 
 
 # pylint: disable=too-many-instance-attributes

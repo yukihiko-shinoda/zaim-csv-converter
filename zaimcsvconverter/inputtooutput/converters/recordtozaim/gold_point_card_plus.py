@@ -5,11 +5,9 @@ from pathlib import Path
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimPaymentRowStoreConverter,
-    ZaimRowConverter,
-)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowStoreConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus import GoldPointCardPlusRow
 

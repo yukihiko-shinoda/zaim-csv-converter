@@ -1,18 +1,17 @@
 """Custom data type to convert string with comma to optional int."""
 
-from typing import Annotated, Optional
+from __future__ import annotations
+
+from typing import Annotated
+from typing import Optional
 
 from pydantic import BeforeValidator
 
-from zaimcsvconverter.customdatatypes.abstract_string_to_optional_int import (
-    OptionalIntegerMustBeFromStr,
-    abstract_constringtooptionalint,
-)
-from zaimcsvconverter.customdatatypes.validators import (
-    optional_number_multiple_validator,
-    optional_number_size_validator,
-    optional_strict_int_validator,
-)
+from zaimcsvconverter.customdatatypes.abstract_string_to_optional_int import OptionalIntegerMustBeFromStr
+from zaimcsvconverter.customdatatypes.abstract_string_to_optional_int import abstract_constringtooptionalint
+from zaimcsvconverter.customdatatypes.validators import optional_number_multiple_validator
+from zaimcsvconverter.customdatatypes.validators import optional_number_size_validator
+from zaimcsvconverter.customdatatypes.validators import optional_strict_int_validator
 from zaimcsvconverter.utility import Utility
 
 try:

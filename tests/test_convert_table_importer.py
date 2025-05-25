@@ -7,7 +7,8 @@ import pytest
 from sqlalchemy.orm.session import Session as SQLAlchemySession
 
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
-from zaimcsvconverter.models import Item, Store
+from zaimcsvconverter.models import Item
+from zaimcsvconverter.models import Store
 
 
 class TestConvertTableImporter:
@@ -56,12 +57,10 @@ class TestConvertTableImporter:
                 [
                     6,
                     5,
-                    "".join(
-                        [
-                            "LITTLE TREEチェアマット 120×90cm厚1.5mm 床を保護 ",  # noqa: RUF001
-                            "机の擦り傷防止滑り止め カート可能 透明大型デスク足元マット ",
-                            "フローリング/畳/床暖房対応 (120×90cm)",  # noqa: RUF001
-                        ],
+                    (
+                        "LITTLE TREEチェアマット 120×90cm厚1.5mm 床を保護 "  # noqa: RUF001
+                        "机の擦り傷防止滑り止め カート可能 透明大型デスク足元マット "
+                        "フローリング/畳/床暖房対応 (120×90cm)"  # noqa: RUF001
                     ),
                     "住まい",
                     "家具",

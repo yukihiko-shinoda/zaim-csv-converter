@@ -9,11 +9,9 @@ from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import (
-    SFCardViewerEnterExitRow,
-    SFCardViewerEnterRow,
-    SFCardViewerRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerEnterExitRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerEnterRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sf_card_viewer import SFCardViewerRow
 from zaimcsvconverter.models import Store
 
 
@@ -91,7 +89,7 @@ class TestSFCardViewerExitByWindowRow:
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_sf_card_viewer")
     def test_create_fail() -> None:
         """Method should raise ValueError when note is not defined."""
-        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501  # pylint: disable=line-too-long
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # pylint: disable=line-too-long
         #   https://github.com/pydantic/pydantic/issues/9140
         index_note = 9
         with pytest.raises(ValidationError) as excinfo:
@@ -100,6 +98,4 @@ class TestSFCardViewerExitByWindowRow:
         assert len(excinfo.value.errors()) == 1
         error = excinfo.value.errors()[0]
         assert error["loc"] == (index_note,)
-        assert error["msg"] == "".join(
-            ["Input should be '', '物販', 'ｵｰﾄﾁｬｰｼﾞ', '窓出' or 'ﾊﾞｽ/路面等'"],
-        )
+        assert error["msg"] == "Input should be '', '物販', 'ｵｰﾄﾁｬｰｼﾞ', '窓出' or 'ﾊﾞｽ/路面等'"

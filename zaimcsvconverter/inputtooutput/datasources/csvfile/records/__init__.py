@@ -3,19 +3,25 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Callable, Generic, Optional, TypeVar
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Callable
+from typing import Generic
+from typing import Optional
+from typing import TypeVar
 
-from errorcollector import MultipleErrorCollector, SingleErrorCollector
+from errorcollector import MultipleErrorCollector
+from errorcollector import SingleErrorCollector
 
-from zaimcsvconverter.exceptions import InvalidCellError, UndefinedContentError
+from zaimcsvconverter.exceptions import InvalidCellError
+from zaimcsvconverter.exceptions import UndefinedContentError
 from zaimcsvconverter.inputtooutput.datasources import AbstractInputRecord
-from zaimcsvconverter.inputtooutput.datasources.csvfile.data import (
-    TypeVarInputItemRowData,
-    TypeVarInputRowData,
-    TypeVarInputStoreItemRowData,
-    TypeVarInputStoreRowData,
-)
-from zaimcsvconverter.models import Item, Store
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputItemRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputStoreItemRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputStoreRowData
+from zaimcsvconverter.models import Item
+from zaimcsvconverter.models import Store
 
 if TYPE_CHECKING:
     from datetime import datetime

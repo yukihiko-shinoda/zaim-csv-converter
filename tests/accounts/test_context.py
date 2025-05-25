@@ -1,11 +1,12 @@
 """Tests for account_dependency.py ."""
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field
 
 import pytest
 from godslayer.god_slayer_factory import GodSlayerFactory
 
-from zaimcsvconverter.account import AccountContext
+from zaimcsvconverter.accounts.context import AccountContext
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.waon import WaonRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData

@@ -7,7 +7,8 @@ import pytest
 from tests.testlibraries.assert_list import assert_each_properties
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon import AmazonRow
-from zaimcsvconverter.models import Item, Store
+from zaimcsvconverter.models import Item
+from zaimcsvconverter.models import Store
 
 
 class TestAmazonRow:

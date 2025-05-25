@@ -1,12 +1,13 @@
 """Tests for input_csv.py."""
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Any
 
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.account import Account, AccountContext
+from zaimcsvconverter.accounts.enum import Account
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
 from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
@@ -15,6 +16,9 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.record_to_zaim_conve
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_file import Csv
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
+
+if TYPE_CHECKING:
+    from zaimcsvconverter.accounts.context import AccountContext
 
 
 class TestConvertWorkflow:

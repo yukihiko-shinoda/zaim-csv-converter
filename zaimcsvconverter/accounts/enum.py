@@ -1,29 +1,29 @@
-"""This module implements constants which suitable module to belong is not defined."""
+"""The constants for accounts in Zaim."""
 
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
 from enum import Enum
-from typing import TYPE_CHECKING, Generic
+from typing import TYPE_CHECKING
 
 from godslayer.god_slayer_factory import GodSlayerFactory
 
 from zaimcsvconverter import CONFIG
+from zaimcsvconverter.accounts.context import AccountContext
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import Amazon201911ZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus import (
-    GoldPointCardPlusZaimRowConverterFactory,
+    GoldPointCardPlusZaimRowConverterFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912ZaimRowConverterFactory,
+    GoldPointCardPlus201912ZaimRowConverterFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mobile_suica import MobileSuicaZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pal import PayPalZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pay_card import PayPayCardZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sbi_sumishin_net_bank import (
-    SBISumishinNetBankZaimRowConverterFactory,
+    SBISumishinNetBankZaimRowConverterFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import SFCardViewerZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.view_card import ViewCardZaimRowConverterFactory
@@ -31,27 +31,26 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.waon import WaonZaim
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.amazon import AmazonRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.amazon_201911 import Amazon201911RowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.gold_point_card_plus import (
-    GoldPointCardPlusRowFactory,
+    GoldPointCardPlusRowFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowFactory,
+    GoldPointCardPlus201912RowFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.mobile_suica import MobileSuicaRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.mufg import MufgRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pal import PayPalRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pay_card import PayPayCardRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sbi_sumishin_net_bank import (
-    SBISumishinNetBankRowFactory,
+    SBISumishinNetBankRowFactory,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sf_card_viewer import SFCardViewerRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.view_card import ViewCardRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.waon import WaonRowFactory
-from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import AmazonRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,
+    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mobile_suica import MobileSuicaRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
@@ -61,50 +60,9 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_ba
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records import TypeVarInputRow
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-    from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
-    from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
-
-
-@dataclass
-# pylint: disable=too-many-instance-attributes
-class AccountContext(Generic[TypeVarInputRowData, TypeVarInputRow]):
-    """This class implements recipe for converting steps for WAON CSV."""
-
-    # pylint: disable=invalid-name
-    # fmt: off
-    GOD_SLAYER_FACTORY_SF_CARD_VIEWER: GodSlayerFactory = field(
-        default=GodSlayerFactory(
-            header=["利用年月日", "定期", "鉄道会社名", "入場駅/事業者名", "定期", "鉄道会社名", "出場駅/降車場所", "利用額(円)", "残額(円)", "メモ"],  # noqa: E501 pylint: disable=line-too-long
-            encoding="shift_jis_2004",
-        ),
-        init=False,
-    )
-    # pylint: disable=invalid-name
-    GOD_SLAYER_FACTORY_AMAZON: GodSlayerFactory = field(
-        default=GodSlayerFactory(
-            header=[
-                "注文日", "注文番号", "商品名", "付帯情報", "価格", "個数", "商品小計", "注文合計", "お届け先", "状態", "請求先", "請求額", "クレカ請求日",  # noqa: E501 pylint: disable=line-too-long
-                "クレカ請求額", "クレカ種類", "注文概要URL", "領収書URL", "商品URL",
-            ],
-            partition=[
-                r"\d{4}/\d{1,2}/\d{1,2}", r".*", "（注文全体）", "", "", "", "", r"\d*", "", "", r".*", r"\d*", "", "",  # noqa: RUF001,RUF100,E501 pylint: disable=line-too-long
-                r".*", r".*", r".*", "",
-            ],
-            encoding="utf-8-sig",
-        ),
-        init=False,
-    )
-    # fmt: on
-    regex_csv_file_name: str
-    god_slayer_factory: GodSlayerFactory
-    input_row_data_class: type[TypeVarInputRowData]
-    input_row_factory: InputRowFactory[TypeVarInputRowData, TypeVarInputRow]
-    zaim_row_converter_factory: CsvRecordToZaimRowConverterFactory[TypeVarInputRow, TypeVarInputRowData]
 
 
 class Account(Enum):

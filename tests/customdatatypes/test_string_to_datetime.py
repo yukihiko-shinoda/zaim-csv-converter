@@ -8,11 +8,9 @@ from pydantic import ValidationError
 from pydantic.dataclasses import dataclass
 
 from tests.customdatatypes import create
-from zaimcsvconverter.customdatatypes.string_to_datetime import (
-    StringNumberOnlyToDateTime,
-    StringSlashMonthDayOnlyToDatetime,
-    StringSlashToDateTime,
-)
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringNumberOnlyToDateTime
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashMonthDayOnlyToDatetime
+from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
 
 
 @dataclass

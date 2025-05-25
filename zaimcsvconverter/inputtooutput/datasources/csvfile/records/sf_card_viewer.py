@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+from typing import Any
 
 from zaimcsvconverter.data.sf_card_viewer import Note
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow, InputStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStoreRow
 
 if TYPE_CHECKING:
     from zaimcsvconverter.config import SFCardViewerConfig

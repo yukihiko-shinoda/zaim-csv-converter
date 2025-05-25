@@ -6,7 +6,7 @@ from types import DynamicClassAttribute
 
 import pytest
 
-from zaimcsvconverter.account import Account
+from zaimcsvconverter.accounts.enum import Account
 
 
 class FilePathInput(Enum):

@@ -428,6 +428,19 @@ wheels = [
 ]
 
 [[package]]
+name = "flake8-bugbear"
+version = "24.12.12"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "attrs" },
+    { name = "flake8" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c7/25/48ba712ff589b0149f21135234f9bb45c14d6689acc6151b5e2ff8ac2ae9/flake8_bugbear-24.12.12.tar.gz", hash = "sha256:46273cef0a6b6ff48ca2d69e472f41420a42a46e24b2a8972e4f0d6733d12a64", size = 82907, upload-time = "2024-12-12T16:49:26.307Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b9/21/0a875f75fbe4008bd171e2fefa413536258fe6b4cfaaa087986de74588f4/flake8_bugbear-24.12.12-py3-none-any.whl", hash = "sha256:1b6967436f65ca22a42e5373aaa6f2d87966ade9aa38d4baf2a1be550767545e", size = 36664, upload-time = "2024-12-12T16:49:23.584Z" },
+]
+
+[[package]]
 name = "flake8-polyfill"
 version = "1.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2012,6 +2025,7 @@ dev = [
     { name = "factory-boy" },
     { name = "fixturefilehandler" },
     { name = "flake8" },
+    { name = "flake8-bugbear" },
     { name = "flake8-polyfill" },
     { name = "flake8-pyproject" },
     { name = "hacking" },
@@ -2056,6 +2070,7 @@ dev = [
     { name = "factory-boy" },
     { name = "fixturefilehandler" },
     { name = "flake8", marker = "python_full_version >= '3.6'", specifier = ">=4.0.1,!=5.0.0,!=6.0.0" },
+    { name = "flake8-bugbear" },
     { name = "flake8-polyfill" },
     { name = "flake8-pyproject" },
     { name = "hacking", marker = "python_full_version >= '3.8'", specifier = ">=5.0.0" },

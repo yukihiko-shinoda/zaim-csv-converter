@@ -5,7 +5,8 @@ see:
     https://www.paypalobjects.com/webstatic/en_US/developer/docs/pdf/PP_ActivityDownload.pdf
 """
 
-from zaimcsvconverter.data.pay_pal import BalanceImpact, Status
+from zaimcsvconverter.data.pay_pal import BalanceImpact
+from zaimcsvconverter.data.pay_pal import Status
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pal import PayPalRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStoreItemRow

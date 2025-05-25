@@ -1,16 +1,20 @@
 """Custom data type to convert string to optional int."""
 
-from collections.abc import Callable
-from typing import Any, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Optional
 
 import annotated_types
 
-from zaimcsvconverter.customdatatypes.validators import (
-    optional_int_validator,
-    optional_number_multiple_validator,
-    optional_number_size_validator,
-    optional_strict_int_validator,
-)
+from zaimcsvconverter.customdatatypes.validators import optional_int_validator
+from zaimcsvconverter.customdatatypes.validators import optional_number_multiple_validator
+from zaimcsvconverter.customdatatypes.validators import optional_number_size_validator
+from zaimcsvconverter.customdatatypes.validators import optional_strict_int_validator
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class OptionalIntegerMustBeFromStr:

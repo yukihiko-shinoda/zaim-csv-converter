@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from zaimcsvconverter import DirectoryCsv
-from zaimcsvconverter.account import Account, AccountContext
+from zaimcsvconverter.accounts.enum import Account
 from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
 from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.record_to_zaim_converter import RecordToZaimConverter
@@ -13,6 +13,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor imp
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_output_exporter import ZaimCsvOutputModelExporter
 
 if TYPE_CHECKING:
+    from zaimcsvconverter.accounts.context import AccountContext
     from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputRowData
     from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
 

@@ -5,11 +5,9 @@ from datetime import datetime
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import (
-    MufgIncomeFromSelfRow,
-    MufgPaymentToSelfRow,
-    MufgStoreRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgIncomeFromSelfRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgPaymentToSelfRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mufg import MufgStoreRow
 from zaimcsvconverter.models import Store
 
 

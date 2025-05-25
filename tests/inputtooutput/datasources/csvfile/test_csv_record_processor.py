@@ -3,7 +3,7 @@
 import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.account import Account
+from zaimcsvconverter.accounts.enum import Account
 from zaimcsvconverter.exceptions import InvalidRecordError
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory

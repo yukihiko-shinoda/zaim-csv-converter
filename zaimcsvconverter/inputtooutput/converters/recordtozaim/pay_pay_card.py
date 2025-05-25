@@ -1,19 +1,23 @@
 """This module implements convert steps from PayPay Card input row to Zaim row."""
 
-from pathlib import Path
-from typing import Optional, cast
+from __future__ import annotations
 
-from returns.primitives.hkt import Kind1
+from typing import TYPE_CHECKING
+from typing import Optional
+from typing import cast
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimPaymentRowStoreConverter,
-    ZaimRowConverter,
-    ZaimTransferRowConverter,
-)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowStoreConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimTransferRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pay_card import PayPayCardRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.pay_pay_card import PayPayCardRow
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from returns.primitives.hkt import Kind1
 
 
 class PayPayCardZaimTransferRowConverter(ZaimTransferRowConverter[PayPayCardRow, PayPayCardRowData]):

@@ -7,7 +7,8 @@ from pydantic import ValidationError
 
 from tests.testlibraries.assert_list import assert_each_properties
 from tests.testlibraries.instance_resource import InstanceResource
-from zaimcsvconverter.data.waon import ChargeKind, UseKind
+from zaimcsvconverter.data.waon import ChargeKind
+from zaimcsvconverter.data.waon import UseKind
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
 
@@ -46,7 +47,7 @@ class TestWaonRowData:
     @pytest.mark.usefixtures("database_session_with_schema")
     def test_validate() -> None:
         """Validate method should collect errors."""
-        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501  # pylint: disable=line-too-long
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # pylint: disable=line-too-long
         #   https://github.com/pydantic/pydantic/issues/9140
         index_use_kind = 3
         with pytest.raises(ValidationError) as excinfo:
@@ -64,7 +65,7 @@ class TestWaonRowData:
     @staticmethod
     def test_unsupported_charge_kind() -> None:
         """Unsupported charge kind should raise error."""
-        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # noqa: E501  # pylint: disable=line-too-long
+        # - The key: `loc` of ValidationError should be not index but property name even if instantiate dataclass without kwarg? · Issue #9140 · pydantic/pydantic  # pylint: disable=line-too-long
         #   https://github.com/pydantic/pydantic/issues/9140
         index_charge_kind = 4
         with pytest.raises(ValidationError) as excinfo:
@@ -73,9 +74,4 @@ class TestWaonRowData:
         assert len(errors) == 1
         error = errors[0]
         assert error["loc"] == (index_charge_kind,)
-        assert error["msg"] == "".join(
-            [
-                "Input should be ",
-                "'銀行口座', 'ポイント', '現金', 'バリューダウンロード' or '-'",
-            ],
-        )
+        assert error["msg"] == "Input should be '銀行口座', 'ポイント', '現金', 'バリューダウンロード' or '-'"

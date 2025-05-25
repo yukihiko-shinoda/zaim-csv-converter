@@ -5,18 +5,14 @@ from pathlib import Path
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimPaymentRowItemConverter,
-    ZaimRowConverter,
-)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowItemConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import (
-    Amazon201911DiscountRow,
-    Amazon201911ItemRow,
-    Amazon201911PaymentRow,
-    Amazon201911ShippingHandlingRow,
-)
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911DiscountRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911ItemRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911PaymentRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.amazon_201911 import Amazon201911ShippingHandlingRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object

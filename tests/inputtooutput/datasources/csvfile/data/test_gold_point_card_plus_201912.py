@@ -4,7 +4,7 @@ from datetime import datetime
 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,
+    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
 )
 
 

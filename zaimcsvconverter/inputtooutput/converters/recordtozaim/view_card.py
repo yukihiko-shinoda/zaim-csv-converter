@@ -5,13 +5,12 @@ from pathlib import Path
 from returns.primitives.hkt import Kind1
 
 from zaimcsvconverter import CONFIG
-from zaimcsvconverter.inputtooutput.converters.recordtozaim import (
-    CsvRecordToZaimRowConverterFactory,
-    ZaimPaymentRowStoreConverter,
-    ZaimRowConverter,
-)
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowStoreConverter
+from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardRow, ViewCardStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.view_card import ViewCardStoreRow
 
 
 # Reason: Pylint's bug. pylint: disable=unsubscriptable-object

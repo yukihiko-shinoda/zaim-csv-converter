@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+from typing import Any
 
-from zaimcsvconverter.data.mobile_suica import Kind1, Kind2
+from zaimcsvconverter.data.mobile_suica import Kind1
+from zaimcsvconverter.data.mobile_suica import Kind2
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mobile_suica import MobileSuicaRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow, InputStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStoreRow
 
 if TYPE_CHECKING:
     from zaimcsvconverter.config import SFCardViewerConfig

@@ -4,10 +4,18 @@ see: python - entering context managers in __enter__ - Stack Overflow
 https://stackoverflow.com/questions/47705573/entering-context-managers-in-enter
 """
 
+from __future__ import annotations
+
 import contextlib
-from abc import ABC, abstractmethod
-from types import TracebackType
-from typing import Generic, Optional, TypeVar
+from abc import ABC
+from abc import abstractmethod
+from typing import TYPE_CHECKING
+from typing import Generic
+from typing import Optional
+from typing import TypeVar
+
+if TYPE_CHECKING:
+    from types import TracebackType
 
 TypeVarCovariant_co = TypeVar("TypeVarCovariant_co", covariant=True)
 

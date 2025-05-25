@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from zaimcsvconverter.data.waon import ChargeKind, UseKind
+from zaimcsvconverter.data.waon import ChargeKind
+from zaimcsvconverter.data.waon import UseKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.waon import WaonRowData
-from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow, InputStoreRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStoreRow
 
 
 class WaonRow(InputRow[WaonRowData]):

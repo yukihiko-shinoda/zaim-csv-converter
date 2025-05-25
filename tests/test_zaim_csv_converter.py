@@ -1,5 +1,7 @@
 """Tests for zaim_csv_converter.py."""
 
+from __future__ import annotations
+
 import csv
 from logging import getLogger
 from pathlib import Path
@@ -9,35 +11,36 @@ import pytest
 from fixturefilehandler.file_paths import RelativeDeployFilePath
 
 from tests.testlibraries.instance_resource import InstanceResource
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_amazon_201810
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_amazon_201911_201911
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_amazon_201911_202004
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_amazon_201911_202006
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_amazon_201911_202012
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_gold_point_card_plus_201807
 from tests.testlibraries.integration_test_expected_factory import (
-    create_zaim_row_data_amazon_201810,
-    create_zaim_row_data_amazon_201911_201911,
-    create_zaim_row_data_amazon_201911_202004,
-    create_zaim_row_data_amazon_201911_202006,
-    create_zaim_row_data_amazon_201911_202012,
-    create_zaim_row_data_gold_point_card_plus_201807,
-    create_zaim_row_data_gold_point_card_plus_201912_201807,
-    create_zaim_row_data_mobile_suica_202210,
-    create_zaim_row_data_mobile_suica_202211,
-    create_zaim_row_data_mobile_suica_202212,
-    create_zaim_row_data_mobile_suica_202301,
-    create_zaim_row_data_mufg_201808,
-    create_zaim_row_data_mufg_201810,
-    create_zaim_row_data_mufg_201811,
-    create_zaim_row_data_mufg_202304,
-    create_zaim_row_data_pasmo_201811,
-    create_zaim_row_data_pasmo_201901,
-    create_zaim_row_data_pay_pal_201810,
-    create_zaim_row_data_pay_pay_card_202208,
-    create_zaim_row_data_sbi_sumishin_net_bank_202201,
-    create_zaim_row_data_suica_202003,
-    create_zaim_row_data_view_card_202005,
-    create_zaim_row_data_waon_201807,
-    create_zaim_row_data_waon_201808,
-    create_zaim_row_data_waon_201810,
-    create_zaim_row_data_waon_201811,
+    create_zaim_row_data_gold_point_card_plus_201912_201807,  # noqa: H301,RUF100
 )
-from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker, ZaimCsvFileChecker
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mobile_suica_202210
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mobile_suica_202211
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mobile_suica_202212
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mobile_suica_202301
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mufg_201808
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mufg_201810
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mufg_201811
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mufg_202304
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_pasmo_201811
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_pasmo_201901
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_pay_pal_201810
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_pay_pay_card_202208
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_sbi_sumishin_net_bank_202201
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_suica_202003
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_view_card_202005
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_waon_201807
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_waon_201808
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_waon_201810
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_waon_201811
+from tests.testlibraries.output_csv_file_checker import ErrorCsvFileChecker
+from tests.testlibraries.output_csv_file_checker import ZaimCsvFileChecker
 from tests.testlibraries.row_data import InvalidRowErrorRowData
 from zaimcsvconverter.exceptions import SomeInvalidInputCsvError
 from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter

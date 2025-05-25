@@ -6,10 +6,10 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,
+    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912Row,
+    GoldPointCardPlus201912Row,  # noqa: H301,RUF100
 )
 from zaimcsvconverter.models import Store
 
@@ -41,7 +41,7 @@ class TestGoldPointCardPlus201912Row:
                 True,
             ),
             # Since アマゾン注文履歴フィルタ doesn't suppport return
-            # see: https://github.com/furyutei/amzOrderHistoryFilter/blob/30ff80c6ea5194ec4b9ede986e30b80cbdd21355/src/js/amzOrderHistoryFilter.user.js#L4157 # noqa: E501 pylint: disable=line-too-long
+            # see: https://github.com/furyutei/amzOrderHistoryFilter/blob/30ff80c6ea5194ec4b9ede986e30b80cbdd21355/src/js/amzOrderHistoryFilter.user.js#L4157 pylint: disable=line-too-long
             (
                 InstanceResource.ROW_DATA_GOLD_POINT_CARD_PLUS_201912_AMAZON_RETURN,
                 # Reason: Time is not used in this process.
