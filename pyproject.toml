@@ -101,6 +101,9 @@ source = ["zaimcsvconverter"]
 
 [tool.docformatter]
 recursive = true
+# For compatibility with Black
+# - How to Configure docformatter — docformatter 1.7.5 documentation
+#   https://docformatter.readthedocs.io/en/stable/configuration.html#a-note-on-options-to-control-styles
 pre_summary_space = true
 wrap-descriptions = 119
 wrap-summaries = 119
@@ -109,6 +112,9 @@ wrap-summaries = 119
 # @see https://github.com/psf/black/blob/master/README.md#line-length
 max_line_length = 119
 extend_ignore = [
+  # For compatibility with Black:
+  # - Using Black with other tools - Black 25.1.0 documentation
+  #   https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8
   "E203",
   # 2025-05-24 Now openstack/hacking wasn't introduced into Ruff and sorting imports is mainly considered with isort.
   "H306",
@@ -159,7 +165,8 @@ max-line-length = 119
 
 [tool.pylint.options]
 # Since this rule against single responsibility principle.
-# @see https://stackoverflow.com/questions/28722314/why-does-pylint-want-2-public-methods-per-class/40258006#40258006
+# - python - Why does Pylint want two public methods per class? - Stack Overflow
+#   https://stackoverflow.com/a/40258006/12721873
 min-public-methods = "1"
 
 [tool.pytest.ini_options]
