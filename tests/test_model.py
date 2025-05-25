@@ -3,9 +3,9 @@
 from typing import Optional
 
 import pytest
+from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm.session import Session as SQLAlchemySession
-from sqlalchemy import select
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.file_csv_convert import FileCsvConvert

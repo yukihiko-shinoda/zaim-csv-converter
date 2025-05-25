@@ -1,7 +1,7 @@
 """This module implements CSV export."""
 
-from collections.abc import Iterable
 import csv
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Union
 

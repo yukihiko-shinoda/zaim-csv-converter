@@ -1,6 +1,6 @@
 """This module implements converting steps from account CSV to Zaim CSV."""
 
-from zaimcsvconverter import CONFIG, DirectoryCsv, PATH_FILE_CONFIG
+from zaimcsvconverter import CONFIG, PATH_FILE_CONFIG, DirectoryCsv
 from zaimcsvconverter.convert_table_importer import ConvertTableImporter
 from zaimcsvconverter.errorreporters.error_totalizer import ErrorTotalizer
 from zaimcsvconverter.exceptions import SomeInvalidInputCsvError

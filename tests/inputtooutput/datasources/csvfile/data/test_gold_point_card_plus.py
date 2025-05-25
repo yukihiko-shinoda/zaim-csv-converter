@@ -3,8 +3,8 @@
 from datetime import datetime
 
 from tests.testlibraries.assert_list import assert_each_properties
-from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import RowDataFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
 
 
 class TestGoldPointCardPlusRowData:

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Callable, Generic, Optional, TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Generic, Optional, TypeVar
 
 from errorcollector import MultipleErrorCollector, SingleErrorCollector
 

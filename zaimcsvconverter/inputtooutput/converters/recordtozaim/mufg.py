@@ -5,7 +5,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import cast, Optional, TypeVar
+from typing import Optional, TypeVar, cast
 
 from returns.primitives.hkt import Kind1
 

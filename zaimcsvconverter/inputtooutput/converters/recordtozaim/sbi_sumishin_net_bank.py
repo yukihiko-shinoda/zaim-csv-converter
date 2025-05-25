@@ -1,7 +1,7 @@
 """This module implements convert steps from SBI Sumishin net bank input row to Zaim row."""
 
 from pathlib import Path
-from typing import cast, Optional, Union
+from typing import Optional, Union, cast
 
 from returns.primitives.hkt import Kind1
 

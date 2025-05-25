@@ -3,8 +3,8 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter import DirectoryCsv
+from zaimcsvconverter.account import Account, AccountContext
 from zaimcsvconverter.first_form_normalizer import FirstFormNormalizer
 from zaimcsvconverter.inputtooutput.convert_workflow import ConvertWorkflow
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.record_to_zaim_converter import RecordToZaimConverter
