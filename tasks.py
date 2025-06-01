@@ -12,7 +12,7 @@ from invokelint import style
 from invokelint import test
 
 ns = Collection()
-ns.add_collection(_clean)
+ns.add_collection(_clean, name="clean")
 ns.add_collection(dist)
 ns.add_collection(lint)
 ns.add_collection(path)
