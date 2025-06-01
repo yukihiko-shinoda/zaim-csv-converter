@@ -11,7 +11,6 @@ from enum import Enum
 from types import DynamicClassAttribute
 from typing import Any
 from typing import Generic
-from typing import Optional
 from typing import TypeVar
 from typing import cast
 
@@ -83,19 +82,19 @@ class ConvertTableRowData:
 class StoreRowData(ConvertTableRowData):
     """This class implements data class for wrapping list of store convert table row model."""
 
-    name_zaim: Optional[str] = None
-    category_payment_large: Optional[str] = None
-    category_payment_small: Optional[str] = None
-    category_income: Optional[str] = None
-    transfer_account: Optional[str] = None
+    name_zaim: str | None = None
+    category_payment_large: str | None = None
+    category_payment_small: str | None = None
+    category_income: str | None = None
+    transfer_account: str | None = None
 
 
 @dataclass
 class ItemRowData(ConvertTableRowData):
     """This class implements data class for wrapping list of item and category row model."""
 
-    category_payment_large: Optional[str] = None
-    category_payment_small: Optional[str] = None
+    category_payment_large: str | None = None
+    category_payment_small: str | None = None
 
 
 TypeVarConvertTableRowData = TypeVar("TypeVarConvertTableRowData", bound=ConvertTableRowData)
@@ -121,8 +120,8 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
     id = mapped_column(Integer, primary_key=True)
     file_csv_convert_id = mapped_column(Integer)
     name: Mapped[str] = mapped_column(String(255))
-    category_payment_large: Mapped[Optional[str]] = mapped_column(String(255))
-    category_payment_small: Mapped[Optional[str]] = mapped_column(String(255))
+    category_payment_large: Mapped[str | None] = mapped_column(String(255))
+    category_payment_small: Mapped[str | None] = mapped_column(String(255))
 
     __table_args__ = (UniqueConstraint("file_csv_convert_id", "name", name="_name_on_each_account_uc"),)
 
@@ -132,7 +131,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
         self.name = row_data.name
 
     @staticmethod
-    def _get_str_or_none(value: Optional[str]) -> Optional[str]:
+    def _get_str_or_none(value: str | None) -> str | None:
         return value if value else None
 
     @classmethod
@@ -178,9 +177,9 @@ with warnings.catch_warnings():
         # as well as being able to control which types are optional.
         # - Mypy / Pep-484 Support for ORM Mappings — SQLAlchemy 1.4 Documentation
         #   https://docs.sqlalchemy.org/en/14/orm/extensions/mypy.html#introspection-of-columns-based-on-typeengine
-        name_zaim: Mapped[Optional[str]] = mapped_column(String(255))
-        category_income: Mapped[Optional[str]] = mapped_column(String(255))
-        transfer_target: Mapped[Optional[str]] = mapped_column(String(255))
+        name_zaim: Mapped[str | None] = mapped_column(String(255))
+        category_income: Mapped[str | None] = mapped_column(String(255))
+        transfer_target: Mapped[str | None] = mapped_column(String(255))
 
         def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: StoreRowData) -> None:
             ConvertTableRecordMixin.__init__(self, file_csv_convert_id, row_data)

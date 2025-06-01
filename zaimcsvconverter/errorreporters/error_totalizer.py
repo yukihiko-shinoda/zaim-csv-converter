@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from enum import Enum
 from typing import TYPE_CHECKING
-from typing import Union
 
 from zaimcsvconverter.csvconverter.csv_to_csv_converter import CsvToCsvConverter
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
@@ -32,7 +31,7 @@ class ErrorTotalizer:
         self.list_invalid_data_source: list[DataSource] = []
         self.undefined_content_error_handler: UndefinedContentErrorHandler = UndefinedContentErrorHandler()
 
-    def __iter__(self) -> Generator[list[Union[int, str]], None, None]:
+    def __iter__(self) -> Generator[list[int | str], None, None]:
         for data_source in self.list_invalid_data_source:
             data_source_error_reporter = DataSourceErrorReporterFactory.create(data_source)
             yield from data_source_error_reporter

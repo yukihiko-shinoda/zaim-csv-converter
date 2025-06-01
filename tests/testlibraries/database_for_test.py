@@ -7,7 +7,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
-from typing import Optional
 
 import factory
 
@@ -86,7 +85,7 @@ class DatabaseForTest:
     @classmethod
     def database_session_with_schema(
         cls,
-        list_fixture_record: Optional[list[FixtureRecord]] = None,
+        list_fixture_record: list[FixtureRecord] | None = None,
     ) -> Generator[SQLAlchemySession, None, None]:
         """This fixture prepares database session and fixture records to reset database after each test."""
         with DatabaseEngineManager(Session) as engine:

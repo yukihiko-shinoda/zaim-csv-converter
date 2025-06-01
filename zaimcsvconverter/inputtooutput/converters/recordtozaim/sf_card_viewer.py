@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Callable
-from typing import Optional
 
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
@@ -35,12 +34,12 @@ class SFCardViewerZaimPaymentOnSomewhereRowConverter(
     account_config: SFCardViewerConfig
 
     @property
-    def category_large(self) -> Optional[str]:
+    def category_large(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return "交通" if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
 
     @property
-    def category_small(self) -> Optional[str]:
+    def category_small(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return "バス" if self.input_row.is_bus_tram else ZaimCsvFormat.CATEGORY_LARGE_EMPTY
 

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Generic
-from typing import Optional
 from typing import cast
 
 from godslayer.exceptions import InvalidFooterError
@@ -39,8 +38,8 @@ class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
         super().__init__()
         self.first_form_normalizer = first_form_normalizer
         self.csv_record_processor = csv_record_processor
-        self.invalid_header_error: Optional[InvalidHeaderError] = None
-        self.invalid_footer_error: Optional[InvalidFooterError] = None
+        self.invalid_header_error: InvalidHeaderError | None = None
+        self.invalid_footer_error: InvalidFooterError | None = None
 
     def __iter__(self) -> Generator[AbstractInputRecord, None, None]:
         iterator = self.first_form_normalizer.__iter__()

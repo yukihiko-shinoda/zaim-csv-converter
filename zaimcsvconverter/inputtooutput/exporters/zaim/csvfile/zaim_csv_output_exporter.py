@@ -5,7 +5,6 @@ from __future__ import annotations
 import contextlib
 import csv
 from typing import TYPE_CHECKING
-from typing import Optional
 
 from zaimcsvconverter.inputtooutput.exporters import OutputModelExporter
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
@@ -23,7 +22,7 @@ class ZaimCsvOutputModelExporter(OutputModelExporter[ZaimRow]):
 
     def __init__(self, path_to_output: Path) -> None:
         self.path_to_output = path_to_output
-        self.writer_zaim: Optional[CSVWriter] = None
+        self.writer_zaim: CSVWriter | None = None
 
     def execute(self, output_row: ZaimRow) -> None:
         # Reason: We won't to create if block since priority is efficiency than mypy type check.

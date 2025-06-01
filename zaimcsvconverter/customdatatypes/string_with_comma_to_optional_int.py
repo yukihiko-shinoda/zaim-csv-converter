@@ -24,12 +24,12 @@ except ImportError:
 def constringwithcommatooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     *,
     strict: bool = False,
-    gt: Optional[int] = None,  # pylint: disable=invalid-name
-    ge: Optional[int] = None,  # pylint: disable=invalid-name
-    lt: Optional[int] = None,  # pylint: disable=invalid-name
-    le: Optional[int] = None,  # pylint: disable=invalid-name
-    multiple_of: Optional[int] = None,
-) -> type[Optional[int]]:
+    gt: int | None = None,  # pylint: disable=invalid-name
+    ge: int | None = None,  # pylint: disable=invalid-name
+    lt: int | None = None,  # pylint: disable=invalid-name
+    le: int | None = None,  # pylint: disable=invalid-name
+    multiple_of: int | None = None,
+) -> type[int | None]:
     """A wrapper around `int` that allows for additional constraints.
 
     Args:

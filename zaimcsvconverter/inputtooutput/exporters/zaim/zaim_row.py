@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from typing import TYPE_CHECKING
-from typing import Optional
-from typing import Union
 
 from zaimcsvconverter.inputtooutput.exporters import OutputRecord
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
@@ -34,7 +32,7 @@ class ZaimRow(OutputRecord):
         return self._date.strftime("%Y-%m-%d")
 
     @abstractmethod
-    def convert_to_list(self) -> list[Optional[Union[str, int]]]:
+    def convert_to_list(self) -> list[str | int | None]:
         """This method converts object data to list."""
 
 
@@ -50,7 +48,7 @@ class ZaimIncomeRow(ZaimRow):
         self._amount_income = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
-    def convert_to_list(self) -> list[Optional[Union[str, int]]]:
+    def convert_to_list(self) -> list[str | int | None]:
         return [
             self._date_string,
             self.METHOD,
@@ -86,7 +84,7 @@ class ZaimPaymentRow(ZaimRow):
         self._amount_payment = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
-    def convert_to_list(self) -> list[Optional[Union[str, int]]]:
+    def convert_to_list(self) -> list[str | int | None]:
         return [
             self._date_string,
             self.METHOD,
@@ -118,7 +116,7 @@ class ZaimTransferRow(ZaimRow):
         self._amount_transfer = zaim_row_converter.amount
         super().__init__(zaim_row_converter)
 
-    def convert_to_list(self) -> list[Optional[Union[str, int]]]:
+    def convert_to_list(self) -> list[str | int | None]:
         return [
             self._date_string,
             self.METHOD,

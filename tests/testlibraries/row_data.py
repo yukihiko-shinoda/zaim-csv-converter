@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
-from typing import Union
 
 
 @dataclass
@@ -12,22 +10,22 @@ class ZaimRowData:
     """This class implements data class for wrapping list of Zaim CSV row model."""
 
     # Reason: This implement depends on design of CSV. pylint: disable=too-many-instance-attributes
-    date: Optional[Union[str, int]]
-    method: Optional[Union[str, int]]
-    category_large: Optional[Union[str, int]]
-    category_small: Optional[Union[str, int]]
-    cash_flow_source: Optional[Union[str, int]]
-    cash_flow_target: Optional[Union[str, int]]
-    item_name: Optional[Union[str, int]]
-    note: Optional[Union[str, int]]
-    store_name: Optional[Union[str, int]]
-    currency: Optional[Union[str, int]]
-    amount_income: Optional[Union[str, int]]
-    amount_payment: Optional[Union[str, int]]
-    amount_transfer: Optional[Union[str, int]]
-    balance_adjustment: Optional[Union[str, int]]
-    amount_before_currency_conversion: Optional[Union[str, int]]
-    setting_aggregate: Optional[Union[str, int]]
+    date: str | int | None
+    method: str | int | None
+    category_large: str | int | None
+    category_small: str | int | None
+    cash_flow_source: str | int | None
+    cash_flow_target: str | int | None
+    item_name: str | int | None
+    note: str | int | None
+    store_name: str | int | None
+    currency: str | int | None
+    amount_income: str | int | None
+    amount_payment: str | int | None
+    amount_transfer: str | int | None
+    balance_adjustment: str | int | None
+    amount_before_currency_conversion: str | int | None
+    setting_aggregate: str | int | None
 
 
 @dataclass

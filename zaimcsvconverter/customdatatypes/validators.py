@@ -5,7 +5,6 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Optional
 from typing import Union
 
 # pylint: disable=no-name-in-module
@@ -21,25 +20,25 @@ if TYPE_CHECKING:
 Number = Union[int, float, Decimal]
 
 
-def optional_strict_int_validator(value: Any) -> Optional[int]:
+def optional_strict_int_validator(value: Any) -> int | None:
     if value is None:
         return None
     return strict_int_validator(value)
 
 
-def optional_int_validator(value: Any) -> Optional[int]:
+def optional_int_validator(value: Any) -> int | None:
     if value is None:
         return None
     return int_validator(value)
 
 
-def optional_number_size_validator(value: Optional[Number], field: ModelField) -> Optional[Number]:
+def optional_number_size_validator(value: Number | None, field: ModelField) -> Number | None:
     if value is None:
         return None
     return number_size_validator(value, field)
 
 
-def optional_number_multiple_validator(value: Optional[Number], field: ModelField) -> Optional[Number]:
+def optional_number_multiple_validator(value: Number | None, field: ModelField) -> Number | None:
     if value is None:
         return None
     return number_multiple_validator(value, field)

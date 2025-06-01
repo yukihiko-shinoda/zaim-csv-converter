@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Generic
-from typing import Optional
 from typing import cast
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
@@ -48,7 +47,7 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
     @staticmethod
     def create_undefined_content_error_handler(
         input_row: Kind1[InputRow[InputRowData], InputRowData],
-    ) -> Optional[UndefinedContentErrorHandler]:
+    ) -> UndefinedContentErrorHandler | None:
         """To simplify instantiate process."""
         dekinded_input_row = cast("InputRow[InputRowData]", input_row)
         if not isinstance(dekinded_input_row, InputContentRow):

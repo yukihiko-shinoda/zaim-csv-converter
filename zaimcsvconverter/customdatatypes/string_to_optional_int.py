@@ -26,13 +26,13 @@ Number = Union[int, float, Decimal]
 # Reason: Followed Pydantic specification.
 def constringtooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     *,
-    strict: Optional[bool] = None,
-    gt: Optional[int] = None,
-    ge: Optional[int] = None,
-    lt: Optional[int] = None,
-    le: Optional[int] = None,
-    multiple_of: Optional[int] = None,
-) -> type[Optional[int]]:
+    strict: bool | None = None,
+    gt: int | None = None,
+    ge: int | None = None,
+    lt: int | None = None,
+    le: int | None = None,
+    multiple_of: int | None = None,
+) -> type[int | None]:
     """A wrapper around `int` that allows for additional constraints.
 
     Args:

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import contextlib
 from typing import TYPE_CHECKING
-from typing import Optional
 
 import sqlalchemy
 from sqlalchemy.engine.base import Engine
@@ -34,9 +33,9 @@ class DatabaseEngineManager(contextlib.AbstractContextManager[Engine]):
 
     def __exit__(
         self,
-        exc_type: Optional[type[BaseException]],
-        exc_value: Optional[BaseException],
-        traceback: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
     ) -> None:
         # Remove it, so that the next test gets a new Session()
         self.scoped_session.remove()

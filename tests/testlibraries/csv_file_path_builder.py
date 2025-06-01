@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Callable
-from typing import Optional
 
 from fixturefilehandler.file_paths import RelativeVacateFilePath
 
@@ -17,10 +16,10 @@ class CsvFilePathBuilder(RelativeVacateFilePath):
 
     def __init__(
         self,
-        target: Optional[Path] = None,
-        backup: Optional[Path] = None,
-        base: Optional[Path] = None,
-        output: Optional[Path] = None,
+        target: Path | None = None,
+        backup: Path | None = None,
+        base: Path | None = None,
+        output: Path | None = None,
     ) -> None:
         target = self.initialize(target, lambda: Path("export.csv"))
         backup = self.initialize(backup, lambda: Path(f"{target}.bak"))
@@ -29,5 +28,5 @@ class CsvFilePathBuilder(RelativeVacateFilePath):
         super().__init__(target, backup, base / output)
 
     @staticmethod
-    def initialize(optional: Optional[Path], default: Callable[[], Path]) -> Path:
+    def initialize(optional: Path | None, default: Callable[[], Path]) -> Path:
         return optional if optional else default()
