@@ -11,6 +11,7 @@ from enum import Enum
 from types import DynamicClassAttribute
 from typing import Any
 from typing import Generic
+from typing import Optional
 from typing import TypeVar
 from typing import cast
 
@@ -120,8 +121,11 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
     id = mapped_column(Integer, primary_key=True)
     file_csv_convert_id = mapped_column(Integer)
     name: Mapped[str] = mapped_column(String(255))
-    category_payment_large: Mapped[str | None] = mapped_column(String(255))
-    category_payment_small: Mapped[str | None] = mapped_column(String(255))
+    # Reason: SQLAlchemy's bug:
+    # - support Mapped[str | None] on Python 3.9 (currently seems not possible) · Issue #9110 · sqlalchemy/sqlalchemy
+    #   https://github.com/sqlalchemy/sqlalchemy/issues/9110
+    category_payment_large: Mapped[Optional[str]] = mapped_column(String(255))  # noqa: UP007
+    category_payment_small: Mapped[Optional[str]] = mapped_column(String(255))  # noqa: UP007
 
     __table_args__ = (UniqueConstraint("file_csv_convert_id", "name", name="_name_on_each_account_uc"),)
 
@@ -177,9 +181,12 @@ with warnings.catch_warnings():
         # as well as being able to control which types are optional.
         # - Mypy / Pep-484 Support for ORM Mappings — SQLAlchemy 1.4 Documentation
         #   https://docs.sqlalchemy.org/en/14/orm/extensions/mypy.html#introspection-of-columns-based-on-typeengine
-        name_zaim: Mapped[str | None] = mapped_column(String(255))
-        category_income: Mapped[str | None] = mapped_column(String(255))
-        transfer_target: Mapped[str | None] = mapped_column(String(255))
+        # Reason: SQLAlchemy's bug:
+        # - support Mapped[str | None] on Python 3.9 (currently seems not possible) · Issue #9110 · sqlalchemy/sqlalchemy pylint: disable=line-too-long
+        #   https://github.com/sqlalchemy/sqlalchemy/issues/9110
+        name_zaim: Mapped[Optional[str]] = mapped_column(String(255))  # noqa: UP007
+        category_income: Mapped[Optional[str]] = mapped_column(String(255))  # noqa: UP007
+        transfer_target: Mapped[Optional[str]] = mapped_column(String(255))  # noqa: UP007
 
         def __init__(self, file_csv_convert_id: FileCsvConvertId, row_data: StoreRowData) -> None:
             ConvertTableRecordMixin.__init__(self, file_csv_convert_id, row_data)
