@@ -43,7 +43,7 @@ convert_table_type|入力 CSV ファイルの各行がお店単位の場合は `
 
 #### 3-2. 入力 CSV の行の各列のプロパティを拡張する dataclass の実装
 
-`zaimcsvconverter/inputtooutput/datasources/csv/data/` 配下に、新規対応口座の入力 CSV の行モデル dataclass を拡張する dataclass を作成します。
+`zaimcsvconverter/inputtooutput/datasources/csvfile/data/` 配下に、新規対応口座の入力 CSV の行モデル dataclass を拡張する dataclass を作成します。
 
 次の複数のクラスを多重継承して定義します:
 
@@ -62,7 +62,7 @@ item_name|変換用テーブルの CSV から品目を検索するための、�
 
 #### 3-3. 入力 CSV のレコードのモデルクラスの実装
 
-`zaimcsvconverter/inputtooutput/datasources/csv/records/` 配下に、
+`zaimcsvconverter/inputtooutput/datasources/csvfile/records/` 配下に、
 入力 CSV のレコードのモデルクラスを作成します。
 入力 CSV のレコードがお店単位の場合は InputStoreRow を継承、
 入力 CSV のレコードが品目単位の場合は InputItemRow を継承して作成します。
@@ -107,7 +107,7 @@ CSV 形式は、実際には性質の異なる行や、その属性を、
 
 - InputRow は CSV のフォーマットを表しており、
 同じ CSV フォーマットの異なる口座の設定を DI できるようにするため
-(`zaimcsvconverter/inputtooutput/datasources/csv/records/sf_card_viewer.py` を参考にしてください。)
+(`zaimcsvconverter/inputtooutput/datasources/csvfile/records/sf_card_viewer.py` を参考にしてください。)
 - 手順3-3.で実装した InputRow モデルの各プロパティの実装が if だらけにならないようにするため
 - 行の種類によって不要な列を処理から省くため
 
@@ -156,7 +156,7 @@ amount|この行が振替の行の場合、出力 CSV に「振替」として�
 
 ### 5. 口座に依存する属性を定義
 
-`account.py` の `Account` Enum クラスに新規対応口座用の `AccountContext` インスタンス定数を追加します。
+`accounts/enum.py` の `Account` Enum クラスに新規対応口座用の `AccountContext` インスタンス定数を追加します。
 `AccountContext` の各プロパティは以下のように定義します。
 
 プロパティ名|内容
