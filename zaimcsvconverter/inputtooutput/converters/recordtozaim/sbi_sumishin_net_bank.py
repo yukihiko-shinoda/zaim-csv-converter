@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Optional
 from typing import Union
 from typing import cast
 
@@ -52,7 +51,7 @@ class SBISumishinNetBankWithdrawalZaimTransferRowConverter(
         return CONFIG.sbi_sumishin_net_bank.account_name
 
     @property
-    def cash_flow_target(self) -> Optional[str]:
+    def cash_flow_target(self) -> str | None:
         return self.input_row.store.transfer_target
 
     @property
@@ -80,7 +79,7 @@ class SBISumishinNetBankDepositZaimTransferRowConverter(
     """This class implements convert steps from MUFG income input row to Zaim transfer row."""
 
     @property
-    def cash_flow_source(self) -> Optional[str]:
+    def cash_flow_source(self) -> str | None:
         return self.input_row.store.transfer_target
 
     @property

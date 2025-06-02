@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import re
-from typing import Optional
 
 
 class Utility:
     """This class implements utility."""
 
     @staticmethod
-    def convert_string_to_int_or_none(string: str) -> Optional[int]:
+    def convert_string_to_int_or_none(string: str) -> int | None:
         """This method converts string to int or None."""
         if not string:
             return None

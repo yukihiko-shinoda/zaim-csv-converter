@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Optional
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -14,7 +13,7 @@ def assert_each_properties(
     actual_object: object,
     list_expected: list[Any],
     *,
-    attribute_filter: Optional[list[str]] = None,
+    attribute_filter: list[str] | None = None,
 ) -> None:
     """Asserts each properties of actual object."""
     list_actual = create_actual_iterator(actual_object, attribute_filter)
@@ -24,7 +23,7 @@ def assert_each_properties(
         raise AssertionError(str(actual_object.__dict__.keys()) + ",\n" + str(error)) from error
 
 
-def create_actual_iterator(actual_object: object, attribute_filter: Optional[list[str]] = None) -> Iterable[Any]:
+def create_actual_iterator(actual_object: object, attribute_filter: list[str] | None = None) -> Iterable[Any]:
     return (
         value
         for key, value in actual_object.__dict__.items()

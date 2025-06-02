@@ -6,7 +6,6 @@ import re
 from datetime import datetime
 from typing import TYPE_CHECKING
 from typing import Callable
-from typing import Optional
 
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
@@ -44,12 +43,12 @@ class MobileSuicaZaimPaymentOnSomewhereRowConverter(
         return self.input_row.date.replace(year=self.year)
 
     @property
-    def category_large(self) -> Optional[str]:
+    def category_large(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return ZaimCsvFormat.CATEGORY_LARGE_EMPTY
 
     @property
-    def category_small(self) -> Optional[str]:
+    def category_small(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return ZaimCsvFormat.CATEGORY_SMALL_EMPTY
 

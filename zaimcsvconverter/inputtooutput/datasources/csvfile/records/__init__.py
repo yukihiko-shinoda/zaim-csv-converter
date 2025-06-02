@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
 from typing import Generic
-from typing import Optional
 from typing import TypeVar
 
 from errorcollector import MultipleErrorCollector
@@ -71,8 +70,8 @@ class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
         super().__init__(input_store_row_data)
         self._file_csv_convert_store: FileCsvConvertContext = file_csv_convert_context_store
         self.store_name: str = input_store_row_data.store_name
-        self._store: Optional[Store] = None
-        self.undefined_content_error_store: Optional[UndefinedContentError] = None
+        self._store: Store | None = None
+        self.undefined_content_error_store: UndefinedContentError | None = None
 
     @property
     def store(self) -> Store:
@@ -122,8 +121,8 @@ class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
         self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_item
         self.store_name: str = ""
         self.item_name: str = input_item_row_data.item_name
-        self._item: Optional[Item] = None
-        self.undefined_content_error_item: Optional[UndefinedContentError] = None
+        self._item: Item | None = None
+        self.undefined_content_error_item: UndefinedContentError | None = None
 
     @property
     @abstractmethod
@@ -179,8 +178,8 @@ class InputStoreItemRow(InputStoreRow[TypeVarInputStoreItemRowData]):
         self._file_csv_convert_item: FileCsvConvertContext = file_csv_convert_context_item
         self.store_name: str = ""
         self.item_name: str = input_store_item_row_data.item_name
-        self._item: Optional[Item] = None
-        self.undefined_content_error_item: Optional[UndefinedContentError] = None
+        self._item: Item | None = None
+        self.undefined_content_error_item: UndefinedContentError | None = None
 
     @property
     def item(self) -> Item:

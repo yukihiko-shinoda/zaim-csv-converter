@@ -6,7 +6,6 @@ from abc import ABC
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 from typing import Generic
-from typing import Optional
 from typing import TypeVar
 from typing import cast
 
@@ -69,12 +68,12 @@ class ZaimIncomeRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRowDa
 
     @property
     @abstractmethod
-    def category(self) -> Optional[str]:
+    def category(self) -> str | None:
         """This property returns category on Zaim income row."""
 
     @property
     @abstractmethod
-    def store_name(self) -> Optional[str]:
+    def store_name(self) -> str | None:
         """This property returns store name."""
 
     @property
@@ -93,12 +92,12 @@ class ZaimIncomeRowStoreConverter(ZaimIncomeRowConverter[TypeVarInputStoreRow, T
     """This class implements convert steps from input store row to Zaim income row."""
 
     @property
-    def category(self) -> Optional[str]:
+    def category(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.category_income
 
     @property
-    def store_name(self) -> Optional[str]:
+    def store_name(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.name_zaim
 
@@ -108,12 +107,12 @@ class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRowD
 
     @property
     @abstractmethod
-    def category_large(self) -> Optional[str]:
+    def category_large(self) -> str | None:
         """This property returns large category on Zaim payment row."""
 
     @property
     @abstractmethod
-    def category_small(self) -> Optional[str]:
+    def category_small(self) -> str | None:
         """This property returns small category on Zaim payment row."""
 
     @property
@@ -123,7 +122,7 @@ class ZaimPaymentRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRowD
 
     @property
     @abstractmethod
-    def store_name(self) -> Optional[str]:
+    def store_name(self) -> str | None:
         """This property returns store name."""
 
     @property
@@ -146,12 +145,12 @@ class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow,
     """This class implements convert steps from input store row to Zaim payment row."""
 
     @property
-    def category_large(self) -> Optional[str]:
+    def category_large(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.category_payment_large
 
     @property
-    def category_small(self) -> Optional[str]:
+    def category_small(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.category_payment_small
 
@@ -160,7 +159,7 @@ class ZaimPaymentRowStoreConverter(ZaimPaymentRowConverter[TypeVarInputStoreRow,
         return ZaimCsvFormat.ITEM_NAME_EMPTY
 
     @property
-    def store_name(self) -> Optional[str]:
+    def store_name(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.name_zaim
 
@@ -169,12 +168,12 @@ class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow, T
     """This class implements convert steps from input item row to Zaim payment row."""
 
     @property
-    def category_large(self) -> Optional[str]:
+    def category_large(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.item.category_payment_large
 
     @property
-    def category_small(self) -> Optional[str]:
+    def category_small(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.item.category_payment_small
 
@@ -187,7 +186,7 @@ class ZaimPaymentRowItemConverter(ZaimPaymentRowConverter[TypeVarInputItemRow, T
         return self.input_row.item.name
 
     @property
-    def store_name(self) -> Optional[str]:
+    def store_name(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.name_zaim
 
@@ -199,12 +198,12 @@ class ZaimPaymentRowStoreItemConverter(
     """This class implements convert steps from input store item row to Zaim payment row."""
 
     @property
-    def category_large(self) -> Optional[str]:
+    def category_large(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.item.category_payment_large
 
     @property
-    def category_small(self) -> Optional[str]:
+    def category_small(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.item.category_payment_small
 
@@ -217,7 +216,7 @@ class ZaimPaymentRowStoreItemConverter(
         return self.input_row.item.name
 
     @property
-    def store_name(self) -> Optional[str]:
+    def store_name(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.name_zaim
 
@@ -227,12 +226,12 @@ class ZaimTransferRowConverter(ZaimRowConverter[TypeVarInputRow, TypeVarInputRow
 
     @property
     @abstractmethod
-    def cash_flow_source(self) -> Optional[str]:
+    def cash_flow_source(self) -> str | None:
         """This property returns cash flow source."""
 
     @property
     @abstractmethod
-    def cash_flow_target(self) -> Optional[str]:
+    def cash_flow_target(self) -> str | None:
         """This property returns cash flow target."""
 
     @property

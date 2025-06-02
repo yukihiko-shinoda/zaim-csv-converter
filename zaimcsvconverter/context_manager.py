@@ -11,7 +11,6 @@ from abc import ABC
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 from typing import Generic
-from typing import Optional
 from typing import TypeVar
 
 if TYPE_CHECKING:
@@ -24,7 +23,7 @@ class ContextManager(Generic[TypeVarCovariant_co], ABC):
     """Class which can be used as `contextmanager`."""
 
     def __init__(self) -> None:
-        self.__cm: Optional[contextlib._GeneratorContextManager[TypeVarCovariant_co]] = None
+        self.__cm: contextlib._GeneratorContextManager[TypeVarCovariant_co] | None = None
 
     @abstractmethod
     # Reason: Maybe, there are no way to fix.
@@ -42,10 +41,10 @@ class ContextManager(Generic[TypeVarCovariant_co], ABC):
 
     def __exit__(
         self,
-        exc_type: Optional[type[BaseException]],
-        exc_value: Optional[BaseException],
-        traceback: Optional[TracebackType],
-    ) -> Optional[bool]:
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> bool | None:
         if self.__cm is None:
             return None
         return self.__cm.__exit__(exc_type, exc_value, traceback)

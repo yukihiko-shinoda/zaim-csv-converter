@@ -6,7 +6,6 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
-from typing import Optional
 
 from pydantic import ConfigDict
 from pydantic import GetCoreSchemaHandler
@@ -133,11 +132,11 @@ def constringtoint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     type_class: type[ConstrainedStringToInt],
     *,
     strict: bool = False,
-    gt: Optional[int] = None,  # pylint: disable=invalid-name
-    ge: Optional[int] = None,  # pylint: disable=invalid-name
-    lt: Optional[int] = None,  # pylint: disable=invalid-name
-    le: Optional[int] = None,  # pylint: disable=invalid-name
-    multiple_of: Optional[int] = None,
+    gt: int | None = None,  # pylint: disable=invalid-name
+    ge: int | None = None,  # pylint: disable=invalid-name
+    lt: int | None = None,  # pylint: disable=invalid-name
+    le: int | None = None,  # pylint: disable=invalid-name
+    multiple_of: int | None = None,
 ) -> type[int]:
     """Creates constrained type for converting string with comma to int value."""
     # use kwargs then define conf in a dict to aid with IDE type hinting

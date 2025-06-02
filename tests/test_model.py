@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Optional
 
 import pytest
 from sqlalchemy import select
@@ -63,8 +62,8 @@ class TestModel:
     def test_try_to_find_success(
         file_csv_convert: FileCsvConvert,
         store_name: str,
-        expected_store_name_zaim: Optional[str],
-        expected_transfer_target: Optional[str],
+        expected_store_name_zaim: str | None,
+        expected_transfer_target: str | None,
     ) -> None:
         """Method should return Store model when store name is exist in database."""
         store = Store.try_to_find(file_csv_convert.value.id, store_name)

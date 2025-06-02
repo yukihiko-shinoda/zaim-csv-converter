@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Optional
 from typing import cast
 
 from zaimcsvconverter import CONFIG
@@ -28,7 +27,7 @@ class PayPayCardZaimTransferRowConverter(ZaimTransferRowConverter[PayPayCardRow,
         return CONFIG.pay_pay_card.account_name
 
     @property
-    def cash_flow_target(self) -> Optional[str]:
+    def cash_flow_target(self) -> str | None:
         return self.input_row.store.transfer_target
 
     @property

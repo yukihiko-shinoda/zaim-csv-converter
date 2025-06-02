@@ -5,7 +5,6 @@ from __future__ import annotations
 import csv
 from logging import getLogger
 from pathlib import Path
-from typing import Optional
 
 import pytest
 from fixturefilehandler.file_paths import RelativeDeployFilePath
@@ -49,7 +48,7 @@ from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 def create_relative_deploy_file_path(
     resource_path: Path,
     directory_name: str,
-    directory_name_resource: Optional[str] = None,
+    directory_name_resource: str | None = None,
 ) -> RelativeDeployFilePath:
     """This  function creates relative path aggregate instance to deploy."""
     if directory_name_resource is None:

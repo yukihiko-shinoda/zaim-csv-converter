@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import Any
-from typing import Optional
 
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -47,7 +46,7 @@ class Amazon201911DiscountRow(Amazon201911ItemRow):
 
     def __init__(self, row_data: Amazon201911RowData) -> None:
         super().__init__(row_data)
-        self._total_order: Optional[int] = row_data.total_order
+        self._total_order: int | None = row_data.total_order
 
     @property
     def total_order(self) -> int:
@@ -71,7 +70,7 @@ class Amazon201911ShippingHandlingRow(Amazon201911ItemRow):
 
     def __init__(self, row_data: Amazon201911RowData) -> None:
         super().__init__(row_data)
-        self._subtotal_price_item: Optional[int] = row_data.subtotal_price_item
+        self._subtotal_price_item: int | None = row_data.subtotal_price_item
 
     @property
     def subtotal_price_item(self) -> int:
@@ -96,8 +95,8 @@ class Amazon201911PaymentRow(Amazon201911ItemRow):
 
     def __init__(self, row_data: Amazon201911RowData) -> None:
         super().__init__(row_data)
-        self._price: Optional[int] = row_data.price
-        self._number: Optional[int] = row_data.number
+        self._price: int | None = row_data.price
+        self._number: int | None = row_data.number
 
     @property
     def price(self) -> int:

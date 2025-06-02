@@ -8,7 +8,6 @@ from __future__ import annotations
 from abc import ABC
 from abc import abstractmethod
 from typing import TYPE_CHECKING
-from typing import Optional
 from typing import TypeVar
 from typing import cast
 
@@ -79,11 +78,11 @@ class MufgAbstractIncomeZaimTransferRowConverter(MufgZaimTransferRowConverter[Ty
 
     @property
     @abstractmethod
-    def cash_flow_source(self) -> Optional[str]:
+    def cash_flow_source(self) -> str | None:
         """This property returns cash flow source."""
 
     @property
-    def cash_flow_target(self) -> Optional[str]:
+    def cash_flow_target(self) -> str | None:
         return CONFIG.mufg.account_name
 
     @property
@@ -96,12 +95,12 @@ class MufgAbstractPaymentZaimTransferRowConverter(MufgZaimTransferRowConverter[T
     """This class implements convert steps from MUFG payment input row [MufgPaymentRow]to Zaim transfer row."""
 
     @property
-    def cash_flow_source(self) -> Optional[str]:
+    def cash_flow_source(self) -> str | None:
         return CONFIG.mufg.account_name
 
     @property
     @abstractmethod
-    def cash_flow_target(self) -> Optional[str]:
+    def cash_flow_target(self) -> str | None:
         """This property returns cash flow target."""
 
     @property
@@ -130,7 +129,7 @@ class MufgTransferIncomeZaimTransferRowConverter(MufgAbstractIncomeZaimTransferR
     """This class implements convert steps from MUFG transfer income input row to Zaim transfer row."""
 
     @property
-    def cash_flow_source(self) -> Optional[str]:
+    def cash_flow_source(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.transfer_target
 
@@ -141,7 +140,7 @@ class MufgTransferPaymentZaimTransferRowConverter(
     """This class implements convert steps from MUFG transfer payment input row to Zaim transfer row."""
 
     @property
-    def cash_flow_target(self) -> Optional[str]:
+    def cash_flow_target(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return self.input_row.store.transfer_target
 
@@ -150,17 +149,17 @@ class MufgPaymentToMufgRowConverter(MufgZaimPaymentRowConverter):
     """This class implements convert steps from MUFG input row to Zaim payment row."""
 
     @property
-    def category_large(self) -> Optional[str]:
+    def category_large(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return "通信"
 
     @property
-    def category_small(self) -> Optional[str]:
+    def category_small(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return "その他"
 
     @property
-    def store_name(self) -> Optional[str]:
+    def store_name(self) -> str | None:
         # Reason: Pylint's bug. pylint: disable=no-member
         return CONFIG.mufg.store_name_zaim
 

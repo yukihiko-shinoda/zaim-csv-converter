@@ -6,7 +6,6 @@ from abc import ABC
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 from typing import Generic
-from typing import Union
 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_file import Csv
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
@@ -20,7 +19,7 @@ if TYPE_CHECKING:
 
 class DataSourceErrorReporter(ABC):
     @abstractmethod
-    def __iter__(self) -> Generator[list[Union[int, str]], None, None]:
+    def __iter__(self) -> Generator[list[int | str], None, None]:
         raise NotImplementedError
 
 
@@ -30,7 +29,7 @@ class InputCsvErrorReporter(Generic[TypeVarInputRow, TypeVarInputRowData], DataS
     def __init__(self, csv: Csv[TypeVarInputRow, TypeVarInputRowData]) -> None:
         self.csv = csv
 
-    def __iter__(self) -> Generator[list[Union[int, str]], None, None]:
+    def __iter__(self) -> Generator[list[int | str], None, None]:
         if self.csv.invalid_header_error is not None:
             yield [self.csv.first_form_normalizer.path_to_file.name, "", str(self.csv.invalid_header_error)]
         if self.csv.invalid_footer_error is not None:

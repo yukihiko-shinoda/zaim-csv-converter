@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
 
 
@@ -38,7 +36,7 @@ class InvalidRecordError(Error):
         self,
         list_error: list[InvalidCellError],
         *args: object,
-        undefined_content_error_handler: Optional[UndefinedContentErrorHandler] = None,
+        undefined_content_error_handler: UndefinedContentErrorHandler | None = None,
     ) -> None:
         self.list_error = list_error
         self.undefined_content_error_handler = (

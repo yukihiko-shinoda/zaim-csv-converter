@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Optional
 
 import annotated_types
 
@@ -23,7 +22,7 @@ class OptionalIntegerMustBeFromStr:
     def __init__(self, string_to_int: Callable[[str], int]) -> None:
         self.string_to_int = string_to_int
 
-    def validate(self, value: Any) -> Optional[int]:
+    def validate(self, value: Any) -> int | None:
         if not isinstance(value, str):
             msg = f"String required. Value is {value}. Type is {type(value)}."
             raise TypeError(msg)
@@ -35,12 +34,12 @@ class OptionalIntegerMustBeFromStr:
 # Reason: Followed Pydantic specification.
 def abstract_constringtooptionalint(  # noqa: PLR0913 pylint: disable=too-many-arguments
     *,
-    strict: Optional[bool] = None,
-    gt: Optional[int] = None,
-    ge: Optional[int] = None,
-    lt: Optional[int] = None,
-    le: Optional[int] = None,
-    multiple_of: Optional[int] = None,
+    strict: bool | None = None,
+    gt: int | None = None,
+    ge: int | None = None,
+    lt: int | None = None,
+    le: int | None = None,
+    multiple_of: int | None = None,
 ) -> list[Any]:
     """A wrapper around `int` that allows for additional constraints."""
     return [

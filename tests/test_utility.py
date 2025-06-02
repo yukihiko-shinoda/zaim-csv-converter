@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 import pytest
 
 from zaimcsvconverter.utility import Utility
@@ -14,7 +12,7 @@ class TestUtility:
 
     @staticmethod
     @pytest.mark.parametrize(("argument", "expected"), [("", None), ("1,000", 1000)])
-    def test_convert_string_to_int_or_none(argument: str, expected: Optional[int]) -> None:
+    def test_convert_string_to_int_or_none(argument: str, expected: int | None) -> None:
         """Test following:
 
         - Method should return None when argument is empty string.

@@ -14,7 +14,7 @@ dev = [
     #   https://github.com/dlint-py/dlint/blob/0.13.0/requirements.txt#L1
     "dlint>=0.14.0",
     # To the docformatter load pyproject.toml settings:
-    "docformatter[tomli]; python_version < '3.11' and python_version >= '3.6'",
+    "docformatter[tomli]; python_version < '3.11'",
     "docformatter; python_version >= '3.11'",
     "dodgy",
     "exceptiongroup; python_version <= '3.10'",
@@ -23,7 +23,7 @@ dev = [
     # The hacking depends flake8 ~=6.1.0 or ~=5.0.1 or ~=4.0.1.
     # We should avoid the versions that is not compatible with the hacking,
     # considering the speed of dependency calculation process
-    "flake8!=6.0.0,!=5.0.0,>=4.0.1; python_version >= '3.6'",
+    "flake8!=6.0.0,!=5.0.0,>=4.0.1",
     # To replace E501 in pycodestyle with B950 in flake8-bugbear:
     # - Using Black with other tools - Black 25.1.0 documentation
     #   https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#bugbear
@@ -35,11 +35,36 @@ dev = [
     # Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
     # When unpin hacking, it has possibility to install too legacy version of hacking.
     "hacking>=5.0.0; python_version >= '3.8'",
-    "invokelint>=0.8.1; python_version >= '3.7'",
-    "mypy",
+    "invokelint>=0.8.1",
+    # The mypy 1.16.0 seems to not support returns:
+    #   $ mypy zaimcsvconverter --show-traceback 
+    #   /workspace/.venv/lib/python3.13/site-packages/returns/primitives/hkt.py:87: error: INTERNAL ERROR -- Please try using mypy master on GitHub:
+    #   https://mypy.readthedocs.io/en/stable/common_issues.html#using-a-development-mypy-build
+    #   Please report a bug at https://github.com/python/mypy/issues
+    #   version: 1.16.0
+    #   Traceback (most recent call last):
+    #     File "mypy/checker.py", line 577, in accept
+    #     File "mypy/nodes.py", line 1396, in accept
+    #     File "mypy/checker.py", line 3079, in visit_assignment_stmt
+    #     File "mypy/checker.py", line 3306, in check_assignment
+    #     File "mypy/checker.py", line 3432, in check_compatibility_all_supers
+    #     File "mypy/checker.py", line 3578, in node_type_from_base
+    #     File "mypy/checkmember.py", line 378, in analyze_instance_member_access
+    #     File "mypy/checkmember.py", line 564, in analyze_member_var_access
+    #     File "mypy/checkmember.py", line 935, in analyze_var
+    #     File "/workspace/.venv/lib/python3.13/site-packages/returns/contrib/mypy/_typeops/fallback.py", line 25, in decorator
+    #       return function(*args, **kwargs)
+    #     File "/workspace/.venv/lib/python3.13/site-packages/returns/contrib/mypy/_features/kind.py", line 65, in attribute_access
+    #       return analyze_member_access(
+    #           ctx.context.name,  # type: ignore
+    #       ...<8 lines>...
+    #           in_literal_context=exprchecker.is_literal_context(),
+    #       )
+    #   TypeError: 'msg' is an invalid keyword argument for analyze_member_access()
+    #   /workspace/.venv/lib/python3.13/site-packages/returns/primitives/hkt.py:87: : note: use --pdb to drop into pdb
+    "mypy<1.16.0",
     # Currently, migration steps is difficult
     "pydantic>=2.0.0",
-    "pydocstyle; python_version >= '3.6'",
     "pylint",
     "pytest",
     "pytest-resource-path",
@@ -49,8 +74,8 @@ dev = [
     #   https://github.com/rubik/radon/issues/251
     "radon<6.0.0",
     "returns",
-    "ruff; python_version >= '3.7'",
-    "semgrep;python_version>='3.9' or python_version>='3.6' and platform_system=='Linux'",
+    "ruff",
+    "semgrep;python_version>='3.9' or platform_system=='Linux'",
     "types-invoke",
     "typing-extensions; python_version <= '3.10'",
     "xenon",
@@ -147,22 +172,6 @@ module = [
 ]
 ignore_missing_imports = true
 
-[tool.pydocstyle]
-convention = "google"
-add_ignore = [
-    # Reason: Docstring may be missed since docstring-min-length is set.
-    "D101",  # Missing docstring in public class
-    "D102",  # Missing docstring in public method
-    "D103",  # Missing docstring in public function
-    "D105",  # Missing docstring in magic method
-    "D106",  # Missing docstring in public nested class
-    "D107",  # Missing docstring in __init__
-    # Reason: First line may ends with function signature for expression.
-    "D402",  # First line should not be the function’s “signature”
-    # Reason: First line may ends with ":" for expression.
-    "D415",  # First line should end with a period, question mark, or exclamation point
-]
-
 [tool.pylint.basic]
 docstring-min-length = "7"
 
@@ -208,12 +217,8 @@ ignore = [
     "D415",    # First line should end with a period, question mark, or exclamation point
     # Reason: `Line too long` is checked by flake8-bugbear.
     "E501",    # Line too long ({width} > {limit})
-    # To support for Python 3.5 in the future
-    "UP032",   # [*] Use f-string instead of `format` call
     # Currently, there are too many Any types in the codebase
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed, These warnings are disabled by default
-    # Python 3.9 incompatible
-    "UP007",   # Use X | Y for type annotations
 ]
 fixable = [
     "COM812",  # Trailing comma missing
