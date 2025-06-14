@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from zaimcsvconverter import CONFIG
 from zaimcsvconverter.data.waon import ChargeKind
 from zaimcsvconverter.data.waon import UseKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -102,3 +103,12 @@ class WaonChargeRow(WaonStoreRow):
     @property
     def is_charge_by_download_value(self) -> bool:
         return self.is_charge and self.charge_kind == ChargeKind.DOWNLOAD_VALUE
+
+    @property
+    def is_row_to_skip(self) -> bool:
+        return self.is_transfer_from_auto_charge_source and CONFIG.waon.skip_transfer_from_auto_charge_source_row
+
+    @property
+    def is_transfer_from_auto_charge_source(self) -> bool:
+        """Check if the row is a transfer from auto charge source."""
+        return ChargeKind(CONFIG.waon.auto_charge_source_type) == self.charge_kind

@@ -173,7 +173,7 @@ class TestZaimCsvConverter:
                 InvalidRowErrorRowData(
                     "waon201808.csv",
                     "1",
-                    "Invalid 4, Input should be '銀行口座', 'ポイント', '現金', 'バリューダウンロード' or '-'",
+                    "Invalid 4, Input should be '銀行口座', 'ポイント', '現金', 'クレジット', 'バリューダウンロード' or '-'",
                 ),
             ],
         )

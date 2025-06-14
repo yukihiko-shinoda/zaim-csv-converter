@@ -32,25 +32,19 @@ def create_zaim_row_data_waon_201810() -> list[ZaimRowData]:
         "2018-10-22", "income", "その他", "-", "", "WAON", "", "",
         "イオンスタイル　板橋前野町", "", "1504", "0", "0", "", "", "",
     )
-    zaim_row_data_02 = ZaimRowData(
-        "2018-10-22", "transfer", "-", "-", "イオン銀行", "WAON", "", "", "", "", "0", "0", "10000", "", "", "",
-    )
     # fmt: on
-    return [zaim_row_data_01, zaim_row_data_02]
+    return [zaim_row_data_01]
 
 
 def create_zaim_row_data_waon_201811() -> list[ZaimRowData]:
     """Creates expected zaim row data for WAON 201811."""
     # fmt: off
-    zaim_row_data_01 = ZaimRowData(
-        "2018-11-11", "transfer", "-", "-", "イオン銀行", "WAON", "", "", "", "", "0", "0", "5000", "", "", "",
-    )
     zaim_row_data_02 = ZaimRowData(
         "2018-11-23", "payment", "食費", "食料品", "WAON", "", "", "",
         "カルディコーヒーファーム成増店", "", "0", "-2098", "0", "", "", "",
     )
     # fmt: on
-    return [zaim_row_data_01, zaim_row_data_02]
+    return [zaim_row_data_02]
 
 
 def create_zaim_row_data_gold_point_card_plus_201807() -> list[ZaimRowData]:

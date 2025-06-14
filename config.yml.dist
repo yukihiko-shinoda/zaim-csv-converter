@@ -3,6 +3,11 @@ waon:
   account_name: 'WAON'
   # ↓ オートチャージ時に入金元となる口座の、Zaim上で登録している口座名を設定します。
   auto_charge_source: ''
+  # ↓ オートチャージ時に入金元となる口座からの入金履歴を省くかどうかを設定します。AEON 銀行を API 連携するなどの場合、2重登録を防ぐため true にします。
+  skip_transfer_from_auto_charge_source_row: true
+  # ↓ オートチャージ時に入金元となる口座の種類を `銀行口座` か `クレジット` のいずれかを設定します
+  # ↓ オートチャージ未設定の場合はいずれかを設定しておきます (動作に影響はありません)
+  auto_charge_source_type: 銀行口座
 gold_point_card_plus:
   # ↓ Zaim上でヨドバシゴールドポイントカード・プラス用として登録している口座名を設定します。
   account_name: 'ヨドバシゴールドポイントカード・プラス'
