@@ -1,6 +1,8 @@
 waon:
   account_name: 'WAON'
   auto_charge_source: 'イオン銀行'
+  skip_transfer_from_auto_charge_source_row: true
+  auto_charge_source_type: 銀行口座
 gold_point_card_plus:
   account_name: 'ヨドバシゴールドポイントカード・プラス'
   skip_amazon_row: true

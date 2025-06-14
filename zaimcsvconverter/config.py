@@ -15,6 +15,8 @@ class WaonConfig(DataClassJsonMixin):
 
     account_name: str
     auto_charge_source: str
+    skip_transfer_from_auto_charge_source_row: bool
+    auto_charge_source_type: str
 
 
 @dataclass

@@ -32,6 +32,7 @@ class ChargeKind(str, Enum):
     BANK_ACCOUNT = "銀行口座"
     POINT = "ポイント"
     CASH = "現金"
+    CREDIT_CARD = "クレジット"
     DOWNLOAD_VALUE = "バリューダウンロード"
     NULL = "-"
 
