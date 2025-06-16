@@ -102,6 +102,8 @@ dependencies = [
     "inflector",
     # To uniquify undefined content errors
     "numpy",
+    # To normalize CSV data to Pydantic model
+    "pydantictypes",
     # To manage stores and items by database (now using SQLite)
     "sqlalchemy",
     # To read yaml file as config
