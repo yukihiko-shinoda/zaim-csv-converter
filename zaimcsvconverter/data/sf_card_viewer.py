@@ -3,8 +3,8 @@
 from enum import Enum
 
 from pydantic.dataclasses import dataclass
-
 from pydantictypes.string_to_datetime import StringSlashToDateTime
+
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 

@@ -3,9 +3,9 @@
 from typing import ClassVar
 
 from pydantic.dataclasses import dataclass
-
 from pydantictypes.string_to_datetime import StringSlashToDateTime
 from pydantictypes.string_to_optional_int import ConstrainedStringToOptionalInt
+
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 
