@@ -7,8 +7,8 @@ import pytest
 from pydantic import ValidationError
 from pydantic.dataclasses import dataclass
 
-from tests.customdatatypes import create
-from zaimcsvconverter.customdatatypes.symbol_yen_string_to_int import SymbolYenStringToInt
+from pydantictypes.symbol_yen_string_to_int import SymbolYenStringToInt
+from tests.pydantictypes import create
 
 
 @dataclass

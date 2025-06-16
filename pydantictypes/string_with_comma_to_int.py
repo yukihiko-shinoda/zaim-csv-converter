@@ -7,7 +7,7 @@ from typing import Annotated
 import annotated_types
 from pydantic import BeforeValidator
 
-from zaimcsvconverter.customdatatypes.abstract_string_to_int import IntegerMustBeFromStr
+from pydantictypes.abstract_string_to_int import IntegerMustBeFromStr
 from zaimcsvconverter.utility import Utility
 
 

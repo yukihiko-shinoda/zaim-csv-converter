@@ -8,8 +8,8 @@ import annotated_types
 from pydantic import BeforeValidator
 
 # Reason: Pylint's bug. pylint: disable=no-name-in-module
-from zaimcsvconverter.customdatatypes.abstract_string_to_int import ConstrainedStringToInt
-from zaimcsvconverter.customdatatypes.abstract_string_to_int import IntegerMustBeFromStr
+from pydantictypes.abstract_string_to_int import ConstrainedStringToInt
+from pydantictypes.abstract_string_to_int import IntegerMustBeFromStr
 from zaimcsvconverter.utility import Utility
 
 

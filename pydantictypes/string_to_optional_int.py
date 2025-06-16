@@ -9,11 +9,11 @@ from typing import Union
 
 from pydantic import BeforeValidator
 
-from zaimcsvconverter.customdatatypes.abstract_string_to_optional_int import OptionalIntegerMustBeFromStr
-from zaimcsvconverter.customdatatypes.abstract_string_to_optional_int import abstract_constringtooptionalint
-from zaimcsvconverter.customdatatypes.validators import optional_int_validator
-from zaimcsvconverter.customdatatypes.validators import optional_number_multiple_validator
-from zaimcsvconverter.customdatatypes.validators import optional_number_size_validator
+from pydantictypes.abstract_string_to_optional_int import OptionalIntegerMustBeFromStr
+from pydantictypes.abstract_string_to_optional_int import abstract_constringtooptionalint
+from pydantictypes.validators import optional_int_validator
+from pydantictypes.validators import optional_number_multiple_validator
+from pydantictypes.validators import optional_number_size_validator
 
 try:
     from typing import Unpack

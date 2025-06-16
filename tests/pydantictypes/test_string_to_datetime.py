@@ -7,10 +7,10 @@ import pytest
 from pydantic import ValidationError
 from pydantic.dataclasses import dataclass
 
-from tests.customdatatypes import create
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringNumberOnlyToDateTime
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashMonthDayOnlyToDatetime
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
+from pydantictypes.string_to_datetime import StringNumberOnlyToDateTime
+from pydantictypes.string_to_datetime import StringSlashMonthDayOnlyToDatetime
+from pydantictypes.string_to_datetime import StringSlashToDateTime
+from tests.pydantictypes import create
 
 
 @dataclass

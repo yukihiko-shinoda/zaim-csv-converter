@@ -4,8 +4,8 @@ from enum import Enum
 
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
-from zaimcsvconverter.customdatatypes.string_with_comma_to_optional_int import StrictStringWithCommaToOptionalInt
+from pydantictypes.string_to_datetime import StringSlashToDateTime
+from pydantictypes.string_with_comma_to_optional_int import StrictStringWithCommaToOptionalInt
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 

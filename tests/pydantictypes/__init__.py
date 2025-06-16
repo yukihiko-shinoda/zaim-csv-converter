@@ -1,4 +1,4 @@
-"""Test for customdatatypes."""
+"""Test for pydantictypes."""
 
 from typing import TypeVar
 

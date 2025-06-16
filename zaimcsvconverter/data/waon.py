@@ -4,8 +4,8 @@ from enum import Enum
 
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.kanji_yen_string_to_int import StrictKanjiYenStringToInt
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
+from pydantictypes.kanji_yen_string_to_int import StrictKanjiYenStringToInt
+from pydantictypes.string_to_datetime import StringSlashToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 

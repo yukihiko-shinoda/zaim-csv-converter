@@ -6,7 +6,7 @@ from typing import ClassVar
 
 from pydantic.dataclasses import dataclass
 
-from zaimcsvconverter.customdatatypes.string_to_datetime import StringSlashToDateTime
+from pydantictypes.string_to_datetime import StringSlashToDateTime
 from zaimcsvconverter.first_form_normalizer import CsvRowData
 
 

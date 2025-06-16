@@ -7,10 +7,10 @@ from typing import Any
 
 import annotated_types
 
-from zaimcsvconverter.customdatatypes.validators import optional_int_validator
-from zaimcsvconverter.customdatatypes.validators import optional_number_multiple_validator
-from zaimcsvconverter.customdatatypes.validators import optional_number_size_validator
-from zaimcsvconverter.customdatatypes.validators import optional_strict_int_validator
+from pydantictypes.validators import optional_int_validator
+from pydantictypes.validators import optional_number_multiple_validator
+from pydantictypes.validators import optional_number_size_validator
+from pydantictypes.validators import optional_strict_int_validator
 
 if TYPE_CHECKING:
     from collections.abc import Callable

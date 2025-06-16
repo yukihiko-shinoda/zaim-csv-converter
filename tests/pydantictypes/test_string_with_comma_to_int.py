@@ -1,4 +1,4 @@
-"""Tests for string_to_optional_int.py ."""
+"""Test for string_with_comma_to_int.py ."""
 
 import datetime
 from typing import Any
@@ -7,39 +7,40 @@ import pytest
 from pydantic.dataclasses import dataclass
 from pydantic_core import ValidationError
 
-from tests.customdatatypes import create
-from zaimcsvconverter.customdatatypes.string_to_optional_int import ConstrainedStringToOptionalInt
+from pydantictypes.string_with_comma_to_int import StrictStringWithCommaToInt
+from tests.pydantictypes import create
 
 
 @dataclass
 class Stub:
-    int_: ConstrainedStringToOptionalInt
+    int_: StrictStringWithCommaToInt
 
 
 class Test:
-    """Tests for ConstrainedStringToOptionalInt."""
+    """Tests for StrictStringWithCommaToInt."""
 
     @pytest.mark.parametrize(
         ("value", "expected"),
         [
             ("1", 1),
-            ("1000", 1000),
-            ("1000000", 1000000),
-            ("", None),
+            ("1,000", 1000),
+            ("1,000,000", 1000000),
         ],
     )
     def test(self, value: str, expected: int) -> None:
         """Property should be converted to int."""
         stub = create(Stub, [value])
-        assert isinstance(stub.int_, type(expected))
         assert stub.int_ == expected
 
     @pytest.mark.parametrize(
         "value",
         [
             "1.0",
-            "1,000",
-            "1000000 1000000",
+            "1,000.0",
+            "1,000,000.0",
+            "1,000,000 1,000,000",
+            # "1000000",
+            "1,000,000円",
             "1 円",
             "1円",
             "1 ドル",
@@ -48,6 +49,7 @@ class Test:
             "¥ 1",
             "$1",
             "$ 1",
+            "",
             None,
             datetime.date(2020, 1, 1),
             1,

@@ -109,7 +109,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["zaimcsvconverter", "zaimcsvconverter.*"]
+include = ["zaimcsvconverter", "zaimcsvconverter.*", "pydantictypes", "pydantictypes.*"]
 
 [tool.bandit.assert_used]
 skips = ["tests/*.py"]
@@ -126,7 +126,7 @@ exclude_also = [
 ]
 
 [tool.coverage.run]
-source = ["zaimcsvconverter"]
+source = ["zaimcsvconverter", "pydantictypes"]
 
 [tool.docformatter]
 recursive = true
