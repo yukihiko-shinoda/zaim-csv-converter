@@ -2,7 +2,6 @@ services:
   converter:
     build:
       context: .
-      target: production
     environment:
       RADONFILESENCODING: UTF-8
     image: futureys/convert-zaim-csv:latest

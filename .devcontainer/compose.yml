@@ -17,7 +17,6 @@ services:
     #
     build:
       context: .
-      target: development
     entrypoint: []
     image: futureys/convert-zaim-csv:development
     volumes:
