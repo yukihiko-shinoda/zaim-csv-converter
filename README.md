@@ -4,7 +4,7 @@
 [![CodeQL](https://github.com/yukihiko-shinoda/zaim-csv-converter/workflows/CodeQL/badge.svg)](https://github.com/yukihiko-shinoda/zaim-csv-converter/actions?query=workflow%3ACodeQL)
 [![Code Coverage](https://qlty.sh/gh/yukihiko-shinoda/projects/zaim-csv-converter/coverage.svg)](https://qlty.sh/gh/yukihiko-shinoda/projects/zaim-csv-converter)
 [![Maintainability](https://qlty.sh/gh/yukihiko-shinoda/projects/zaim-csv-converter/maintainability.svg)](https://qlty.sh/gh/yukihiko-shinoda/projects/zaim-csv-converter)
-[![Code Climate technical debt](https://img.shields.io/codeclimate/tech-debt/yukihiko-shinoda/zaim-csv-converter)](https://codeclimate.com/github/yukihiko-shinoda/zaim-csv-converter)
+[![Dependabot](https://flat.badgen.net/github/dependabot/yukihiko-shinoda/zaim-csv-converter?icon=dependabot)](https://github.com/yukihiko-shinoda/zaim-csv-converter/security/dependabot)
 [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fyukihiko-shinoda%2Fzaim-csv-converter)](http://twitter.com/share?text=Zaim%20CSV%20Converter&url=https://github.com/yukihiko-shinoda/zaim-csv-converter&hashtags=python,zaim)
 
 各口座の WEB サイト等で出力できる CSV を
