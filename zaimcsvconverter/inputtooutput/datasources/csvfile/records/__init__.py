@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
 
 
-class InputRow(Generic[TypeVarInputRowData], AbstractInputRecord):
+class InputRow(AbstractInputRecord, Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
 
     def __init__(self, input_row_data: TypeVarInputRowData) -> None:

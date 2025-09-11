@@ -27,7 +27,7 @@ if TYPE_CHECKING:
     from zaimcsvconverter.inputtooutput.datasources.csvfile.csv_record_processor import CsvRecordProcessor
 
 
-class Csv(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
+class Csv(DataSource, Generic[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements CSV datasource."""
 
     def __init__(

@@ -20,7 +20,7 @@ class TestInputCsvErrorReporter:
     def test_error() -> None:
         """Method create() should raise appropriate error."""
 
-        class Unexpected(Generic[TypeVarInputRow, TypeVarInputRowData], DataSource):
+        class Unexpected(DataSource, Generic[TypeVarInputRow, TypeVarInputRowData]):
             """Unexpected class."""
 
             def __iter__(self) -> Generator[AbstractInputRecord, None, None]:

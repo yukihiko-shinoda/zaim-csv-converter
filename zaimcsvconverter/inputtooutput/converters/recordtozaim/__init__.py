@@ -43,7 +43,7 @@ TypeVarAbstractZaimRowConverter = TypeVar("TypeVarAbstractZaimRowConverter", bou
 
 
 # Reason: Abstract class. pylint: disable=too-few-public-methods
-class ZaimRowConverter(Generic[TypeVarInputRow, TypeVarInputRowData], AbstractZaimRowConverter, ABC):
+class ZaimRowConverter(AbstractZaimRowConverter, ABC, Generic[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements convert steps from input row to Zaim row."""
 
     def __init__(self, input_row: Kind1[TypeVarInputRow, TypeVarInputRowData]) -> None:
@@ -259,7 +259,7 @@ class ZaimRowConverterFactory:
         raise NotImplementedError
 
 
-class CsvRecordToZaimRowConverterFactory(Generic[TypeVarInputRow, TypeVarInputRowData], ZaimRowConverterFactory):
+class CsvRecordToZaimRowConverterFactory(ZaimRowConverterFactory, Generic[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements factory of Zaim row converter.
 
     Why factory class is independent from input row data class is because we can't achieve 100% coverage without this

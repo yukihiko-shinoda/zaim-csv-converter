@@ -17,7 +17,7 @@ class OutputRecord(ABC):  # noqa: B024
 TypeVarOutputRecord = TypeVar("TypeVarOutputRecord", bound=OutputRecord)
 
 
-class OutputModelExporter(Generic[TypeVarOutputRecord], ContextManager[Any], ABC):
+class OutputModelExporter(ContextManager[Any], ABC, Generic[TypeVarOutputRecord]):
     @abstractmethod
     def execute(self, output_row: TypeVarOutputRecord) -> None:
         raise NotImplementedError

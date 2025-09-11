@@ -23,7 +23,7 @@ class DataSourceErrorReporter(ABC):
         raise NotImplementedError
 
 
-class InputCsvErrorReporter(Generic[TypeVarInputRow, TypeVarInputRowData], DataSourceErrorReporter):
+class InputCsvErrorReporter(DataSourceErrorReporter, Generic[TypeVarInputRow, TypeVarInputRowData]):
     """This class implements error report process for input CSV."""
 
     def __init__(self, csv: Csv[TypeVarInputRow, TypeVarInputRowData]) -> None:

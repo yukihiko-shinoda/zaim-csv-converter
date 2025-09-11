@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 TypeVarCovariant_co = TypeVar("TypeVarCovariant_co", covariant=True)
 
 
-class ContextManager(Generic[TypeVarCovariant_co], ABC):
+class ContextManager(ABC, Generic[TypeVarCovariant_co]):
     """Class which can be used as `contextmanager`."""
 
     def __init__(self) -> None:
