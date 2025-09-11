@@ -72,7 +72,7 @@ dev = [
     # Since the radon can't run when use pytest log format:
     # - Radon can't run when use pytest log fornat: `$()d` · Issue #251 · rubik/radon
     #   https://github.com/rubik/radon/issues/251
-    "radon<6.0.0",
+    "radon<7.0.0",
     "returns",
     "ruff",
     "semgrep;python_version>='3.9' or platform_system=='Linux'",
