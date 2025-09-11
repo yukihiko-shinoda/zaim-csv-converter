@@ -2252,7 +2252,7 @@ dev = [
     { name = "flake8-pyproject" },
     { name = "hacking", marker = "python_full_version >= '3.8'", specifier = ">=5.0.0" },
     { name = "invokelint", specifier = ">=0.8.1" },
-    { name = "mypy", specifier = "<1.18.0" },
+    { name = "mypy" },
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "pylint" },
     { name = "pytest" },
