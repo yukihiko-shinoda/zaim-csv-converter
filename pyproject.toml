@@ -36,33 +36,7 @@ dev = [
     # When unpin hacking, it has possibility to install too legacy version of hacking.
     "hacking>=5.0.0; python_version >= '3.8'",
     "invokelint>=0.8.1",
-    # The mypy 1.16.0 seems to not support returns:
-    #   $ mypy zaimcsvconverter --show-traceback 
-    #   /workspace/.venv/lib/python3.13/site-packages/returns/primitives/hkt.py:87: error: INTERNAL ERROR -- Please try using mypy master on GitHub:
-    #   https://mypy.readthedocs.io/en/stable/common_issues.html#using-a-development-mypy-build
-    #   Please report a bug at https://github.com/python/mypy/issues
-    #   version: 1.16.0
-    #   Traceback (most recent call last):
-    #     File "mypy/checker.py", line 577, in accept
-    #     File "mypy/nodes.py", line 1396, in accept
-    #     File "mypy/checker.py", line 3079, in visit_assignment_stmt
-    #     File "mypy/checker.py", line 3306, in check_assignment
-    #     File "mypy/checker.py", line 3432, in check_compatibility_all_supers
-    #     File "mypy/checker.py", line 3578, in node_type_from_base
-    #     File "mypy/checkmember.py", line 378, in analyze_instance_member_access
-    #     File "mypy/checkmember.py", line 564, in analyze_member_var_access
-    #     File "mypy/checkmember.py", line 935, in analyze_var
-    #     File "/workspace/.venv/lib/python3.13/site-packages/returns/contrib/mypy/_typeops/fallback.py", line 25, in decorator
-    #       return function(*args, **kwargs)
-    #     File "/workspace/.venv/lib/python3.13/site-packages/returns/contrib/mypy/_features/kind.py", line 65, in attribute_access
-    #       return analyze_member_access(
-    #           ctx.context.name,  # type: ignore
-    #       ...<8 lines>...
-    #           in_literal_context=exprchecker.is_literal_context(),
-    #       )
-    #   TypeError: 'msg' is an invalid keyword argument for analyze_member_access()
-    #   /workspace/.venv/lib/python3.13/site-packages/returns/primitives/hkt.py:87: : note: use --pdb to drop into pdb
-    "mypy<1.16.0",
+    "mypy",
     # Currently, migration steps is difficult
     "pydantic>=2.0.0",
     "pylint",
