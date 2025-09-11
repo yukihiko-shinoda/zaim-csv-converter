@@ -62,7 +62,7 @@ dev = [
     #       )
     #   TypeError: 'msg' is an invalid keyword argument for analyze_member_access()
     #   /workspace/.venv/lib/python3.13/site-packages/returns/primitives/hkt.py:87: : note: use --pdb to drop into pdb
-    "mypy<1.16.0",
+    "mypy<1.18.0",
     # Currently, migration steps is difficult
     "pydantic>=2.0.0",
     "pylint",
