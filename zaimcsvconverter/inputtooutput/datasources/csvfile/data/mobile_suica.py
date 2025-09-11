@@ -32,8 +32,13 @@ class MobileSuicaRowData(mobile_suica.MobileSuicaRowData, InputStoreRowData):
         return bool(self.used_place_1)
 
     @property
+    def is_settle(self) -> bool:
+        """This property returns whether this row is settle."""
+        return self.kind_1 == mobile_suica.Kind1.SETTLE
+
+    @property
     def is_bus_et_cetera(self) -> bool:
-        """This property returns whether this row has used place 1."""
+        """This property returns whether this row is bus et cetera."""
         return self.kind_1 == mobile_suica.Kind1.BUS_ET_CETERA
 
     @property

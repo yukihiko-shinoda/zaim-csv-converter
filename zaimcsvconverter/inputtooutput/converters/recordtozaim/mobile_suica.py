@@ -17,6 +17,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica imp
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaEnterExitRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaFirstRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaSettleRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaStoreRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
 
@@ -75,6 +76,28 @@ class MobileSuicaZaimPaymentOnBusEtCeteraRowConverter(
     ZaimPaymentRowStoreConverter[MobileSuicaBusEtCeteraRow, MobileSuicaRowData],
 ):
     """This class implements convert steps from Mobile Suica enter row to Zaim payment row."""
+
+    account_config: SFCardViewerConfig
+    year: int
+
+    @property
+    def date(self) -> datetime:
+        return self.input_row.date.replace(year=self.year)
+
+    @property
+    def cash_flow_source(self) -> str:
+        return self.account_config.account_name
+
+    @property
+    def amount(self) -> int:
+        # Reason: Pylint's bug. pylint: disable=no-member
+        return -1 * self.input_row.deposit_used_amount
+
+
+class MobileSuicaZaimPaymentOnSettleRowConverter(
+    ZaimPaymentRowStoreConverter[MobileSuicaSettleRow, MobileSuicaRowData],
+):
+    """This class implements convert steps from Mobile Suica settle row to Zaim payment row."""
 
     account_config: SFCardViewerConfig
     year: int
@@ -205,6 +228,18 @@ class MobileSuicaZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[Mobi
 
             # Reason: The returns can't detect correct type limited by if instance block.
             return ConcreteMobileSuicaZaimPaymentOnBusEtCeteraRowConverter(  # type: ignore[return-value]
+                input_row,  # type: ignore[arg-type]
+            )
+        if isinstance(input_row, MobileSuicaSettleRow):
+
+            class ConcreteMobileSuicaZaimPaymentOnSettleRowConverter(
+                MobileSuicaZaimPaymentOnSettleRowConverter,
+            ):
+                account_config = self._account_config()
+                year = self.year
+
+            # Reason: The returns can't detect correct type limited by if instance block.
+            return ConcreteMobileSuicaZaimPaymentOnSettleRowConverter(  # type: ignore[return-value]
                 input_row,  # type: ignore[arg-type]
             )
         if isinstance(input_row, MobileSuicaEnterExitRow):

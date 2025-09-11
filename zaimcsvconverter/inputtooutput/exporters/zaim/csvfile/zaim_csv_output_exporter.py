@@ -21,6 +21,7 @@ class ZaimCsvOutputModelExporter(OutputModelExporter[ZaimRow]):
     """Export operation of Zaim CSV."""
 
     def __init__(self, path_to_output: Path) -> None:
+        super().__init__()
         self.path_to_output = path_to_output
         self.writer_zaim: CSVWriter | None = None
 

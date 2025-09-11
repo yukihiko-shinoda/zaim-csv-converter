@@ -27,6 +27,7 @@ class Kind1(str, Enum):
     EXCHANGE_OTHER_TICKET = "購"
     # Reason: This is not password.
     COMMUTER_PASS = "定"  # nosec  # noqa: S105
+    SETTLE = "精"
 
 
 class Kind2(str, Enum):

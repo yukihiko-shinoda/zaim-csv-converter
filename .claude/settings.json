@@ -1,0 +1,32 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run invoke lint"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(uv run invoke lint:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv run invoke test:*)",
+      "Edit(tests/**)",
+      "Edit(tifftopng/**)"
+    ],
+    "deny": [
+      "Read(./csvconverttable/**)",
+      "Read(./csvinput/**)",
+      "Read(./csvoutput/**)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(rm:*)"
+    ]
+  }
+}

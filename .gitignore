@@ -16,3 +16,5 @@ coverage.xml
 htmlcov
 **/csvoutput/*
 !**/csvoutput/.gitkeep
+/.claude/settings.local.json
+/.claude/*.py

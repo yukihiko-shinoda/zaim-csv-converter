@@ -83,10 +83,11 @@ class MobileSuicaFirstRow(MobileSuicaStoreRow):
 
 
 class MobileSuicaBusEtCeteraRow(MobileSuicaStoreRow):
-    """This class implements bus or etc.
+    """This class implements bus or etc. row model of Mobile Suica CSV."""
 
-    row model of Mobile Suica CSV.
-    """
+
+class MobileSuicaSettleRow(MobileSuicaStoreRow):
+    """This class implements settle row model of Mobile Suica CSV."""
 
 
 # Reason: Specification requires. pylint: disable=too-many-ancestors
