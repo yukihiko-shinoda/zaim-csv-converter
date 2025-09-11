@@ -350,7 +350,10 @@ def create_zaim_row_data_mobile_suica_202210() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mobile_suica_202211() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Mobile Suica 202211."""
+    """Creates expected zaim row data for Mobile Suica 202211.
+
+    Since `現金` includes charging by JRE POINT, we expect as discount.
+    """
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2022-11-03", "payment", "", "", "Suica", "", "", "", "", "", "0", "-1019", "0", "", "", "",
@@ -371,11 +374,22 @@ def create_zaim_row_data_mobile_suica_202212() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mobile_suica_202301() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Mobile Suica 202212."""
+    """Creates expected zaim row data for Mobile Suica 202301."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2023-01-29", "payment", "交通", "バス", "Suica", "",
         "", "", "都営バス", "", "0", "210", "0", "", "", "",
+    )
+    # fmt: on
+    return [zaim_row_data_01]
+
+
+def create_zaim_row_data_mobile_suica_202505() -> list[ZaimRowData]:
+    """Creates expected zaim row data for Mobile Suica 202505."""
+    # fmt: off
+    zaim_row_data_01 = ZaimRowData(
+        "2025-05-11", "payment", "交通", "電車", "Suica", "",
+        "", "", "梅田駅（OsakaMetro）", "", "0", "190", "0", "", "", "",  # noqa: RUF001
     )
     # fmt: on
     return [zaim_row_data_01]

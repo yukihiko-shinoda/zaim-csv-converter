@@ -9,6 +9,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica imp
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaEnterExitRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaFirstRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaRow
+from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaSettleRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica import MobileSuicaStoreRow
 
 
@@ -25,8 +26,13 @@ class MobileSuicaRowFactory(InputRowFactory[MobileSuicaRowData, MobileSuicaRow])
     def create(self, input_row_data: MobileSuicaRowData) -> MobileSuicaRow:  # type: ignore[override]
         if input_row_data.has_kind_2:
             return MobileSuicaEnterExitRow(input_row_data, self._account_config())
+        if input_row_data.is_settle:
+            return MobileSuicaSettleRow(input_row_data, self._account_config())
         if input_row_data.is_bus_et_cetera:
             return MobileSuicaBusEtCeteraRow(input_row_data, self._account_config())
+        return self._create(input_row_data)
+
+    def _create(self, input_row_data: MobileSuicaRowData) -> MobileSuicaRow:
         if input_row_data.first_record:
             return MobileSuicaFirstRow(input_row_data, self._account_config())
         if input_row_data.has_used_place_1:
