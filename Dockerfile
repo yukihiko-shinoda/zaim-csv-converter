@@ -3,7 +3,8 @@ WORKDIR /workspace
 # - Using uv in Docker | uv
 #   https://docs.astral.sh/uv/guides/integration/docker/#installing-uv
 COPY --from=ghcr.io/astral-sh/uv:0.8.17 /uv /uvx /bin/
-RUN npm install -g @anthropic-ai/claude-code@1.0.111
+RUN npm install -g @anthropic-ai/claude-code@1.0.93
+ENV DISABLE_AUTOUPDATER=1
 # For running Semgrep, otherwise following error occurs:
 # Fatal error: exception Failure: ca-certs: no trust anchor file found, looked into /etc/ssl/certs/ca-certificates.crt, /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem, /etc/ssl/ca-bundle.pem.
 RUN apt-get update && apt-get install --no-install-recommends -y ca-certificates \
