@@ -18,7 +18,7 @@
       "Bash(uv run pytest:*)",
       "Bash(uv run invoke test:*)",
       "Edit(tests/**)",
-      "Edit(tifftopng/**)"
+      "Edit(zaimcsvconverter/**)"
     ],
     "deny": [
       "Read(./csvconverttable/**)",
