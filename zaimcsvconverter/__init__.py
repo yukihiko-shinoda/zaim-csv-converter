@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from zaimcsvconverter.config import Config
 
 Session = scoped_session(sessionmaker(bind=create_engine("sqlite://")))
-CONFIG: Config = Config()
+CONFIG: Config = Config.create()
 
 
 class DirectoryCsv(Enum):

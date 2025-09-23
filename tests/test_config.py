@@ -12,12 +12,12 @@ class TestConfig:
     # pylint: disable=unused-argument
     def test_init(self) -> None:
         """Constructor should leave to load yaml file."""
-        config = Config()
-        assert_each_properties(config, [None, None, None, None, None, None, None, None, None, None])
+        config = Config.create()
+        assert_each_properties(config, [])
 
     def test_load(self, resource_path_root: Path) -> None:
         """Arguments should load yaml file."""
-        config = Config()
+        config = Config.create()
         config.load(resource_path_root / "config.yml.dist")
         self.assert_waon(config, "WAON", "イオン銀行")
         self.assert_gold_point_card_plus(
