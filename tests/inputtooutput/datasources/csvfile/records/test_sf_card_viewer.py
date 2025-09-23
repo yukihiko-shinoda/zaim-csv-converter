@@ -40,7 +40,11 @@ class TestSFCardViewerSalesGoodsRow:
     @staticmethod
     @pytest.mark.parametrize(
         ("_yaml_config_load", "expected"),
-        [("config_skip_sales_goods_row.yml.dist", True), ("config_not_skip_sales_goods_row.yml.dist", False)],
+        [
+            pytest.param("test.yml.dist", True, id="test"),
+            ("config_skip_sales_goods_row.yml.dist", True),
+            ("config_not_skip_sales_goods_row.yml.dist", False),
+        ],
         indirect=["_yaml_config_load"],
     )
     @pytest.mark.usefixtures("_yaml_config_load", "database_session_stores_sf_card_viewer")
