@@ -44,7 +44,7 @@ dev = [
     "pytest-resource-path",
     "pyvelocity; python_version >= '3.9'",
     # Since the radon can't run when use pytest log format:
-    # - Radon can't run when use pytest log fornat: `$()d` · Issue #251 · rubik/radon
+    # - Radon can't run when use pytest log format: `$()d` · Issue #251 · rubik/radon
     #   https://github.com/rubik/radon/issues/251
     "radon<6.0.0",
     "returns",
@@ -193,18 +193,6 @@ ignore = [
     "D415",    # First line should end with a period, question mark, or exclamation point
     # Reason: `Line too long` is checked by flake8-bugbear.
     "E501",    # Line too long ({width} > {limit})
-    # Currently, there are too many Any types in the codebase
-    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed, These warnings are disabled by default
-]
-fixable = [
-    "COM812",  # Trailing comma missing
-    "EM102",   # Exception must not use an f-string literal, assign to variable first
-    "I",       # isort
-    "PT001",   # Use `@pytest.fixture()` over `@pytest.fixture`
-    "PT006",   # Wrong name(s) type in `@pytest.mark.parametrize`, expected `tuple`
-    "UP006",   # Use {} instead of {} for type annotations
-    "UP015",   # Unnecessary open mode parameters
-    "UP037",   # Remove quotes from type annotation
 ]
 unfixable = [
     # When fix `return a and b != ""` as `return a and b`, mypy will report warning:
