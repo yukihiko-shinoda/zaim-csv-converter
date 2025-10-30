@@ -28,6 +28,9 @@ if TYPE_CHECKING:
     from zaimcsvconverter.file_csv_convert import FileCsvConvertContext
 
 
+TypeVarReturnValue = TypeVar("TypeVarReturnValue")
+
+
 class InputRow(AbstractInputRecord, Generic[TypeVarInputRowData]):
     """This class implements row model of CSV."""
 
@@ -40,10 +43,10 @@ class InputRow(AbstractInputRecord, Generic[TypeVarInputRowData]):
         """This method validates data."""
         return bool(self.list_error)
 
-    def stock_error(self, method: Callable[[], Any], message: str) -> Any:
+    def stock_error(self, method: Callable[[], TypeVarReturnValue], message: str) -> None:
         """This method stocks error."""
         with MultipleErrorCollector(InvalidCellError, message, self.list_error):
-            return method()
+            _ = method()
 
     @property
     def is_row_to_skip(self) -> bool:
@@ -80,7 +83,11 @@ class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
             self._store = Store.try_to_find(self._file_csv_convert_store.id, self.store_name)
         return self._store
 
-    def stock_undefined_content_error_store(self, method: Callable[[], Any], message: str) -> Any:
+    def stock_undefined_content_error_store(
+        self,
+        method: Callable[[], TypeVarReturnValue],
+        message: str,
+    ) -> TypeVarReturnValue | None:
         """This method stocks undefined content error."""
         error_collector = SingleErrorCollector(UndefinedContentError, message)
         # noinspection PyUnusedLocal
@@ -136,7 +143,11 @@ class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
             self._item = Item.try_to_find(self._file_csv_convert_item.id, self.item_name)
         return self._item
 
-    def stock_undefined_content_error_item(self, method: Callable[[], Any], message: str) -> Any:
+    def stock_undefined_content_error_item(
+        self,
+        method: Callable[[], TypeVarReturnValue],
+        message: str,
+    ) -> TypeVarReturnValue | None:
         """This method stocks undefined content error."""
         error_collector = SingleErrorCollector(UndefinedContentError, message)
         # noinspection PyUnusedLocal
@@ -188,7 +199,11 @@ class InputStoreItemRow(InputStoreRow[TypeVarInputStoreItemRowData]):
             self._item = Item.try_to_find(self._file_csv_convert_item.id, self.item_name)
         return self._item
 
-    def stock_undefined_content_error_item(self, method: Callable[[], Any], message: str) -> Any:
+    def stock_undefined_content_error_item(
+        self,
+        method: Callable[[], TypeVarReturnValue],
+        message: str,
+    ) -> TypeVarReturnValue | None:
         """This method stocks undefined content error."""
         error_collector = SingleErrorCollector(UndefinedContentError, message)
         # noinspection PyUnusedLocal

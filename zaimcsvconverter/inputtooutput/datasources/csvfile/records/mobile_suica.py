@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Any
 
 from zaimcsvconverter.data.mobile_suica import Kind1
 from zaimcsvconverter.data.mobile_suica import Kind2
@@ -24,8 +23,8 @@ class MobileSuicaRow(InputRow[MobileSuicaRowData]):
         self,
         row_data: MobileSuicaRowData,
         account_config: SFCardViewerConfig,
-        *args: Any,
-        **kwargs: Any,
+        *args: object,
+        **kwargs: object,
     ) -> None:
         super().__init__(row_data, *args, **kwargs)
         self.kind_1 = row_data.kind_1

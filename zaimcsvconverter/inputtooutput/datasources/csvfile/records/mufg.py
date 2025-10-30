@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import Any
 
 from zaimcsvconverter.data.mufg import CashFlowKind
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -15,7 +14,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStor
 class MufgRow(InputRow[MufgRowData]):
     """This class implements row model of MUFG bank CSV."""
 
-    def __init__(self, input_row_data: MufgRowData, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, input_row_data: MufgRowData, *args: object, **kwargs: object) -> None:
         super().__init__(input_row_data, *args, **kwargs)
         self.cash_flow_kind: CashFlowKind = input_row_data.cash_flow_kind
         self._summary: str = input_row_data.summary
@@ -55,7 +54,7 @@ class MufgRow(InputRow[MufgRowData]):
 class MufgIncomeRow(MufgRow, ABC):
     """This class implements income row model of MUFG bank CSV."""
 
-    def __init__(self, row_data: MufgRowData, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, row_data: MufgRowData, *args: object, **kwargs: object) -> None:
         super().__init__(row_data, *args, **kwargs)
         self._deposit_amount: int | None = row_data.deposit_amount
 
@@ -78,7 +77,7 @@ class MufgIncomeRow(MufgRow, ABC):
 class MufgPaymentRow(MufgRow, ABC):
     """This class implements payment row model of MUFG bank CSV."""
 
-    def __init__(self, row_data: MufgRowData, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, row_data: MufgRowData, *args: object, **kwargs: object) -> None:
         super().__init__(row_data, *args, **kwargs)
         self._payed_amount: int | None = row_data.payed_amount
 
