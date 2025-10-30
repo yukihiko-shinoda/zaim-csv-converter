@@ -1,3 +1,11 @@
+dlint
+docformatter
+isort
+mypy
+pycodestyle
+Pydantic
+pydocstyle
+Pylint
 pyproject
 pytest
 setuptools
