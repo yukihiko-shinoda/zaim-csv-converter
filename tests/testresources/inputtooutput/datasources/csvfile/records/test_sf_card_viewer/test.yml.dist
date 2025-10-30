@@ -1,0 +1,28 @@
+pasmo:
+  account_name: 'PASMO'
+  auto_charge_source: 'TOKYU CARD'
+  skip_sales_goods_row: true
+waon:
+  account_name: 'WAON'
+  auto_charge_source: 'イオン銀行'
+  skip_transfer_from_auto_charge_source_row: true
+  auto_charge_source_type: 銀行口座
+gold_point_card_plus:
+  account_name: 'ヨドバシゴールドポイントカード・プラス'
+  skip_amazon_row: true
+  skip_pay_pal_row: true
+  skip_kyash_row: true
+mufg:
+  account_name: '三菱UFJ銀行'
+  transfer_account_name: 'お財布'
+  store_name_zaim: '三菱UFJ銀行'
+amazon:
+  store_name_zaim: 'Amazon Japan G.K.'
+  payment_account_name: 'ヨドバシゴールドポイントカード・プラス'
+view_card:
+  account_name: 'ビューカード'
+  skip_suica_row: true
+suica:
+  account_name: 'Suica'
+  auto_charge_source: 'ビューカード'
+  skip_sales_goods_row: true
