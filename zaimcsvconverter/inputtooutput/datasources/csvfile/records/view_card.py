@@ -1,7 +1,5 @@
 """This module implements row model of VIEW CARD CSV."""
 
-from typing import Any
-
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
@@ -10,7 +8,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStor
 
 
 class ViewCardRow(InputRow[ViewCardRowData]):
-    def __init__(self, row_data: ViewCardRowData, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, row_data: ViewCardRowData, *args: object, **kwargs: object) -> None:
         super().__init__(row_data, *args, **kwargs)
         self.billing_amount_current_time: int = row_data.billing_amount_current_time
 

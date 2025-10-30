@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
@@ -15,7 +13,7 @@ from zaimcsvconverter.models import StoreRowData
 
 
 class Amazon201911Row(InputRow[Amazon201911RowData]):
-    def __init__(self, row_data: Amazon201911RowData, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, row_data: Amazon201911RowData, *args: object, **kwargs: object) -> None:
         super().__init__(row_data, *args, **kwargs)
 
 

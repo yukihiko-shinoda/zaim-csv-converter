@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Any
 
 from zaimcsvconverter.data.sf_card_viewer import Note
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
@@ -23,8 +22,8 @@ class SFCardViewerRow(InputRow[SFCardViewerRowData]):
         self,
         row_data: SFCardViewerRowData,
         account_config: SFCardViewerConfig,
-        *args: Any,
-        **kwargs: Any,
+        *args: object,
+        **kwargs: object,
     ) -> None:
         super().__init__(row_data, *args, **kwargs)
         self.used_amount = row_data.used_amount

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.data.waon import ChargeKind
 from zaimcsvconverter.data.waon import UseKind
@@ -16,7 +14,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStor
 class WaonRow(InputRow[WaonRowData]):
     """This class implements row model of WAON CSV."""
 
-    def __init__(self, row_data: WaonRowData, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, row_data: WaonRowData, *args: object, **kwargs: object) -> None:
         super().__init__(row_data, *args, **kwargs)
         self.used_amount: int = row_data.used_amount
         self.use_kind: UseKind = row_data.use_kind

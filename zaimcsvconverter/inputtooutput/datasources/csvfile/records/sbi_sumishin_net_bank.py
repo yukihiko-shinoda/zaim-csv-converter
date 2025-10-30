@@ -1,7 +1,5 @@
 """This module implements row model of SBI Sumishin net bank CSV."""
 
-from typing import Any
-
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStoreRow
@@ -66,7 +64,7 @@ class SBISumishinNetBankRow(InputStoreRow[SBISumishinNetBankRowData]):
 class SBISumishinNetBankWithdrawalRow(SBISumishinNetBankRow):
     """This class implements row model of SBI Sumishin net bank CSV."""
 
-    def __init__(self, input_row_data: SBISumishinNetBankRowData, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, input_row_data: SBISumishinNetBankRowData, *args: object, **kwargs: object) -> None:
         super().__init__(input_row_data, FileCsvConvert.SBI_SUMISHIN_NET_BANK.value, *args, **kwargs)
         if input_row_data.withdrawal_amount is None:
             raise TypeError
@@ -76,7 +74,7 @@ class SBISumishinNetBankWithdrawalRow(SBISumishinNetBankRow):
 class SBISumishinNetBankDepositRow(SBISumishinNetBankRow):
     """This class implements row model of SBI Sumishin net bank CSV."""
 
-    def __init__(self, input_row_data: SBISumishinNetBankRowData, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, input_row_data: SBISumishinNetBankRowData, *args: object, **kwargs: object) -> None:
         super().__init__(input_row_data, FileCsvConvert.SBI_SUMISHIN_NET_BANK.value, *args, **kwargs)
         if input_row_data.deposit_amount is None:
             raise TypeError
