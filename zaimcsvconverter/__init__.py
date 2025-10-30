@@ -10,7 +10,10 @@ from sqlalchemy.orm import sessionmaker
 
 from zaimcsvconverter.config import Config
 
-Session = scoped_session(sessionmaker(bind=create_engine("sqlite://")))
+# Reason: SWLAlchemy offcial documentation named as "Session".
+# - Contextual/Thread-local Sessions | SQLAlchemy 2.0 Documentation
+#   http://docs.sqlalchemy.org/en/latest/orm/contextual.html
+Session = scoped_session(sessionmaker(bind=create_engine("sqlite://")))  # pylint: disable=invalid-name
 CONFIG: Config = Config.create()
 
 

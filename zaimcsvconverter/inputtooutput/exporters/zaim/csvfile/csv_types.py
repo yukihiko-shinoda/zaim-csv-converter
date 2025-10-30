@@ -16,5 +16,5 @@ if TYPE_CHECKING:
     from typing_extensions import TypeAlias
 
 # Reason: To conceal reference error for typing.
-CSVReader: TypeAlias = "_csv._reader"  # noqa: SLF001 pylint: disable=protected-access,no-member
-CSVWriter: TypeAlias = "_csv._writer"  # noqa: SLF001 pylint: disable=protected-access,no-member
+CSVReader: TypeAlias = "_csv._reader"  # noqa: SLF001 pylint: disable=protected-access,no-member,invalid-name
+CSVWriter: TypeAlias = "_csv._writer"  # noqa: SLF001 pylint: disable=protected-access,no-member,invalid-name
