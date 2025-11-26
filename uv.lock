@@ -701,15 +701,6 @@ wheels = [
 ]
 
 [[package]]
-name = "future"
-version = "1.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a7/b2/4140c69c6a66432916b26158687e821ba631a4c9273c474343badf84d3ba/future-1.0.0.tar.gz", hash = "sha256:bd2968309307861edae1458a4f8a4f3598c03be43b97521076aebf5d94c07b05", size = 1228490, upload-time = "2024-02-21T11:52:38.461Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl", hash = "sha256:929292d34f5872e70396626ef385ec22355a1fae8ad29e1a734c3e43f9fbc216", size = 491326, upload-time = "2024-02-21T11:52:35.956Z" },
-]
-
-[[package]]
 name = "glom"
 version = "22.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2284,16 +2275,11 @@ wheels = [
 
 [[package]]
 name = "radon"
-version = "5.1.0"
-source = { registry = "https://pypi.org/simple" }
+version = "6.0.1"
+source = { git = "https://github.com/kieran-ryan/radon?branch=fix-unrelated-config-error#30259053d7871888fcd88aaf1fab8bd22b73e0cd" }
 dependencies = [
     { name = "colorama" },
-    { name = "future" },
     { name = "mando" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/f5/37/737fb1a1786d9daed92e3ce1b8fe484c10d2a51078febffddd14ffdc0081/radon-5.1.0.tar.gz", hash = "sha256:cb1d8752e5f862fb9e20d82b5f758cbc4fb1237c92c9a66450ea0ea7bf29aeee", size = 1873643, upload-time = "2021-08-08T13:25:23.754Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c0/0f/25c8256018b6e90265f440651ec60311818c01a008564c0f106b7d915b60/radon-5.1.0-py2.py3-none-any.whl", hash = "sha256:fa74e018197f1fcb54578af0f675d8b8e2342bd8e0b72bef8197bc4c9e645f36", size = 52143, upload-time = "2021-08-08T13:25:20.919Z" },
 ]
 
 [[package]]
@@ -3293,7 +3279,7 @@ dev = [
     { name = "pytest" },
     { name = "pytest-resource-path" },
     { name = "pyvelocity", marker = "python_full_version >= '3.9'" },
-    { name = "radon", specifier = "<6.0.0" },
+    { name = "radon", git = "https://github.com/kieran-ryan/radon?branch=fix-unrelated-config-error" },
     { name = "returns" },
     { name = "ruff" },
     { name = "semgrep", marker = "python_full_version >= '3.9' or sys_platform == 'linux'" },

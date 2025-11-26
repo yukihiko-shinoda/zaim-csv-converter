@@ -84,9 +84,6 @@ dependencies = [
     "yamldataclassconfig",
 ]
 
-[tool.setuptools.packages.find]
-include = ["zaimcsvconverter", "zaimcsvconverter.*"]
-
 [tool.bandit.assert_used]
 skips = ["tests/*.py"]
 
@@ -210,3 +207,9 @@ force-single-line = true
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.setuptools.packages.find]
+include = ["zaimcsvconverter", "zaimcsvconverter.*"]
+
+[tool.uv.sources]
+radon = { git = "https://github.com/kieran-ryan/radon", branch = "fix-unrelated-config-error" }
