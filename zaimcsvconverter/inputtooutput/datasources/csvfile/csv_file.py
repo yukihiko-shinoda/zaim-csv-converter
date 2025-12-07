@@ -12,6 +12,7 @@ from pydantic import ValidationError
 
 from zaimcsvconverter.exceptions import InvalidCellError
 from zaimcsvconverter.exceptions import InvalidRecordError
+from zaimcsvconverter.exceptions import InvalidRecordErrorFactory
 from zaimcsvconverter.exceptions import LogicError
 from zaimcsvconverter.exceptions import SkipRecord
 from zaimcsvconverter.exceptions.invalid_input_csv_error import InvalidInputCsvError
@@ -61,10 +62,10 @@ class Csv(DataSource, Generic[TypeVarInputRow, TypeVarInputRowData]):
             return next(iterator)
         except InvalidHeaderError as error:
             self.invalid_header_error = error
-            raise InvalidInputCsvError(self, str(error)) from error
+            raise InvalidInputCsvError(str(error), self) from error
         except InvalidFooterError as error:
             self.invalid_footer_error = error
-            raise InvalidInputCsvError(self, str(error)) from error
+            raise InvalidInputCsvError(str(error), self) from error
 
     def convert_to_record(self, input_record_data: TypeVarInputRowData) -> Generator[AbstractInputRecord, None, None]:
         """Converts InputRecordData to InputRecord."""
@@ -78,7 +79,7 @@ class Csv(DataSource, Generic[TypeVarInputRow, TypeVarInputRowData]):
 
     def build_invalid_record_error(self, exc: ValidationError) -> InvalidRecordError:
         list_error = [InvalidCellError(f"Invalid {error['loc'][0]}, {error['msg']}") for error in exc.errors()]
-        return InvalidRecordError(list_error)
+        return InvalidRecordErrorFactory.create(list_error)
 
     @property
     def is_invalid(self) -> bool:

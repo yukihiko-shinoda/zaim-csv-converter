@@ -7,7 +7,7 @@ from typing import Generic
 from typing import cast
 
 from zaimcsvconverter.errorhandling.error_handler import UndefinedContentErrorHandler
-from zaimcsvconverter.exceptions import InvalidRecordError
+from zaimcsvconverter.exceptions import InvalidRecordErrorFactory
 from zaimcsvconverter.exceptions import SkipRecord
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import InputRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data import TypeVarInputRowData
@@ -36,7 +36,7 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
         dekinded_input_record = cast("InputRow[InputRowData]", input_record)
         # Requires to validate before skip check process since skip check process checks store.
         if dekinded_input_record.validate:
-            raise InvalidRecordError(
+            raise InvalidRecordErrorFactory.create(
                 dekinded_input_record.list_error,
                 undefined_content_error_handler=self.create_undefined_content_error_handler(input_record),
             )
