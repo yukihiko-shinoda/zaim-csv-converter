@@ -28,4 +28,4 @@ class ConvertWorkflow(Generic[TypeVarOutputModelExporter]):
                 output_record = self.record_converter.convert(input_record)
                 self.output_model_exporter.execute(output_record)
         if self.data_source.is_invalid:
-            raise InvalidInputCsvError(self.data_source, self.data_source.message)
+            raise InvalidInputCsvError(self.data_source.message, self.data_source)

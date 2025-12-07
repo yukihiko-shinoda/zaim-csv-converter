@@ -12,8 +12,13 @@ class InvalidInputCsvError(Error):
 
     def __init__(
         self,
+        message: str,
         data_source: DataSource,
-        *args: object,
     ) -> None:
+        super().__init__(message, data_source)
+        self.message = message
         self.data_source = data_source
-        super().__init__(*args)
+
+    def __str__(self) -> str:
+        """Return just the message for string representation."""
+        return self.message
