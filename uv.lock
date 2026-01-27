@@ -1902,15 +1902,15 @@ wheels = [
 
 [[package]]
 name = "pydantictypes"
-version = "1.0.0"
+version = "1.2.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/09/ad/c415226960e21b8b4c30a888d7c52f19f2211af86d3fa2537888ee841d68/pydantictypes-1.0.0.tar.gz", hash = "sha256:6f74a8c47ef02a02748bd8b75dcf4664c4e78a931af6de174f9b182352d1fc59", size = 16175, upload-time = "2025-07-07T03:27:25.457Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/61/04/bed08871b353502b5bd04e396130a1e5488cede85d92f91f3c151ba4ef5f/pydantictypes-1.2.1.tar.gz", hash = "sha256:0d2532a1b62610d0aeda8807976e7f2245962b3d659bef6b05bb009d2fcfc738", size = 21907, upload-time = "2026-01-26T02:09:19.96Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/41/dfd47211c0608daaed9f71ccc7308ef126436144459c488dc5792bae1523/pydantictypes-1.0.0-py3-none-any.whl", hash = "sha256:d81a4f172480fc3de1dd27f5e349940d4db9abf617f0726b8b9523229252ebb7", size = 15544, upload-time = "2025-07-07T03:27:24.659Z" },
+    { url = "https://files.pythonhosted.org/packages/41/1f/150690661723f5cdab4622db4362911157f10555159068c9661289e8a03e/pydantictypes-1.2.1-py3-none-any.whl", hash = "sha256:655c47f21c9406a6e364036d73c4dd8d1b22809d002ddd7d8ab9b6de12d0cdd1", size = 23483, upload-time = "2026-01-26T02:09:18.6Z" },
 ]
 
 [[package]]
