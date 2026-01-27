@@ -1028,16 +1028,16 @@ wheels = [
 
 [[package]]
 name = "invokelint"
-version = "0.15.2"
+version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "invoke" },
     { name = "packagediscovery" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/04/f4/d6e080b701f6643d1584ec9bc4b765359428d22533839b2f9237db5cafd0/invokelint-0.15.2.tar.gz", hash = "sha256:cc127ae06f27cedce7f3630d14ada770029306ecb7f6beee4f98cfe047b4b7f9", size = 25571, upload-time = "2025-10-27T05:33:12.271Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/49/fd/b52b1083d79c6836517d8c3c9eeaf58d93d1f1dce54ac40cba965c1de6e2/invokelint-0.16.0.tar.gz", hash = "sha256:e61e4739c073191a30a2c00af1987c9361a6f5de6f90c2265af68db7a3aeff0b", size = 25634, upload-time = "2026-01-25T04:06:31.115Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/2b/b42bb3ba448e462ce4fa9fbe25eb5fed94fed79eeb527966feb21fbf93f3/invokelint-0.15.2-py3-none-any.whl", hash = "sha256:6366a8f84a468705716b5a9c10e373bbfbcc2a157066e85a3fc6bbd7dd67a14f", size = 16357, upload-time = "2025-10-27T05:33:10.922Z" },
+    { url = "https://files.pythonhosted.org/packages/ed/88/e09791c2f724443d87024fc236fc750e15cd6f2974696cda316ef061c343/invokelint-0.16.0-py3-none-any.whl", hash = "sha256:570ecd375a7f691572fdb907bb71b4863769daec507f94d4162686ec3cb477de", size = 16384, upload-time = "2026-01-25T04:06:29.602Z" },
 ]
 
 [[package]]
