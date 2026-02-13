@@ -8,19 +8,19 @@ from zaimcsvconverter.accounts.enum import Account
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon import AmazonZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import (
-    Amazon201911DiscountZaimPaymentRowConverter,  # noqa: H301,RUF100
+    Amazon201911DiscountZaimPaymentRowConverter,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.amazon_201911 import (
-    Amazon201911PaymentZaimPaymentRowConverter,  # noqa: H301,RUF100
+    Amazon201911PaymentZaimPaymentRowConverter,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus import (
-    GoldPointCardPlusZaimPaymentRowConverter,  # noqa: H301,RUF100
+    GoldPointCardPlusZaimPaymentRowConverter,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912ZaimPaymentRowConverter,  # noqa: H301,RUF100
+    GoldPointCardPlus201912ZaimPaymentRowConverter,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912ZaimTransferRowConverter,  # noqa: H301,RUF100
+    GoldPointCardPlus201912ZaimTransferRowConverter,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgIncomeZaimTransferRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgPaymentZaimTransferRowConverter
@@ -29,10 +29,10 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgTran
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgZaimIncomeRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgZaimPaymentRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import (
-    SFCardViewerZaimPaymentOnSomewhereRowConverter,  # noqa: H301,RUF100
+    SFCardViewerZaimPaymentOnSomewhereRowConverter,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import (
-    SFCardViewerZaimPaymentOnStationRowConverter,  # noqa: H301,RUF100
+    SFCardViewerZaimPaymentOnStationRowConverter,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sf_card_viewer import SFCardViewerZaimTransferRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.view_card import ViewCardZaimPaymentRowConverter

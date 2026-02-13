@@ -5,7 +5,7 @@ from sqlalchemy.exc import NoResultFound
 from zaimcsvconverter import CONFIG
 from zaimcsvconverter.file_csv_convert import FileCsvConvert
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
+    GoldPointCardPlus201912RowData,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records import InputStoreRow
 

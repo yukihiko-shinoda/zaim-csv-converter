@@ -29,4 +29,4 @@ class CsvFilePathBuilder(RelativeVacateFilePath):
 
     @staticmethod
     def initialize(optional: Path | None, default: Callable[[], Path]) -> Path:
-        return optional if optional else default()
+        return optional or default()

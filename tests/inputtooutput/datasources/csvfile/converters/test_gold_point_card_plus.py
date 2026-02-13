@@ -4,7 +4,7 @@ import pytest
 
 from tests.testlibraries.instance_resource import InstanceResource
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.gold_point_card_plus import (
-    GoldPointCardPlusRowFactory,  # noqa: H301,RUF100
+    GoldPointCardPlusRowFactory,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus import GoldPointCardPlusRow

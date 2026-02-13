@@ -17,7 +17,7 @@ from tests.testlibraries.integration_test_expected_factory import create_zaim_ro
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_amazon_201911_202012
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_gold_point_card_plus_201807
 from tests.testlibraries.integration_test_expected_factory import (
-    create_zaim_row_data_gold_point_card_plus_201912_201807,  # noqa: H301,RUF100
+    create_zaim_row_data_gold_point_card_plus_201912_201807,  # noqa: H301
 )
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mobile_suica_202210
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_mobile_suica_202211
