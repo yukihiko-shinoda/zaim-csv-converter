@@ -136,7 +136,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
 
     @staticmethod
     def _get_str_or_none(value: str | None) -> str | None:
-        return value if value else None
+        return value or None
 
     @classmethod
     def try_to_find(cls, file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
@@ -212,7 +212,7 @@ with warnings.catch_warnings():
         def is_pay_pal(self) -> bool:
             """This property returns whether this store is PayPal or not."""
             # Reason: Specification.
-            return self.name in ["ＰａｙＰａｌ決済"] or (
+            return self.name == "ＰａｙＰａｌ決済" or (
                 self.name is not None and re.search(r"PAYPAL\s*", self.name) is not None
             )
 

@@ -14,11 +14,11 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConver
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimTransferRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import (
-    SBISumishinNetBankDepositRow,  # noqa: H301,RUF100
+    SBISumishinNetBankDepositRow,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import SBISumishinNetBankRow
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.sbi_sumishin_net_bank import (
-    SBISumishinNetBankWithdrawalRow,  # noqa: H301,RUF100
+    SBISumishinNetBankWithdrawalRow,  # noqa: H301
 )
 
 if TYPE_CHECKING:

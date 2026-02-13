@@ -9,7 +9,7 @@ from tests.testlibraries.instance_resource import InstanceResource
 from tests.testlibraries.row_data import ZaimRowData
 from zaimcsvconverter.accounts.enum import Account
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
+    GoldPointCardPlus201912RowData,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimPaymentRow
 from zaimcsvconverter.inputtooutput.exporters.zaim.zaim_row import ZaimRow

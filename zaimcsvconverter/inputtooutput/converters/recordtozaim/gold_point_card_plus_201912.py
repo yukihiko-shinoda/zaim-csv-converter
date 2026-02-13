@@ -11,10 +11,10 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRo
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimRowConverter
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimTransferRowConverter
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
+    GoldPointCardPlus201912RowData,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.records.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912Row,  # noqa: H301,RUF100
+    GoldPointCardPlus201912Row,  # noqa: H301
 )
 
 if TYPE_CHECKING:

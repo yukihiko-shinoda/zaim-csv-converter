@@ -69,7 +69,7 @@ class InvalidRecordErrorFactory:
         error_messages = ", ".join(str(error) for error in list_error)
         message = f"Invalid record: {error_messages}"
         handler = undefined_content_error_handler
-        return InvalidRecordError(message, list_error, handler if handler else UndefinedContentErrorHandler())
+        return InvalidRecordError(message, list_error, handler or UndefinedContentErrorHandler())
 
 
 class SomeInvalidInputCsvError(Error):

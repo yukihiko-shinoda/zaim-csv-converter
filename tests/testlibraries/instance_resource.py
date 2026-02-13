@@ -9,7 +9,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon import Amazo
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.amazon_201911 import Amazon201911RowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus import GoldPointCardPlusRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.gold_point_card_plus_201912 import (
-    GoldPointCardPlus201912RowData,  # noqa: H301,RUF100
+    GoldPointCardPlus201912RowData,  # noqa: H301
 )
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
