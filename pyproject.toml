@@ -38,7 +38,7 @@ dev = [
     "invokelint>=0.8.1",
     "mypy",
     # Currently, migration steps is difficult
-    "pydantic>=2.0.0",
+    "pydantic>=2.13.2",
     "pylint",
     "pytest",
     "pytest-resource-path",
