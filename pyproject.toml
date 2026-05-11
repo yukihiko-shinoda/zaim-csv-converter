@@ -35,7 +35,7 @@ dev = [
     # Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
     # When unpin hacking, it has possibility to install too legacy version of hacking.
     "hacking>=5.0.0; python_version >= '3.8'",
-    "invokelint>=0.8.1",
+    "invokelint>=0.17.0",
     "mypy",
     # Currently, migration steps is difficult
     "pydantic>=2.13.3",
