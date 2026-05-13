@@ -27,7 +27,7 @@ class TestErrorTotalizer:
     def assert_files(self, tmp_path: Path, list_expected_file: list[str]) -> None:
         files = sorted(tmp_path.rglob("*[!.gitkeep]"))
         assert len(files) == len(list_expected_file)
-        for actual, expected in zip(files, list_expected_file):
+        for actual, expected in zip(files, list_expected_file, strict=True):
             assert actual.name == expected
 
     # pylint: disable=unused-argument

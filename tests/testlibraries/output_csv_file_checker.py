@@ -30,7 +30,7 @@ class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):
         assert len(list_output_row_data) == len(
             list_expected,
         ), f"len(list_output_row_data) = {len(list_output_row_data)}, len(list_expected) = {len(list_expected)}"
-        for output_row_data, expected in zip(list_output_row_data, list_expected):
+        for output_row_data, expected in zip(list_output_row_data, list_expected, strict=True):
             assert output_row_data == expected, self._build_error_message(
                 expected,
                 list_output_row_data,

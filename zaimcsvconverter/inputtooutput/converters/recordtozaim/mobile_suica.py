@@ -5,7 +5,6 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from typing import TYPE_CHECKING
-from typing import Callable
 
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import CsvRecordToZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim import ZaimPaymentRowConverter
@@ -22,6 +21,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.records.mobile_suica imp
 from zaimcsvconverter.inputtooutput.exporters.zaim.csvfile.zaim_csv_format import ZaimCsvFormat
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from pathlib import Path
 
     from returns.primitives.hkt import Kind1

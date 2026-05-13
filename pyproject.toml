@@ -1,6 +1,6 @@
 [dependency-groups]
 dev = [
-    "bandit; python_version >= '3.7'",
+    "bandit",
     "cohesion",
     # The coverage==3.5.3 is difficult to analyze its dependencies by dependencies management tool,
     # so we should avoid 3.5.3 or lower.
@@ -14,8 +14,8 @@ dev = [
     #   https://github.com/dlint-py/dlint/blob/0.13.0/requirements.txt#L1
     "dlint>=0.14.0",
     # To the docformatter load pyproject.toml settings:
-    "docformatter[tomli]; python_version < '3.11'",
-    "docformatter; python_version >= '3.11'",
+    "docformatter[tomli]>=1.7.8; python_version < '3.11'",
+    "docformatter>=1.7.8; python_version >= '3.11'",
     "dodgy",
     "exceptiongroup; python_version <= '3.10'",
     "factory_boy",
@@ -28,13 +28,11 @@ dev = [
     # - Using Black with other tools - Black 25.1.0 documentation
     #   https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#bugbear
     "flake8-bugbear",
-    # To use flake8 --radon-show-closures
-    "flake8-polyfill",
     # To use pyproject.toml for Flake8 configuration
     "Flake8-pyproject",
     # Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
     # When unpin hacking, it has possibility to install too legacy version of hacking.
-    "hacking>=5.0.0; python_version >= '3.8'",
+    "hacking>=5.0.0",
     "invokelint>=0.17.0",
     "mypy",
     # Currently, migration steps is difficult
@@ -42,24 +40,19 @@ dev = [
     "pylint",
     "pytest",
     "pytest-resource-path",
-    "pyvelocity; python_version >= '3.9'",
-    # Since the radon can't run when use pytest log format:
-    # - Radon can't run when use pytest log format: `$()d` · Issue #251 · rubik/radon
-    #   https://github.com/rubik/radon/issues/251
-    "radon<6.0.0",
+    "pyvelocity",
     "returns",
     "ruff",
-    "semgrep;python_version>='3.9' or platform_system=='Linux'",
+    "semgrep",
     "types-invoke",
     "typing-extensions; python_version <= '3.10'",
-    "xenon",
 ]
 
 [project]
 name = "zaimcsvconverter"
 version = "0.1.0"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {file = "LICENSE"}
 authors = [
     {name = "Yukihiko Shinoda", email = "yuk.hik.future@gmail.com"},
@@ -148,6 +141,12 @@ module = [
 ]
 ignore_missing_imports = true
 
+[tool.pylint]
+disable = [
+    # We check line length by flake8-bugbear B950.
+    "line-too-long",
+]
+
 [tool.pylint.basic]
 docstring-min-length = "7"
 
@@ -167,11 +166,6 @@ log_format = "%(asctime)s %(process)d %(levelname)s %(name)s:%(filename)s:%(line
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
 ]
-
-[tool.radon]
-cc_min = "B"
-show_complexity = true
-show_mi = true
 
 [tool.ruff]
 line-length = 119
@@ -211,6 +205,11 @@ unfixable = [
 
 [tool.ruff.lint.isort]
 force-single-line = true
+
+[tool.ruff.lint.mccabe]
+# The default value: 10 is too loose,
+# 5 is as same as the default value of Radon for A rank that we use without any problems for a decade.
+max-complexity = 5
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]

@@ -12,8 +12,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     # Reason: Flake8 still warns about unused import.
     import _csv  # noqa: F401,RUF100
-
-    from typing_extensions import TypeAlias
+    from typing import TypeAlias
 
 # Reason: To conceal reference error for typing.
 CSVReader: TypeAlias = "_csv._reader"  # noqa: SLF001 pylint: disable=protected-access,no-member,invalid-name

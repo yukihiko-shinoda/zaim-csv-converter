@@ -1,6 +1,6 @@
 """Converter from SF Card Viewer CSV data to record model."""
 
-from typing import Callable
+from collections.abc import Callable
 
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.data.sf_card_viewer import Note

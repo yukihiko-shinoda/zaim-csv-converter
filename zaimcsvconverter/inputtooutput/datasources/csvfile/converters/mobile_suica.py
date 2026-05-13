@@ -1,6 +1,6 @@
 """Converter from Mobile Suica CSV data to record model."""
 
-from typing import Callable
+from collections.abc import Callable
 
 from zaimcsvconverter.config import SFCardViewerConfig
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory

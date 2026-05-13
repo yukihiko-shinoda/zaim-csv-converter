@@ -77,5 +77,5 @@ Each supported account follows a consistent pattern with:
 - Strict type checking with mypy
 - Comprehensive linting (ruff, flake8, pylint with OpenStack hacking rules)
 - Security scanning with bandit and semgrep
-- Code complexity monitoring with xenon and radon
+- Code complexity monitoring with Ruff's mccabe plugin (max complexity 5)
 - Docstring requirements (Google style, minimum 7 characters)

@@ -80,7 +80,7 @@ class TestConvertTableImporter:
         #   https://github.com/sqlalchemy/sqlalchemy2-stubs/issues/207
         stores: list[Store] = database_session_with_schema.query(Store).order_by(Store.id.asc()).all()
         assert len(stores) == len(expected_stores)
-        for store, expected_store in zip(stores, expected_stores):
+        for store, expected_store in zip(stores, expected_stores, strict=True):
             self.assert_store1(store, expected_store)
             self.assert_store2(store, expected_store)
 
@@ -109,7 +109,7 @@ class TestConvertTableImporter:
         #   https://github.com/sqlalchemy/sqlalchemy2-stubs/issues/207
         items: list[Item] = database_session_with_schema.query(Item).order_by(Item.id.asc()).all()
         assert len(items) == len(expected_items)
-        for item, expected_item in zip(items, expected_items):
+        for item, expected_item in zip(items, expected_items, strict=True):
             self.assert_item1(item, expected_item)
             self.assert_item2(item, expected_item)
 
