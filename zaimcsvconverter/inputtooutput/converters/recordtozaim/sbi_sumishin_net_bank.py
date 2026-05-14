@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Union
 from typing import cast
 
 from zaimcsvconverter import CONFIG
@@ -91,12 +90,12 @@ class SBISumishinNetBankDepositZaimTransferRowConverter(
         return self.input_row.deposit_amount
 
 
-AnySbiSumishinNetBankConverter = Union[
-    SBISumishinNetBankZaimPaymentRowConverter,
-    SBISumishinNetBankWithdrawalZaimTransferRowConverter,
-    SBISumishinNetBankZaimIncomeRowConverter,
-    SBISumishinNetBankDepositZaimTransferRowConverter,
-]
+AnySbiSumishinNetBankConverter = (
+    SBISumishinNetBankZaimPaymentRowConverter
+    | SBISumishinNetBankWithdrawalZaimTransferRowConverter
+    | SBISumishinNetBankZaimIncomeRowConverter
+    | SBISumishinNetBankDepositZaimTransferRowConverter
+)
 
 
 class SBISumishinNetBankZaimRowConverterFactory(

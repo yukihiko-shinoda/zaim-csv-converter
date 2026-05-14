@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING
 
 from fixturefilehandler.file_paths import RelativeVacateFilePath
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class CsvFilePathBuilder(RelativeVacateFilePath):
