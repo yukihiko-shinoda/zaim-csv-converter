@@ -594,11 +594,11 @@ wheels = [
 
 [[package]]
 name = "errorcollector"
-version = "1.0.1"
+version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ac/6e/4ac9213bb280bdadb479326daf4012899ab9dd2fcd9308ba3ab61ad64524/errorcollector-1.0.1.tar.gz", hash = "sha256:1617b499fada97fa06a2f62f395119aa514325a0d2d105cf4f46a508c38148f1", size = 7440, upload-time = "2025-09-14T04:08:41.942Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/35/3a/e32ff46c4bf5f43149dfee46d35445ef18c866f3c6c587a8f5197c2b4435/errorcollector-1.1.0.tar.gz", hash = "sha256:df94a4bf9bd57a701695bcf397bbdf9f067e03ff1e41bc941873691f509ed499", size = 7634, upload-time = "2026-05-17T06:21:59.279Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/68/c2fbb71304b3a11017b156d65615b9b6c6c1d0f715bd1d216326884dba53/errorcollector-1.0.1-py3-none-any.whl", hash = "sha256:5bf65b22da2e1fdd576df4183a9455f9ac37ee5ef2962dec269a0ead5fea1b8f", size = 5488, upload-time = "2025-09-14T04:08:40.665Z" },
+    { url = "https://files.pythonhosted.org/packages/a7/0b/73a2d17512f8af3435e3a58210314889433e0aa77e0ba817b890a7152288/errorcollector-1.1.0-py3-none-any.whl", hash = "sha256:9e085137d2ec0c79949fc8186684ac4fd46ca2e90b272333e7c9643294ae79c5", size = 5490, upload-time = "2026-05-17T06:21:57.854Z" },
 ]
 
 [[package]]
