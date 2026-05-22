@@ -710,11 +710,11 @@ wheels = [
 
 [[package]]
 name = "godslayer"
-version = "1.1.1"
+version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/9b/78/179d8ec39e83ae8d8c34b92fa1017b7216a450e96b546e0909aae19aea7f/godslayer-1.1.1.tar.gz", hash = "sha256:e2c177d0d7afb40b8abeae3bc57c8dbee914aecbf93ce51a4f40ffd36d37baac", size = 19383, upload-time = "2025-09-15T09:12:27.673Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/8b/7d549fff2b0484abe97ce4b17fbb9b03a7c1ad8da1e8d78d40c683f1a5ed/godslayer-1.2.0.tar.gz", hash = "sha256:6777d1677d52be6638692d2f5cc0c3fb5f63ee42e2e31c6962133803f33e735d", size = 19911, upload-time = "2026-05-17T06:11:12.494Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/95/67/a604103034ea06b87063e2ad471ac46d1edec81f0f24c4da1f6f516863b2/godslayer-1.1.1-py3-none-any.whl", hash = "sha256:59065c6f2f2a1fe05f24c9a3f49468c56a3d07bd0bd00e1d82523e615db4366a", size = 15261, upload-time = "2025-09-15T09:12:26.475Z" },
+    { url = "https://files.pythonhosted.org/packages/62/3e/26b84dbb9b4de4307c63e3670f50bb92601387c49643876d2060394c8d7f/godslayer-1.2.0-py3-none-any.whl", hash = "sha256:f7102a7904cae347ce0b72059bab63583880e865b197c3da3b62ebbd74f99d72", size = 15295, upload-time = "2026-05-17T06:11:10.931Z" },
 ]
 
 [[package]]
