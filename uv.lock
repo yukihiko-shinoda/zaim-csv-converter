@@ -2555,16 +2555,16 @@ wheels = [
 
 [[package]]
 name = "yamldataclassconfig"
-version = "2.0.5"
+version = "2.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dataclasses-json" },
     { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/59/90/72391a52a7dcccfb05201cd388650b7612f68b2e5be27feaebd0efe746fa/yamldataclassconfig-2.0.5.tar.gz", hash = "sha256:2f3c2976aa6f2d473eed2418789bc668100266cd54da3d7294071fd875cf036a", size = 29990, upload-time = "2026-04-09T22:59:07.031Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/53/22/04eac0ea10ff32c39143d171f0ffe566e068bb66a715b7124b53b0ae920d/yamldataclassconfig-2.1.0.tar.gz", hash = "sha256:99dca40069f765e80d9580265a66dcc6b2a1480612b94aca10aa48ac32056d36", size = 30064, upload-time = "2026-05-18T01:25:03.026Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3f/fa/d980abe519b3b2d8f95b39f799f80ce0d46c554ef992e60732c78ddf068b/yamldataclassconfig-2.0.5-py3-none-any.whl", hash = "sha256:463a0b022fb7a16678ed143f32712651cbfc3efe841b99087a088c6be4241ce1", size = 16514, upload-time = "2026-04-09T22:59:06.127Z" },
+    { url = "https://files.pythonhosted.org/packages/f1/d1/d04b13f5705f53fa1fc6af4627be51fa14856cede205258df9abb83efd83/yamldataclassconfig-2.1.0-py3-none-any.whl", hash = "sha256:8444161a8ff3fb63e18d350589ca33e5eb0194225a8f8366b71a1f985f841987", size = 16509, upload-time = "2026-05-18T01:25:01.559Z" },
 ]
 
 [[package]]
