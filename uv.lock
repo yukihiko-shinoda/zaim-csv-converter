@@ -1765,14 +1765,14 @@ wheels = [
 
 [[package]]
 name = "pytest-resource-path"
-version = "1.4.1"
+version = "1.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pytest" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/72/04/d4e333aa83e338dd4d94714e98f094f44a49f2ea519674f9dd6b981454eb/pytest_resource_path-1.4.1.tar.gz", hash = "sha256:ee17e25e059ef622c376a85a0ae2cfbe32a4e0a267c7266dde78bab4c0a05e90", size = 12741, upload-time = "2025-09-18T15:41:16.248Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/12/06/d3a7713221cb29fb49c1d003d7690d686a59820abebd27bd76a5d1e63a02/pytest_resource_path-1.5.0.tar.gz", hash = "sha256:f56a37370a0f01cd9a5794d361c24e7aa1c033a69260870d9f46b263624527c9", size = 13018, upload-time = "2026-05-17T07:27:25.789Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f7/83/e4b248ce4ba40d5f703f736bb308cb9b200137ecdcdf2fcb46c9d28da8ae/pytest_resource_path-1.4.1-py3-none-any.whl", hash = "sha256:a6ac94b3aac839d4cb850e0891100b0d28811236ebb7d9e9b98cda15098542e1", size = 9458, upload-time = "2025-09-18T15:41:15.119Z" },
+    { url = "https://files.pythonhosted.org/packages/da/a6/663739a752f6bb012a7cd9277d96c811acd02b81255dab514910e859c82d/pytest_resource_path-1.5.0-py3-none-any.whl", hash = "sha256:7f9f3a9a4b6a1fbc89cffb466b4695d43d2244b3f39aefc135187466c333d953", size = 9460, upload-time = "2026-05-17T07:27:24.368Z" },
 ]
 
 [[package]]
