@@ -8,7 +8,7 @@ dev = [
     #   since it tries to parse legacy package metadata and raise InstallError
     #   · Issue #5595 · pypa/pipenv
     #   https://github.com/pypa/pipenv/issues/5595
-    "coverage>=3.5.4",
+    "coverage>=7.14.1",
     # The dlint less than 0.14.0 limits max version of flake8.
     # - dlint/requirements.txt at 0.13.0 · dlint-py/dlint
     #   https://github.com/dlint-py/dlint/blob/0.13.0/requirements.txt#L1
