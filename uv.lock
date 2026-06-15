@@ -2,10 +2,14 @@ version = 1
 revision = 3
 requires-python = ">=3.10"
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.12' and python_full_version < '3.15'",
-    "python_full_version == '3.11.*'",
-    "python_full_version < '3.11'",
+    "python_full_version >= '3.15' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and python_full_version < '3.15' and sys_platform == 'linux'",
+    "python_full_version == '3.11.*' and sys_platform == 'linux'",
+    "python_full_version >= '3.15' and sys_platform != 'linux'",
+    "python_full_version >= '3.12' and python_full_version < '3.15' and sys_platform != 'linux'",
+    "python_full_version == '3.11.*' and sys_platform != 'linux'",
+    "python_full_version < '3.11' and sys_platform == 'linux'",
+    "python_full_version < '3.11' and sys_platform != 'linux'",
 ]
 
 [[package]]
@@ -123,6 +127,22 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/63/9a/fec38644694abfaaeca2798b58e276a8e61de49e2e37494ace423395febc/bracex-2.6.tar.gz", hash = "sha256:98f1347cd77e22ee8d967a30ad4e310b233f7754dbf31ff3fceb76145ba47dc7", size = 26642, upload-time = "2025-06-22T19:12:31.254Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9d/2a/9186535ce58db529927f6cf5990a849aa9e052eea3e2cfefe20b9e1802da/bracex-2.6-py3-none-any.whl", hash = "sha256:0b0049264e7340b3ec782b5cb99beb325f36c3782a32e36e876452fd49a09952", size = 11508, upload-time = "2025-06-22T19:12:29.781Z" },
+]
+
+[[package]]
+name = "build"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "os_name == 'nt' and sys_platform != 'linux'" },
+    { name = "importlib-metadata", marker = "python_full_version < '3.10.2'" },
+    { name = "packaging" },
+    { name = "pyproject-hooks" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/78/e0/df5e171f685f82f37b12e1f208064e24244911079d7b767447d1af7e0d70/build-1.5.0.tar.gz", hash = "sha256:302c22c3ba2a0fd5f3911918651341ebb3896176cbdec15bd421f80b1afc7647", size = 89796, upload-time = "2026-04-30T03:18:25.17Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0d/fe/6bea5c9162869c5beba5d9c8abbed835ec85bf1ec1fba05a3822325c45f3/build-1.5.0-py3-none-any.whl", hash = "sha256:13f3eecb844759ab66efec90ca17639bbf14dc06cb2fdf37a9010322d9c50a6f", size = 26018, upload-time = "2026-04-30T03:18:23.644Z" },
 ]
 
 [[package]]
@@ -906,16 +926,38 @@ wheels = [
 
 [[package]]
 name = "invokelint"
-version = "0.18.0"
+version = "0.19.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "invoke" },
     { name = "packagediscovery" },
+    { name = "types-invoke" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4e/88/cf929e8126a418138e9f16bc15580013220f06e5b568e18f25f8cae25c5a/invokelint-0.18.0.tar.gz", hash = "sha256:723d06088f48522249b4d4674617aa8217438b8e13344bba31085ebd67f36746", size = 28820, upload-time = "2026-06-13T10:11:14.562Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1e/89/09c8bc6af47f8871d692197a3c901034e797fdf90c75235aa6d6a183eeb0/invokelint-0.19.0.tar.gz", hash = "sha256:7b8ccd76c2cc6b65403b511211eed731f6dd946e79da09589cad42b6be561ca1", size = 28916, upload-time = "2026-06-15T13:06:06.524Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/bc/a6c47fbd144d4a40cbf6305f1fa27c36163e26f0eabf87a701bf9ffd7c7e/invokelint-0.18.0-py3-none-any.whl", hash = "sha256:1a487c450e5c225511554a225506209c76b34b8135743a108331816e0c9e52c9", size = 17667, upload-time = "2026-06-13T10:11:13.546Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/8d/628b0155796d9db3478ba4ff1b78c6f11d10f022fa5419c6260da7007f82/invokelint-0.19.0-py3-none-any.whl", hash = "sha256:98d0e49ae8545f21fb5e20502891a822eafac51abceae3345e2f6330598eb393", size = 17127, upload-time = "2026-06-15T13:06:05.459Z" },
+]
+
+[package.optional-dependencies]
+basic = [
+    { name = "bandit" },
+    { name = "build" },
+    { name = "cohesion" },
+    { name = "coverage" },
+    { name = "dlint" },
+    { name = "docformatter" },
+    { name = "docformatter", extra = ["tomli"], marker = "python_full_version < '3.11'" },
+    { name = "dodgy" },
+    { name = "flake8" },
+    { name = "flake8-bugbear" },
+    { name = "flake8-pyproject" },
+    { name = "hacking" },
+    { name = "mypy" },
+    { name = "pylint" },
+    { name = "pytest" },
+    { name = "ruff" },
+    { name = "semgrep" },
 ]
 
 [[package]]
@@ -1180,7 +1222,8 @@ name = "numpy"
 version = "2.2.6"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version < '3.11'",
+    "python_full_version < '3.11' and sys_platform == 'linux'",
+    "python_full_version < '3.11' and sys_platform != 'linux'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/76/21/7d2a95e4bba9dc13d043ee156a356c0a8f0c6309dff6b21b4d71a073b8a8/numpy-2.2.6.tar.gz", hash = "sha256:e29554e2bef54a90aa5cc07da6ce955accb83f21ab5de01a62c8478897b264fd", size = 20276440, upload-time = "2025-05-17T22:38:04.611Z" }
 wheels = [
@@ -1245,9 +1288,12 @@ name = "numpy"
 version = "2.4.6"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.12' and python_full_version < '3.15'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and python_full_version < '3.15' and sys_platform == 'linux'",
+    "python_full_version == '3.11.*' and sys_platform == 'linux'",
+    "python_full_version >= '3.15' and sys_platform != 'linux'",
+    "python_full_version >= '3.12' and python_full_version < '3.15' and sys_platform != 'linux'",
+    "python_full_version == '3.11.*' and sys_platform != 'linux'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/d0/ad/fed0499ce6a338d2a03ebae59cd15093910c8875328855781952abf6c2fe/numpy-2.4.6.tar.gz", hash = "sha256:f3a3570c4a2a16746ac2c31a7c7c7b0c186b95ce902e33db6f28094ed7387dda", size = 20735807, upload-time = "2026-05-18T23:37:14.07Z" }
 wheels = [
@@ -1461,14 +1507,14 @@ wheels = [
 
 [[package]]
 name = "packagediscovery"
-version = "0.2.0"
+version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "setuptools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/62/14/9406f2d96299bd2540755977cf1ade8d7e8071f0f911a2b0ac9f4f89f87d/packagediscovery-0.2.0.tar.gz", hash = "sha256:e386efd44b7899d373857004eacc5a5c0f6b2da3884e8ce21bd733f51d093b00", size = 11098, upload-time = "2025-09-01T07:59:00.66Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dc/44/d10dae339f8949a2f5d51bc338c31ea457721710315821f22dfd46228039/packagediscovery-0.3.0.tar.gz", hash = "sha256:58ade07927f126dc0354ac677a39178869921a81279c29193395fb9a6d0adf24", size = 11574, upload-time = "2026-06-14T18:04:51.92Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ef/77/2d015bc6c8df50b37ee5df6236d17d57ea4f4f4c3e2b6ae0c46751014989/packagediscovery-0.2.0-py3-none-any.whl", hash = "sha256:012ab032a936314862bf94dce49fffcbea3fd2ffb47192e7e5084598cdf71c10", size = 6187, upload-time = "2025-09-01T07:58:59.782Z" },
+    { url = "https://files.pythonhosted.org/packages/39/ad/d6558d90c0c953400197c2382df3f000b87220e103a8745dc4c6248cad27/packagediscovery-0.3.0-py3-none-any.whl", hash = "sha256:ef218a2d3052309290ca66362cbc0923a0cbc42199a3b0730bd4f19b61140c05", size = 6190, upload-time = "2026-06-14T18:04:50.857Z" },
 ]
 
 [[package]]
@@ -1744,7 +1790,7 @@ crypto = [
 
 [[package]]
 name = "pylint"
-version = "4.0.5"
+version = "4.0.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "astroid" },
@@ -1756,9 +1802,18 @@ dependencies = [
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "tomlkit" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e4/b6/74d9a8a68b8067efce8d07707fe6a236324ee1e7808d2eb3646ec8517c7d/pylint-4.0.5.tar.gz", hash = "sha256:8cd6a618df75deb013bd7eb98327a95f02a6fb839205a6bbf5456ef96afb317c", size = 1572474, upload-time = "2026-02-20T09:07:33.621Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7d/1d/3bb57f303701549550d74bf7ced2b07412be97125c167a0c9d216aa9f762/pylint-4.0.6.tar.gz", hash = "sha256:52f19191bee08bf103f9705ad1a0ece4aa5a0a4ef2bdcbd969375a1e6f6579d5", size = 1585588, upload-time = "2026-06-14T14:43:26.772Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d5/6f/9ac2548e290764781f9e7e2aaf0685b086379dabfb29ca38536985471eaf/pylint-4.0.5-py3-none-any.whl", hash = "sha256:00f51c9b14a3b3ae08cff6b2cdd43f28165c78b165b628692e428fb1f8dc2cf2", size = 536694, upload-time = "2026-02-20T09:07:31.028Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/da/acb2e7d4dbd2dfb792d38c0d850481f29ad7049b356d23f56c687d35203b/pylint-4.0.6-py3-none-any.whl", hash = "sha256:d11a0e1fdb7b1cd46ec5d6fc78fee8b95f28695b2d6140e5809925f61e32ea54", size = 538389, upload-time = "2026-06-14T14:43:24.873Z" },
+]
+
+[[package]]
+name = "pyproject-hooks"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/82/28175b2414effca1cdac8dc99f76d660e7a4fb0ceefa4b4ab8f5f6742925/pyproject_hooks-1.2.0.tar.gz", hash = "sha256:1e859bd5c40fae9448642dd871adf459e5e2084186e8d2c2a79a824c970da1f8", size = 19228, upload-time = "2024-09-29T09:24:13.293Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42/pyproject_hooks-1.2.0-py3-none-any.whl", hash = "sha256:9e5c6bfa8dcc30091c74b0cf803c81fdd29d94f01992a7707bc97babb1141913", size = 10216, upload-time = "2024-09-29T09:24:11.978Z" },
 ]
 
 [[package]]
@@ -1811,7 +1866,7 @@ wheels = [
 
 [[package]]
 name = "pyvelocity"
-version = "0.9.0"
+version = "0.9.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -1819,9 +1874,9 @@ dependencies = [
     { name = "tomli" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8b/ca/ab1b543db430cf308481482e0e8f70210f4191c1534971df04b2c9eacba4/pyvelocity-0.9.0.tar.gz", hash = "sha256:7ff5b011042373c8413b5e4fed65968dc2418819cd684ee154d50cc9847b339b", size = 27878, upload-time = "2026-05-16T14:59:13.001Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/07/6d/37642261223b4b79159cc85b6cc1aa2659b8fcb0705f8349698e47df241f/pyvelocity-0.9.1.tar.gz", hash = "sha256:74da20084515247a4685da947f6515cb187a2f35a034c9696a2459e2802dbb40", size = 28708, upload-time = "2026-06-15T09:55:00.095Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/46/20/2490c0ec5234845024480008bef274162ae9ad53c3c589cc7278b0019b0c/pyvelocity-0.9.0-py3-none-any.whl", hash = "sha256:607d328eec381d4c6c0388d3f7139b2da5cdeb87239dc93c933868394df6a67d", size = 36736, upload-time = "2026-05-16T14:59:12.155Z" },
+    { url = "https://files.pythonhosted.org/packages/31/8c/63e19269fa382c9f0dcf58fe3459fd8e376b265f368e1b4ea862a9818cb0/pyvelocity-0.9.1-py3-none-any.whl", hash = "sha256:90c6243e8ed873f9b8a13aabbe398778b40a66534cac736b39b0da4f1ce4d5f1", size = 36738, upload-time = "2026-06-15T09:54:58.969Z" },
 ]
 
 [[package]]
@@ -1945,7 +2000,8 @@ name = "returns"
 version = "0.26.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version < '3.11'",
+    "python_full_version < '3.11' and sys_platform == 'linux'",
+    "python_full_version < '3.11' and sys_platform != 'linux'",
 ]
 dependencies = [
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
@@ -1960,9 +2016,12 @@ name = "returns"
 version = "0.28.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.12' and python_full_version < '3.15'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and python_full_version < '3.15' and sys_platform == 'linux'",
+    "python_full_version == '3.11.*' and sys_platform == 'linux'",
+    "python_full_version >= '3.15' and sys_platform != 'linux'",
+    "python_full_version >= '3.12' and python_full_version < '3.15' and sys_platform != 'linux'",
+    "python_full_version == '3.11.*' and sys_platform != 'linux'",
 ]
 dependencies = [
     { name = "typing-extensions", marker = "python_full_version >= '3.11'" },
@@ -1990,7 +2049,8 @@ name = "rpds-py"
 version = "0.30.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version < '3.11'",
+    "python_full_version < '3.11' and sys_platform == 'linux'",
+    "python_full_version < '3.11' and sys_platform != 'linux'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/20/af/3f2f423103f1113b36230496629986e0ef7e199d2aa8392452b484b38ced/rpds_py-0.30.0.tar.gz", hash = "sha256:dd8ff7cf90014af0c0f787eea34794ebf6415242ee1d6fa91eaba725cc441e84", size = 69469, upload-time = "2025-11-30T20:24:38.837Z" }
 wheels = [
@@ -2115,9 +2175,12 @@ name = "rpds-py"
 version = "2026.5.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.12' and python_full_version < '3.15'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and sys_platform == 'linux'",
+    "python_full_version >= '3.12' and python_full_version < '3.15' and sys_platform == 'linux'",
+    "python_full_version == '3.11.*' and sys_platform == 'linux'",
+    "python_full_version >= '3.15' and sys_platform != 'linux'",
+    "python_full_version >= '3.12' and python_full_version < '3.15' and sys_platform != 'linux'",
+    "python_full_version == '3.11.*' and sys_platform != 'linux'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/2e/43/25a8dcd3feedd735039a8f0b5b7e3b118232b5eae288c4fd9ab200d41094/rpds_py-2026.5.1.tar.gz", hash = "sha256:07b24fea40541e28570e5b795a4a38fbdcd12550c06bd0748005ecc8116ca256", size = 64459, upload-time = "2026-05-28T12:02:13.232Z" }
 wheels = [
@@ -2746,32 +2809,15 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "bandit" },
-    { name = "cohesion" },
-    { name = "coverage" },
-    { name = "dlint" },
-    { name = "docformatter" },
-    { name = "docformatter", extra = ["tomli"], marker = "python_full_version < '3.11'" },
-    { name = "dodgy" },
     { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
     { name = "factory-boy" },
     { name = "fixturefilehandler" },
-    { name = "flake8" },
-    { name = "flake8-bugbear" },
-    { name = "flake8-pyproject" },
-    { name = "hacking" },
-    { name = "invokelint" },
-    { name = "mypy" },
+    { name = "invokelint", extra = ["basic"] },
     { name = "pydantic" },
-    { name = "pylint" },
-    { name = "pytest" },
     { name = "pytest-resource-path" },
     { name = "pyvelocity" },
     { name = "returns", version = "0.26.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "returns", version = "0.28.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "ruff" },
-    { name = "semgrep" },
-    { name = "types-invoke" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 
@@ -2788,31 +2834,14 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "bandit" },
-    { name = "cohesion" },
-    { name = "coverage", specifier = ">=7.14.1" },
-    { name = "dlint", specifier = ">=0.14.0" },
-    { name = "docformatter", marker = "python_full_version >= '3.11'", specifier = ">=1.7.8" },
-    { name = "docformatter", extras = ["tomli"], marker = "python_full_version < '3.11'", specifier = ">=1.7.8" },
-    { name = "dodgy" },
     { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
     { name = "factory-boy" },
     { name = "fixturefilehandler" },
-    { name = "flake8", specifier = ">=4.0.1,!=5.0.0,!=6.0.0" },
-    { name = "flake8-bugbear" },
-    { name = "flake8-pyproject" },
-    { name = "hacking", specifier = ">=5.0.0" },
-    { name = "invokelint", specifier = ">=0.17.0" },
-    { name = "mypy" },
+    { name = "invokelint", extras = ["basic"], specifier = ">=0.19.0" },
     { name = "pydantic", specifier = ">=2.13.3" },
-    { name = "pylint" },
-    { name = "pytest" },
     { name = "pytest-resource-path" },
     { name = "pyvelocity" },
     { name = "returns" },
-    { name = "ruff" },
-    { name = "semgrep", specifier = ">=1.122.0" },
-    { name = "types-invoke" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 
