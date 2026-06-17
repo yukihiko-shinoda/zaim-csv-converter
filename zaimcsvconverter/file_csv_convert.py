@@ -30,7 +30,7 @@ class FileCsvConvertContext:
         self,
         list_convert_table_row_standard_type_value: list[str],
     ) -> ConvertTableRecordMixin[Base, ConvertTableRowData]:
-        """This method creates convert table row model instance by list data of convert table row."""
+        """Create convert table row model instance by list data of convert table row."""
         convert_table_type = self.convert_table_type.value
         # noinspection PyArgumentList
         return convert_table_type.model(
@@ -73,7 +73,7 @@ class FileCsvConvert(Enum):
 
     @staticmethod
     def create_by_path_csv_convert(path: Path) -> FileCsvConvert:
-        """This method creates Enum instance by path to CSV convert file."""
+        """Create Enum instance by path to CSV convert file."""
         for file_csv_convert in FileCsvConvert:
             if path.name == file_csv_convert.value.name:
                 return file_csv_convert
@@ -84,5 +84,5 @@ class FileCsvConvert(Enum):
         self,
         list_convert_table_row_standard_type_value: list[str],
     ) -> ConvertTableRecordMixin[Base, ConvertTableRowData]:
-        """This method creates convert table row model instance by list data of convert table row."""
+        """Create convert table row model instance by list data of convert table row."""
         return self.value.create_convert_table_row_instance(list_convert_table_row_standard_type_value)

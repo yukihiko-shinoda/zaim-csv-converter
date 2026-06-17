@@ -229,7 +229,7 @@ class Account(Enum):
 
     @staticmethod
     def create_by_path_csv_input(path: Path) -> Account:
-        """This function create correct setting instance by argument."""
+        """Create correct setting instance by argument."""
         # noinspection PyUnusedLocal
         matches = [account for account in Account if re.search(account.value.regex_csv_file_name, path.name)]
         if not matches:

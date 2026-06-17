@@ -74,7 +74,7 @@ class TestConvertTableImporter:
         expected_stores: list[list[Any]],
         database_session_with_schema: SQLAlchemySession,
     ) -> None:
-        """This method asserts Store table."""
+        """Assert Store table."""
         # Reeason: SQLAlchemy 2 Stubs' issue:
         # - any, has on column attribute · Issue #207 · sqlalchemy/sqlalchemy2-stubs
         #   https://github.com/sqlalchemy/sqlalchemy2-stubs/issues/207
@@ -103,7 +103,7 @@ class TestConvertTableImporter:
         expected_items: list[list[Any]],
         database_session_with_schema: SQLAlchemySession,
     ) -> None:
-        """This method asserts Store table."""
+        """Assert Store table."""
         # Reeason: SQLAlchemy 2 Stubs' issue:
         # - any, has on column attribute · Issue #207 · sqlalchemy/sqlalchemy2-stubs
         #   https://github.com/sqlalchemy/sqlalchemy2-stubs/issues/207

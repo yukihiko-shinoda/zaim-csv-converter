@@ -68,7 +68,7 @@ class Csv(DataSource, Generic[TypeVarInputRow, TypeVarInputRowData]):
             raise InvalidInputCsvError(str(error), self) from error
 
     def convert_to_record(self, input_record_data: TypeVarInputRowData) -> Generator[AbstractInputRecord, None, None]:
-        """Converts InputRecordData to InputRecord."""
+        """Convert InputRecordData to InputRecord."""
         try:
             yield cast("AbstractInputRecord", self.csv_record_processor.execute(input_record_data))
         except InvalidRecordError as exc:

@@ -22,7 +22,7 @@ def zaim_row_data_created_by_zaim_row(
     account: Account,
     input_row_data: InputRowData,
 ) -> ZaimRowData:
-    """Creates ZaimRowData instance by ZaimRow."""
+    """Create ZaimRowData instance by ZaimRow."""
     csv_record_processor = CsvRecordProcessor(account.value.input_row_factory)
     input_row = csv_record_processor.create_input_row_instance(input_row_data)
     # Reason: Pylint's bug. pylint: disable=no-member
@@ -40,7 +40,7 @@ def zaim_row_data_created_by_zaim_payment_row(
     input_row_data: InputRowData,
     zaim_row_converter_factory: CsvRecordToZaimRowConverterFactory[InputRow[InputRowData], InputRowData],
 ) -> ZaimRowData:
-    """Creates ZaimRowData instance by ZaimPaymentRow."""
+    """Create ZaimRowData instance by ZaimPaymentRow."""
     input_row = input_row_factory.create(input_row_data)
     zaim_low = ZaimRowFactory.create(zaim_row_converter_factory.create(input_row, Path()))
     list_zaim_row = zaim_low.convert_to_list()

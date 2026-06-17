@@ -33,5 +33,5 @@ class CsvToCsvConverter:
         self.convert_workflow = ConvertWorkflow(data_source_csv, record_converter, output_model_exporter)
 
     def execute(self) -> None:
-        """This method executes CSV convert steps."""
+        """Execute CSV convert steps."""
         self.convert_workflow.execute()

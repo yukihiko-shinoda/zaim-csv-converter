@@ -23,12 +23,12 @@ class UndefinedContentErrorHandler:
         return len(self.list_error)
 
     def extend_list(self, error: list[list[str]]) -> None:
-        """This method appends error list argument into error list property."""
+        """Append error list argument into error list property."""
         self.list_error.extend(error)
         self.uniquify()
 
     def extend(self, error_handler: UndefinedContentErrorHandler) -> None:
-        """This method extends error list argument into error list property."""
+        """Extend error list argument into error list property."""
         if not error_handler.is_presented:
             return
         error_handler.uniquify()
@@ -41,6 +41,6 @@ class UndefinedContentErrorHandler:
         return bool(self.list_error)
 
     def uniquify(self) -> None:
-        """This method uniquify error list."""
+        """Uniquify error list."""
         # noinspection PyTypeChecker
         self.list_error = np.unique(np.array(self.list_error), axis=0).tolist()

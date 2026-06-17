@@ -14,7 +14,7 @@ class ZaimCsvConverter:
 
     @staticmethod
     def execute() -> None:
-        """This method executes all CSV converters."""
+        """Execute all CSV converters."""
         CONFIG.load(PATH_FILE_CONFIG)
         initialize_database()
         for path in sorted(DirectoryCsv.CONVERT.value.glob("*.csv")):

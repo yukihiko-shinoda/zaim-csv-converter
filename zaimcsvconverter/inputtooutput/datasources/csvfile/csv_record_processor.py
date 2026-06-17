@@ -31,7 +31,7 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
         self.input_row_factory = input_row_factory
 
     def execute(self, input_record_data: TypeVarInputRowData) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
-        """This method executes convert steps of input CSV row."""
+        """Execute convert steps of input CSV row."""
         input_record = self.create_input_row_instance(input_record_data)
         dekinded_input_record = cast("InputRow[InputRowData]", input_record)
         # Requires to validate before skip check process since skip check process checks store.
@@ -60,5 +60,5 @@ class CsvRecordProcessor(Generic[TypeVarInputRowData, TypeVarInputRow]):
         self,
         input_row_data: TypeVarInputRowData,
     ) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
-        """This method creates input row instance by input row data instance."""
+        """Create input row instance by input row data instance."""
         return self.input_row_factory.create(input_row_data)

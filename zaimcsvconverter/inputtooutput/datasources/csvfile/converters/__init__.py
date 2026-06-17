@@ -25,4 +25,4 @@ class InputRowFactory(Generic[TypeVarInputRowData, TypeVarInputRow]):
 
     @abstractmethod
     def create(self, input_row_data: TypeVarInputRowData) -> Kind1[TypeVarInputRow, TypeVarInputRowData]:
-        """This method creates input row by input CSV row data."""
+        """Create input row by input CSV row data."""

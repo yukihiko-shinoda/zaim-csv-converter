@@ -148,7 +148,7 @@ class SBISumishinNetBankZaimRowConverterFactory(
 
     @staticmethod
     def build_message(input_row: Kind1[SBISumishinNetBankRow, SBISumishinNetBankRowData]) -> str:  # pragma: no cover
-        """This method builds error message."""
+        """Build error message."""
         dekinded_input_row = cast("SBISumishinNetBankRow", input_row)
         return (
             "Unsupported row. "

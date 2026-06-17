@@ -58,7 +58,7 @@ class TestWaonRow:
         expected_store_name_zaim: str,
         expected_amount: int,
     ) -> None:
-        """Asserts store and item."""
+        """Assert store and item."""
         assert isinstance(waon_row.store, Store)
         assert waon_row.store.name_zaim == expected_store_name_zaim
         assert waon_row.used_amount == expected_amount

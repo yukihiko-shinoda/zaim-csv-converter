@@ -22,7 +22,7 @@ class ConvertWorkflow(Generic[TypeVarOutputModelExporter]):
         self.output_model_exporter = output_model_exporter
 
     def execute(self) -> None:
-        """This method convert this csv into Zaim format CSV."""
+        """Convert this csv into Zaim format CSV."""
         with self.output_model_exporter:
             for input_record in self.data_source:
                 output_record = self.record_converter.convert(input_record)

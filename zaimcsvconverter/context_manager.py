@@ -32,7 +32,7 @@ class ContextManager(ABC, Generic[TypeVarCovariant_co]):
     #   expected "Callable[[ContextManager[T_co]], Iterator[<nothing>]]"
     @contextlib.contextmanager  # type: ignore[arg-type]
     def contextmanager(self) -> contextlib._GeneratorContextManager[TypeVarCovariant_co]:
-        """This method is used to implement context manager."""
+        """Implement context manager."""
         raise NotImplementedError
 
     def __enter__(self) -> TypeVarCovariant_co:

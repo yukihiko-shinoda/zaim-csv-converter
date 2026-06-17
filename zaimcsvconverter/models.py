@@ -140,7 +140,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
 
     @classmethod
     def try_to_find(cls, file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
-        """This method select Store model from database.
+        """Select Store model from database.
 
         If record is not exist, raise NoResultFound.
         """
@@ -151,7 +151,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
 
     @classmethod
     def find(cls, file_csv_convert_id: FileCsvConvertId, name: str) -> TypeVarBase:
-        """This method select Store model from database."""
+        """Select Store model from database."""
         with Session() as session:
             return cast(
                 "TypeVarBase",
@@ -162,7 +162,7 @@ class ConvertTableRecordMixin(Generic[TypeVarBase, TypeVarConvertTableRowData]):
 
     @classmethod
     def save_all(cls, models: list[TypeVarBase]) -> None:
-        """This method insert Store models into database."""
+        """Insert Store models into database."""
         with Session() as session:
             session.add_all(models)
             session.commit()
@@ -234,7 +234,7 @@ with warnings.catch_warnings():
 
 
 def initialize_database() -> None:
-    """This function create empty tables from SQLAlchemy models."""
+    """Create empty tables from SQLAlchemy models."""
     # pylint: disable=no-member
     Base.metadata.create_all(Session.get_bind(), checkfirst=False)
 

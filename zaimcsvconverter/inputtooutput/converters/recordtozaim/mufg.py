@@ -227,7 +227,7 @@ class MufgZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[MufgRow, Mu
 
     @staticmethod
     def build_message(input_row: Kind1[MufgRow, MufgRowData]) -> str:  # pragma: no cover
-        """This method builds error message."""
+        """Build error message."""
         message = (
             "Unsupported row. "
             f"class = {type(input_row)}, "

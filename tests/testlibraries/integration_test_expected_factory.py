@@ -4,7 +4,7 @@ from tests.testlibraries.row_data import ZaimRowData
 
 
 def create_zaim_row_data_waon_201807() -> list[ZaimRowData]:
-    """Creates expected zaim row data for WAON 201807."""
+    """Create expected zaim row data for WAON 201807."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-08-07", "payment", "食費", "食料品", "WAON", "", "", "",
@@ -15,7 +15,7 @@ def create_zaim_row_data_waon_201807() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_waon_201808() -> list[ZaimRowData]:
-    """Creates expected zaim row data for WAON 201808."""
+    """Create expected zaim row data for WAON 201808."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-08-30", "payment", "食費", "食料品", "WAON", "", "", "",
@@ -26,7 +26,7 @@ def create_zaim_row_data_waon_201808() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_waon_201810() -> list[ZaimRowData]:
-    """Creates expected zaim row data for WAON 201810."""
+    """Create expected zaim row data for WAON 201810."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-10-22", "income", "その他", "-", "", "WAON", "", "",
@@ -37,7 +37,7 @@ def create_zaim_row_data_waon_201810() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_waon_201811() -> list[ZaimRowData]:
-    """Creates expected zaim row data for WAON 201811."""
+    """Create expected zaim row data for WAON 201811."""
     # fmt: off
     zaim_row_data_02 = ZaimRowData(
         "2018-11-23", "payment", "食費", "食料品", "WAON", "", "", "",
@@ -48,7 +48,7 @@ def create_zaim_row_data_waon_201811() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_gold_point_card_plus_201807() -> list[ZaimRowData]:
-    """Creates expected zaim row data for GOLD POINT CARD PLUS 201807."""
+    """Create expected zaim row data for GOLD POINT CARD PLUS 201807."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-07-03", "payment", "水道・光熱", "電気料金", "ヨドバシゴールドポイントカード・プラス", "", "", "",
@@ -59,7 +59,7 @@ def create_zaim_row_data_gold_point_card_plus_201807() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_gold_point_card_plus_201912_201807() -> list[ZaimRowData]:
-    """Creates expected zaim row data for GOLD POINT CARD PLUS 201912 201807."""
+    """Create expected zaim row data for GOLD POINT CARD PLUS 201912 201807."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2020-07-03", "payment", "水道・光熱", "電気料金", "ヨドバシゴールドポイントカード・プラス", "", "", "",
@@ -74,7 +74,7 @@ def create_zaim_row_data_gold_point_card_plus_201912_201807() -> list[ZaimRowDat
 
 
 def create_zaim_row_data_mufg_201808() -> list[ZaimRowData]:
-    """Creates expected zaim row data for MUFG 201808."""
+    """Create expected zaim row data for MUFG 201808."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-08-20", "income", "その他", "-", "", "三菱UFJ銀行", "", "", "三菱UFJ銀行", "",
@@ -85,7 +85,7 @@ def create_zaim_row_data_mufg_201808() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mufg_201810() -> list[ZaimRowData]:
-    """Creates expected zaim row data for MUFG 201810."""
+    """Create expected zaim row data for MUFG 201810."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-10-01", "transfer", "-", "-", "お財布", "三菱UFJ銀行", "", "", "", "", "0", "0", "10000", "", "", "",
@@ -106,7 +106,7 @@ def create_zaim_row_data_mufg_201810() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mufg_201811() -> list[ZaimRowData]:
-    """Creates expected zaim row data for MUFG 201811."""
+    """Create expected zaim row data for MUFG 201811."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-11-28", "payment", "水道・光熱", "水道料金", "三菱UFJ銀行", "", "", "",
@@ -117,7 +117,7 @@ def create_zaim_row_data_mufg_201811() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mufg_202304() -> list[ZaimRowData]:
-    """Creates expected zaim row data for MUFG 201811."""
+    """Create expected zaim row data for MUFG 201811."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2023-04-22", "transfer", "-", "-", "三菱UFJ銀行", "お財布",
@@ -128,7 +128,7 @@ def create_zaim_row_data_mufg_202304() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_pasmo_201811() -> list[ZaimRowData]:
-    """Creates expected zaim row data for PASMO 201811."""
+    """Create expected zaim row data for PASMO 201811."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-11-13", "payment", "交通", "電車", "PASMO", "", "", "メトロ 六本木一丁目 → メトロ 後楽園",
@@ -142,7 +142,7 @@ def create_zaim_row_data_pasmo_201811() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_pasmo_201901() -> list[ZaimRowData]:
-    """Creates expected zaim row data for PASMO 201901."""
+    """Create expected zaim row data for PASMO 201901."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2019-01-27", "payment", "交通", "バス", "PASMO", "", "", "", "", "", "0", "195", "0", "", "", "",
@@ -152,7 +152,7 @@ def create_zaim_row_data_pasmo_201901() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_amazon_201810() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Amazon 201810."""
+    """Create expected zaim row data for Amazon 201810."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-10-23", "payment", "大型出費", "家電", "ヨドバシゴールドポイントカード・プラス", "",
@@ -164,7 +164,7 @@ def create_zaim_row_data_amazon_201810() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_amazon_201911_201911() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Amazon 201911 201911."""
+    """Create expected zaim row data for Amazon 201911 201911."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2019-11-09", "payment", "教育・教養", "参考書", "ヨドバシゴールドポイントカード・プラス", "",
@@ -185,7 +185,7 @@ def create_zaim_row_data_amazon_201911_201911() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_amazon_201911_202004() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Amazon 201911 202004."""
+    """Create expected zaim row data for Amazon 201911 202004."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2020-04-25", "payment", "大型出費", "家電", "ヨドバシゴールドポイントカード・プラス", "",
@@ -218,12 +218,12 @@ def create_zaim_row_data_amazon_201911_202004() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_amazon_201911_202006() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Amazon 201911 202006."""
+    """Create expected zaim row data for Amazon 201911 202006."""
     return []
 
 
 def create_zaim_row_data_amazon_201911_202012() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Amazon 201911 202006."""
+    """Create expected zaim row data for Amazon 201911 202006."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2020-12-01", "payment", "大型出費", "家電", "ヨドバシゴールドポイントカード・プラス", "",
@@ -249,7 +249,7 @@ def create_zaim_row_data_amazon_201911_202012() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_view_card_202005() -> list[ZaimRowData]:
-    """Creates expected zaim row data for VIEW CARD 202005."""
+    """Create expected zaim row data for VIEW CARD 202005."""
     # fmt: off
     zaim_row_data_view_card_01 = ZaimRowData(
         "2020-03-31", "payment", "通信", "その他", "ビューカード", "", "", "",
@@ -261,7 +261,7 @@ def create_zaim_row_data_view_card_202005() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_suica_202003() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Suica 202003."""
+    """Create expected zaim row data for Suica 202003."""
     # fmt: off
     zaim_row_suica_20200301 = ZaimRowData(
         "2020-03-21", "payment", "交通", "電車", "Suica", "", "", "JR東 越谷レイクタウン → JR東 板橋", "板橋", "", "0",
@@ -280,7 +280,7 @@ def create_zaim_row_data_suica_202003() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_pay_pal_201810() -> list[ZaimRowData]:
-    """Creates expected zaim row data for PayPal 201810."""
+    """Create expected zaim row data for PayPal 201810."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2018-10-11", "payment", "教育・教養", "参考書", "ヨドバシゴールドポイントカード・プラス", "",
@@ -299,7 +299,7 @@ def create_zaim_row_data_pay_pal_201810() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_sbi_sumishin_net_bank_202201() -> list[ZaimRowData]:
-    """Creates expected zaim row data for SBI Sumishin net bank 202201."""
+    """Create expected zaim row data for SBI Sumishin net bank 202201."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2022-01-16", "income", "その他", "-", "", "住信 SBI ネット銀行", "", "",
@@ -318,7 +318,7 @@ def create_zaim_row_data_sbi_sumishin_net_bank_202201() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_pay_pay_card_202208() -> list[ZaimRowData]:
-    """Creates expected zaim row data for PayPay Card 202208."""
+    """Create expected zaim row data for PayPay Card 202208."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2022-07-29", "transfer", "-", "-", "PayPay カード", "PayPay", "", "",
@@ -333,7 +333,7 @@ def create_zaim_row_data_pay_pay_card_202208() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mobile_suica_202210() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Mobile Suica 202210."""
+    """Create expected zaim row data for Mobile Suica 202210."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2022-10-28", "transfer", "-", "-", "ビューカード", "Suica", "", "", "", "", "0", "0", "10000", "", "", "",
@@ -350,7 +350,7 @@ def create_zaim_row_data_mobile_suica_202210() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mobile_suica_202211() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Mobile Suica 202211.
+    """Create expected zaim row data for Mobile Suica 202211.
 
     Since `現金` includes charging by JRE POINT, we expect as discount.
     """
@@ -363,7 +363,7 @@ def create_zaim_row_data_mobile_suica_202211() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mobile_suica_202212() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Mobile Suica 202212."""
+    """Create expected zaim row data for Mobile Suica 202212."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2022-12-25", "payment", "交通", "電車", "Suica", "",
@@ -374,7 +374,7 @@ def create_zaim_row_data_mobile_suica_202212() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mobile_suica_202301() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Mobile Suica 202301."""
+    """Create expected zaim row data for Mobile Suica 202301."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2023-01-29", "payment", "交通", "バス", "Suica", "",
@@ -385,7 +385,7 @@ def create_zaim_row_data_mobile_suica_202301() -> list[ZaimRowData]:
 
 
 def create_zaim_row_data_mobile_suica_202505() -> list[ZaimRowData]:
-    """Creates expected zaim row data for Mobile Suica 202505."""
+    """Create expected zaim row data for Mobile Suica 202505."""
     # fmt: off
     zaim_row_data_01 = ZaimRowData(
         "2025-05-11", "payment", "交通", "電車", "Suica", "",
