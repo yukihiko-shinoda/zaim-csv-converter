@@ -32,7 +32,7 @@ class DataSource(ABC):
 
     @abstractmethod
     def mark_current_record_as_error(self, list_error: list[InvalidCellError]) -> None:
-        """Marks current record as error."""
+        """Mark current record as error."""
         raise NotImplementedError
 
     @property

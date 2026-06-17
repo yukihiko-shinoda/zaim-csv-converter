@@ -51,7 +51,7 @@ def create_relative_deploy_file_path(
     directory_name: str,
     directory_name_resource: str | None = None,
 ) -> RelativeDeployFilePath:
-    """This  function creates relative path aggregate instance to deploy."""
+    """Create relative path aggregate instance to deploy."""
     if directory_name_resource is None:
         directory_name_resource = directory_name
     return RelativeDeployFilePath(

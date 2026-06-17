@@ -255,7 +255,7 @@ class ZaimRowConverterFactory:
     """
 
     def create(self, input_row: AbstractInputRecord, path_csv_file: Path) -> AbstractZaimRowConverter:
-        """This method selects Zaim row converter."""
+        """Select Zaim row converter."""
         raise NotImplementedError
 
 
@@ -280,7 +280,7 @@ class CsvRecordToZaimRowConverterFactory(ZaimRowConverterFactory, Generic[TypeVa
         input_row: Kind1[TypeVarInputRow, TypeVarInputRowData],  # type: ignore[override]
         path_csv_file: Path,
     ) -> ZaimRowConverter[TypeVarInputRow, TypeVarInputRowData]:
-        """This method selects Zaim row converter."""
+        """Select Zaim row converter."""
         raise NotImplementedError
 
 
@@ -300,7 +300,7 @@ class ZaimRowFactory:
 
     @staticmethod
     def create(zaim_row_converter: AbstractZaimRowConverter) -> ZaimRow:
-        """This method creates Zaim row."""
+        """Create Zaim row."""
         if isinstance(zaim_row_converter, ZaimIncomeRowConverter):
             return ZaimIncomeRow(zaim_row_converter)
         if isinstance(zaim_row_converter, ZaimPaymentRowConverter):

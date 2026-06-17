@@ -33,7 +33,7 @@ class ZaimRow(OutputRecord):
 
     @abstractmethod
     def convert_to_list(self) -> list[str | int | None]:
-        """This method converts object data to list."""
+        """Convert object data to list."""
 
 
 class ZaimIncomeRow(ZaimRow):

@@ -50,7 +50,7 @@ class ErrorTotalizer:
         return bool(self.list_invalid_data_source)
 
     def report_to_csv(self) -> None:
-        """This method exports invalid input CSV errors into CSV."""
+        """Export invalid input CSV errors into CSV."""
         csv_exporter = CsvExporter(self.directory_csv_output)
         csv_exporter.export(self, FileNameForError.INVALID_ROW.value)
         if self.undefined_content_error_handler.is_presented:

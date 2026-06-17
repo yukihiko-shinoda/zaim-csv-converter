@@ -44,7 +44,7 @@ class InputRow(AbstractInputRecord, Generic[TypeVarInputRowData]):
         return bool(self.list_error)
 
     def stock_error(self, method: Callable[[], TypeVarReturnValue], message: str) -> None:
-        """This method stocks error."""
+        """Stock error."""
         with MultipleErrorCollector(InvalidCellError, message, self.list_error):
             _ = method()
 
@@ -88,7 +88,7 @@ class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
         method: Callable[[], TypeVarReturnValue],
         message: str,
     ) -> TypeVarReturnValue | None:
-        """This method stocks undefined content error."""
+        """Stock undefined content error."""
         error_collector = SingleErrorCollector(UndefinedContentError, message)
         # noinspection PyUnusedLocal
         return_value = None
@@ -108,7 +108,7 @@ class InputStoreRow(InputContentRow[TypeVarInputStoreRowData]):
         return super().validate or self.undefined_content_error_store is not None
 
     def get_report_undefined_content_error(self) -> list[list[str]]:
-        """This method returns report of undefined content error."""
+        """Return report of undefined content error."""
         return (
             []
             if self.undefined_content_error_store is None
@@ -148,7 +148,7 @@ class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
         method: Callable[[], TypeVarReturnValue],
         message: str,
     ) -> TypeVarReturnValue | None:
-        """This method stocks undefined content error."""
+        """Stock undefined content error."""
         error_collector = SingleErrorCollector(UndefinedContentError, message)
         # noinspection PyUnusedLocal
         return_value = None
@@ -168,7 +168,7 @@ class InputItemRow(InputContentRow[TypeVarInputItemRowData]):
         return super().validate or self.undefined_content_error_item is not None
 
     def get_report_undefined_content_error(self) -> list[list[str]]:
-        """This method returns report of undefined content error."""
+        """Return report of undefined content error."""
         return (
             []
             if self.undefined_content_error_item is None
@@ -204,7 +204,7 @@ class InputStoreItemRow(InputStoreRow[TypeVarInputStoreItemRowData]):
         method: Callable[[], TypeVarReturnValue],
         message: str,
     ) -> TypeVarReturnValue | None:
-        """This method stocks undefined content error."""
+        """Stock undefined content error."""
         error_collector = SingleErrorCollector(UndefinedContentError, message)
         # noinspection PyUnusedLocal
         return_value = None
@@ -224,7 +224,7 @@ class InputStoreItemRow(InputStoreRow[TypeVarInputStoreItemRowData]):
         return super().validate or self.undefined_content_error_item is not None
 
     def get_report_undefined_content_error(self) -> list[list[str]]:
-        """This method returns report of undefined content error."""
+        """Return report of undefined content error."""
         report_undefined_content_error = super().get_report_undefined_content_error()
         if self.undefined_content_error_item is not None:
             report_undefined_content_error.append([self._file_csv_convert_item.name, "", self.item_name])

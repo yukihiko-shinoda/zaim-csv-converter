@@ -4,7 +4,7 @@ from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter
 
 
 def main() -> None:
-    """This function calls Zaim CSV converter package."""
+    """Call Zaim CSV converter package."""
     ZaimCsvConverter.execute()
 
 

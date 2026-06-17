@@ -80,7 +80,7 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
         raise ValueError(self.build_message(dekinded_input_row))
 
     def create_charge(self, input_row: WaonChargeRow) -> ZaimRowConverter[WaonRow, WaonRowData]:
-        """This method creates Zaim row converter for charge row."""
+        """Create Zaim row converter for charge row."""
         if input_row.is_income:
             # Reason: The returns can't detect correct type limited by if instance block.
             return WaonZaimIncomeRowConverter(input_row)  # type: ignore[arg-type,return-value]
@@ -97,7 +97,7 @@ class WaonZaimRowConverterFactory(CsvRecordToZaimRowConverterFactory[WaonRow, Wa
 
     @staticmethod
     def build_message(input_row: WaonRow) -> str:
-        """This method builds error message."""
+        """Build error message."""
         message = f"Unsupported row. Input row = {input_row.__class__.__name__}, {input_row.use_kind}"
         if isinstance(input_row, WaonChargeRow):  # pragma: no cover
             # Reason: This line is insurance for future development so process must be not able to reach

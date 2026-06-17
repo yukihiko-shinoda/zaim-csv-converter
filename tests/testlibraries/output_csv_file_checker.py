@@ -25,7 +25,7 @@ class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):
     output_row_data_class: type[TypeVarOutputRowData] = field(init=False)
 
     def assert_file(self, file_name: str, list_expected: list[TypeVarOutputRowData]) -> None:
-        """This method checks Zaim CSV file."""
+        """Check Zaim CSV file."""
         list_output_row_data: list[TypeVarOutputRowData] = self.read_output_csv(file_name)
         assert len(list_output_row_data) == len(
             list_expected,
@@ -47,7 +47,7 @@ class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):
         return f"\n{expected=}\n{output_row_data=}\nlist_output_row_data={debug_list_output_row_data}"
 
     def read_output_csv(self, file_name: str) -> list[TypeVarOutputRowData]:
-        """This method reads output CSV files and returns as list of output row data instance."""
+        """Read output CSV files and returns as list of output row data instance."""
         with (self.directory_csv_output.target / file_name).open("r", encoding="UTF-8", newline="\n") as file:
             csv_reader = csv.reader(file)
             self.assert_header_and_skip(csv_reader)
@@ -59,7 +59,7 @@ class OutputCsvFileChecker(Generic[TypeVarOutputRowData]):
 
     @abstractmethod
     def assert_header_and_skip(self, csv_reader: CSVReader) -> None:
-        """This method reads output CSV files and returns as list of output row data instance."""
+        """Read output CSV files and returns as list of output row data instance."""
 
 
 @dataclass

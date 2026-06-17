@@ -52,7 +52,7 @@ class FixtureRecord:
     row_data: ConvertTableRowData
 
     def define(self) -> None:
-        """This method defines factory_boy fixture records by using properties."""
+        """Define factory_boy fixture records by using properties."""
         if self.file_csv_convert_id is FileCsvConvertId.AMAZON:
             # Reason: Mypy and SQLAlchemy's issue pylint: disable-next=line-too-long
             ItemFactory(file_csv_convert_id=self.file_csv_convert_id, row_data=self.row_data)  # type: ignore[no-untyped-call]
@@ -78,7 +78,7 @@ class DatabaseForTest:
 
     @classmethod
     def database_session(cls) -> Generator[SQLAlchemySession, None, None]:
-        """This fixture prepares database session to reset database after each test."""
+        """Prepare database session to reset database after each test."""
         with DatabaseEngineManager(Session):
             yield Session()
 
@@ -87,7 +87,7 @@ class DatabaseForTest:
         cls,
         list_fixture_record: list[FixtureRecord] | None = None,
     ) -> Generator[SQLAlchemySession, None, None]:
-        """This fixture prepares database session and fixture records to reset database after each test."""
+        """Prepare database session and fixture records to reset database after each test."""
         with DatabaseEngineManager(Session) as engine:
             session = Session()
             Base.metadata.create_all(engine)

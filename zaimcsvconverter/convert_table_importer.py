@@ -14,7 +14,7 @@ class ConvertTableImporter:
 
     @classmethod
     def execute(cls, path: Path) -> None:
-        """This method executes importing process for convert table CSV."""
+        """Execute importing process for convert table CSV."""
         file_csv_convert = FileCsvConvert.create_by_path_csv_convert(path)
         list_convert_table = cls._load_csv(file_csv_convert, path)
         file_csv_convert.value.convert_table_type.value.model.save_all(list_convert_table)
