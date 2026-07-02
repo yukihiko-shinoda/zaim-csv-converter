@@ -926,7 +926,7 @@ wheels = [
 
 [[package]]
 name = "invokelint"
-version = "0.19.0"
+version = "0.20.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -934,9 +934,9 @@ dependencies = [
     { name = "packagediscovery" },
     { name = "types-invoke" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1e/89/09c8bc6af47f8871d692197a3c901034e797fdf90c75235aa6d6a183eeb0/invokelint-0.19.0.tar.gz", hash = "sha256:7b8ccd76c2cc6b65403b511211eed731f6dd946e79da09589cad42b6be561ca1", size = 28916, upload-time = "2026-06-15T13:06:06.524Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/34/88/34b8fdc85ad5b3cd1cc7aa046e50f59f63abbc590437e3460709066b8363/invokelint-0.20.0.tar.gz", hash = "sha256:a26e1c186e28283b0bb697f2f7e99bdd2139512b3db1b326431126a39c856d8b", size = 29324, upload-time = "2026-06-30T15:18:23.882Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2c/8d/628b0155796d9db3478ba4ff1b78c6f11d10f022fa5419c6260da7007f82/invokelint-0.19.0-py3-none-any.whl", hash = "sha256:98d0e49ae8545f21fb5e20502891a822eafac51abceae3345e2f6330598eb393", size = 17127, upload-time = "2026-06-15T13:06:05.459Z" },
+    { url = "https://files.pythonhosted.org/packages/44/12/e252d923240f1bc3ef8d6ce1d525a85ae13f1f443d91bc6746e0f5ec6d3a/invokelint-0.20.0-py3-none-any.whl", hash = "sha256:661087c997bf9eb82b636a3f33c229606e6e8665c7bb7f59300f19cb2b6a1fb5", size = 17130, upload-time = "2026-06-30T15:18:22.879Z" },
 ]
 
 [package.optional-dependencies]
@@ -2837,7 +2837,7 @@ dev = [
     { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
     { name = "factory-boy" },
     { name = "fixturefilehandler" },
-    { name = "invokelint", extras = ["basic"], specifier = ">=0.19.0" },
+    { name = "invokelint", extras = ["basic"], specifier = ">=0.20.0" },
     { name = "pydantic", specifier = ">=2.13.3" },
     { name = "pytest-resource-path" },
     { name = "pyvelocity" },
