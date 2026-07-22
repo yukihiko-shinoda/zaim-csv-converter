@@ -598,7 +598,7 @@ wheels = [
 
 [package.optional-dependencies]
 tomli = [
-    { name = "tomli" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
 
 [[package]]
@@ -2061,7 +2061,7 @@ resolution-markers = [
     "python_full_version < '3.11' and sys_platform != 'linux'",
 ]
 dependencies = [
-    { name = "typing-extensions" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/06/c2/6dda7ef39464568152e35c766a8b49ab1cdb1b03a5891441a7c2fa40dc61/returns-0.26.0.tar.gz", hash = "sha256:180320e0f6e9ea9845330ccfc020f542330f05b7250941d9b9b7c00203fcc3da", size = 105300, upload-time = "2025-07-24T13:11:21.772Z" }
 wheels = [
@@ -2083,7 +2083,7 @@ resolution-markers = [
     "python_full_version == '3.11.*' and sys_platform != 'linux'",
 ]
 dependencies = [
-    { name = "typing-extensions" },
+    { name = "typing-extensions", marker = "python_full_version >= '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/db/8a/9f6285f3a195ef4cb400c60e10952b25f19c513f44ef739a959c403087a8/returns-0.28.0.tar.gz", hash = "sha256:0eb059d81bfd8af64c86d9286cdf19c280f5a815ee719ff838a9c20b29ce4f84", size = 105269, upload-time = "2026-06-04T09:07:26.371Z" }
 wheels = [
@@ -2908,7 +2908,7 @@ dev = [
     { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
     { name = "factory-boy" },
     { name = "fixturefilehandler" },
-    { name = "invokelint", extras = ["basic"], specifier = ">=0.20.0" },
+    { name = "invokelint", extras = ["basic"], specifier = ">=0.20.1" },
     { name = "pydantic", specifier = ">=2.13.3" },
     { name = "pytest-resource-path" },
     { name = "pyvelocity" },
