@@ -1,4 +1,4 @@
-FROM futureys/claude-code-python-development:20260726122500
+FROM futureys/claude-code-python-development:20260805201500
 # To prevent following error when install semgrep:
 # 8.445       error: command 'cc' failed: No such file or directory
 RUN apt-get update && apt-get install -y --no-install-recommends \
