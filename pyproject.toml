@@ -5,7 +5,7 @@ dev = [
     "fixturefilehandler",
     "invokelint[basic]>=0.20.1",
     # Currently, migration steps is difficult
-    "pydantic>=2.13.3",
+    "pydantic>=2.13.5",
     "pytest-resource-path",
     "pyvelocity",
     "returns",
