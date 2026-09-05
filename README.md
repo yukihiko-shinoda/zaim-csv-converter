@@ -106,7 +106,8 @@ Suica|suica
 モバイル Suica|mobile_suica + 西暦年を表す半角数字 4 ~ 6 桁 (後述)
 PayPal|pay_pal_store, pay_pal_item
 住信 SBI ネット銀行|sbi_sumishin_net_bank
-PayPay カード|pay_pay_card
+PayPay カード 2025 年 4 月以前の形式|pay_pay_card
+PayPay カード 2025 年 5 月以降の形式|pay_pay_card_202505
 
 変換対象CSVの準備方法の詳細は[変換対象 CSV の準備方法](#変換対象-CSV-の準備方法)を参照してください。
 

@@ -32,6 +32,7 @@ from tests.testlibraries.integration_test_expected_factory import create_zaim_ro
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_pasmo_201901
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_pay_pal_201810
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_pay_pay_card_202208
+from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_pay_pay_card_202505_202505
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_sbi_sumishin_net_bank_202201
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_suica_202003
 from tests.testlibraries.integration_test_expected_factory import create_zaim_row_data_view_card_202005
@@ -83,7 +84,7 @@ class TestZaimCsvConverter:
             TestZaimCsvConverter.debug_csv("error_invalid_row.csv", directory_csv_output)
             raise
         files = sorted(directory_csv_output.target.rglob("*[!.gitkeep]"))
-        expected_length = 27
+        expected_length = 28
         assert len(files) == expected_length, ",\n".join(str(file) for file in files)
         checker = ZaimCsvFileChecker(directory_csv_output)
         checker.assert_file("waon201807.csv", create_zaim_row_data_waon_201807())
@@ -111,6 +112,7 @@ class TestZaimCsvConverter:
         checker.assert_file("pay_pal201810.csv", create_zaim_row_data_pay_pal_201810())
         checker.assert_file("sbi_sumishin_net_bank202201.csv", create_zaim_row_data_sbi_sumishin_net_bank_202201())
         checker.assert_file("pay_pay_card_202208.csv", create_zaim_row_data_pay_pay_card_202208())
+        checker.assert_file("pay_pay_card_202505_202505.csv", create_zaim_row_data_pay_pay_card_202505_202505())
         checker.assert_file("mobile_suica_202210.csv", create_zaim_row_data_mobile_suica_202210())
         checker.assert_file("mobile_suica_202211.csv", create_zaim_row_data_mobile_suica_202211())
         checker.assert_file("mobile_suica_202212.csv", create_zaim_row_data_mobile_suica_202212())
