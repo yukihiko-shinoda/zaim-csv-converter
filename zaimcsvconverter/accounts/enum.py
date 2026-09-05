@@ -22,6 +22,9 @@ from zaimcsvconverter.inputtooutput.converters.recordtozaim.mobile_suica import 
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.mufg import MufgZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pal import PayPalZaimRowConverterFactory
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pay_card import PayPayCardZaimRowConverterFactory
+from zaimcsvconverter.inputtooutput.converters.recordtozaim.pay_pay_card_202505 import (
+    PayPayCard202505ZaimRowConverterFactory,  # noqa: H301
+)
 from zaimcsvconverter.inputtooutput.converters.recordtozaim.sbi_sumishin_net_bank import (
     SBISumishinNetBankZaimRowConverterFactory,  # noqa: H301
 )
@@ -40,6 +43,9 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.mobile_suica 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.mufg import MufgRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pal import PayPalRowFactory
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pay_card import PayPayCardRowFactory
+from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.pay_pay_card_202505 import (
+    PayPayCard202505RowFactory,  # noqa: H301
+)
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters.sbi_sumishin_net_bank import (
     SBISumishinNetBankRowFactory,  # noqa: H301
 )
@@ -56,6 +62,7 @@ from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mobile_suica import
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.mufg import MufgRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pal import PayPalRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pay_card import PayPayCardRowData
+from zaimcsvconverter.inputtooutput.datasources.csvfile.data.pay_pay_card_202505 import PayPayCard202505RowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sbi_sumishin_net_bank import SBISumishinNetBankRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.sf_card_viewer import SFCardViewerRowData
 from zaimcsvconverter.inputtooutput.datasources.csvfile.data.view_card import ViewCardRowData
@@ -216,6 +223,18 @@ class Account(Enum):
         PayPayCardRowData,
         PayPayCardRowFactory(),
         PayPayCardZaimRowConverterFactory(),
+    )
+    PAY_PAY_CARD_202505 = AccountContext(
+        r".*pay_pay_card_202505.*\.csv",
+        GodSlayerFactory(
+            header=[
+                "利用日/キャンセル日", "利用店名・商品名", "利用者", "決済方法", "支払区分", "利用金額",
+                "手数料", "支払総額", "当月支払金額", "翌月以降繰越金額", "調整額", "当月お支払日",
+            ],
+        ),
+        PayPayCard202505RowData,
+        PayPayCard202505RowFactory(),
+        PayPayCard202505ZaimRowConverterFactory(),
     )
     # fmt: on
     MOBILE_SUICA = AccountContext(
