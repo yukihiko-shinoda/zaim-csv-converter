@@ -1,0 +1,35 @@
+name: Dependabot auto-merge
+on:
+  pull_request:
+    branches:
+      - main
+# Merging itself is gated by branch protection on main:
+# - Require status checks to pass
+# - Require branches to be up to date before merging
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98  # v3.1.0
+      # Merges done with GITHUB_TOKEN don't trigger workflows on push to main (e.g. Qlty),
+      # so auto-merge is enabled with a GitHub App token instead.
+      # Workflows permission is required to merge updates of github-actions ecosystem.
+      - id: app-token
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510  # v3.3.0
+        with:
+          client-id: ${{ secrets.AUTO_MERGE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
+      - if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
