@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Converter from GOLD POINT CARD+ CSV data to record model version 201912."""
 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory

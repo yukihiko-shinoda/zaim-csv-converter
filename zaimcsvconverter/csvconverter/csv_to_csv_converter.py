@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements abstract converting steps for CSV."""
 
 from pathlib import Path

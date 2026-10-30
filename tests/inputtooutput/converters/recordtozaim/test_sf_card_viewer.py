@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for sf_card_viewer.py."""
 
 from dataclasses import dataclass

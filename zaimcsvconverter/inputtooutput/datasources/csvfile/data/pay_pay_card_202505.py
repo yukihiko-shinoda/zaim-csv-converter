@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Zaim CSV Converter extended PayPay Card CSV Data model (2025-05 format)."""
 
 from datetime import datetime

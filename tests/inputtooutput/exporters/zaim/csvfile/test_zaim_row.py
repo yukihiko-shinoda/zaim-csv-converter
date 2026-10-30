@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for zaim_row.py."""
 
 from dataclasses import dataclass

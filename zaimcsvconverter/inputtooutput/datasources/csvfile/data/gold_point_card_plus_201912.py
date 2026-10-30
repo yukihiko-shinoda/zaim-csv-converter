@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Zaim CSV Converter extended GOLD POINT CARD+ CSV Data model version 201912."""
 
 from datetime import datetime

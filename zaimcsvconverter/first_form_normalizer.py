@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Generator to iterate CSV row data as model instance."""
 
 from collections.abc import Generator

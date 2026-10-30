@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """CSV datasource."""
 
 from __future__ import annotations

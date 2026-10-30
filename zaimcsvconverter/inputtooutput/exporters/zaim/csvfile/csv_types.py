@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Type aliases for the reader and writer objects returned by csv.reader() and csv.writer().
 
 Typeshed defines these as public ``_csv.Reader`` / ``_csv.Writer`` classes (CPython 3.12+ also

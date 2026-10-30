@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for zaim_csv_converter.py."""
 
 from __future__ import annotations

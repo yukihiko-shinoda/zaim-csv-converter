@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements converting steps from account CSV to Zaim CSV."""
 
 from zaimcsvconverter import CONFIG

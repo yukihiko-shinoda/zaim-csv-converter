@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Converter from SBI Sumishin net bank CSV data to record model."""
 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for account_dependency.py ."""
 
 from dataclasses import dataclass

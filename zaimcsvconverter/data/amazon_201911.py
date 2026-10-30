@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Amazon.co.jp CSV Data model version 201911."""
 
 from typing import ClassVar

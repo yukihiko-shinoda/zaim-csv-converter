@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """SF Card Viewer CSV Data model."""
 
 from enum import Enum

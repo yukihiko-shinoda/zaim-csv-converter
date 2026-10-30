@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """The constants for accounts in Zaim."""
 
 from __future__ import annotations

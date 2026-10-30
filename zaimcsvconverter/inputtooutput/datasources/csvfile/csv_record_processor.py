@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements convert steps of input CSV row."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """PayPay Card CSV Data model (2025-05 format)."""
 
 from pydantic.dataclasses import dataclass

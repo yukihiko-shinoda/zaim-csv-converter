@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements row model of SBI Sumishin net bank CSV."""
 
 from zaimcsvconverter.file_csv_convert import FileCsvConvert

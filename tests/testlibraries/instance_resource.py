@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements fixture of instance."""
 
 from pathlib import Path
@@ -177,8 +178,10 @@ class InstanceResource:
             "5952",
             "Visa（下4けたが1234）",  # noqa: RUF001
             "https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=123-4567890-1234567",
-            "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
-            "?ie=UTF8&orderID=123-4567890-1234567",
+            (
+                "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
+                "?ie=UTF8&orderID=123-4567890-1234567"
+            ),
             "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1",
         ],
     )
@@ -201,8 +204,10 @@ class InstanceResource:
             "5952",
             "Visa（下4けたが1234）",  # noqa: RUF001
             "https://www.amazon.co.jp/gp/css/summary/edit.html?ie=UTF8&orderID=234-5678901-2345678",
-            "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
-            "?ie=UTF8&orderID=234-5678901-2345678",
+            (
+                "https://www.amazon.co.jp/gp/css/summary/print.html/ref=oh_aui_ajax_dpi"
+                "?ie=UTF8&orderID=234-5678901-2345678"
+            ),
             "https://www.amazon.co.jp/gp/product/B06ZYTTC4P/ref=od_aui_detailpages01?ie=UTF8&psc=1",
         ],
     )
@@ -223,10 +228,14 @@ class InstanceResource:
             "",
             "",
             "Visa ****1234",
-            "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=docs_ya_os_i"
-            "?ie=UTF8&orderID=234-5678901-2345678",
-            "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00"
-            "?ie=UTF8&orderID=234-5678901-2345678&print=1",
+            (
+                "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=docs_ya_os_i"
+                "?ie=UTF8&orderID=234-5678901-2345678"
+            ),
+            (
+                "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00"
+                "?ie=UTF8&orderID=234-5678901-2345678&print=1"
+            ),
             "",
         ],
     )
@@ -247,10 +256,14 @@ class InstanceResource:
             "",
             "",
             "",
-            "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=docs_ya_os_i"
-            "?ie=UTF8&orderID=234-5678901-2345678",
-            "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00"
-            "?ie=UTF8&orderID=234-5678901-2345678&print=1",
+            (
+                "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=docs_ya_os_i"
+                "?ie=UTF8&orderID=234-5678901-2345678"
+            ),
+            (
+                "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html/ref=ppx_yo_dt_b_dpi_o00"
+                "?ie=UTF8&orderID=234-5678901-2345678&print=1"
+            ),
             "",
         ],
     )
@@ -296,10 +309,14 @@ class InstanceResource:
             "",
             "",
             "",
-            "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html"
-            "/ref=docs_ya_os_i?ie=UTF8&orderID=D01-2345678-9012345",
-            "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html"
-            "/ref=ppx_yo_dt_b_dpi_o00?ie=UTF8&orderID=D01-2345678-9012345&print=1",
+            (
+                "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html"
+                "/ref=docs_ya_os_i?ie=UTF8&orderID=D01-2345678-9012345"
+            ),
+            (
+                "https://www.amazon.co.jp/gp/digital/your-account/order-summary.html"
+                "/ref=ppx_yo_dt_b_dpi_o00?ie=UTF8&orderID=D01-2345678-9012345&print=1"
+            ),
             "https://www.amazon.co.jp/dp/B089M7LC28/ref=docs-os-doi_0",
         ],
     )

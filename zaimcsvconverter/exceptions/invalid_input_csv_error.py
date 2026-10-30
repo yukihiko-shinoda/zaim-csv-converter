@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """To prevent circular import."""
 
 from zaimcsvconverter.exceptions import Error

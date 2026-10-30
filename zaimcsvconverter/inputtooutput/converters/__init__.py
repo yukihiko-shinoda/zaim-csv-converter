@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Abstract record converter."""
 
 from abc import ABC

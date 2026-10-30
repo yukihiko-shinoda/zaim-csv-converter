@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Zaim CSV Converter extended SBI Sumishin net bank CSV Data model."""
 
 from datetime import datetime

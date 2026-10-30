@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements convert steps from PayPay Card input row to Zaim row (2025-05 format)."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Provides fixtures for tests of zaimcsvconverter.inputtooutput.exporters.zaim.csv."""
 
 from pathlib import Path

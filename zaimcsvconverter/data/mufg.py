@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """MUFG CSV Data model."""
 
 from enum import Enum

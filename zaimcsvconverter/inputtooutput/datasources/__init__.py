@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """To handle data source by abstraction for compatibility in future."""
 
 from __future__ import annotations

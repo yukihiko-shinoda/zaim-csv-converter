@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements row model of Amazon.co.jp CSV version 201911."""
 
 from __future__ import annotations

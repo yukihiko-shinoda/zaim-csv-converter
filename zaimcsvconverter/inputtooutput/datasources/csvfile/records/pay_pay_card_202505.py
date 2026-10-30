@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements row model of PayPay Card CSV (2025-05 format)."""
 
 from __future__ import annotations

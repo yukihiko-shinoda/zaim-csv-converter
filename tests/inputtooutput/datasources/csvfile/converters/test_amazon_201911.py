@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Test for Amazon201911RowFactory."""
 
 import pytest

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements row model of MUFG bank CSV."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Converter from Mobile Suica CSV data to record model."""
 
 from collections.abc import Callable

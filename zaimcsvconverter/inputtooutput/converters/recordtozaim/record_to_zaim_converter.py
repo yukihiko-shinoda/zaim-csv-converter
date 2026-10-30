@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """RecordConverter from input to Zaim."""
 
 from pathlib import Path
