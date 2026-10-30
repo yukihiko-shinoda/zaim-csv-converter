@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements exceptions for this package."""
 
 from __future__ import annotations

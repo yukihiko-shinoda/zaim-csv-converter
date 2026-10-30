@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Converter from Amazon.co.jp CSV data to record model."""
 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory

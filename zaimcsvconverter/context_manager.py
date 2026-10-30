@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """To implement context by using yield for class without calling any method.
 
 see: python - entering context managers in __enter__ - Stack Overflow

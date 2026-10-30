@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements importing process for convert table CSV."""
 
 import csv

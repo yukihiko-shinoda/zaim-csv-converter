@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for row_processor.py."""
 
 import pytest

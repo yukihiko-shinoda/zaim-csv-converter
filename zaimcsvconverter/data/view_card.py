@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """VIEW CARD CSV Data model."""
 
 from pydantic.dataclasses import dataclass

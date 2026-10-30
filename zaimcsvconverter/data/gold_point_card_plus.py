@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """GOLD POINT CARD+ CSV Data model."""
 
 from pydantic.dataclasses import dataclass

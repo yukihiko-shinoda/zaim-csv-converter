@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements data class for wrapping list of CSV row model."""
 
 from __future__ import annotations

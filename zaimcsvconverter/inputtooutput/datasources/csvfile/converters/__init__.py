@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Converter from CSV data to record model."""
 
 from abc import abstractmethod

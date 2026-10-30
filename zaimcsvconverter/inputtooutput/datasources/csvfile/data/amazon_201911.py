@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Zaim CSV Converter extended Amazon.co.jp CSV Data model version 201911."""
 
 from datetime import datetime

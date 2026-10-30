@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements convert steps from MUFG input row to Zaim row.
 
 @see https://faq01.bk.mufg.jp/usr/file/attachment/main_contents_0401.pdf

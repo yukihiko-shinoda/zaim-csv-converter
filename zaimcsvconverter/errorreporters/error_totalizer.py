@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements totalize process of error."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements config for pytest."""
 
 from collections.abc import Generator

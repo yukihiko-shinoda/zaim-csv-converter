@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements convert steps from input row to Zaim row."""
 
 from __future__ import annotations

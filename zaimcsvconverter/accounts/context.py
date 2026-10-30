@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """The account context that provides the necessary configuration for converting CSV files to Zaim rows."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements error report process for input CSV."""
 
 from __future__ import annotations

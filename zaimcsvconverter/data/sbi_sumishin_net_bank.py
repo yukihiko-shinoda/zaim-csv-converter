@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """SBI Sumishin net bank CSV Data model."""
 
 from pydantic.dataclasses import dataclass

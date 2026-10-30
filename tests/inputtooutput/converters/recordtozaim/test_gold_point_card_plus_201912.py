@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for gold_point_card_plus_201912.py."""
 
 from dataclasses import dataclass

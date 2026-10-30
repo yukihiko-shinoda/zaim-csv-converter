@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """PayPal CSV Data model."""
 
 from dataclasses import field

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements only calling Zaim CSV converter package."""
 
 from zaimcsvconverter.zaim_csv_converter import ZaimCsvConverter

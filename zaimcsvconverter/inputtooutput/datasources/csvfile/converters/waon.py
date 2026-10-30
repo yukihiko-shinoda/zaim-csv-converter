@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Converter from WAON CSV data to record model."""
 
 from zaimcsvconverter.data.waon import UseKind

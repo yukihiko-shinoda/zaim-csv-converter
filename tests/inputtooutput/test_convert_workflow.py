@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for input_csv.py."""
 
 from pathlib import Path

@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """This module implements testing utility using SQLAlchemy and factory_boy.
 
 @see https://factoryboy.readthedocs.io/en/latest/orms.html#sqlalchemy

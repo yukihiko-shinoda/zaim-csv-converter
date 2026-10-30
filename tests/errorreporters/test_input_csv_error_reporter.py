@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for zaimcsvconverter.errorreporters.input_csv_error_reporter."""
 
 from collections.abc import Generator

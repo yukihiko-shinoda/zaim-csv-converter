@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for convert_table_importer.py."""
 
 from pathlib import Path

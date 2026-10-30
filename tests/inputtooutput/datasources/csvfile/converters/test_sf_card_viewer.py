@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Test for SFCardViewerRowFactory."""
 
 from dataclasses import dataclass

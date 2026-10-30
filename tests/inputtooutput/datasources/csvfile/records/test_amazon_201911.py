@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Tests for AmazonRow."""
 
 from datetime import datetime

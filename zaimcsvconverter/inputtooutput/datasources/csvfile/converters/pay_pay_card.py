@@ -1,3 +1,4 @@
+# Copyright (c) 2018 Yukihiko Shinoda
 """Converter from PayPay Card CSV data to record model."""
 
 from zaimcsvconverter.inputtooutput.datasources.csvfile.converters import InputRowFactory
