@@ -15,3 +15,14 @@ jobs:
       support-python-versions: "[ '3.14', '3.13', '3.12', '3.11', '3.10' ]"
   call-workflow-lint:
     uses: yukihiko-shinoda/reusable-workflow-invoke-lint-lint/.github/workflows/workflow.yml@0966c64de69c044585bbdca96980a8393c761829  # v1.0.0
+  # Single required status check for branch protection,
+  # so that matrix changes don't require updating the protection settings.
+  all-green:
+    if: always()
+    needs:
+      - call-workflow-test
+      - call-workflow-lint
+    runs-on: ubuntu-latest
+    steps:
+      - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
