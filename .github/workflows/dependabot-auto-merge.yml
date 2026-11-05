@@ -19,8 +19,12 @@ jobs:
       # Merges done with GITHUB_TOKEN don't trigger workflows on push to main (e.g. Qlty),
       # so auto-merge is enabled with a GitHub App token instead.
       # Workflows permission is required to merge updates of github-actions ecosystem.
+      # Versions without "." (e.g. date-based Docker tags like 20261026205000) are always
+      # reported as semver-major, so update-type is only meaningful for dotted versions.
       - id: app-token
-        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        if: >-
+          (steps.metadata.outputs.new-version != '' && !contains(steps.metadata.outputs.new-version, '.'))
+          || steps.metadata.outputs.update-type != 'version-update:semver-major'
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510  # v3.3.0
         with:
           client-id: ${{ secrets.AUTO_MERGE_APP_CLIENT_ID }}
@@ -28,7 +32,9 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
           permission-workflows: write
-      - if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+      - if: >-
+          (steps.metadata.outputs.new-version != '' && !contains(steps.metadata.outputs.new-version, '.'))
+          || steps.metadata.outputs.update-type != 'version-update:semver-major'
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
