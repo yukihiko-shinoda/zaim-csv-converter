@@ -1,7 +1,7 @@
 # 📥Zaim CSV Converter📤
 
 [![Test](https://github.com/yukihiko-shinoda/zaim-csv-converter/workflows/Test/badge.svg)](https://github.com/yukihiko-shinoda/zaim-csv-converter/actions?query=workflow%3ATest)
-[![CodeQL](https://github.com/yukihiko-shinoda/zaim-csv-converter/workflows/CodeQL/badge.svg)](https://github.com/yukihiko-shinoda/zaim-csv-converter/actions?query=workflow%3ACodeQL)
+[![CodeQL](https://github.com/yukihiko-shinoda/zaim-csv-converter/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/yukihiko-shinoda/zaim-csv-converter/actions/workflows/github-code-scanning/codeql)
 [![Code Coverage](https://qlty.sh/gh/yukihiko-shinoda/projects/zaim-csv-converter/coverage.svg)](https://qlty.sh/gh/yukihiko-shinoda/projects/zaim-csv-converter)
 [![Maintainability](https://qlty.sh/gh/yukihiko-shinoda/projects/zaim-csv-converter/maintainability.svg)](https://qlty.sh/gh/yukihiko-shinoda/projects/zaim-csv-converter)
 [![Dependabot](https://flat.badgen.net/github/dependabot/yukihiko-shinoda/zaim-csv-converter?icon=dependabot)](https://github.com/yukihiko-shinoda/zaim-csv-converter/security/dependabot)
