@@ -16,6 +16,12 @@ class ZaimCsvConverter:
     @staticmethod
     def execute() -> None:
         """Execute all CSV converters."""
+        if not PATH_FILE_CONFIG.is_file():
+            msg = (
+                f"Config file not found: {PATH_FILE_CONFIG}. "
+                "Copy config.yml.dist to config.yml and fill in your settings."
+            )
+            raise FileNotFoundError(msg)
         CONFIG.load(PATH_FILE_CONFIG)
         initialize_database()
         for path in sorted(DirectoryCsv.CONVERT.value.glob("*.csv")):
